@@ -1,4 +1,4 @@
-# 🌐 Dự án Kinh tế lượng không gian (Spatial econometrics project) - Giai đoạn 1
+# 🌐 Dự án Kinh tế lượng không gian - Giai đoạn 1
 
 ## 📌 Tổng quan dự án
 Dự án này tập trung xây dựng **hạ tầng lưới không gian**, một kỹ thuật tiền xử lý dữ liệu cốt lõi trong phân tích Kinh tế lượng không gian. 
