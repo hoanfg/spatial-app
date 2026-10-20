@@ -1,8 +1,0 @@
-├── app.py
-├── requirements.txt
-└── data/
-    └── gadm41_VNM_1.cpg
-    └── gadm41_VNM_1.dbf
-    └── gadm41_VNM_1.prj
-    └── gadm41_VNM_1.shp
-    └── gadm41_VNM_1.shx
