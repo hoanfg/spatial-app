@@ -77,7 +77,7 @@ if st.session_state.get('da_bam_nut', False):
         center_y = boundary.geometry.centroid.y.values[0]
         center_x = boundary.geometry.centroid.x.values[0]
         
-        m = folium.Map(location=[center_y, center_x], zoom_start=10, tiles='CartoDB positron')
+        m = folium.Map(location=[center_y, center_x], zoom_start=10, tiles='OpenStreetMap')
         
         folium.GeoJson(
             clipped_grid_wgs84,
