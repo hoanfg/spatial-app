@@ -19,7 +19,7 @@ Giai đoạn 1 đóng vai trò tạo ra một bộ khung xương chuẩn xác v�
 
 ---
 
-## ⚙️ Cơ chế thuật toán Lõi
+## ⚙️ Cơ chế thuật toán
 Thuật toán cắt lưới được thiết kế theo quy trình 5 bước để tối ưu hóa bộ nhớ:
 
 1. **Chuẩn hóa hệ tọa độ:** Chuyển đổi ranh giới gốc từ hệ tọa độ cầu `WGS84` (kinh độ/vĩ độ) sang hệ tọa độ phẳng `UTM EPSG:32648` (đo bằng mét) để đảm bảo các phép tính hình học không bị méo mó theo độ cong của Trái Đất.
