@@ -14,7 +14,7 @@ Giai đoạn 1 đóng vai trò tạo ra một bộ khung xương chuẩn xác v�
   * `GeoPandas` & `Shapely`: Xử lý hình học véc-tơ, phép toán đại số không gian.
   * `NumPy`: Sinh ma trận tọa độ tối ưu hóa hiệu năng.
 * **Trực quan hóa:** `Folium`, `streamlit-folium` (Bản đồ tương tác đa lớp).
-* **Nguồn dữ liệu ranh giới:** Sử dụng **dữ liệu tĩnh GADM v4.1 (Shapefiles)** thay vì API thời gian thực.
+* **Nguồn dữ liệu ranh giới:** Sử dụng **dữ liệu tĩnh GADM v4.1 (Shapefiles)** thay vì API thời gian thực (GADM, 2022).
   * *Lý do:* Giải quyết triệt để vấn đề "xung đột dữ liệu mảng" trong kinh tế lượng khi ranh giới hành chính có sự sáp nhập/chia tách qua các năm. Dữ liệu tĩnh đảm bảo mốc thời gian không gian được cố định theo năm nghiên cứu.
 
 ---
@@ -31,9 +31,9 @@ Thuật toán cắt lưới được thiết kế theo quy trình 5 bước đ�
 ---
 
 ## ⚠️ Vấn đề "ô biên giới"
-Khi ép một ma trận lưới vuông (ví dụ 1x1 km = 1 km²) vào một ranh giới hành chính ngoằn ngoèo, thuật toán cắt sẽ sinh ra một loạt các **ô biên giới** có hình thù móp méo và diện tích bị hao hụt (ví dụ: chỉ còn $0.15 km^2$ hoặc $0.8 km^2$).
+Khi ép một ma trận lưới vuông (ví dụ 1x1 km = 1 km²) vào một ranh giới hành chính ngoằn ngoèo, thuật toán cắt sẽ sinh ra một loạt các **ô biên giới** có hình thù móp méo và diện tích bị hao hụt (ví dụ: chỉ còn $0.15 km^2$ hoặc $0.8 km^2$) (Openshaw, 1983).
 
-Trong kinh tế lượng, nếu ta thực hiện phép đếm tổng dữ liệu ánh sáng đêm hoặc dân số cho toàn bộ các ô lưới này, những ô biên giới sẽ có giá trị NTL rất thấp (vì chúng quá nhỏ). Mô hình hồi quy sẽ hiểu lầm rằng khu vực biên giới này là "vùng kinh tế kém phát triển", gây ra hiện tượng **phương sai sai số thay đổi (Heteroskedasticity)** và làm sai lệch nghiêm trọng trọng số (bias) của toàn bộ mô hình.
+Trong kinh tế lượng, nếu ta thực hiện phép đếm tổng dữ liệu ánh sáng đêm hoặc dân số cho toàn bộ các ô lưới này, những ô biên giới sẽ có giá trị NTL rất thấp vì chúng quá nhỏ (Henderson et al., (2012). Mô hình hồi quy sẽ hiểu lầm rằng khu vực biên giới này là "vùng kinh tế kém phát triển", gây ra hiện tượng **phương sai sai số thay đổi (Heteroskedasticity)** và làm sai lệch nghiêm trọng trọng số (bias) của toàn bộ mô hình (Openshaw, 1983).
 
 ### 💡 Giải pháp chuẩn hóa kinh tế lượng tự đề xuất
 Để giải quyết bài toán trên, Phase 1 đã chủ động tính toán và lưu trữ biến số diện tích thực (`area_km2`) cho từng ô lưới bị cắt gọt. Ở Phase 2, hệ thống sẽ áp dụng 2 chiến lược:
@@ -45,7 +45,7 @@ Trong kinh tế lượng, nếu ta thực hiện phép đếm tổng dữ liệu
 ## 🚀 Ứng dụng: Lưới không gian này dùng để làm gì?
 Mặc dù UI hiện tại mới chỉ là "trực quan hóa", nhưng **bảng dữ liệu ẩn** bên dưới bản đồ chính là cơ sở hạ tầng để thực hiện các phép **Spatial join (Gộp dữ liệu không gian)**. Cụ thể:
 
-1. **Nội suy GDP vi mô:** Gắn dữ liệu pixel ánh sáng đêm (SNPP-VIIRS) vào lưới. Ô lưới nào sáng hơn phản ánh mức độ tập trung kinh tế cao hơn, cho phép ước lượng GDP tới cấp độ phường/xã hoặc từng khu phố (100 hecta) thay vì bị giới hạn ở số liệu GDP cấp tỉnh thô sơ.
+1. **Nội suy GDP vi mô:** Gắn dữ liệu pixel ánh sáng đêm (SNPP-VIIRS) vào lưới. Ô lưới nào sáng hơn phản ánh mức độ tập trung kinh tế cao hơn, cho phép ước lượng GDP tới cấp độ phường/xã hoặc từng khu phố (100 hecta) thay vì bị giới hạn ở số liệu GDP cấp tỉnh thô sơ (Elvidge et al., 2017).
 2. **Đánh giá bất bình đẳng không gian:** Đếm số lượng Điểm quan tâm (POI) như Chi nhánh ngân hàng, ATM, hoặc Trường học rơi vào từng ô lưới. Từ đó chạy các mô hình hồi quy trọng số không gian (GWR) để xem xét mức độ tiếp cận tài chính/giáo dục.
 3. **Phân tích rủi ro khí hậu/bất động sản:** Gắn dữ liệu độ cao (DEM) hoặc bản đồ rủi ro ngập lụt vào lưới để định giá sự sụt giảm giá trị bất động sản ở những ô lưới có rủi ro cao.
 
