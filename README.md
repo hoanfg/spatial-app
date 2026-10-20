@@ -50,3 +50,9 @@ Mặc dù UI hiện tại mới chỉ là "trực quan hóa", nhưng **bảng d�
 3. **Phân tích rủi ro khí hậu/bất động sản:** Gắn dữ liệu độ cao (DEM) hoặc bản đồ rủi ro ngập lụt vào lưới để định giá sự sụt giảm giá trị bất động sản ở những ô lưới có rủi ro cao.
 
 ---
+
+## Tài liệu tham khảo
+    Elvidge, C. D., Baugh, K., Zhizhin, M., Hsu, F. C., & Ghosh, T. (2017). VIIRS night-time lights. International Journal of Remote Sensing, 38(21), 5860-5879.
+    GADM. (2022). GADM database of Global Administrative Areas, version 4.1. Truy cập tại: https://gadm.org/
+    Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growth from Outer Space. American Economic Review, 102(2), 994-1028.
+    Openshaw, S. (1983). The Modifiable Areal Unit Problem. Concepts and Techniques in Modern Geography, 38.
