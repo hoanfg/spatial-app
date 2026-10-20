@@ -8,7 +8,7 @@ import os
 
 # 1. Cấu hình giao diện Streamlit
 st.set_page_config(page_title="Hệ thống Lưới Không gian", layout="wide")
-st.title("Công cụ Cắt Lưới Không Gian (Spatial Grid Generator)")
+st.title("Công cụ cắt lưới không gian")
 
 # 2. Đọc dữ liệu Shapefile Tĩnh từ thư mục data
 file_path = "data/gadm41_VNM_1.shp"
