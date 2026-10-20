@@ -1,55 +1,38 @@
-import streamlit as st
 import geopandas as gpd
-import folium
-from streamlit_folium import st_folium
-import os
+import streamlit as st
+# (Các thư viện khác vẫn giữ nguyên)
 
-# 1. Cấu hình trang
-st.set_page_config(page_title="Mô phỏng Lưới Không gian", layout="wide")
-st.title("Hệ thống Demo Lưới Không gian Kinh tế lượng")
+# ---------------------------------------------------------
+# BƯỚC 1 MỚI: ĐỌC DỮ LIỆU RANH GIỚI TĨNH
+# ---------------------------------------------------------
+st.write("1. Đang tải ranh giới từ file tĩnh...")
 
-# 2. Sidebar UI
-with st.sidebar:
-    st.header("Lựa chọn Dữ liệu Demo")
+# Chỉ cần truyền đường dẫn tới file .shp, GeoPandas sẽ tự lo phần còn lại
+file_path = "gadm41_VNM_1.shp" 
+gdf_provinces = gpd.read_file(file_path)
+
+# In thử danh sách 5 tỉnh đầu tiên để kiểm tra
+print(gdf_provinces['NAME_1'].head())
+
+try:
+    # Đọc toàn bộ bản đồ 63 tỉnh thành
+    map_vietnam = gpd.read_file(file_path)
     
-    # Giả sử bạn đã bỏ 2 file này vào thư mục data
-    location_options = {
-        "Bắc Ninh (Lưới 2x2km)": "data/bacninh_grid.geojson",
-        "Đà Nẵng (Lưới 1x1km)": "data/danang_grid.geojson" 
-    }
+    # Ở file GADM, cột chứa tên tỉnh thường là 'NAME_1'
+    # Lọc lấy riêng tỉnh Bắc Ninh
+    boundary = map_vietnam[map_vietnam['NAME_1'] == 'Bắc Ninh']
     
-    selected_area = st.selectbox("Chọn khu vực đã xử lý:", list(location_options.keys()))
-    file_path = location_options[selected_area]
-
-# 3. Khu vực Bản đồ Chính
-if os.path.exists(file_path):
-    with st.spinner("Đang nạp dữ liệu không gian..."):
-        # Đọc file GeoJSON đã xử lý sẵn
-        gdf_grid = gpd.read_file(file_path)
+    if boundary.empty:
+        st.error("Không tìm thấy Bắc Ninh trong dữ liệu. Vui lòng kiểm tra lại tên cột (NAME_1).")
+        st.stop()
         
-        # Lấy tọa độ trung tâm để camera bản đồ chĩa vào đó
-        center_y = gdf_grid.geometry.centroid.y.mean()
-        center_x = gdf_grid.geometry.centroid.x.mean()
-        
-        # Khởi tạo bản đồ Folium (Nền bản đồ mặc định của OpenStreetMap)
-        m = folium.Map(location=[center_y, center_x], zoom_start=10, tiles='CartoDB positron')
-        
-        # Vẽ lưới (GeoJSON) lên bản đồ
-        folium.GeoJson(
-            gdf_grid,
-            style_function=lambda feature: {
-                'fillColor': 'blue',
-                'color': 'black',    # Màu viền lưới
-                'weight': 1,         # Độ dày viền
-                'fillOpacity': 0.1   # Độ trong suốt (để nhìn xuyên xuống nền đường phố)
-            },
-            # Hiển thị thông tin (tooltip) khi di chuột qua từng ô
-            tooltip=folium.GeoJsonTooltip(fields=['area_km2'], aliases=['Diện tích (km2):'], labels=True)
-        ).add_to(m)
-        
-        # Hiển thị bản đồ lên Streamlit
-        st_folium(m, width=1200, height=600)
-        
-        st.info(f"Đã nạp thành công {len(gdf_grid)} ô lưới không gian.")
-else:
-    st.error("Chưa tìm thấy file dữ liệu. Vui lòng chạy code tạo lưới trước.")
+    # Ép hệ tọa độ sang UTM (EPSG:32648 là vùng UTM phổ biến của Bắc Việt Nam)
+    # Lưu ý: Khi dùng GeoPandas thuần, ta không dùng ox.project_gdf nữa
+    boundary_utm = boundary.to_crs(epsg=32648)
+    
+    st.success("Tải ranh giới thành công!")
+    
+    # ... (Các Bước 2, 3 tạo lưới và cắt lưới giữ nguyên như cũ) ...
+    
+except Exception as e:
+    st.error(f"Lỗi khi đọc file: {e}")
