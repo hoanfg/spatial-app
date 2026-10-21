@@ -1,275 +1,223 @@
 import streamlit as st
+import ee
+import geemap.foliumap as geemap
 import geopandas as gpd
+import pandas as pd
 import numpy as np
 from shapely.geometry import Polygon
 import folium
 from streamlit_folium import st_folium
+import math
 import os
-import branca.colormap as cm
-import ee
-from rasterstats import zonal_stats
+import requests
+import rasterio
+from exactextract import exact_extract
 import tempfile
-import json
+import pycountry
 
 # ==========================================
-# 1. UI CONFIGURATION & AUTHENTICATION
+# 0. PAGE CONFIGURATION & GEE INIT
 # ==========================================
-st.set_page_config(page_title="Spatial Econometrics Grid", layout="wide")
-st.title("Spatial Grid Infrastructure & NTL Extractor")
+st.set_page_config(page_title="NTL Data Extractor (Global Scale)", layout="wide")
 
 @st.cache_resource
 def init_gee():
-    """Initialize Google Earth Engine using Streamlit Secrets"""
     try:
-        service_account = st.secrets["gcp_service_account"]
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as tmp:
-            json.dump(dict(service_account), tmp)
-            tmp_path = tmp.name
-            
-        credentials = ee.ServiceAccountCredentials(service_account["client_email"], tmp_path)
-        # Bắt buộc truyền project_id từ file json vào hàm Initialize
-        ee.Initialize(credentials, project=service_account.get("spatial-econometrics-app"))
-        os.remove(tmp_path)
+        ee.Initialize()
         return True
     except Exception as e:
-        st.error(f"GEE Authentication Error: Please configure Streamlit Secrets. Details: {e}")
+        st.error("Google Earth Engine initialization failed. Check your authentication.")
         return False
 
-# ==========================================
-# 2. DATA LOADING (STATIC BOUNDARIES)
-# ==========================================
-file_path = "data/gadm41_VNM_1.shp"
+is_gee_ready = init_gee()
 
-if not os.path.exists(file_path):
-    st.error(f"Shapefile not found at {file_path}. Ensure the 'data' directory contains all GADM files (.shp, .shx, .dbf, .prj).")
-    st.stop()
-
-@st.cache_data
-def load_boundaries():
-    return gpd.read_file(file_path)
-
-with st.spinner("Loading administrative boundaries..."):
-    df_boundaries = load_boundaries()
+def get_dynamic_utm_crs(lon, lat):
+    """Calculate the correct UTM Zone EPSG code based on global Longitude/Latitude."""
+    utm_zone = math.floor((lon + 180) / 6) + 1
+    return 32600 + utm_zone if lat >= 0 else 32700 + utm_zone
 
 # ==========================================
-# 3. SIDEBAR PARAMETERS & PIPELINE ROUTING
+# 1. CURATED DATABASE CONFIGURATION
+# ==========================================
+# Danh sách các khu vực có sẵn trong "Kho dữ liệu tuyển chọn"
+# Key là tên hiển thị, Value là đường dẫn file tĩnh trong thư mục dự án
+CURATED_REGIONS = {
+    "Vietnam - Binh Phuoc Province (ADM1)": "data/curated_boundaries/VNM_Binh_Phuoc.geojson",
+    # Bạn tự tải và thêm các file GeoJSON khác vào thư mục này:
+    # "USA - Harris County, Texas (ADM2)": "data/curated_boundaries/USA_Texas_Harris_County.geojson",
+    # "France - Paris Region (ADM2)": "data/curated_boundaries/FRA_Ile_de_France.geojson"
+}
+
+st.title("Nighttime Lights (NTL) Extraction Engine")
+st.markdown("""
+**Architecture:** Cloud-to-Local Raster Fetch + C/C++ Engine (`exactextract`).
+Designed for Econometric Spatial Analysis (MAUP-resistant 1000m resolution).
+""")
+
+# ==========================================
+# 2. SIDEBAR PARAMETERS
 # ==========================================
 with st.sidebar:
     st.header("1. Spatial Parameters")
-    list_provinces = df_boundaries['NAME_1'].sort_values().unique()
-    selected_prov = st.selectbox("Select Province/City", list_provinces)
-    cell_size = st.slider("Grid Resolution (meters)", min_value=1000, max_value=5000, value=2000, step=1000)
+    
+    # Lazy Loading: Chỉ nạp danh sách tên, không nạp dữ liệu
+    selected_region_name = st.selectbox("Select Curated Region", list(CURATED_REGIONS.keys()))
+    
+    # Cho phép điều chỉnh lưới, nhưng khóa cứng mặc định ở 1000m chuẩn học thuật
+    cell_size = st.slider("Grid Resolution (meters)", min_value=500, max_value=5000, value=1000, step=500)
     
     st.markdown("---")
-    st.header("2. Raster Data Source")
-    data_source = st.radio(
-        "Select Nighttime Lights (NTL) Source:", 
-        ["Mock Data (UI Testing)", "Local GeoTIFF Upload (Fallback)", "Google Earth Engine (Cloud API)"]
-    )
+    st.header("2. Temporal Parameters")
+    year = st.selectbox("Select Year", list(range(2014, 2024)), index=8)
     
-    uploaded_tif = None
-    if data_source == "Local GeoTIFF Upload (Fallback)":
-        uploaded_tif = st.file_uploader("Upload VIIRS/DMSP GeoTIFF (< 50MB)", type=['tif', 'tiff'])
-        if uploaded_tif:
-            st.success("GeoTIFF loaded into temporary memory.")
-            
     run_btn = st.button("Execute Pipeline")
 
-# Session state to prevent Folium reruns
 if run_btn:
     st.session_state['is_executed'] = True
-    st.session_state['prov'] = selected_prov
+    st.session_state['region_name'] = selected_region_name
     st.session_state['size'] = cell_size
-    st.session_state['source'] = data_source
+    st.session_state['year'] = year
 
 # ==========================================
-# 4. CORE PIPELINE EXECUTION
+# 3. CORE PIPELINE EXECUTION
 # ==========================================
 if st.session_state.get('is_executed', False):
     
-    prov = st.session_state['prov']
+    region_name = st.session_state['region_name']
     size = st.session_state['size']
-    source = st.session_state['source']
+    year = st.session_state['year']
+    file_path = CURATED_REGIONS[region_name]
     
-    with st.spinner(f"Executing Spatial Operations for {prov}..."):
-        
-        # --- PHASE 1: SPATIAL GRID GENERATION ---
-        # Reproject to UTM Zone 48N (EPSG:32648) for accurate metric calculations
-        boundary = df_boundaries[df_boundaries['NAME_1'] == prov]
-        boundary_utm = boundary.to_crs(epsg=32648)
-        
-        minx, miny, maxx, maxy = boundary_utm.total_bounds
-        x_coords = np.arange(minx, maxx, size)
-        y_coords = np.arange(miny, maxy, size)
-        
-        grid_cells = [Polygon([(x, y), (x + size, y), (x + size, y + size), (x, y + size)]) 
-                      for x in x_coords for y in y_coords]
-                
-        raw_grid = gpd.GeoDataFrame({'geometry': grid_cells}, crs=boundary_utm.crs)
-        
-        # Clip grid and calculate physical area
-        clipped_grid = gpd.clip(raw_grid, boundary_utm)
-        clipped_grid['area_km2'] = clipped_grid.geometry.area / 1e6
-        
-        # Identify MAUP Border Cells (< 95% of standard area)
-        standard_area = (size / 1000) ** 2
-        clipped_grid['cell_type'] = np.where(clipped_grid['area_km2'] < (standard_area * 0.95), 'Border', 'Standard (Core)')
-        
-        # Reproject to WGS84 (EPSG:4326) for Web Mapping and Satellite Overlay
-        grid_wgs84 = clipped_grid.to_crs(epsg=4326)
-        
-        # --- PHASE 2: ZONAL STATISTICS & RASTER EXTRACTION ---
-        
-        # Route A: Distance-Decay Mock Data
-        if source == "Mock Data (UI Testing)":
-            prov_centroid = clipped_grid.geometry.centroid.iloc[0]
-            clipped_grid['dist'] = clipped_grid.geometry.centroid.distance(prov_centroid)
-            max_dist = clipped_grid['dist'].max()
+    # ---------------------------------------------------------
+    # STATION 1: DATA LOADING & DYNAMIC GRIDDING (RAM-SAFE)
+    # ---------------------------------------------------------
+    with st.spinner("Station 1: Loading Static Boundary and Generating 1000m Grid..."):
+        try:
+            # Tải lười (Lazy Load): Chỉ đọc file của khu vực được chọn
+            boundary = gpd.read_file(file_path)
+            # Gom toàn bộ ranh giới thành 1 Polygon duy nhất (để gọi GEE cho nhẹ)
+            boundary_union = gpd.GeoDataFrame(geometry=[boundary.unary_union], crs=boundary.crs)
             
-            np.random.seed(42)
-            noise = np.random.normal(0, 5, len(clipped_grid))
+            centroid_lon = boundary_union.geometry.centroid.x.iloc[0]
+            centroid_lat = boundary_union.geometry.centroid.y.iloc[0]
+            dynamic_epsg = get_dynamic_utm_crs(centroid_lon, centroid_lat)
             
-            grid_wgs84['ntl_mean'] = (100 * (1 - (clipped_grid['dist'] / max_dist)) + noise).clip(0, 100).round(2)
+            st.info(f"🌍 Auto-detected CRS: UTM Zone EPSG:{dynamic_epsg}")
+            
+            # Cắt lưới 1000m
+            boundary_utm = boundary_union.to_crs(epsg=dynamic_epsg)
+            minx, miny, maxx, maxy = boundary_utm.total_bounds
+            x_coords = np.arange(minx, maxx, size)
+            y_coords = np.arange(miny, maxy, size)
+            
+            grid_cells = [Polygon([(x, y), (x + size, y), (x + size, y + size), (x, y + size)]) 
+                          for x in x_coords for y in y_coords]
+                    
+            raw_grid = gpd.GeoDataFrame({'geometry': grid_cells}, crs=boundary_utm.crs)
+            clipped_grid = gpd.clip(raw_grid, boundary_utm)
+            
+            # Tính diện tích thật (km2) để kiểm chứng MAUP
+            clipped_grid['area_km2'] = clipped_grid.geometry.area / 1e6
+            
+            st.success(f"✅ Generated {len(clipped_grid)} grid cells at {size}m resolution.")
+            
+        except Exception as e:
+            st.error(f"Error at Station 1 (Data Loading): {e}")
+            st.stop()
 
-        # Route B: Local GeoTIFF Processing (rasterstats)
-        elif source == "Local GeoTIFF Upload (Fallback)":
-            if uploaded_tif is None:
-                st.error("Pipeline Halted: Missing GeoTIFF file.")
-                st.stop()
-                
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.tif') as tmp_tif:
-                tmp_tif.write(uploaded_tif.getvalue())
-                tmp_tif_path = tmp_tif.name
+    # ---------------------------------------------------------
+    # STATION 2: CLOUD-TO-LOCAL RASTER FETCH (BYPASS API LIMITS)
+    # ---------------------------------------------------------
+    with st.spinner("Station 2: Fetching 1000m NTL Raster from Google Earth Engine (1 Request Only)..."):
+        try:
+            # Chuyển Bounding Box của ranh giới sang định dạng GEE
+            bounds = boundary_union.geometry.bounds.iloc[0]
+            ee_roi = ee.Geometry.Rectangle([bounds['minx'], bounds['miny'], bounds['maxx'], bounds['maxy']])
             
-            stats = zonal_stats(
-                grid_wgs84, 
-                tmp_tif_path, 
-                stats="mean", 
-                geojson_out=False, 
-                nodata=-9999
-            )
-            
-            grid_wgs84['ntl_mean'] = [round(s['mean'], 2) if s['mean'] is not None else 0 for s in stats]
-            os.remove(tmp_tif_path)
-
-        # Route C: Cloud Computing (Google Earth Engine)
-        elif source == "Google Earth Engine (Cloud API)":
-            if not init_gee():
-                st.stop()
-                
-            viirs = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
-                        .filterDate('2022-01-01', '2022-12-31') \
+            # Khởi tạo Image Collection VIIRS
+            dataset = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
+                        .filterDate(f"{year}-01-01", f"{year}-12-31") \
                         .select('avg_rad') \
-                        .median()
+                        .median() \
+                        .clip(ee_roi)
+            
+            # Lấy URL tải trực tiếp file GeoTIFF (Khóa cứng scale=1000)
+            download_url = dataset.getDownloadUrl({
+                'scale': 1000, 
+                'crs': 'EPSG:4326', # Giữ nguyên độ phân giải góc của vệ tinh lúc tải
+                'region': ee_roi,
+                'format': 'GEO_TIFF'
+            })
+            
+            # Tải ảnh về RAM (Tempfile) thay vì lưu vào ổ cứng
+            response = requests.get(download_url)
+            temp_tif = tempfile.NamedTemporaryFile(delete=False, suffix='.tif')
+            temp_tif.write(response.content)
+            temp_tif.close()
+            
+            st.success("✅ Raster fetched successfully (Network API bypassed).")
 
-            # Parse toàn bộ geometries sang chuẩn định dạng GEE
-            all_features = []
-            for _, row in grid_wgs84.iterrows():
-                geom_dict = row.geometry.__geo_interface__
-                all_features.append(ee.Feature(ee.Geometry(geom_dict)))
-            
-            # GIẢM CHUNK SIZE XUỐNG 100 ĐỂ TRÁNH QUÁ TẢI (HTTP 413)
-            chunk_size = 100
-            total_chunks = (len(all_features) // chunk_size) + 1
-            mean_values = []
-            
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
-            for i in range(total_chunks):
-                start_idx = i * chunk_size
-                end_idx = min((i + 1) * chunk_size, len(all_features))
-                chunk_features = all_features[start_idx:end_idx]
-                
-                if not chunk_features:
-                    break
-                    
-                status_text.text(f"Extracting GEE data: Batch {i+1}/{total_chunks}...")
-                ee_fc = ee.FeatureCollection(chunk_features)
-                
-                reduced = viirs.reduceRegions(
-                    collection=ee_fc,
-                    reducer=ee.Reducer.mean(),
-                    scale=500
-                )
-                
-                try:
-                    # Gọi API kéo dữ liệu về cho từng batch nhỏ
-                    gee_results = reduced.getInfo()
-                    mean_values.extend([feat['properties'].get('mean', 0) for feat in gee_results['features']])
-                except Exception as e:
-                    # BẮT LỖI GỐC CỦA GOOGLE VÀ HIỂN THỊ RA MÀN HÌNH ĐỂ DEBUG
-                    st.error(f"Google Earth Engine API Error at batch {i+1}. Raw error:")
-                    st.code(str(e))
-                    st.stop()
-                    
-                progress_bar.progress((i + 1) / total_chunks)
-            
-            status_text.empty()
-            progress_bar.empty()
-            
-            grid_wgs84['ntl_mean'] = [round(v, 2) if v is not None else 0 for v in mean_values]
+        except Exception as e:
+            st.error(f"Error at Station 2 (GEE Fetch): {e}. This might happen if the region is larger than 32MB GEE Limit.")
+            st.stop()
 
-        # ==========================================
-        # 5. VISUALIZATION & EXPORT
-        # ==========================================
+    # ---------------------------------------------------------
+    # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
+    # ---------------------------------------------------------
+    with st.spinner("Station 3: Calculating Fractional Pixel Coverage (C/C++ Engine)..."):
+        try:
+            # Chuyển lưới từ UTM về lại EPSG:4326 để khớp với ảnh TIFF vừa tải
+            grid_wgs84 = clipped_grid.to_crs(epsg=4326)
+            
+            # Sử dụng exactextract để tính NTL trung bình dựa trên fraction (tỷ lệ diện tích)
+            stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'])
+            
+            # Gắn kết quả vào GeoDataFrame gốc
+            clipped_grid['ntl_mean'] = [s['mean'] if s['mean'] is not None else 0 for s in stats]
+            
+            # Xóa file rác
+            os.remove(temp_tif.name)
+            
+            st.success("✅ Econometric Data Extraction complete (MAUP resistant).")
+            
+        except Exception as e:
+            st.error(f"Error at Station 3 (Computation): {e}")
+            st.stop()
+
+    # ---------------------------------------------------------
+    # STATION 4: VISUALIZATION & EXPORT
+    # ---------------------------------------------------------
+    with st.spinner("Station 4: Rendering Map..."):
+        # Tính toán vĩ độ, kinh độ trung tâm cho Map
+        center_lat = boundary_union.geometry.centroid.y.iloc[0]
+        center_lon = boundary_union.geometry.centroid.x.iloc[0]
         
-        # Dynamic Colormap scaling based on extracted data
-        vmax_val = grid_wgs84['ntl_mean'].max()
-        vmax_val = vmax_val if vmax_val > 0 else 1 
+        m = folium.Map(location=[center_lat, center_lon], zoom_start=9, tiles="CartoDB positron")
         
-        center_y = boundary.geometry.centroid.y.iloc[0]
-        center_x = boundary.geometry.centroid.x.iloc[0]
+        # Thêm lưới Heatmap (Chuyển về EPSG 4326 để hiển thị trên web)
+        display_grid = clipped_grid.to_crs(epsg=4326)
         
-        m = folium.Map(location=[center_y, center_x], zoom_start=10, tiles='OpenStreetMap')
+        # Chỉ vẽ các ô có ánh sáng (NTL > 0) để web đỡ lag
+        display_grid = display_grid[display_grid['ntl_mean'] > 0.1]
         
-        colormap = cm.LinearColormap(
-            colors=['#0d0887', '#7a0403', '#cb4621', '#f89441', '#f0f921'], 
-            vmin=0, vmax=vmax_val,
-            caption='NTL Intensity (Mean)'
-        )
-        m.add_child(colormap)
-        
-        folium.GeoJson(
-            grid_wgs84,
-            style_function=lambda feature: {
-                'fillColor': colormap(feature['properties']['ntl_mean']),
-                'color': '#ffffff' if feature['properties']['cell_type'] == 'Standard (Core)' else '#ff0000',
-                'weight': 0.5,
-                'fillOpacity': 0.7
-            },
-            tooltip=folium.GeoJsonTooltip(
-                fields=['ntl_mean', 'area_km2', 'cell_type'], 
-                aliases=['NTL Intensity (Mean):', 'Actual Area (km2):', 'Grid Type:'],
-                labels=True
-            )
+        folium.Choropleth(
+            geo_data=display_grid,
+            data=display_grid,
+            columns=['geometry', 'ntl_mean'],
+            key_on='feature.id',
+            fill_color='YlOrRd',
+            fill_opacity=0.7,
+            line_opacity=0.1,
+            legend_name='NTL Mean (Fractional Coverage)'
         ).add_to(m)
-        
-        st_folium(m, width=1000, height=600, returned_objects=[])
 
-        # Data Export Module
-        st.markdown("### 📥 Data Export Engine")
+        st_data = st_folium(m, width=900, height=500)
         
-        col1, col2 = st.columns(2)
-        
-        geojson_data = grid_wgs84.to_json()
-        with col1:
-            st.download_button(
-                label="Download Spatial Data (GeoJSON)",
-                data=geojson_data,
-                file_name=f"{prov}_Grid_{size}m.geojson",
-                mime="application/geo+json"
-            )
-        
-        df_export = grid_wgs84.copy()
-        df_export['centroid_lon'] = df_export.geometry.centroid.x
-        df_export['centroid_lat'] = df_export.geometry.centroid.y
-        df_csv = df_export.drop(columns=['geometry']).to_csv(index=False).encode('utf-8')
-        
-        with col2:
-            st.download_button(
-                label="Download Tabular Data (CSV)",
-                data=df_csv,
-                file_name=f"{prov}_Data_{size}m.csv",
-                mime="text/csv"
-            )
+        # Xuất file CSV cho phần mềm Stata/R
+        csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
+        st.download_button(
+            label="Download Data for Spatial Econometrics (CSV)",
+            data=csv_data,
+            file_name=f"{selected_region_name.split()[0]}_NTL_{year}_{size}m.csv",
+            mime="text/csv"
+        )
