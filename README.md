@@ -84,7 +84,7 @@ Although the UI provides visualization, the **hidden data table** beneath the ma
 ## 📚 References
 Elvidge, C. D., Baugh, K., Zhizhin, M., Hsu, F. C., & Ghosh, T. (2017). VIIRS night-time lights. International Journal of Remote Sensing, 38(21), 5860-5879.
 
-GADM. (2022). GADM database of Global Administrative Areas, version 4.1. Truy cập tại: https://gadm.org/
+GADM. (2022). GADM database of Global Administrative Areas, version 4.1. Retrieve at: https://gadm.org/
 
 Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growth from Outer Space. American Economic Review, 102(2), 994-1028.
 
