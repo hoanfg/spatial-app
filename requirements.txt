@@ -5,6 +5,8 @@ geopandas
 shapely
 folium
 streamlit-folium
+branca
 earthengine-api
-rasterstats
 rasterio
+exactextract
+pycountry
