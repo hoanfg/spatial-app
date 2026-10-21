@@ -1,16 +1,18 @@
 # 🌐 Spatial econometrics Project - Phase 1
 
-## 📌 Project overview
-This project focuses on building spatial grid infrastructure, a core data preprocessing technique in spatial econometrics analysis
+[ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
-Phase 1 plays the role of creating a geographically accurate skeletal framework, allowing irregular administrative regions to be converted into a regular square grid matrix. This sets the premise for integrating and analyzing economic data in Raster format (such as nighttime light intensity data) or Point format (such as FDI enterprise density, bank branches)
+## 📌 Project overview
+This project builds a **spatial grid infrastructure and nighttime lights (NTL) Extraction Pipeline**, serving as a core data engineering tool for Spatial Econometrics
+
+The application resolves the complex task of standardizing irregular administrative boundaries into uniform spatial matrices, and directly interfaces with Cloud APIs to extract real-world raster data (SNPP-VIIRS) for micro-level economic analysis
 
 ---
 
 ## 🛠 Technical specification
-- **Programming language:** Python 3.x
+- **Language:** Python 3.x
   
-- **UI Framework:** Streamlit, integrated with Session State to prevent the re-run phenomenon of static systems
+- **UI & Deployment:** Streamlit, integrated with Session State to prevent the re-run phenomenon of static systems
   
 - **GIS Core:** 
   `GeoPandas` & `Shapely`: Vector geometry processing, spatial algebraic operations
