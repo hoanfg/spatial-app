@@ -131,3 +131,37 @@ if st.session_state.get('da_bam_nut', False):
         
         # Khóa tín hiệu re-run của Folium
         st_folium(m, width=1000, height=600, returned_objects=[])
+
+        st.markdown("### 📥 Trích xuất Dữ liệu (Data Export)")
+        st.info("Hạ tầng lưới không gian này đã sẵn sàng để tải xuống và tích hợp vào các mô hình Kinh tế lượng (Stata, R, QGIS) hoặc gộp với dữ liệu vệ tinh.")
+        
+        # Tạo cột để đặt 2 nút tải xuống cạnh nhau
+        col1, col2 = st.columns(2)
+        
+        # 1. Nút tải định dạng GeoJSON (Dành cho GIS)
+        # GeoJSON giữ được hình dạng đa giác (Polygon) của lưới
+        geojson_data = clipped_grid_wgs84.to_json()
+        with col1:
+            st.download_button(
+                label="Tải xuống Bản đồ Lưới (GeoJSON)",
+                data=geojson_data,
+                file_name=f"{tinh}_Grid_{size}m.geojson",
+                mime="application/geo+json"
+            )
+        
+        # 2. Nút tải định dạng CSV (Dành cho Thống kê/Stata)
+        # CSV bỏ đi cột geometry phức tạp, giữ lại tọa độ điểm trung tâm (Centroid X, Y)
+        df_export = clipped_grid_wgs84.copy()
+        # Tạo cột tọa độ tâm (Centroid) để có thể vẽ lại lưới dưới dạng điểm (Point) trên Stata/Excel
+        df_export['centroid_lon'] = df_export.geometry.centroid.x
+        df_export['centroid_lat'] = df_export.geometry.centroid.y
+        # Xóa cột geometry vì CSV không đọc được định dạng Polygon
+        df_csv = df_export.drop(columns=['geometry']).to_csv(index=False).encode('utf-8')
+        
+        with col2:
+            st.download_button(
+                label="Tải xuống Bảng Dữ liệu (CSV)",
+                data=df_csv,
+                file_name=f"{tinh}_Data_{size}m.csv",
+                mime="text/csv"
+            )
