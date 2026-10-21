@@ -6,153 +6,238 @@ import folium
 from streamlit_folium import st_folium
 import os
 import branca.colormap as cm
+import ee
+from rasterstats import zonal_stats
+import tempfile
+import json
 
-# 1. Streamlit UI Configuration
-st.set_page_config(page_title="Spatial Grid System", layout="wide")
-st.title("Spatial Grid Cutter Tool")
+# ==========================================
+# 1. UI CONFIGURATION & AUTHENTICATION
+# ==========================================
+st.set_page_config(page_title="Spatial Econometrics Grid", layout="wide")
+st.title("Spatial Grid Infrastructure & NTL Extractor")
 
-# 2. Load Static Shapefile Data
+@st.cache_resource
+def init_gee():
+    """Initialize Google Earth Engine using Streamlit Secrets"""
+    try:
+        service_account = st.secrets["gcp_service_account"]
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as tmp:
+            json.dump(dict(service_account), tmp)
+            tmp_path = tmp.name
+            
+        credentials = ee.ServiceAccountCredentials(service_account["client_email"], tmp_path)
+        ee.Initialize(credentials)
+        os.remove(tmp_path)
+        return True
+    except Exception as e:
+        st.error(f"GEE Authentication Error: Please configure Streamlit Secrets. Details: {e}")
+        return False
+
+# ==========================================
+# 2. DATA LOADING (STATIC BOUNDARIES)
+# ==========================================
 file_path = "data/gadm41_VNM_1.shp"
 
-# Check data existence
 if not os.path.exists(file_path):
-    st.error(f"Data file not found at {file_path}. Please check the directory.")
+    st.error(f"Shapefile not found at {file_path}. Ensure the 'data' directory contains all GADM files (.shp, .shx, .dbf, .prj).")
     st.stop()
 
-@st.cache_data # Cache data to prevent reloading during user interaction
-def load_data():
+@st.cache_data
+def load_boundaries():
     return gpd.read_file(file_path)
 
-with st.spinner("Loading boundaries data..."):
-    df_vietnam = load_data()
+with st.spinner("Loading administrative boundaries..."):
+    df_boundaries = load_boundaries()
 
-# 3. Sidebar Configuration
+# ==========================================
+# 3. SIDEBAR PARAMETERS & PIPELINE ROUTING
+# ==========================================
 with st.sidebar:
-    st.header("Input parameters")
-    list_provinces = df_vietnam['NAME_1'].sort_values().unique()
-    selected_province = st.selectbox("Please choose City/Province", list_provinces)
+    st.header("1. Spatial Parameters")
+    list_provinces = df_boundaries['NAME_1'].sort_values().unique()
+    selected_prov = st.selectbox("Select Province/City", list_provinces)
+    cell_size = st.slider("Grid Resolution (meters)", min_value=1000, max_value=5000, value=2000, step=1000)
     
-    cell_size = st.slider("Grid size (meters)", min_value=1000, max_value=5000, value=2000, step=1000)
-    run_btn = st.button("Generate grid")
+    st.markdown("---")
+    st.header("2. Raster Data Source")
+    data_source = st.radio(
+        "Select Nighttime Lights (NTL) Source:", 
+        ["Mock Data (UI Testing)", "Local GeoTIFF Upload (Fallback)", "Google Earth Engine (Cloud API)"]
+    )
+    
+    uploaded_tif = None
+    if data_source == "Local GeoTIFF Upload (Fallback)":
+        uploaded_tif = st.file_uploader("Upload VIIRS/DMSP GeoTIFF (< 50MB)", type=['tif', 'tiff'])
+        if uploaded_tif:
+            st.success("GeoTIFF loaded into temporary memory.")
+            
+    run_btn = st.button("Execute Pipeline")
 
-# --- SESSION STATE MANAGEMENT ---
-# Store state to prevent rerun data loss when interacting with Folium
+# Session state to prevent Folium reruns
 if run_btn:
-    st.session_state['is_generated'] = True
-    st.session_state['selected_prov'] = selected_province
-    st.session_state['current_size'] = cell_size
+    st.session_state['is_executed'] = True
+    st.session_state['prov'] = selected_prov
+    st.session_state['size'] = cell_size
+    st.session_state['source'] = data_source
 
-# 4. Grid Cutting and Mock Data Generation
-if st.session_state.get('is_generated', False):
+# ==========================================
+# 4. CORE PIPELINE EXECUTION
+# ==========================================
+if st.session_state.get('is_executed', False):
     
-    prov = st.session_state['selected_prov']
-    size = st.session_state['current_size']
+    prov = st.session_state['prov']
+    size = st.session_state['size']
+    source = st.session_state['source']
     
-    with st.spinner(f"Processing mathematical operations and generating simulated data of {size}m for {prov}..."):
-        # Filter boundary and reproject to UTM (meters) EPSG:32648 for Northern/Vietnam regional accuracy
-        boundary = df_vietnam[df_vietnam['NAME_1'] == prov]
+    with st.spinner(f"Executing Spatial Operations for {prov}..."):
+        
+        # --- PHASE 1: SPATIAL GRID GENERATION ---
+        # Reproject to UTM Zone 48N (EPSG:32648) for accurate metric calculations
+        boundary = df_boundaries[df_boundaries['NAME_1'] == prov]
         boundary_utm = boundary.to_crs(epsg=32648)
         
-        # Generate raw grid based on bounding box
         minx, miny, maxx, maxy = boundary_utm.total_bounds
         x_coords = np.arange(minx, maxx, size)
         y_coords = np.arange(miny, maxy, size)
         
-        grid_cells = []
-        for x in x_coords:
-            for y in y_coords:
-                poly = Polygon([(x, y), (x + size, y), (x + size, y + size), (x, y + size)])
-                grid_cells.append(poly)
+        grid_cells = [Polygon([(x, y), (x + size, y), (x + size, y + size), (x, y + size)]) 
+                      for x in x_coords for y in y_coords]
                 
         raw_grid = gpd.GeoDataFrame({'geometry': grid_cells}, crs=boundary_utm.crs)
         
-        # Clip grid to administrative boundary and calculate actual area
+        # Clip grid and calculate physical area
         clipped_grid = gpd.clip(raw_grid, boundary_utm)
         clipped_grid['area_km2'] = clipped_grid.geometry.area / 1e6
         
-        # --- MOCK ECONOMIC DATA GENERATION ---
-        # 1. Identify Border Cells vs Core Cells
+        # Identify MAUP Border Cells (< 95% of standard area)
         standard_area = (size / 1000) ** 2
         clipped_grid['cell_type'] = np.where(clipped_grid['area_km2'] < (standard_area * 0.95), 'Border', 'Standard (Core)')
         
-        # 2. Find Provincial Centroid (CBD proxy)
-        prov_centroid = boundary_utm.geometry.centroid.iloc[0]
+        # Reproject to WGS84 (EPSG:4326) for Web Mapping and Satellite Overlay
+        grid_wgs84 = clipped_grid.to_crs(epsg=4326)
         
-        # 3. Calculate distance from each cell to centroid (in meters)
-        clipped_grid['dist_to_center'] = clipped_grid.geometry.centroid.distance(prov_centroid)
+        # --- PHASE 2: ZONAL STATISTICS & RASTER EXTRACTION ---
         
-        # 4. Convert distance to Mock NTL Score (0-100) using normal distribution noise
-        max_dist = clipped_grid['dist_to_center'].max()
-        np.random.seed(42) # Fix seed for consistent map rendering
-        noise = np.random.normal(0, 5, len(clipped_grid)) 
-        
-        clipped_grid['mock_ntl_score'] = 100 * (1 - (clipped_grid['dist_to_center'] / max_dist)) + noise
-        clipped_grid['mock_ntl_score'] = clipped_grid['mock_ntl_score'].clip(0, 100).round(2)
-        
-        # Reproject back to WGS84 for web map visualization
-        clipped_grid_wgs84 = clipped_grid.to_crs(epsg=4326)
-        
-        st.success(f"Complete! Generated {len(clipped_grid)} spatial grid cells with simulated economic data.")
+        # Route A: Distance-Decay Mock Data
+        if source == "Mock Data (UI Testing)":
+            prov_centroid = clipped_grid.geometry.centroid.iloc[0]
+            clipped_grid['dist'] = clipped_grid.geometry.centroid.distance(prov_centroid)
+            max_dist = clipped_grid['dist'].max()
+            
+            np.random.seed(42)
+            noise = np.random.normal(0, 5, len(clipped_grid))
+            
+            grid_wgs84['ntl_mean'] = (100 * (1 - (clipped_grid['dist'] / max_dist)) + noise).clip(0, 100).round(2)
 
-        # 5. Render Heatmap Visualization
-        # Use iloc[0] to prevent Pandas future warnings
+        # Route B: Local GeoTIFF Processing (rasterstats)
+        elif source == "Local GeoTIFF Upload (Fallback)":
+            if uploaded_tif is None:
+                st.error("Pipeline Halted: Missing GeoTIFF file.")
+                st.stop()
+                
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.tif') as tmp_tif:
+                tmp_tif.write(uploaded_tif.getvalue())
+                tmp_tif_path = tmp_tif.name
+            
+            stats = zonal_stats(
+                grid_wgs84, 
+                tmp_tif_path, 
+                stats="mean", 
+                geojson_out=False, 
+                nodata=-9999
+            )
+            
+            grid_wgs84['ntl_mean'] = [round(s['mean'], 2) if s['mean'] is not None else 0 for s in stats]
+            os.remove(tmp_tif_path)
+
+        # Route C: Cloud Computing (Google Earth Engine)
+        elif source == "Google Earth Engine (Cloud API)":
+            if not init_gee():
+                st.stop()
+                
+            features = []
+            for _, row in grid_wgs84.iterrows():
+                geom = ee.Geometry.Polygon(list(row.geometry.exterior.coords))
+                features.append(ee.Feature(geom))
+            ee_fc = ee.FeatureCollection(features)
+            
+            viirs = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
+                        .filterDate('2022-01-01', '2022-12-31') \
+                        .select('avg_rad') \
+                        .median()
+                        
+            reduced = viirs.reduceRegions(
+                collection=ee_fc,
+                reducer=ee.Reducer.mean(),
+                scale=500
+            )
+            
+            gee_results = reduced.getInfo()
+            mean_values = [feat['properties'].get('mean', 0) for feat in gee_results['features']]
+            grid_wgs84['ntl_mean'] = [round(v, 2) if v is not None else 0 for v in mean_values]
+
+        st.success(f"Pipeline Completed: Processed {len(grid_wgs84)} spatial grid cells.")
+
+        # ==========================================
+        # 5. VISUALIZATION & EXPORT
+        # ==========================================
+        
+        # Dynamic Colormap scaling based on extracted data
+        vmax_val = grid_wgs84['ntl_mean'].max()
+        vmax_val = vmax_val if vmax_val > 0 else 1 
+        
         center_y = boundary.geometry.centroid.y.iloc[0]
         center_x = boundary.geometry.centroid.x.iloc[0]
         
         m = folium.Map(location=[center_y, center_x], zoom_start=10, tiles='OpenStreetMap')
         
-        # Initialize Colormap (Dark Blue to Yellow)
         colormap = cm.LinearColormap(
             colors=['#0d0887', '#7a0403', '#cb4621', '#f89441', '#f0f921'], 
-            vmin=0, vmax=100,
-            caption='Light intensity / Economic simulation (0-100)'
+            vmin=0, vmax=vmax_val,
+            caption='NTL Intensity (Mean)'
         )
         m.add_child(colormap)
         
-        # Map GeoJSON layer with conditional styling
         folium.GeoJson(
-            clipped_grid_wgs84,
+            grid_wgs84,
             style_function=lambda feature: {
-                'fillColor': colormap(feature['properties']['mock_ntl_score']),
+                'fillColor': colormap(feature['properties']['ntl_mean']),
                 'color': '#ffffff' if feature['properties']['cell_type'] == 'Standard (Core)' else '#ff0000',
                 'weight': 0.5,
                 'fillOpacity': 0.7
             },
             tooltip=folium.GeoJsonTooltip(
-                fields=['mock_ntl_score', 'area_km2', 'cell_type'], 
-                aliases=['Economic score (Mock NTL):', 'Actual area (km2):', 'Grid classification:'],
+                fields=['ntl_mean', 'area_km2', 'cell_type'], 
+                aliases=['NTL Intensity (Mean):', 'Actual Area (km2):', 'Grid Type:'],
                 labels=True
             )
         ).add_to(m)
         
-        # Prevent silent reruns from Folium callbacks
         st_folium(m, width=1000, height=600, returned_objects=[])
 
-        # 6. Data Export Module
-        st.markdown("### 📥 Data export")
-        st.info("This spatial grid infrastructure is ready for download and integration into econometric models (Stata, R, QGIS) or merging with satellite data.")
+        # Data Export Module
+        st.markdown("### 📥 Data Export Engine")
         
         col1, col2 = st.columns(2)
         
-        # GeoJSON Export (For Spatial Analysis/QGIS)
-        geojson_data = clipped_grid_wgs84.to_json()
+        geojson_data = grid_wgs84.to_json()
         with col1:
             st.download_button(
-                label="Download grid map (GeoJSON)",
+                label="Download Spatial Data (GeoJSON)",
                 data=geojson_data,
                 file_name=f"{prov}_Grid_{size}m.geojson",
                 mime="application/geo+json"
             )
         
-        # CSV Export (For Stata/Statistical Analysis)
-        df_export = clipped_grid_wgs84.copy()
+        df_export = grid_wgs84.copy()
         df_export['centroid_lon'] = df_export.geometry.centroid.x
         df_export['centroid_lat'] = df_export.geometry.centroid.y
         df_csv = df_export.drop(columns=['geometry']).to_csv(index=False).encode('utf-8')
         
         with col2:
             st.download_button(
-                label="Download data table (CSV)",
+                label="Download Tabular Data (CSV)",
                 data=df_csv,
                 file_name=f"{prov}_Data_{size}m.csv",
                 mime="text/csv"
