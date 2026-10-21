@@ -8,27 +8,27 @@ import os
 import branca.colormap as cm
 
 # 1. Cấu hình giao diện Streamlit
-st.set_page_config(page_title="Hệ thống Lưới Không gian", layout="wide")
-st.title("Công cụ cắt lưới không gian")
+st.set_page_config(page_title="Spatial grid system", layout="wide")
+st.title("Spatial grid cutter tool")
 
 # 2. Đọc dữ liệu Shapefile Tĩnh từ thư mục data
 file_path = "data/gadm41_VNM_1.shp"
 
 # Kiểm tra xem file có tồn tại không trước khi đọc
 if not os.path.exists(file_path):
-    st.error(f"Không tìm thấy file dữ liệu tại {file_path}. Vui lòng kiểm tra lại thư mục.")
+    st.error(f"Data file not found at {file_path}. Please check the directory.")
     st.stop()
 
 @st.cache_data # Lưu cache để không phải đọc lại file shp khi người dùng tương tác
 def load_data():
     return gpd.read_file(file_path)
 
-with st.spinner("Đang tải dữ liệu ranh giới 63 tỉnh thành..."):
+with st.spinner("Loading boundaries data..."):
     df_vietnam = load_data()
 
 # 3. Thanh điều hướng (Sidebar)
 with st.sidebar:
-    st.header("Thông số đầu vào")
+    st.header("Input parameters")
     list_provinces = df_vietnam['NAME_1'].sort_values().unique()
     selected_province = st.selectbox("Please choose City/Province", list_provinces)
     
@@ -48,7 +48,7 @@ if st.session_state.get('da_bam_nut', False):
     tinh = st.session_state['tinh_dang_chon']
     size = st.session_state['kich_thuoc']
     
-    with st.spinner(f"Đang xử lý toán học và sinh dữ liệu giả lập {size}m cho {tinh}..."):
+    with st.spinner(f"Processing mathematical operations and generating simulated data of {size}m for {tinh}..."):
         # Lọc ranh giới và bẻ hệ tọa độ sang mét
         boundary = df_vietnam[df_vietnam['NAME_1'] == tinh]
         boundary_utm = boundary.to_crs(epsg=32648)
@@ -97,7 +97,7 @@ if st.session_state.get('da_bam_nut', False):
         # Trả hệ tọa độ về WGS84 để hiển thị lên Folium
         clipped_grid_wgs84 = clipped_grid.to_crs(epsg=4326)
         
-        st.success(f"Hoàn thành! Đã tạo ra {len(clipped_grid)} ô lưới không gian với dữ liệu kinh tế mô phỏng.")
+        st.success(f"Complete! Generated {len(clipped_grid)} spatial grid cells with simulated economic data.")
 
         # 5. Vẽ bản đồ Nhiệt (Heatmap)
         center_y = boundary.geometry.centroid.y.values[0]
@@ -109,7 +109,7 @@ if st.session_state.get('da_bam_nut', False):
         colormap = cm.LinearColormap(
             colors=['#0d0887', '#7a0403', '#cb4621', '#f89441', '#f0f921'], 
             vmin=0, vmax=100,
-            caption='Mô phỏng Cường độ Ánh sáng/Kinh tế (0-100)'
+            caption='Light intensity / Economic simulation (0-100)'
         )
         m.add_child(colormap)
         
@@ -118,13 +118,13 @@ if st.session_state.get('da_bam_nut', False):
             clipped_grid_wgs84,
             style_function=lambda feature: {
                 'fillColor': colormap(feature['properties']['mock_ntl_score']),
-                'color': '#ffffff' if feature['properties']['cell_type'] == 'Tiêu chuẩn (Core)' else '#ff0000', # Viền đỏ cho ô biên giới
+                'color': '#ffffff' if feature['properties']['cell_type'] == 'Standard (Core)' else '#ff0000', # Viền đỏ cho ô biên giới
                 'weight': 0.5,
                 'fillOpacity': 0.7
             },
             tooltip=folium.GeoJsonTooltip(
                 fields=['mock_ntl_score', 'area_km2', 'cell_type'], 
-                aliases=['Điểm Kinh tế (Mock NTL):', 'Diện tích thực (km2):', 'Phân loại Ô lưới:'],
+                aliases=['Economic score (Mock NTL):', 'Actual area (km2):', 'Grid classification:'],
                 labels=True
             )
         ).add_to(m)
