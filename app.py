@@ -28,7 +28,7 @@ def init_gee():
             
         credentials = ee.ServiceAccountCredentials(service_account["client_email"], tmp_path)
         # Bắt buộc truyền project_id từ file json vào hàm Initialize
-        ee.Initialize(credentials, project=service_account.get("project_id"))
+        ee.Initialize(credentials, project=service_account.get("spatial-econometrics-app"))
         os.remove(tmp_path)
         return True
     except Exception as e:
@@ -168,12 +168,11 @@ if st.session_state.get('is_executed', False):
                 geom_dict = row.geometry.__geo_interface__
                 all_features.append(ee.Feature(ee.Geometry(geom_dict)))
             
-            # Cấu hình Chunking để tránh lỗi HTTP Error / Timeout
-            chunk_size = 1000
+            # GIẢM CHUNK SIZE XUỐNG 100 ĐỂ TRÁNH QUÁ TẢI (HTTP 413)
+            chunk_size = 100
             total_chunks = (len(all_features) // chunk_size) + 1
             mean_values = []
             
-            # Hiển thị thanh tiến trình xử lý trên Streamlit
             progress_bar = st.progress(0)
             status_text = st.empty()
             
@@ -194,15 +193,21 @@ if st.session_state.get('is_executed', False):
                     scale=500
                 )
                 
-                # Gọi API kéo dữ liệu về cho từng batch nhỏ
-                gee_results = reduced.getInfo()
-                mean_values.extend([feat['properties'].get('mean', 0) for feat in gee_results['features']])
+                try:
+                    # Gọi API kéo dữ liệu về cho từng batch nhỏ
+                    gee_results = reduced.getInfo()
+                    mean_values.extend([feat['properties'].get('mean', 0) for feat in gee_results['features']])
+                except Exception as e:
+                    # BẮT LỖI GỐC CỦA GOOGLE VÀ HIỂN THỊ RA MÀN HÌNH ĐỂ DEBUG
+                    st.error(f"Google Earth Engine API Error at batch {i+1}. Raw error:")
+                    st.code(str(e))
+                    st.stop()
+                    
                 progress_bar.progress((i + 1) / total_chunks)
             
             status_text.empty()
             progress_bar.empty()
             
-            # Gán kết quả vào bảng dữ liệu chính
             grid_wgs84['ntl_mean'] = [round(v, 2) if v is not None else 0 for v in mean_values]
 
         # ==========================================
