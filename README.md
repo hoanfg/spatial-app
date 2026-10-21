@@ -11,11 +11,11 @@ Phase 1 plays the role of creating a geographically accurate skeletal framework,
 - **Programming language:** Python 3.x
 - **UI Framework:** Streamlit, integrated with Session State to prevent the re-run phenomenon of static systems.
 - **GIS Core:** 
-  * `GeoPandas` & `Shapely`: Vector geometry processing, spatial algebraic operations.
-  * `NumPy`: Coordinate matrix generation optimized for performance.
+  `GeoPandas` & `Shapely`: Vector geometry processing, spatial algebraic operations.
+  `NumPy`: Coordinate matrix generation optimized for performance.
 - **Visualisation:** `Folium`, `streamlit-folium` Multi-layer interactive map.
 - **Boundary data source:** Using **static GADM v4.1 (Shapefiles)** data instead of real-time APIs (GADM, 2022).
-  * *Reason:*Thoroughly resolve the "array data conflict" problem in econometrics when administrative boundaries merge or split across years. Static data ensures the spatial timeline is fixed according to the study year.
+  *Reason:*Thoroughly resolve the "array data conflict" problem in econometrics when administrative boundaries merge or split across years. Static data ensures the spatial timeline is fixed according to the study year.
   
 ---
 
