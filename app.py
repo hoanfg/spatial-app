@@ -27,7 +27,8 @@ def init_gee():
             tmp_path = tmp.name
             
         credentials = ee.ServiceAccountCredentials(service_account["client_email"], tmp_path)
-        ee.Initialize(credentials)
+        # Bắt buộc truyền project_id từ file json vào hàm Initialize
+        ee.Initialize(credentials, project=service_account.get("project_id"))
         os.remove(tmp_path)
         return True
     except Exception as e:
@@ -156,29 +157,53 @@ if st.session_state.get('is_executed', False):
             if not init_gee():
                 st.stop()
                 
-            features = []
-            for _, row in grid_wgs84.iterrows():
-                geom_dict = row.geometry.__geo_interface__
-                geom = ee.Geometry(geom_dict)
-                features.append(ee.Feature(geom))
-            ee_fc = ee.FeatureCollection(features)
-            
             viirs = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
                         .filterDate('2022-01-01', '2022-12-31') \
                         .select('avg_rad') \
                         .median()
-                        
-            reduced = viirs.reduceRegions(
-                collection=ee_fc,
-                reducer=ee.Reducer.mean(),
-                scale=500
-            )
-            
-            gee_results = reduced.getInfo()
-            mean_values = [feat['properties'].get('mean', 0) for feat in gee_results['features']]
-            grid_wgs84['ntl_mean'] = [round(v, 2) if v is not None else 0 for v in mean_values]
 
-        st.success(f"Pipeline Completed: Processed {len(grid_wgs84)} spatial grid cells.")
+            # Parse toàn bộ geometries sang chuẩn định dạng GEE
+            all_features = []
+            for _, row in grid_wgs84.iterrows():
+                geom_dict = row.geometry.__geo_interface__
+                all_features.append(ee.Feature(ee.Geometry(geom_dict)))
+            
+            # Cấu hình Chunking để tránh lỗi HTTP Error / Timeout
+            chunk_size = 1000
+            total_chunks = (len(all_features) // chunk_size) + 1
+            mean_values = []
+            
+            # Hiển thị thanh tiến trình xử lý trên Streamlit
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            for i in range(total_chunks):
+                start_idx = i * chunk_size
+                end_idx = min((i + 1) * chunk_size, len(all_features))
+                chunk_features = all_features[start_idx:end_idx]
+                
+                if not chunk_features:
+                    break
+                    
+                status_text.text(f"Extracting GEE data: Batch {i+1}/{total_chunks}...")
+                ee_fc = ee.FeatureCollection(chunk_features)
+                
+                reduced = viirs.reduceRegions(
+                    collection=ee_fc,
+                    reducer=ee.Reducer.mean(),
+                    scale=500
+                )
+                
+                # Gọi API kéo dữ liệu về cho từng batch nhỏ
+                gee_results = reduced.getInfo()
+                mean_values.extend([feat['properties'].get('mean', 0) for feat in gee_results['features']])
+                progress_bar.progress((i + 1) / total_chunks)
+            
+            status_text.empty()
+            progress_bar.empty()
+            
+            # Gán kết quả vào bảng dữ liệu chính
+            grid_wgs84['ntl_mean'] = [round(v, 2) if v is not None else 0 for v in mean_values]
 
         # ==========================================
         # 5. VISUALIZATION & EXPORT
