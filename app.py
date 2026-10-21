@@ -158,7 +158,8 @@ if st.session_state.get('is_executed', False):
                 
             features = []
             for _, row in grid_wgs84.iterrows():
-                geom = ee.Geometry.Polygon(list(row.geometry.exterior.coords))
+                geom_dict = row.geometry.__geo_interface__
+                geom = ee.Geometry(geom_dict)
                 features.append(ee.Feature(geom))
             ee_fc = ee.FeatureCollection(features)
             
