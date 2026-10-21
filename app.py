@@ -132,8 +132,8 @@ if st.session_state.get('da_bam_nut', False):
         # Khóa tín hiệu re-run của Folium
         st_folium(m, width=1000, height=600, returned_objects=[])
 
-        st.markdown("### 📥 Trích xuất Dữ liệu (Data Export)")
-        st.info("Hạ tầng lưới không gian này đã sẵn sàng để tải xuống và tích hợp vào các mô hình Kinh tế lượng (Stata, R, QGIS) hoặc gộp với dữ liệu vệ tinh.")
+        st.markdown("### 📥 Data export")
+        st.info("This spatial grid infrastructure is ready for download and integration into econometric models (Stata, R, QGIS) or merging with satellite data")
         
         # Tạo cột để đặt 2 nút tải xuống cạnh nhau
         col1, col2 = st.columns(2)
@@ -143,7 +143,7 @@ if st.session_state.get('da_bam_nut', False):
         geojson_data = clipped_grid_wgs84.to_json()
         with col1:
             st.download_button(
-                label="Tải xuống Bản đồ Lưới (GeoJSON)",
+                label="Download grid map (GeoJSON)",
                 data=geojson_data,
                 file_name=f"{tinh}_Grid_{size}m.geojson",
                 mime="application/geo+json"
@@ -160,7 +160,7 @@ if st.session_state.get('da_bam_nut', False):
         
         with col2:
             st.download_button(
-                label="Tải xuống Bảng Dữ liệu (CSV)",
+                label="Download data table (CSV)",
                 data=df_csv,
                 file_name=f"{tinh}_Data_{size}m.csv",
                 mime="text/csv"
