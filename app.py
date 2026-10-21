@@ -30,10 +30,10 @@ with st.spinner("Đang tải dữ liệu ranh giới 63 tỉnh thành..."):
 with st.sidebar:
     st.header("Thông số đầu vào")
     list_provinces = df_vietnam['NAME_1'].sort_values().unique()
-    selected_province = st.selectbox("Chọn Tỉnh/Thành phố", list_provinces)
+    selected_province = st.selectbox("Please choose City/Province", list_provinces)
     
-    cell_size = st.slider("Kích thước lưới (mét)", min_value=1000, max_value=5000, value=2000, step=1000)
-    run_btn = st.button("Tiến hành tạo lưới")
+    cell_size = st.slider("Grid size (meters)", min_value=1000, max_value=5000, value=2000, step=1000)
+    run_btn = st.button("Generate grid")
 
 # --- KỸ THUẬT SESSION STATE (LƯU TRẠNG THÁI) ---
 # Nếu bấm nút, ta lưu yêu cầu vào bộ nhớ của trình duyệt
