@@ -74,7 +74,7 @@ if st.session_state.get('da_bam_nut', False):
         # 1. Nhận diện "Ô biên giới" (Border Cell) vs "Ô tiêu chuẩn" (Core Cell)
         # Nếu diện tích thực tế nhỏ hơn 95% diện tích lưới gốc -> Đánh dấu là Ô biên giới
         standard_area = (size / 1000) ** 2
-        clipped_grid['cell_type'] = np.where(clipped_grid['area_km2'] < (standard_area * 0.95), 'Biên giới (Border)', 'Tiêu chuẩn (Core)')
+        clipped_grid['cell_type'] = np.where(clipped_grid['area_km2'] < (standard_area * 0.95), 'Border', 'Standard (Core)')
         
         # 2. Tìm điểm trung tâm của toàn tỉnh (Central Business District proxy)
         prov_centroid = boundary_utm.geometry.centroid.iloc[0]
