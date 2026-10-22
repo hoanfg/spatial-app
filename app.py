@@ -19,15 +19,24 @@ st.set_page_config(page_title="NTL Data Extractor (Global Scale)", layout="wide"
 @st.cache_resource
 def init_gee():
     try:
-        # Nếu chạy trên Streamlit Cloud và có thiết lập Secrets
+        # Nếu đang chạy trên Streamlit Cloud
         if "ee_credentials" in st.secrets:
-            credentials = ee.ServiceAccountCredentials(
-                st.secrets["ee_credentials"]["client_email"],
-                st.secrets["ee_credentials"]["private_key"].replace('\\n', '\n')
-            )
-            ee.Initialize(credentials)
+            from google.oauth2 import service_account
+            
+            # Đọc toàn bộ từ điển từ Streamlit Secrets
+            cred_dict = dict(st.secrets["ee_credentials"])
+            
+            # Xử lý lỗi Streamlit Cloud đôi khi tự động thêm dấu gạch chéo vào ký tự xuống dòng
+            if '\\n' in cred_dict['private_key']:
+                cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
+                
+            # Khởi tạo thông tin xác thực theo chuẩn mới
+            credentials = service_account.Credentials.from_service_account_info(cred_dict)
+            
+            # BẮT BUỘC Ở API MỚI: Phải truyền tham số project_id vào lệnh Initialize
+            ee.Initialize(credentials, project=cred_dict['project_id'])
         else:
-            # Nếu chạy trên máy tính cục bộ
+            # Nếu chạy trên máy tính cá nhân
             ee.Initialize()
         return True
     except Exception as e:
