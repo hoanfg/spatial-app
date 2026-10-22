@@ -175,38 +175,49 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     # STATION 2: CLOUD-TO-LOCAL RASTER FETCH
     # ---------------------------------------------------------
-    with st.spinner("Station 2: Fetching NTL Raster Cloud..."):
+    with st.spinner("Station 2: Fetching Raster from Cloud..."):
         try:
+            # 1. Chuyển đổi lưới sang WGS84 (tọa độ địa lý chuẩn của Google)
             bounds_wgs84 = clipped_grid.to_crs(epsg=4326).total_bounds
             minx, miny, maxx, maxy = bounds_wgs84
-
-            ee.roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
             
+            # 2. Tạo khung bao (Bounding Box) bằng biến ee_roi
+            ee_roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
+            
+            # 3. Truy vấn dữ liệu VIIRS NTL từ Google Earth Engine
             dataset = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
-                        .filterDate(f"{year}-01-01", f"{year}-12-31") \
-                        .select('avg_rad') \
-                        .median() \
-                        .clip(ee_roi)
+                .filterDate(f'{year}-01-01', f'{year}-12-31') \
+                .filterBounds(ee_roi) \
+                .select('avg_rad')
             
-            download_url = dataset.getDownloadUrl({
-                'scale': 1000, 
-                'crs': 'EPSG:4326',
+            # Tính trung vị (median) của các tháng trong năm và cắt gọn theo ee_roi
+            ntl_image = dataset.median().clip(ee_roi)
+            
+            # 4. Tải file TIFF về máy chủ nội bộ để chuẩn bị cho Trạm 3
+            import requests
+            import tempfile
+            
+            url = ntl_image.getDownloadUrl({
+                'scale': 463, # Độ phân giải gốc của vệ tinh VIIRS
                 'region': ee_roi,
                 'format': 'GEO_TIFF'
             })
             
-            response = requests.get(download_url)
-            temp_tif = tempfile.NamedTemporaryFile(delete=False, suffix='.tif')
+            response = requests.get(url)
+            if response.status_code != 200:
+                raise Exception(f"Failed to download raster: HTTP {response.status_code}")
+                
+            temp_tif = tempfile.NamedTemporaryFile(suffix='.tif', delete=False)
             temp_tif.write(response.content)
             temp_tif.close()
             
             st.success("✅ Raster fetched successfully (Network API bypassed).")
-
+            
         except Exception as e:
             st.error(f"Error at Station 2: {e}")
             st.stop()
             
-# ---------------------------------------------------------
+    # ---------------------------------------------------------
     # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
     # ---------------------------------------------------------
     with st.spinner("Station 3: Calculating Fractional Pixel Coverage (C/C++ Engine)..."):
