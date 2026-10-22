@@ -175,10 +175,12 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     # STATION 2: CLOUD-TO-LOCAL RASTER FETCH
     # ---------------------------------------------------------
-    with st.spinner("Station 2: Fetching NTL Raster from Google Earth Engine (1 Request Only)..."):
+    with st.spinner("Station 2: Fetching NTL Raster Cloud..."):
         try:
-            bounds = boundary_union.geometry.bounds.iloc[0]
-            ee_roi = ee.Geometry.Rectangle([bounds['minx'], bounds['miny'], bounds['maxx'], bounds['maxy']])
+            bounds_wgs84 = clipped_grid.to_crs(epsg=4326).total_bounds
+            minx, miny, maxx, maxy = bounds_wgs84
+
+            region = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
             
             dataset = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
                         .filterDate(f"{year}-01-01", f"{year}-12-31") \
