@@ -1,6 +1,5 @@
 import streamlit as st
 import ee
-import geemap.foliumap as geemap
 import geopandas as gpd
 import pandas as pd
 import numpy as np
