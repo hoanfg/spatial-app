@@ -253,17 +253,16 @@ if st.session_state.get('is_executed', False):
         
         display_grid = clipped_grid.to_crs(epsg=4326)
         
-        # BƯỚC QUYẾT ĐỊNH: Tạo ID chuẩn để Folium biết cách tô màu
         display_grid['grid_id'] = display_grid.index.astype(str)
         display_grid['ntl_mean'] = display_grid['ntl_mean'].fillna(0)
         
-        # Gỡ bỏ bộ lọc > 0 để bản đồ luôn hiện lưới 500m dù không có ánh sáng
         if not display_grid.empty:
-            folium.Choropleth(
+            # 1. BẮT BUỘC PHẢI CÓ CHỮ "choro =" Ở ĐÂY
+            choro = folium.Choropleth(
                 geo_data=display_grid,
                 data=display_grid,
-                columns=['grid_id', 'ntl_mean'], # Khớp chính xác ID
-                key_on='feature.properties.grid_id', # Mapping vào GeoJSON
+                columns=['grid_id', 'ntl_mean'],
+                key_on='feature.properties.grid_id',
                 fill_color='YlOrRd',
                 fill_opacity=0.6,
                 line_opacity=0.4,
@@ -271,7 +270,8 @@ if st.session_state.get('is_executed', False):
                 line_weight=1,
                 legend_name='Nighttime Lights Mean (VIIRS)'
             ).add_to(m)
-
+            
+            # 2. GẮN ĐẦU DÒ (TOOLTIP) NGAY SAU ĐÓ
             choro.geojson.add_child(
                 folium.features.GeoJsonTooltip(
                     fields=['grid_id', 'ntl_mean'],
@@ -279,7 +279,7 @@ if st.session_state.get('is_executed', False):
                     style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
                 )
             )
-        
+
         st_data = st_folium(m, width=900, height=500)
         
         csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
