@@ -246,7 +246,7 @@ if st.session_state.get('is_executed', False):
         
         m = folium.Map(
             location=[center_lat, center_lon], 
-            zoom_start=11, 
+            zoom_start=12, 
             tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
             attr="Esri"
         )
@@ -258,18 +258,35 @@ if st.session_state.get('is_executed', False):
         # 1. Format lại diện tích để hiển thị chữ "km²"
         display_grid['area_km2_str'] = display_grid['area_km2'].round(2).astype(str) + " km²"
         
-        # 2. PHÂN LOẠI KINH TẾ HỌC "SMART" (Dựa trên Phân vị Tương đối của vùng đang xét)
+        # 2. PHÂN LỚP THÔNG MINH KẾT HỢP: Ngưỡng Tuyệt Đối (Global) + Tương Đối (Local)
         q75 = display_grid['ntl_mean'].quantile(0.75)
-        q50 = display_grid['ntl_mean'].quantile(0.50)
         q25 = display_grid['ntl_mean'].quantile(0.25)
         
-        def get_eco_zone_smart(val):
-            if val >= q75: return "🔴 Top 25% (Lõi trung tâm / Mật độ cao)"
-            elif val >= q50: return "🟠 50-75% (Khu vực phát triển khá)"
-            elif val >= q25: return "🟡 25-50% (Khu vực phát triển trung bình)"
-            else: return "⚫ Bottom 25% (Không gian mở / Dân cư thưa thớt)"
-            
-        display_grid['eco_zone'] = display_grid['ntl_mean'].apply(get_eco_zone_smart)
+        def get_smart_insights(val):
+            # A. Phân loại theo mức độ phát triển chung (Ngưỡng tuyệt đối của VIIRS)
+            if val >= 40:
+                dev_level = "Thương mại/Dịch vụ sầm uất (Mật độ siêu cao)"
+            elif val >= 15:
+                dev_level = "Đô thị lõi/Khu dân cư đông đúc"
+            elif val >= 5:
+                dev_level = "Vành đai đô thị/Ngoại ô đang phát triển"
+            elif val > 0:
+                dev_level = "Khu vực ven đô/Hoạt động kinh tế thấp"
+            else:
+                dev_level = "Không gian mở/Khu vực thiếu sáng"
+                
+            # B. Đánh giá vị thế nội bộ (So với trung bình của chính Quận/Huyện này)
+            if val >= q75:
+                local_rank = "Nhóm dẫn đầu (Top 25% khu vực)"
+            elif val <= q25:
+                local_rank = "Nhóm thấp nhất (Bottom 25% khu vực)"
+            else:
+                local_rank = "Mức trung bình của khu vực"
+                
+            return dev_level, local_rank
+
+        # Áp dụng hàm để tạo 2 cột thông tin mới
+        display_grid[['dev_level', 'local_rank']] = display_grid['ntl_mean'].apply(get_smart_insights).apply(pd.Series)
         
         if not display_grid.empty:
             max_val = float(display_grid['ntl_mean'].max())
@@ -291,9 +308,16 @@ if st.session_state.get('is_executed', False):
                     'fillOpacity': 0.8 if feature['properties']['ntl_mean'] > (vmax * 0.1) else 0.25
                 },
                 tooltip=folium.features.GeoJsonTooltip(
-                    fields=['grid_id', 'ntl_mean', 'eco_zone', 'area_km2_str'],
-                    aliases=['ID Ô lưới:', 'Cường độ NTL (nW/cm²/sr):', 'Xếp hạng Khu vực:', 'Diện tích thực tế:'],
-                    style="background-color: #111111; color: #ffffff; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px; border: 1px solid #555555;"
+                    # Truyền 5 trường thông tin chi tiết và dễ hiểu vào Tooltip
+                    fields=['grid_id', 'area_km2_str', 'ntl_mean', 'dev_level', 'local_rank'],
+                    aliases=[
+                        '🔢 ID Ô lưới:', 
+                        '📐 Diện tích đo lường:', 
+                        '💡 Cường độ NTL (nW/cm²/sr):', 
+                        '🏙️ Đặc điểm kinh tế ước lượng:', 
+                        '📊 Vị thế so với toàn quận:'
+                    ],
+                    style="background-color: #111111; color: #ffffff; font-family: arial; font-size: 13px; padding: 12px; border-radius: 6px; border: 1px solid #777777; box-shadow: 2px 2px 8px rgba(0,0,0,0.5);"
                 )
             ).add_to(m)
             
@@ -310,22 +334,25 @@ if st.session_state.get('is_executed', False):
             colormap.add_to(m)
 
         # -----------------------------------------------------
-        # HIỂN THỊ HỘP GIẢI THÍCH HỌC THUẬT LÊN WEB
+        # HỘP GIẢI THÍCH TRỰC QUAN CHO NGƯỜI NGOÀI NGÀNH
         # -----------------------------------------------------
-        st.markdown("### 📊 Spatial Econometrics Insights")
+        st.markdown("### 📊 Hướng dẫn đọc dữ liệu (Dành cho nhà Phân tích / Đầu tư)")
         st.info(f'''
-        **Ý nghĩa của dữ liệu trích xuất (Độ phân giải {size}m):**
-        * **Biến đại diện (Proxy Variable):** Cường độ ánh sáng ban đêm (NTL) thu thập từ vệ tinh VIIRS được sử dụng làm biến đại diện để ước lượng GDP, mật độ dân cư và cơ sở hạ tầng ở quy mô vi mô.
-        * **Khắc phục lỗi MAUP:** Mạng lưới {len(clipped_grid)} ô vuông (Grid network) giúp loại bỏ Sai số do Đơn vị Không gian (Modifiable Areal Unit Problem) gặp phải khi sử dụng ranh giới hành chính bất quy tắc, cung cấp ma trận chuẩn xác 100% cho mô hình hồi quy.
-        * **Phân phối Tương đối:** Hệ thống không dùng một con số cứng nhắc để đánh giá. "Đầu dò" phân loại khu vực dựa trên hệ quy chiếu nội bộ của địa phương (Phân vị Quantile), giúp phát hiện chính xác cấu trúc lõi - rìa của bất kỳ Quận/Huyện nào.
+        Công cụ này chuyển đổi hình ảnh vệ tinh ban đêm thành các chỉ báo kinh tế không gian.
+        
+        * **Cường độ NTL (Nighttime Lights):** Đo lường ánh sáng phát ra từ đèn đường, tòa nhà, nhà máy. Đây là "biến đại diện" (Proxy) đáng tin cậy để đánh giá mức độ tập trung GDP, mật độ dân cư và cơ sở hạ tầng.
+        * **Tại sao lại chia lưới {size}m?** Các ranh giới hành chính (phường/xã) thường có kích thước bất quy tắc, gây nhiễu cho các mô hình hồi quy. Mạng lưới ô vuông giúp chuẩn hóa không gian, cho phép so sánh công bằng giữa trung tâm và ngoại ô.
+        * **Cách đọc Đầu dò (Tooltip):** Rê chuột vào một ô vuông bất kỳ để xem:
+            * *Đặc điểm kinh tế:* Hệ thống đối chiếu mức sáng với thang đo toàn cầu để nhận diện khu vực đó là lõi đô thị sầm uất hay khu vực thưa thớt.
+            * *Vị thế so với toàn quận:* Đánh giá xem ô lưới đó đang là tâm điểm phát triển (Top 25%) hay là vùng trũng (Bottom 25%) so với chính những ô xung quanh nó trong cùng quận.
         ''')
 
         st_data = st_folium(m, width=900, height=500, returned_objects=[])
         
-        export_df = clipped_grid.drop(columns=['geometry', 'area_km2_str', 'eco_zone'], errors='ignore')
+        export_df = clipped_grid.drop(columns=['geometry', 'area_km2_str', 'dev_level', 'local_rank'], errors='ignore')
         csv_data = export_df.to_csv(index=False)
         st.download_button(
-            label="⬇️ Download Data for Spatial Econometrics (CSV)",
+            label="⬇️ Tải Dữ Liệu Hồi Quy Không Gian (CSV)",
             data=csv_data,
             file_name=f"{display_name.replace(' ', '_')}_NTL_{year}_{size}m.csv",
             mime="text/csv",
