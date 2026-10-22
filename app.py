@@ -1451,7 +1451,7 @@ with tab_data:
     # --- Histogram ---
     st.subheader(L["sec_hist"])
     edges = [-0.001, 0, 1, 2, 5, 10, 15, 25, 40, 80, np.inf]
-    binned = pd.cut(ntl, bins=edges, labels=L["hist_bins"]).value_counts(sort=False)
+    binned = pd.cut(ntl, bins=edges, labels=L["hist_bins"]).value_counts()
     hist_df = pd.DataFrame({"bin": list(L["hist_bins"]), "cells": [int(binned.get(b, 0)) for b in L["hist_bins"]]})
     chart = (
         alt.Chart(hist_df)
