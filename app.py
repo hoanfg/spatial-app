@@ -92,7 +92,6 @@ Designed for Econometric Spatial Analysis (MAUP-resistant 1000m resolution).
 with st.sidebar:
     st.header("1. Spatial Parameters")
     
-    # 2.1 Dropdown Quốc Gia
     available_countries = get_countries()
     if not available_countries:
         st.error(f"⚠️ No data found in `{BASE_DATA_DIR}`. Please create the folder structure.")
@@ -100,33 +99,27 @@ with st.sidebar:
         
     selected_country = st.selectbox("Select Country", available_countries)
     
-    # 2.2 Dropdown Bang/Tỉnh (Tự động cập nhật theo Quốc gia)
     available_states = get_states(selected_country)
     selected_state = st.selectbox("Select State / Region", available_states)
     
-    # 2.3 Dropdown Quận/Hạt (Tự động cập nhật theo Bang)
     available_counties_dict = get_counties(selected_country, selected_state)
     selected_county_display = st.selectbox("Select County / District", list(available_counties_dict.keys()))
     
-    # Lấy đường dẫn file vật lý dựa trên lựa chọn
     selected_county_file = available_counties_dict.get(selected_county_display)
     full_file_path = os.path.join(BASE_DATA_DIR, selected_country, selected_state, selected_county_file)
     
+    st.markdown("---")
+    st.header("2. Analytical Parameters")
+    cell_size = st.slider("Grid Resolution (meters)", min_value=500, max_value=5000, value=500, step=500)
+    year = st.selectbox("Select Year", list(range(2014, 2026)), index=9)
     
     st.markdown("---")
-        st.header("2. Analytical Parameters")
-        cell_size = st.slider("Grid Resolution (meters)", min_value=500, max_value=5000, value=500, step=500)
-        year = st.selectbox("Select Year", list(range(2014, 2026)), index=9)
-        
-        # TÍNH NĂNG MỚI: NÚT CHỌN NGÔN NGỮ
-        st.markdown("---")
-        lang = st.radio("🌐 Language / Ngôn ngữ", ["Tiếng Việt", "English"])
-        
-        run_btn = st.button("Execute Pipeline")
-        
-        # Lưu ngôn ngữ vào Session State để dùng ở các trạm dưới
-        if run_btn:
-            st.session_state['lang'] = lang
+    lang = st.radio("🌐 Language / Ngôn ngữ", ["Tiếng Việt", "English"])
+    
+    run_btn = st.button("Execute Pipeline")
+    
+    if run_btn:
+        st.session_state['lang'] = lang
 
 # ==========================================
 # 3. CORE PIPELINE EXECUTION
