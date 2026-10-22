@@ -152,12 +152,12 @@ if st.session_state.get('is_executed', False):
             centroid_lat = boundary_union.geometry.centroid.y.iloc[0]
             dynamic_epsg = get_dynamic_utm_crs(centroid_lon, centroid_lat)
             
-            st.info(f"🌍 Auto-detected CRS: UTM Zone EPSG:{dynamic_epsg}")
-            
             boundary_utm = boundary_union.to_crs(epsg=dynamic_epsg)
             minx, miny, maxx, maxy = boundary_utm.total_bounds
-            x_coords = np.arange(minx, maxx, size)
-            y_coords = np.arange(miny, maxy, size)
+            
+            # SỬA LỖI MẤT LƯỚI: Nới rộng khung bao (Buffer) để đảm bảo quét sạch 100% lãnh thổ
+            x_coords = np.arange(minx - size, maxx + 2*size, size)
+            y_coords = np.arange(miny - size, maxy + 2*size, size)
             
             grid_cells = [Polygon([(x, y), (x + size, y), (x + size, y + size), (x, y + size)]) 
                           for x in x_coords for y in y_coords]
@@ -255,21 +255,21 @@ if st.session_state.get('is_executed', False):
         display_grid['grid_id'] = display_grid.index.astype(str)
         display_grid['ntl_mean'] = pd.to_numeric(display_grid['ntl_mean'], errors='coerce').fillna(0).round(2)
         
-        # -----------------------------------------------------
-        # TẠO THÊM THÔNG TIN KINH TẾ (ECONOMIC PROXY) CHO TOOLTIP
-        # -----------------------------------------------------
         # 1. Format lại diện tích để hiển thị chữ "km²"
         display_grid['area_km2_str'] = display_grid['area_km2'].round(2).astype(str) + " km²"
         
-        # 2. Phân loại kinh tế học dựa trên Cường độ ánh sáng
-        def get_eco_zone(val):
-            if val >= 30: return "🔴 Lõi đô thị / Thương mại sầm uất"
-            elif val >= 10: return "🟠 Khu dân cư / Ngoại ô phát triển"
-            elif val > 0:   return "🟡 Nông thôn / Hoạt động kinh tế thấp"
-            else:           return "⚫ Vùng trống (Tự nhiên / Mặt nước)"
+        # 2. PHÂN LOẠI KINH TẾ HỌC "SMART" (Dựa trên Phân vị Tương đối của vùng đang xét)
+        q75 = display_grid['ntl_mean'].quantile(0.75)
+        q50 = display_grid['ntl_mean'].quantile(0.50)
+        q25 = display_grid['ntl_mean'].quantile(0.25)
+        
+        def get_eco_zone_smart(val):
+            if val >= q75: return "🔴 Top 25% (Lõi trung tâm / Mật độ cao)"
+            elif val >= q50: return "🟠 50-75% (Khu vực phát triển khá)"
+            elif val >= q25: return "🟡 25-50% (Khu vực phát triển trung bình)"
+            else: return "⚫ Bottom 25% (Không gian mở / Dân cư thưa thớt)"
             
-        display_grid['eco_zone'] = display_grid['ntl_mean'].apply(get_eco_zone)
-        # -----------------------------------------------------
+        display_grid['eco_zone'] = display_grid['ntl_mean'].apply(get_eco_zone_smart)
         
         if not display_grid.empty:
             max_val = float(display_grid['ntl_mean'].max())
@@ -291,8 +291,8 @@ if st.session_state.get('is_executed', False):
                     'fillOpacity': 0.8 if feature['properties']['ntl_mean'] > (vmax * 0.1) else 0.25
                 },
                 tooltip=folium.features.GeoJsonTooltip(
-                    fields=['grid_id', 'ntl_mean', 'eco_zone', 'area_km2_str'], # Gọi 4 trường dữ liệu
-                    aliases=['ID Ô lưới:', 'Cường độ NTL (nW/cm²/sr):', 'Phân loại Kinh tế:', 'Diện tích thực tế:'],
+                    fields=['grid_id', 'ntl_mean', 'eco_zone', 'area_km2_str'],
+                    aliases=['ID Ô lưới:', 'Cường độ NTL (nW/cm²/sr):', 'Xếp hạng Khu vực:', 'Diện tích thực tế:'],
                     style="background-color: #111111; color: #ffffff; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px; border: 1px solid #555555;"
                 )
             ).add_to(m)
@@ -310,18 +310,18 @@ if st.session_state.get('is_executed', False):
             colormap.add_to(m)
 
         # -----------------------------------------------------
-        # HIỂN THỊ HỘP GIẢI THÍCH LÊN GIAO DIỆN WEB
+        # HIỂN THỊ HỘP GIẢI THÍCH HỌC THUẬT LÊN WEB
         # -----------------------------------------------------
         st.markdown("### 📊 Spatial Econometrics Insights")
         st.info(f'''
         **Ý nghĩa của dữ liệu trích xuất (Độ phân giải {size}m):**
-        * **Biến đại diện (Proxy Variable):** Cường độ ánh sáng ban đêm (Nighttime Lights) được thu thập từ vệ tinh VIIRS, sử dụng làm biến đại diện để ước lượng GDP, mật độ dân cư và cơ sở hạ tầng ở quy mô vi mô.
-        * **Khắc phục lỗi MAUP:** Mạng lưới {len(clipped_grid)} ô vuông (Grid network) giúp loại bỏ Sai số do Đơn vị Không gian (Modifiable Areal Unit Problem) gặp phải khi sử dụng ranh giới phường/xã bất quy tắc, cung cấp ma trận chuẩn xác 100% cho các mô hình hồi quy không gian (Spatial Regression).
+        * **Biến đại diện (Proxy Variable):** Cường độ ánh sáng ban đêm (NTL) thu thập từ vệ tinh VIIRS được sử dụng làm biến đại diện để ước lượng GDP, mật độ dân cư và cơ sở hạ tầng ở quy mô vi mô.
+        * **Khắc phục lỗi MAUP:** Mạng lưới {len(clipped_grid)} ô vuông (Grid network) giúp loại bỏ Sai số do Đơn vị Không gian (Modifiable Areal Unit Problem) gặp phải khi sử dụng ranh giới hành chính bất quy tắc, cung cấp ma trận chuẩn xác 100% cho mô hình hồi quy.
+        * **Phân phối Tương đối:** Hệ thống không dùng một con số cứng nhắc để đánh giá. "Đầu dò" phân loại khu vực dựa trên hệ quy chiếu nội bộ của địa phương (Phân vị Quantile), giúp phát hiện chính xác cấu trúc lõi - rìa của bất kỳ Quận/Huyện nào.
         ''')
 
         st_data = st_folium(m, width=900, height=500, returned_objects=[])
         
-        # Xóa các cột text dùng để hiển thị để xuất file CSV dạng số liệu thuần túy
         export_df = clipped_grid.drop(columns=['geometry', 'area_km2_str', 'eco_zone'], errors='ignore')
         csv_data = export_df.to_csv(index=False)
         st.download_button(
