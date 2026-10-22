@@ -34,7 +34,7 @@ def init_gee():
             credentials = service_account.Credentials.from_service_account_info(cred_dict)
             
             # BẮT BUỘC Ở API MỚI: Phải truyền tham số project_id vào lệnh Initialize
-            ee.Initialize(credentials, project=cred_dict['project_id'])
+            ee.Initialize(credentials, project=cred_dict['spatial-econometrics-app'])
         else:
             # Nếu chạy trên máy tính cá nhân
             ee.Initialize()
