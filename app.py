@@ -238,49 +238,66 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     # STATION 4: VISUALIZATION & EXPORT
     # ---------------------------------------------------------
-    with st.spinner("Station 4: Rendering Map..."):
+    with st.spinner("Station 4: Rendering Aviation Map..."):
         import branca.colormap as cm
         
         center_lat = boundary_union.geometry.centroid.y.iloc[0]
         center_lon = boundary_union.geometry.centroid.x.iloc[0]
         
-        m = folium.Map(location=[center_lat, center_lon], zoom_start=11, tiles="OpenStreetMap")
+        # 1. ĐỔI BẢN ĐỒ NỀN SANG ESRI DARK GRAY (KHÔNG CẦN API KEY)
+        m = folium.Map(
+            location=[center_lat, center_lon], 
+            zoom_start=11, 
+            tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+            attr="Esri"
+        )
         
         display_grid = clipped_grid.to_crs(epsg=4326)
         display_grid['grid_id'] = display_grid.index.astype(str)
         display_grid['ntl_mean'] = pd.to_numeric(display_grid['ntl_mean'], errors='coerce').fillna(0)
         
         if not display_grid.empty:
-            # TẠO BỘ MÀU PLASMA (XANH TÍM -> VÀNG SÁNG) TUYỆT ĐẸP
             max_val = float(display_grid['ntl_mean'].max())
             vmax = max_val if max_val > 0.1 else 1.0
             
+            # 2. BỘ MÀU ÁNH SÁNG ĐÊM (Đen -> Cam -> Vàng -> Trắng)
             colormap = cm.LinearColormap(
-                colors=['#0d0887', '#7e03a8', '#cc4678', '#f89441', '#f0f921'], 
+                colors=['#000000', '#804000', '#ffaa00', '#ffff00', '#ffffff'], 
                 vmin=0, 
                 vmax=vmax
             )
             colormap.caption = f'Nighttime Lights Intensity ({year})'
             
-            # VẼ LƯỚI GRID VỚI VIỀN TRẮNG MỎNG
+            # 3. VẼ LƯỚI ÁNH SÁNG (Vùng tối sẽ trong suốt, vùng sáng sẽ đậm)
             folium.GeoJson(
                 display_grid,
                 style_function=lambda feature: {
                     'fillColor': colormap(feature['properties']['ntl_mean']),
-                    'color': '#ffffff',  # Viền trắng
-                    'weight': 0.4,       # Độ dày viền tinh tế
-                    'fillOpacity': 0.7 if feature['properties']['ntl_mean'] > 0.5 else 0.4
+                    'color': '#555555',  # Viền ô lưới màu xám tối để không lấn át ánh sáng
+                    'weight': 0.3,       # Viền cực mỏng
+                    'fillOpacity': 0.8 if feature['properties']['ntl_mean'] > (vmax * 0.1) else 0.25
                 },
                 tooltip=folium.features.GeoJsonTooltip(
                     fields=['grid_id', 'ntl_mean'],
                     aliases=['ID Ô lưới:', 'Độ sáng NTL:'],
-                    style="background-color: white; color: #333333; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px;"
+                    # Tooltip cũng chuyển sang Dark Mode cho tone-sur-tone
+                    style="background-color: #111111; color: #ffcc00; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px; border: 1px solid #555555;"
                 )
+            ).add_to(m)
+            
+            # 4. VẼ ĐƯỜNG RANH GIỚI ĐỊA LÝ MÀU TRẮNG DÀY LÊN TRÊN CÙNG
+            boundary_wgs84 = boundary_union.to_crs(epsg=4326)
+            folium.GeoJson(
+                boundary_wgs84,
+                style_function=lambda x: {
+                    'fillColor': 'transparent',
+                    'color': '#ffffff',  # Ranh giới địa lý màu trắng tinh
+                    'weight': 3          # Nét viền dày nổi bật
+                }
             ).add_to(m)
             
             colormap.add_to(m)
 
-        # SỬA LỖI AUTO RERUN BẰNG LỆNH returned_objects=[]
         st_data = st_folium(m, width=900, height=500, returned_objects=[])
         
         csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
