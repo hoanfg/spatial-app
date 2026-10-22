@@ -19,13 +19,20 @@ st.set_page_config(page_title="NTL Data Extractor (Global Scale)", layout="wide"
 @st.cache_resource
 def init_gee():
     try:
-        ee.Initialize()
+        # Nếu chạy trên Streamlit Cloud và có thiết lập Secrets
+        if "ee_credentials" in st.secrets:
+            credentials = ee.ServiceAccountCredentials(
+                st.secrets["ee_credentials"]["client_email"],
+                st.secrets["ee_credentials"]["private_key"].replace('\\n', '\n')
+            )
+            ee.Initialize(credentials)
+        else:
+            # Nếu chạy trên máy tính cục bộ
+            ee.Initialize()
         return True
     except Exception as e:
-        st.error("Google Earth Engine initialization failed. Check your authentication.")
+        st.error(f"Google Earth Engine initialization failed: {e}")
         return False
-
-is_gee_ready = init_gee()
 
 def get_dynamic_utm_crs(lon, lat):
     """Calculate the correct UTM Zone EPSG code based on global Longitude/Latitude."""
@@ -36,7 +43,7 @@ def get_dynamic_utm_crs(lon, lat):
 # 1. DYNAMIC FOLDER SCANNING (CASCADING UX)
 # ==========================================
 # Định nghĩa đường dẫn gốc chứa dữ liệu đã tuyển chọn
-BASE_DATA_DIR = "data/curated_boundaries"
+BASE_DATA_DIR = "data/gadm41_VNM_gpkg"
 
 def get_countries():
     """Quét thư mục gốc để lấy danh sách Quốc gia (VD: USA, VNM)"""
