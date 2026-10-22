@@ -218,30 +218,15 @@ if st.session_state.get('is_executed', False):
     with st.spinner("Station 3: Calculating Fractional Pixel Coverage (C/C++ Engine)..."):
         try:
             grid_wgs84 = clipped_grid.to_crs(epsg=4326)
-            stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'])
             
-            # OMNI-PARSER: Bắt dữ liệu bất chấp mọi định dạng trả về của exactextract
-            if isinstance(stats, pd.DataFrame):
-                mean_col = [c for c in stats.columns if 'mean' in str(c).lower()]
-                mean_values = stats[mean_col[0]].fillna(0).tolist() if mean_col else stats.iloc[:, 0].fillna(0).tolist()
-            else:
-                mean_values = []
-                for s in stats:
-                    if isinstance(s, (int, float)): 
-                        # Dạng danh sách số thuần túy
-                        mean_values.append(float(s))
-                    elif isinstance(s, dict): 
-                        # Dạng từ điển
-                        keys = [k for k in s.keys() if 'mean' in str(k).lower()]
-                        if keys and s[keys[0]] is not None:
-                            mean_values.append(float(s[keys[0]]))
-                        else:
-                            nums = [float(v) for v in s.values() if isinstance(v, (int, float))]
-                            mean_values.append(nums[0] if nums else 0.0)
-                    else:
-                        mean_values.append(0.0)
-
-            clipped_grid['ntl_mean'] = mean_values
+            # ÉP XUẤT RA DATAFRAME ĐỂ DỄ DÀNG LẤY DỮ LIỆU
+            stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'], output='pandas')
+            
+            # Lấy thẳng cột có chữ 'mean' (thường là 'mean' hoặc 'mean_1')
+            mean_col = [c for c in stats.columns if 'mean' in str(c).lower()][0]
+            
+            # Gắn vào lưới
+            clipped_grid['ntl_mean'] = stats[mean_col].fillna(0).tolist()
             
             os.remove(temp_tif.name)
             st.success("✅ Econometric Data Extraction complete.")
