@@ -177,28 +177,24 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     with st.spinner("Station 2: Fetching Raster from Cloud..."):
         try:
-            # 1. Chuyển đổi lưới sang WGS84 (tọa độ địa lý chuẩn của Google)
             bounds_wgs84 = clipped_grid.to_crs(epsg=4326).total_bounds
             minx, miny, maxx, maxy = bounds_wgs84
-            
-            # 2. Tạo khung bao (Bounding Box) bằng biến ee_roi
             ee_roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
             
-            # 3. Truy vấn dữ liệu VIIRS NTL từ Google Earth Engine
             dataset = ee.ImageCollection("NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG") \
                 .filterDate(f'{year}-01-01', f'{year}-12-31') \
                 .filterBounds(ee_roi) \
                 .select('avg_rad')
             
-            # Tính trung vị (median) của các tháng trong năm và cắt gọn theo ee_roi
-            ntl_image = dataset.median().clip(ee_roi)
+            # Ép unmask(0) để khắc phục lỗi NoData của Google
+            ntl_image = dataset.median().unmask(0).clip(ee_roi)
             
-            # 4. Tải file TIFF về máy chủ nội bộ để chuẩn bị cho Trạm 3
             import requests
             import tempfile
             
             url = ntl_image.getDownloadUrl({
-                'scale': 463, # Độ phân giải gốc của vệ tinh VIIRS
+                'scale': 463,
+                'crs': 'EPSG:4326', # Ép cứng tọa độ chuẩn để không bao giờ bị lệch
                 'region': ee_roi,
                 'format': 'GEO_TIFF'
             })
@@ -212,7 +208,6 @@ if st.session_state.get('is_executed', False):
             temp_tif.close()
             
             st.success("✅ Raster fetched successfully (Network API bypassed).")
-            
         except Exception as e:
             st.error(f"Error at Station 2: {e}")
             st.stop()
@@ -259,41 +254,49 @@ if st.session_state.get('is_executed', False):
     # STATION 4: VISUALIZATION & EXPORT
     # ---------------------------------------------------------
     with st.spinner("Station 4: Rendering Map..."):
+        import branca.colormap as cm
+        
         center_lat = boundary_union.geometry.centroid.y.iloc[0]
         center_lon = boundary_union.geometry.centroid.x.iloc[0]
         
-        m = folium.Map(location=[center_lat, center_lon], zoom_start=12, tiles="OpenStreetMap")
+        m = folium.Map(location=[center_lat, center_lon], zoom_start=11, tiles="OpenStreetMap")
         
         display_grid = clipped_grid.to_crs(epsg=4326)
-        
         display_grid['grid_id'] = display_grid.index.astype(str)
-        display_grid['ntl_mean'] = display_grid['ntl_mean'].fillna(0)
+        display_grid['ntl_mean'] = pd.to_numeric(display_grid['ntl_mean'], errors='coerce').fillna(0)
         
         if not display_grid.empty:
-            # 1. BẮT BUỘC PHẢI CÓ CHỮ "choro =" Ở ĐÂY
-            choro = folium.Choropleth(
-                geo_data=display_grid,
-                data=display_grid,
-                columns=['grid_id', 'ntl_mean'],
-                key_on='feature.properties.grid_id',
-                fill_color='YlOrRd',
-                fill_opacity=0.6,
-                line_opacity=0.4,
-                line_color='black',
-                line_weight=1,
-                legend_name='Nighttime Lights Mean (VIIRS)'
+            # TẠO BỘ MÀU PLASMA (XANH TÍM -> VÀNG SÁNG) TUYỆT ĐẸP
+            max_val = float(display_grid['ntl_mean'].max())
+            vmax = max_val if max_val > 0.1 else 1.0
+            
+            colormap = cm.LinearColormap(
+                colors=['#0d0887', '#7e03a8', '#cc4678', '#f89441', '#f0f921'], 
+                vmin=0, 
+                vmax=vmax
+            )
+            colormap.caption = f'Nighttime Lights Intensity ({year})'
+            
+            # VẼ LƯỚI GRID VỚI VIỀN TRẮNG MỎNG
+            folium.GeoJson(
+                display_grid,
+                style_function=lambda feature: {
+                    'fillColor': colormap(feature['properties']['ntl_mean']),
+                    'color': '#ffffff',  # Viền trắng
+                    'weight': 0.4,       # Độ dày viền tinh tế
+                    'fillOpacity': 0.7 if feature['properties']['ntl_mean'] > 0.5 else 0.4
+                },
+                tooltip=folium.features.GeoJsonTooltip(
+                    fields=['grid_id', 'ntl_mean'],
+                    aliases=['ID Ô lưới:', 'Độ sáng NTL:'],
+                    style="background-color: white; color: #333333; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px;"
+                )
             ).add_to(m)
             
-            # 2. GẮN ĐẦU DÒ (TOOLTIP) NGAY SAU ĐÓ
-            choro.geojson.add_child(
-                folium.features.GeoJsonTooltip(
-                    fields=['grid_id', 'ntl_mean'],
-                    aliases=['ID Ô lưới:', 'Độ sáng (NTL):'],
-                    style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
-                )
-            )
+            colormap.add_to(m)
 
-        st_data = st_folium(m, width=900, height=500)
+        # SỬA LỖI AUTO RERUN BẰNG LỆNH returned_objects=[]
+        st_data = st_folium(m, width=900, height=500, returned_objects=[])
         
         csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
         st.download_button(
