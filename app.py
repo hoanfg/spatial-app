@@ -37,7 +37,7 @@ def init_gee():
                 scopes=SCOPES
             )
             
-            ee.Initialize(credentials, project=cred_dict['project_id'])
+            ee.Initialize(credentials, project=cred_dict['spatial-econometrics-app'])
         else:
             # Nếu chạy trên máy tính cá nhân
             ee.Initialize()
