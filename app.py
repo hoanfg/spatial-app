@@ -20,23 +20,20 @@ def init_gee():
     try:
         # Nếu đang chạy trên Streamlit Cloud
         if "ee_credentials" in st.secrets:
-            from google.oauth2 import service_account
+            # Lấy email và khóa trực tiếp từ Secrets
+            service_account_email = st.secrets["ee_credentials"]["client_email"]
+            private_key = st.secrets["ee_credentials"]["private_key"]
             
-            cred_dict = dict(st.secrets["ee_credentials"])
+            # Xử lý ký tự xuống dòng (quan trọng trên Cloud)
+            if '\\n' in private_key:
+                private_key = private_key.replace('\\n', '\n')
             
-            if '\\n' in cred_dict['private_key']:
-                cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
-                
-            # [ĐIỂM SỬA LỖI]: Bắt buộc khai báo Scopes cho thư viện mới
-            SCOPES = ['https://www.googleapis.com/auth/earthengine']
+            # Sử dụng chính hàm xác thực gốc của Earth Engine
+            credentials = ee.ServiceAccountCredentials(service_account_email, private_key)
             
-            # Đưa Scopes vào hàm tạo Credentials
-            credentials = service_account.Credentials.from_service_account_info(
-                cred_dict, 
-                scopes=SCOPES
-            )
-            
-            ee.Initialize(credentials, project=cred_dict['spatial-econometrics-app'])
+            # Truyền credentials và bắt buộc truyền tham số project (như tài liệu yêu cầu)
+            project_id = st.secrets["ee_credentials"]["project_id"]
+            ee.Initialize(credentials, project=project_id)
         else:
             # Nếu chạy trên máy tính cá nhân
             ee.Initialize()
@@ -44,6 +41,8 @@ def init_gee():
     except Exception as e:
         st.error(f"Google Earth Engine initialization failed: {e}")
         return False
+
+is_gee_ready = init_gee()
 
 def get_dynamic_utm_crs(lon, lat):
     """Calculate the correct UTM Zone EPSG code based on global Longitude/Latitude."""
