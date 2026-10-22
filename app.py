@@ -204,28 +204,35 @@ if st.session_state.get('is_executed', False):
             st.error(f"Error at Station 2: {e}")
             st.stop()
             
-    # ---------------------------------------------------------
+# ---------------------------------------------------------
     # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
     # ---------------------------------------------------------
     with st.spinner("Station 3: Calculating Fractional Pixel Coverage (C/C++ Engine)..."):
         try:
             grid_wgs84 = clipped_grid.to_crs(epsg=4326)
-            
-            # BƯỚC 1: BẮT BUỘC PHẢI CÓ DÒNG NÀY ĐỂ TẠO RA BIẾN 'stats'
             stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'])
             
-            # BƯỚC 2: Thuật toán dò tìm thông minh giá trị 'mean'
-            mean_values = []
-            for s in stats:
-                val = 0
-                if s and isinstance(s, dict):
-                    for k, v in s.items():
-                        if 'mean' in str(k).lower() and v is not None:
-                            val = float(v)
-                            break
-                mean_values.append(val)
-                
-            # BƯỚC 3: Gắn dữ liệu vào bản đồ
+            # OMNI-PARSER: Bắt dữ liệu bất chấp mọi định dạng trả về của exactextract
+            if isinstance(stats, pd.DataFrame):
+                mean_col = [c for c in stats.columns if 'mean' in str(c).lower()]
+                mean_values = stats[mean_col[0]].fillna(0).tolist() if mean_col else stats.iloc[:, 0].fillna(0).tolist()
+            else:
+                mean_values = []
+                for s in stats:
+                    if isinstance(s, (int, float)): 
+                        # Dạng danh sách số thuần túy
+                        mean_values.append(float(s))
+                    elif isinstance(s, dict): 
+                        # Dạng từ điển
+                        keys = [k for k in s.keys() if 'mean' in str(k).lower()]
+                        if keys and s[keys[0]] is not None:
+                            mean_values.append(float(s[keys[0]]))
+                        else:
+                            nums = [float(v) for v in s.values() if isinstance(v, (int, float))]
+                            mean_values.append(nums[0] if nums else 0.0)
+                    else:
+                        mean_values.append(0.0)
+
             clipped_grid['ntl_mean'] = mean_values
             
             os.remove(temp_tif.name)
@@ -242,37 +249,36 @@ if st.session_state.get('is_executed', False):
         center_lat = boundary_union.geometry.centroid.y.iloc[0]
         center_lon = boundary_union.geometry.centroid.x.iloc[0]
         
-        # SỬA LỖI 1: Đổi bản đồ nền sang OpenStreetMap (Miễn phí vĩnh viễn)
-        m = folium.Map(location=[center_lat, center_lon], zoom_start=11, tiles="OpenStreetMap")
+        m = folium.Map(location=[center_lat, center_lon], zoom_start=12, tiles="OpenStreetMap")
         
         display_grid = clipped_grid.to_crs(epsg=4326)
         
-        # SỬA LỖI 2: Chỉ lọc bỏ các điểm tối đen hoàn toàn (<= 0), giữ lại các điểm sáng nhẹ
-        display_grid = display_grid[display_grid['ntl_mean'] > 0]
+        # BƯỚC QUYẾT ĐỊNH: Tạo ID chuẩn để Folium biết cách tô màu
+        display_grid['grid_id'] = display_grid.index.astype(str)
+        display_grid['ntl_mean'] = display_grid['ntl_mean'].fillna(0)
         
-        # Nếu vẫn còn dữ liệu sau khi lọc thì mới vẽ bản đồ
+        # Gỡ bỏ bộ lọc > 0 để bản đồ luôn hiện lưới 500m dù không có ánh sáng
         if not display_grid.empty:
             folium.Choropleth(
                 geo_data=display_grid,
                 data=display_grid,
-                columns=['geometry', 'ntl_mean'],
-                key_on='feature.id',
+                columns=['grid_id', 'ntl_mean'], # Khớp chính xác ID
+                key_on='feature.properties.grid_id', # Mapping vào GeoJSON
                 fill_color='YlOrRd',
                 fill_opacity=0.6,
-                line_opacity=0.2,
-                legend_name='Nighttime Lights (Mean Rad)'
+                line_opacity=0.4,
+                line_color='black',
+                line_weight=1,
+                legend_name='Nighttime Lights Mean (VIIRS)'
             ).add_to(m)
-        else:
-            st.warning("Khu vực này không có điểm sáng nào được ghi nhận vào năm này.")
 
         st_data = st_folium(m, width=900, height=500)
         
-        # Nút xuất CSV cho chạy mô hình Kinh tế lượng
         csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
         st.download_button(
             label="⬇️ Download Data for Spatial Econometrics (CSV)",
             data=csv_data,
             file_name=f"{display_name.replace(' ', '_')}_NTL_{year}_{size}m.csv",
             mime="text/csv",
-            type="primary" # Tô màu nút cho nổi bật
+            type="primary"
         )
