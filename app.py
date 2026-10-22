@@ -203,10 +203,7 @@ if st.session_state.get('is_executed', False):
         except Exception as e:
             st.error(f"Error at Station 2: {e}")
             st.stop()
-
-    # ---------------------------------------------------------
-    # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
-    # ---------------------------------------------------------
+            
     # ---------------------------------------------------------
     # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
     # ---------------------------------------------------------
@@ -245,28 +242,37 @@ if st.session_state.get('is_executed', False):
         center_lat = boundary_union.geometry.centroid.y.iloc[0]
         center_lon = boundary_union.geometry.centroid.x.iloc[0]
         
-        m = folium.Map(location=[center_lat, center_lon], zoom_start=9, tiles="CartoDB positron")
+        # SỬA LỖI 1: Đổi bản đồ nền sang OpenStreetMap (Miễn phí vĩnh viễn)
+        m = folium.Map(location=[center_lat, center_lon], zoom_start=11, tiles="OpenStreetMap")
         
         display_grid = clipped_grid.to_crs(epsg=4326)
-        display_grid = display_grid[display_grid['ntl_mean'] > 0.1]
         
-        folium.Choropleth(
-            geo_data=display_grid,
-            data=display_grid,
-            columns=['geometry', 'ntl_mean'],
-            key_on='feature.id',
-            fill_color='YlOrRd',
-            fill_opacity=0.7,
-            line_opacity=0.1,
-            legend_name='NTL Mean'
-        ).add_to(m)
+        # SỬA LỖI 2: Chỉ lọc bỏ các điểm tối đen hoàn toàn (<= 0), giữ lại các điểm sáng nhẹ
+        display_grid = display_grid[display_grid['ntl_mean'] > 0]
+        
+        # Nếu vẫn còn dữ liệu sau khi lọc thì mới vẽ bản đồ
+        if not display_grid.empty:
+            folium.Choropleth(
+                geo_data=display_grid,
+                data=display_grid,
+                columns=['geometry', 'ntl_mean'],
+                key_on='feature.id',
+                fill_color='YlOrRd',
+                fill_opacity=0.6,
+                line_opacity=0.2,
+                legend_name='Nighttime Lights (Mean Rad)'
+            ).add_to(m)
+        else:
+            st.warning("Khu vực này không có điểm sáng nào được ghi nhận vào năm này.")
 
         st_data = st_folium(m, width=900, height=500)
         
+        # Nút xuất CSV cho chạy mô hình Kinh tế lượng
         csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
         st.download_button(
-            label="Download Data for Spatial Econometrics (CSV)",
+            label="⬇️ Download Data for Spatial Econometrics (CSV)",
             data=csv_data,
             file_name=f"{display_name.replace(' ', '_')}_NTL_{year}_{size}m.csv",
-            mime="text/csv"
+            mime="text/csv",
+            type="primary" # Tô màu nút cho nổi bật
         )
