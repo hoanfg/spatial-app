@@ -207,19 +207,28 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
     # ---------------------------------------------------------
+    # ---------------------------------------------------------
+    # STATION 3: LOCAL C/C++ COMPUTE (EXACTEXTRACT)
+    # ---------------------------------------------------------
     with st.spinner("Station 3: Calculating Fractional Pixel Coverage (C/C++ Engine)..."):
         try:
+            grid_wgs84 = clipped_grid.to_crs(epsg=4326)
+            
+            # BƯỚC 1: BẮT BUỘC PHẢI CÓ DÒNG NÀY ĐỂ TẠO RA BIẾN 'stats'
+            stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'])
+            
+            # BƯỚC 2: Thuật toán dò tìm thông minh giá trị 'mean'
             mean_values = []
             for s in stats:
                 val = 0
                 if s and isinstance(s, dict):
-                    # Tìm key nào có chứa chữ 'mean' (ví dụ: 'mean', 'mean_band', 'mean_avg_rad')
                     for k, v in s.items():
                         if 'mean' in str(k).lower() and v is not None:
                             val = float(v)
                             break
                 mean_values.append(val)
                 
+            # BƯỚC 3: Gắn dữ liệu vào bản đồ
             clipped_grid['ntl_mean'] = mean_values
             
             os.remove(temp_tif.name)
