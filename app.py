@@ -116,7 +116,7 @@ with st.sidebar:
     st.markdown("---")
     st.header("2. Analytical Parameters")
     cell_size = st.slider("Grid Resolution (meters)", min_value=500, max_value=5000, value=1000, step=500)
-    year = st.selectbox("Select Year", list(range(2014, 2024)), index=8)
+    year = st.selectbox("Select Year", list(range(2014, 2026)), index=9)
     
     run_btn = st.button("Execute Pipeline")
 
@@ -272,6 +272,14 @@ if st.session_state.get('is_executed', False):
                 legend_name='Nighttime Lights Mean (VIIRS)'
             ).add_to(m)
 
+            choro.geojson.add_child(
+                folium.features.GeoJsonTooltip(
+                    fields=['grid_id', 'ntl_mean'],
+                    aliases=['ID Ô lưới:', 'Độ sáng (NTL):'],
+                    style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
+                )
+            )
+        
         st_data = st_folium(m, width=900, height=500)
         
         csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
