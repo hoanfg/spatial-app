@@ -29,7 +29,7 @@ def init_gee():
                 private_key = private_key.replace('\\n', '\n')
             
             # Sử dụng chính hàm xác thực gốc của Earth Engine
-            credentials = ee.ServiceAccountCredentials(service_account_email, private_key)
+            credentials = ee.ServiceAccountCredentials(service_account_email, key_data=private_key)
             
             # Truyền credentials và bắt buộc truyền tham số project (như tài liệu yêu cầu)
             project_id = st.secrets["ee_credentials"]["project_id"]
