@@ -238,7 +238,7 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     # STATION 4: VISUALIZATION & EXPORT
     # ---------------------------------------------------------
-    with st.spinner("Station 4: Rendering Aviation Map..."):
+    with st.spinner("Station 4: Rendering Aviation Map & Analytics..."):
         import branca.colormap as cm
         
         center_lat = boundary_union.geometry.centroid.y.iloc[0]
@@ -253,9 +253,23 @@ if st.session_state.get('is_executed', False):
         
         display_grid = clipped_grid.to_crs(epsg=4326)
         display_grid['grid_id'] = display_grid.index.astype(str)
-        
-        # Làm tròn 2 chữ số thập phân cho Tooltip nhìn chuyên nghiệp hơn
         display_grid['ntl_mean'] = pd.to_numeric(display_grid['ntl_mean'], errors='coerce').fillna(0).round(2)
+        
+        # -----------------------------------------------------
+        # TẠO THÊM THÔNG TIN KINH TẾ (ECONOMIC PROXY) CHO TOOLTIP
+        # -----------------------------------------------------
+        # 1. Format lại diện tích để hiển thị chữ "km²"
+        display_grid['area_km2_str'] = display_grid['area_km2'].round(2).astype(str) + " km²"
+        
+        # 2. Phân loại kinh tế học dựa trên Cường độ ánh sáng
+        def get_eco_zone(val):
+            if val >= 30: return "🔴 Lõi đô thị / Thương mại sầm uất"
+            elif val >= 10: return "🟠 Khu dân cư / Ngoại ô phát triển"
+            elif val > 0:   return "🟡 Nông thôn / Hoạt động kinh tế thấp"
+            else:           return "⚫ Vùng trống (Tự nhiên / Mặt nước)"
+            
+        display_grid['eco_zone'] = display_grid['ntl_mean'].apply(get_eco_zone)
+        # -----------------------------------------------------
         
         if not display_grid.empty:
             max_val = float(display_grid['ntl_mean'].max())
@@ -266,9 +280,8 @@ if st.session_state.get('is_executed', False):
                 vmin=0, 
                 vmax=vmax
             )
-            colormap.caption = f'Nighttime Lights Intensity ({year})'
+            colormap.caption = f'Nighttime Lights Intensity ({year}) - nW/cm²/sr'
             
-            # VẼ LƯỚI ÁNH SÁNG
             folium.GeoJson(
                 display_grid,
                 style_function=lambda feature: {
@@ -278,18 +291,17 @@ if st.session_state.get('is_executed', False):
                     'fillOpacity': 0.8 if feature['properties']['ntl_mean'] > (vmax * 0.1) else 0.25
                 },
                 tooltip=folium.features.GeoJsonTooltip(
-                    fields=['grid_id', 'ntl_mean'],
-                    aliases=['ID Ô lưới:', 'Độ sáng NTL:'],
-                    style="background-color: #111111; color: #ffcc00; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px; border: 1px solid #555555;"
+                    fields=['grid_id', 'ntl_mean', 'eco_zone', 'area_km2_str'], # Gọi 4 trường dữ liệu
+                    aliases=['ID Ô lưới:', 'Cường độ NTL (nW/cm²/sr):', 'Phân loại Kinh tế:', 'Diện tích thực tế:'],
+                    style="background-color: #111111; color: #ffffff; font-family: arial; font-size: 13px; padding: 10px; border-radius: 5px; border: 1px solid #555555;"
                 )
             ).add_to(m)
             
-            # VẼ ĐƯỜNG RANH GIỚI
             boundary_wgs84 = boundary_union.to_crs(epsg=4326)
             folium.GeoJson(
                 boundary_wgs84,
                 style_function=lambda x: {
-                    'fill': False,       # SỬA LỖI Ở ĐÂY: Xóa bỏ nền tàng hình để không chặn trỏ chuột
+                    'fill': False,
                     'color': '#ffffff',  
                     'weight': 3          
                 }
@@ -297,9 +309,21 @@ if st.session_state.get('is_executed', False):
             
             colormap.add_to(m)
 
+        # -----------------------------------------------------
+        # HIỂN THỊ HỘP GIẢI THÍCH LÊN GIAO DIỆN WEB
+        # -----------------------------------------------------
+        st.markdown("### 📊 Spatial Econometrics Insights")
+        st.info(f'''
+        **Ý nghĩa của dữ liệu trích xuất (Độ phân giải {size}m):**
+        * **Biến đại diện (Proxy Variable):** Cường độ ánh sáng ban đêm (Nighttime Lights) được thu thập từ vệ tinh VIIRS, sử dụng làm biến đại diện để ước lượng GDP, mật độ dân cư và cơ sở hạ tầng ở quy mô vi mô.
+        * **Khắc phục lỗi MAUP:** Mạng lưới {len(clipped_grid)} ô vuông (Grid network) giúp loại bỏ Sai số do Đơn vị Không gian (Modifiable Areal Unit Problem) gặp phải khi sử dụng ranh giới phường/xã bất quy tắc, cung cấp ma trận chuẩn xác 100% cho các mô hình hồi quy không gian (Spatial Regression).
+        ''')
+
         st_data = st_folium(m, width=900, height=500, returned_objects=[])
         
-        csv_data = clipped_grid.drop(columns=['geometry']).to_csv(index=False)
+        # Xóa các cột text dùng để hiển thị để xuất file CSV dạng số liệu thuần túy
+        export_df = clipped_grid.drop(columns=['geometry', 'area_km2_str', 'eco_zone'], errors='ignore')
+        csv_data = export_df.to_csv(index=False)
         st.download_button(
             label="⬇️ Download Data for Spatial Econometrics (CSV)",
             data=csv_data,
