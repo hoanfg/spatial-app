@@ -23,18 +23,21 @@ def init_gee():
         if "ee_credentials" in st.secrets:
             from google.oauth2 import service_account
             
-            # Đọc toàn bộ từ điển từ Streamlit Secrets
             cred_dict = dict(st.secrets["ee_credentials"])
             
-            # Xử lý lỗi Streamlit Cloud đôi khi tự động thêm dấu gạch chéo vào ký tự xuống dòng
             if '\\n' in cred_dict['private_key']:
                 cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
                 
-            # Khởi tạo thông tin xác thực theo chuẩn mới
-            credentials = service_account.Credentials.from_service_account_info(cred_dict)
+            # [ĐIỂM SỬA LỖI]: Bắt buộc khai báo Scopes cho thư viện mới
+            SCOPES = ['https://www.googleapis.com/auth/earthengine']
             
-            # BẮT BUỘC Ở API MỚI: Phải truyền tham số project_id vào lệnh Initialize
-            ee.Initialize(credentials, project=cred_dict['spatial-econometrics-app'])
+            # Đưa Scopes vào hàm tạo Credentials
+            credentials = service_account.Credentials.from_service_account_info(
+                cred_dict, 
+                scopes=SCOPES
+            )
+            
+            ee.Initialize(credentials, project=cred_dict['project_id'])
         else:
             # Nếu chạy trên máy tính cá nhân
             ee.Initialize()
