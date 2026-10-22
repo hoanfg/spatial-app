@@ -16,7 +16,6 @@ import tempfile
 # ==========================================
 st.set_page_config(page_title="NTL Data Extractor (Global Scale)", layout="wide")
 
-@st.cache_resource
 def init_gee():
     try:
         # Nếu đang chạy trên Streamlit Cloud
