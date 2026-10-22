@@ -211,7 +211,11 @@ if st.session_state.get('is_executed', False):
         try:
             grid_wgs84 = clipped_grid.to_crs(epsg=4326)
             stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'])
-            clipped_grid['ntl_mean'] = [s['mean'] if s['mean'] is not None else 0 for s in stats]
+            
+            clipped_grid['ntl_mean'] = [
+                list(s.values())[0] if (s and len(s) > 0 and list(s.values())[0] is not None) else 0 
+                for s in stats
+            ]
             
             os.remove(temp_tif.name)
             st.success("✅ Econometric Data Extraction complete.")
