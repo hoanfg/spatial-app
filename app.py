@@ -209,13 +209,18 @@ if st.session_state.get('is_executed', False):
     # ---------------------------------------------------------
     with st.spinner("Station 3: Calculating Fractional Pixel Coverage (C/C++ Engine)..."):
         try:
-            grid_wgs84 = clipped_grid.to_crs(epsg=4326)
-            stats = exact_extract(temp_tif.name, grid_wgs84, ['mean'])
-            
-            clipped_grid['ntl_mean'] = [
-                list(s.values())[0] if (s and len(s) > 0 and list(s.values())[0] is not None) else 0 
-                for s in stats
-            ]
+            mean_values = []
+            for s in stats:
+                val = 0
+                if s and isinstance(s, dict):
+                    # Tìm key nào có chứa chữ 'mean' (ví dụ: 'mean', 'mean_band', 'mean_avg_rad')
+                    for k, v in s.items():
+                        if 'mean' in str(k).lower() and v is not None:
+                            val = float(v)
+                            break
+                mean_values.append(val)
+                
+            clipped_grid['ntl_mean'] = mean_values
             
             os.remove(temp_tif.name)
             st.success("✅ Econometric Data Extraction complete.")
