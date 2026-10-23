@@ -1,4 +1,4 @@
-# 🌐 Spatial econometrics Project
+# 🌐 Spatial econometrics project
 
 [ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
