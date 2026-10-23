@@ -984,18 +984,22 @@ def boundary_stats(path: str, mtime: float):
 
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
 def fetch_ntl_raster(bbox: tuple, year: int) -> bytes:
-    """Tải GeoTIFF NTL trung vị năm `year` trong bbox (WGS84). Cache theo (bbox, năm)."""
+    """Tải GeoTIFF NTL trung vị năm `year` có lọc mây (cf_cvg > 0) trong bbox (WGS84)."""
     minx, miny, maxx, maxy = bbox
     roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
     col = (
         ee.ImageCollection(GEE_DATASET)
         .filterDate(f"{year}-01-01", f"{year + 1}-01-01")
         .filterBounds(roi)
-        .select("avg_rad")
     )
     if col.size().getInfo() == 0:
         raise LookupError("EMPTY")
-    img = col.median().unmask(0).clip(roi)
+
+    def _mask_cloud_free(img):
+        # Loại bỏ các điểm ảnh có số quan sát không mây bằng 0 (cf_cvg == 0)
+        return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
+
+    img = col.map(_mask_cloud_free).median().unmask(0).clip(roi)
     url = img.getDownloadUrl(
         {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
     )
@@ -1003,7 +1007,7 @@ def fetch_ntl_raster(bbox: tuple, year: int) -> bytes:
     if resp.status_code != 200:
         raise ConnectionError(f"HTTP:{resp.status_code}")
     content = resp.content
-    if content[:2] == b"PK":  # đôi khi GEE trả về zip
+    if content[:2] == b"PK":
         with zipfile.ZipFile(io.BytesIO(content)) as z:
             tif_names = [n for n in z.namelist() if n.lower().endswith(".tif")]
             if not tif_names:
@@ -1426,7 +1430,7 @@ q25, q75 = float(np.quantile(ntl, 0.25)), float(np.quantile(ntl, 0.75))
 std_ntl = float(ntl.std())
 zscore = (ntl - ntl.mean()) / std_ntl if std_ntl > 0 else np.zeros(n)
 local_codes = np.select([ntl <= 0, ntl >= q75, ntl <= q25], [3, 0, 2], default=1)
-is_border = area < 0.999 * (size / 1000) ** 2
+is_border = area < 0.99 * (size / 1000.0) ** 2
 px_per_cell = round((size / GEE_SCALE_M) ** 2, 1)
 # Lọc lấy các ô thực sự có ánh sáng (loại bỏ nhiễu từ các vùng rừng/núi tối thui)
 lit_ntl = ntl[ntl > 0]
