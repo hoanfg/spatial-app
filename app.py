@@ -333,7 +333,7 @@ TEXT = {
         "subtitle": "Kiến trúc: tải raster từ Cloud về máy chủ + động cơ C/C++ (`exactextract`). "
                     "Thiết kế cho kinh tế lượng không gian (chống lỗi MAUP, độ phân giải gốc ~463m).",
         "sb_spatial": "1. Tham số không gian",
-        "country": "Quốc gia",
+        "country": "Quốc gia - Hiện vẫn đang cập nhật và bổ sung",
         "state": "Bang / Tỉnh / Thành phố",
         "county": "Quận / Hạt",
         "sb_analytic": "2. Tham số phân tích",
@@ -478,8 +478,8 @@ TEXT = {
         "subtitle": "Architecture: Cloud-to-Local raster fetch + C/C++ engine (`exactextract`). "
                     "Built for Spatial Econometrics (MAUP-resistant, native ~463m resolution).",
         "sb_spatial": "1. Spatial Parameters",
-        "country": "Country",
-        "state": "Province / City",
+        "country": "Country - Status: Currently updating",
+        "state": "State / Province / City",
         "county": "District",
         "sb_analytic": "2. Analytical Parameters",
         "cell": "Grid Resolution (meters)",
