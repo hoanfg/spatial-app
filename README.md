@@ -84,7 +84,7 @@ Although the UI provides visualization, the **hidden data table** beneath the ma
 
 ## 📚 References
 
-Anselin, L. (1995). Local Indicators of Spatial Association—LISA. Geographical Analysis, 27(2), 93-115. DOI: 10.1111/j.1538-4632.1995.tb00338.x
+Anselin, L. (1995). Local Indicators of Spatial Association - LISA. Geographical Analysis, 27(2), 93-115. DOI: 10.1111/j.1538-4632.1995.tb00338.x
 
 Caldas de Castro, M., & Singer, B. H. (2006). Controlling the false discovery rate: A new application to account for multiple and dependent tests in local statistics of spatial association. Geographical Analysis, 38(2), 180-208. DOI: 10.1111/j.0016-7363.2006.00682.x
 
@@ -100,5 +100,5 @@ Openshaw, S. (1984). The Modifiable Areal Unit Problem. Concepts and Techniques 
 
 ## 🗺️ Roadmap & scaling plan
 - [x] **Phase 1 (Pilot):** Validate pipeline and LISA econometric bridge using Vietnam administrative boundaries (`VNM`).
-- [ ] **Phase 2 (Expansion):** Integrate regional Southeast Asia boundary datasets (e.g., Thailand, Indonesia, Philippines).
+- [ ] **Phase 2 (Expansion):** Integrate regional boundary datasets.
 - [ ] **Phase 3 (Global scale):** Generalize automated boundary ingestion for global GADM vector tiles.
