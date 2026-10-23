@@ -335,7 +335,7 @@ TEXT = {
         "sb_spatial": "1. Tham số không gian",
         "country": "Quốc gia",
         "state": "Tỉnh / Thành phố",
-        "county": "Quận / Huyện",
+        "county": "Quận / Hạt",
         "sb_analytic": "2. Tham số phân tích",
         "cell": "Độ phân giải lưới (mét)",
         "year": "Năm phân tích",
@@ -619,7 +619,7 @@ TEXT = {
 DATA_DICT = [
     ("country", "Tên quốc gia (tiếng Anh)", "Country name (English)"),
     ("iso3", "Mã quốc gia ISO 3 ký tự", "3-letter ISO country code"),
-    ("province", "Tỉnh / Thành phố", "Province / City"),
+    ("province", "Bang / Tỉnh / Thành phố", "State / Province / City"),
     ("district", "Quận / Huyện", "District"),
     ("grid_id", "ID ô lưới, duy nhất trong tệp và trùng với số hiển thị ở đầu dò bản đồ",
      "Grid cell ID, unique in the file and identical to the map tooltip"),
