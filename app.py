@@ -454,7 +454,7 @@ TEXT = {
         "meta_vals": [
             "NOAA VIIRS DNB hàng tháng, hiệu chỉnh ánh sáng tạp (`{ds}`)",
             "`avg_rad` (bức xạ trung bình, nW/cm²/sr)",
-            "Trung vị các ảnh tháng của năm {y}; giá trị rỗng = 0; giá trị âm = 0",
+            "Trung vị các ảnh tháng (đã lọc mây cf_cvg > 0) của năm {y}; giá trị rỗng/âm = 0",
             "~463 m (15 arc-giây)",
             "{s} × {s} m, căn theo bội số {s} m trong hệ UTM",
             "EPSG:{e} (UTM)",
@@ -595,7 +595,7 @@ TEXT = {
         "meta_vals": [
             "NOAA VIIRS DNB monthly, stray-light corrected (`{ds}`)",
             "`avg_rad` (mean radiance, nW/cm²/sr)",
-            "Median of the monthly composites of {y}; nodata = 0; negatives = 0",
+            "Median of cloud-free (cf_cvg > 0) monthly composites of {y}; nodata/negatives = 0",
             "~463 m (15 arc-seconds)",
             "{s} × {s} m, snapped to multiples of {s} m in UTM",
             "EPSG:{e} (UTM)",
@@ -766,7 +766,7 @@ import statsmodels.formula.api as smf
 
 df = pd.read_csv("your_file.csv")
 # Bỏ ô biên nhỏ  |  drop small border cells
-df = df[df["is_border_cell"] == 0]          # hoặc / or: area_km2 >= 0.5 * (cell_size_m/1000)**2
+df = df[df["is_border_cell"] == 0]          # hoặc / or: area_km2 >= 0.99 * (cell_size_m/1000)**2
 
 merged = df.merge(your_data, on="grid_id")   # hoặc ghép theo tọa độ tâm ô | or join on centroid
 res = smf.wls("ln_outcome ~ ntl_log", data=merged,
@@ -1042,8 +1042,8 @@ def morans_i(grid: gpd.GeoDataFrame, values: np.ndarray, size: int, perms: int =
     if denom <= 1e-12:
         return None
     cent = grid.geometry.centroid  # tâm của ô bị cắt vẫn nằm trong ô gốc (lồi)
-    ix = np.floor(cent.x.to_numpy() / size).astype("int64")
-    iy = np.floor(cent.y.to_numpy() / size).astype("int64")
+    ix = np.floor((cent.x.to_numpy() + 1e-6) / size).astype("int64")
+    iy = np.floor((cent.y.to_numpy() + 1e-6) / size).astype("int64")
     ix -= ix.min() - 1
     iy -= iy.min() - 1
     height = int(iy.max()) + 3
