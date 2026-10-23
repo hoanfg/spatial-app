@@ -1,12 +1,3 @@
-"""
-lisa_ui.py — Tab "LISA / Panel Bridge" (Phase 4). Chỉ 2D, Folium + nền Carto nhẹ, không 3D.
-
-Cách gắn vào app.py (xem PHASE4_PATCH.md):
-    from lisa_ui import render_lisa_tab
-    with tab_lisa:
-        render_lisa_tab(res, grid_utm, export_df, lang=LANG, region_id=..., region_label=place,
-                        render_cap=RENDER_CAP)
-"""
 from __future__ import annotations
 
 import folium
@@ -161,8 +152,14 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     }, geometry=sub.values, crs=4326)
 
     minx, miny, maxx, maxy = res["boundary_wgs"].total_bounds
-    m = folium.Map(location=[(miny + maxy) / 2, (minx + maxx) / 2], zoom_start=12, tiles=basemap,
-                   control_scale=True, prefer_canvas=True)
+    m = folium.Map(
+        location=[(miny + maxy) / 2, (minx + maxx) / 2], 
+        zoom_start=12, 
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri",
+        control_scale=True, 
+        prefer_canvas=True
+    )
     m.fit_bounds([[miny, minx], [maxy, maxx]])
     folium.GeoJson(
         gj, name="LISA",
