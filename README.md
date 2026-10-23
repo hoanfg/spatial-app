@@ -4,6 +4,18 @@
 
 [ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
+--------------------------------------------------
+
+> **TL;DR (THE 30-SECOND SUMMARY)**
+> 
+> Don't have the bandwidth to read a 10-page academic manual? Here is the absolute core of what this engine does:
+> 
+> * Using satellite Nighttime Lights (NTL) as a proxy for GDP is a standard trick in economics. **BUT** the data is massive. Processing it usually crashes standard computers (RAM Out-Of-Memory) and takes weeks to do manually.
+> * **What this app does:** Pick a region $\rightarrow$ The app auto-fetches *Google Earth Engine* data $\rightarrow$ Uses a C/C++ backend to crush millions of pixels into grids $\rightarrow$ **Bypasses the strict 1GB RAM cloud server limit without crashing.**
+> * 1-click generates a perfectly clean CSV with ready-to-use economic indicators: Where is the true urban core? Where are the economic hotspots (LISA)? What is the inequality Gini? Just download it and plug it straight into your regression models.
+
+--------------------------------------------------
+
 This project is a system designed for **spatial econometrics**, combining a spatial grid infrastructure with a nighttime lights (NTL) data extraction pipeline.
 
 The application addresses the workflow from standardizing irregular administrative boundaries into uniform square grids, connecting directly to Google Earth Engine (GEE) to retrieve raster data (SNPP-VIIRS), to automatically computing micro-level spatial statistics (LISA) and exporting panel datasets for macroeconomic modeling.
