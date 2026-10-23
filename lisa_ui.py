@@ -80,15 +80,20 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.subheader(L["title"])
 
     # ---------- tham số ----------
-    c1, c2, c3, c4 = st.columns(4)
-    perms = c1.selectbox(L["perms"], [199, 499, 999], index=1, key="lisa_perms")
-    alpha = c2.selectbox(L["alpha"], [0.05, 0.01], index=0, key="lisa_alpha")
-    fdr = c3.toggle(L["fdr"], value=True, key="lisa_fdr")
-    use_log = c4.toggle(L["log"], value=False, key="lisa_log")
-    c5, c6, c7 = st.columns(3)
-    thr = c5.number_input(L["thr"], min_value=0.0, max_value=5.0, value=0.0, step=0.1, key="lisa_thr")
-    min_clu = c6.slider(L["clu"], 2, 30, 4, key="lisa_clu")
-    min_nbr = c7.slider(L["nbr"], 1, 4, 1, key="lisa_nbr")
+    with st.form(key="lisa_params_form"):
+        c1, c2, c3, c4 = st.columns(4)
+        perms = c1.selectbox(L["perms"], [199, 499, 999], index=1)
+        alpha = c2.selectbox(L["alpha"], [0.05, 0.01], index=0)
+        fdr = c3.toggle(L["fdr"], value=True)
+        use_log = c4.toggle(L["log"], value=False)
+        
+        c5, c6, c7 = st.columns(3)
+        thr = c5.number_input(L["thr"], min_value=0.0, max_value=5.0, value=0.0, step=0.1)
+        min_clu = c6.slider(L["clu"], 1, 30, 4) # Đổi giá trị min thành 1
+        min_nbr = c7.slider(L["nbr"], 1, 4, 1)
+        
+        # Nút submit của Form
+        submit_lisa = st.form_submit_button("🔄 Cập nhật tham số LISA", type="primary")
 
     # ---------- tính (cache trong session theo kết quả + tham số) ----------
     ckey = (res["ts"], size, perms, alpha, fdr, use_log, thr, min_clu, min_nbr)
