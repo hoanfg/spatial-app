@@ -18,16 +18,16 @@ The system is designed not merely as a remote sensing data extractor, but as a w
 
 To handle the complexity of combining vector data (administrative boundaries), raster data (VIIRS satellite imagery), and spatial inferential statistics, the system decomposes the workflow into 4 independent tiers:
 
-* **Tier 1: State management and data ingestion tier:** 
+* **Tier 1:** 
   This tier is responsible for recursively scanning the local GADM directory structure. Using pattern recognition, Unicode normalization (NFC/NFD), and the `pycountry` library, the system automatically infers ISO3 identifiers, standardizes administrative names, and loads them into the user interface (UI) without relying on a static database.
 
-* **Tier 2: Spatial preprocessing tier:** 
+* **Tier 2:** 
   Responsible for polygon geometry processing. This tier projects all vector data into a dynamic flat UTM (Universal Transverse Mercator) coordinate system based on the centroid longitude and latitude of the bounding box, and then constructs a regular spatial grid via vectorization using `numpy.meshgrid` and `shapely.box`.
   
-* **Tier 3: Cloud-to-local extraction tier:** 
+* **Tier 3:** 
   The server sends a spatial query to the Google Earth Engine (GEE) API to filter clouds, compute the annual median composite, and clip the raster image to the analysis boundary. The GeoTIFF byte stream is loaded into temporary memory for the **C/C++ engine** (`exactextract`) to compute area-weighted fractional zonal statistics between the vector grid and the raster.
 
-* **Tier 4: Spatial analytics and presentation tier:** 
+* **Tier 4:** 
   Executes the spatial econometrics core (Global Moran's I, Local Moran's I / LISA, connected hotspot cluster detection, distance to the economic core, Gini inequality coefficient) and renders the multi-layer interactive map (Folium/Leaflet). Output data are packaged via the data bridge as cell-level and region–year panel CSV files.
 
 ### 1.2. Hardware constraints and out-of-memory (OOM) safeguards on Cloud
@@ -314,11 +314,11 @@ The table below defines all variables in the exported `ntl_lisa_panel.csv` file:
 
 ### 6.1. Input data limitations
 
-* **Blooming effect:** Due to the optical properties of the VIIRS DNB sensor and atmospheric scattering, light from high-intensity sources (seaports, industrial complexes, major bridges) tends to spill over into adjacent pixels or reflect off water surfaces (Elvidge et al., 2017; Gibson et al., 2021). This can slightly expand the boundaries of `High-High` clusters along coastlines and rivers.
+* Due to the optical properties of the VIIRS DNB sensor and atmospheric scattering, light from high-intensity sources (seaports, industrial complexes, major bridges) tends to spill over into adjacent pixels or reflect off water surfaces (Elvidge et al., 2017; Gibson et al., 2021). This can slightly expand the boundaries of `High-High` clusters along coastlines and rivers.
 
-* **Background noise variance in remote rural areas:** Clamping negative radiance values to $0$ after stray-light correction ensures physical non-negativity, but reduces informational variance in sparsely populated rural areas where true illumination is near $0$ (Gibson et al., 2021).
+* Clamping negative radiance values to $0$ after stray-light correction ensures physical non-negativity, but reduces informational variance in sparsely populated rural areas where true illumination is near $0$ (Gibson et al., 2021).
 
-* **Endogenous spatial correlation at fine resolution (< 1000m):** Because the native resolution of monthly VIIRS composites is approximately $463.83\text{ m}$, a $500 \times 500\text{ m}$ grid cell covers roughly $1.16$ native pixels. At this resolution, two adjacent grid cells can share parts of the same VIIRS pixel through fractional extraction (`exactextract`), inducing mechanical spatial autocorrelation. For causal regressions, using a grid size $\ge 1000\text{ m}$ and checking robustness across multiple resolutions is recommended.
+* Because the native resolution of monthly VIIRS composites is approximately $463.83\text{ m}$, a $500 \times 500\text{ m}$ grid cell covers roughly $1.16$ native pixels. At this resolution, two adjacent grid cells can share parts of the same VIIRS pixel through fractional extraction (`exactextract`), inducing mechanical spatial autocorrelation. For causal regressions, using a grid size $\ge 1000\text{ m}$ and checking robustness across multiple resolutions is recommended.
 
 ### 6.2. Hardware constraints
 
