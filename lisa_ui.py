@@ -27,7 +27,7 @@ KEY_COLS = ("iso3", "region_id", "year", "cell_size_m")
 # =====================================================================
 T = {
     "vi": {
-        "title": "🧭 LISA & Data Bridge cho hồi quy panel",
+        "title": "🧭 LISA & Data bridge cho hồi quy panel",
         "intro": "Phát hiện cụm ánh sáng nóng/lạnh bằng Local Moran's I và xuất biến sẵn sàng cho hồi quy panel.",
         "params": "⚙️ Tham số kiểm định LISA",
         "p_stat": "Kiểm định thống kê", "p_data": "Xử lý dữ liệu", "p_cluster": "Điều kiện cụm",
@@ -83,7 +83,7 @@ T = {
         "scat_help": "Trục x: z-score của ô; trục y: trung bình z của láng giềng. Độ dốc đường xu hướng ≈ Moran's I toàn cục.",
         "sx": "Z-score NTL (bản thân)", "sy": "Spatial lag z-score (hàng xóm)", "slegend": "Trạng thái",
         "no_scat": "Không đủ dữ liệu ô sáng để vẽ biểu đồ.",
-        "bridge_t": "📤 Data Bridge: xuất dữ liệu cho hồi quy",
+        "bridge_t": "📤 Data bridge: xuất dữ liệu cho hồi quy",
         "bridge_cap": "CSV theo ô giữ 100% quan sát. CSV panel gồm 1 dòng cho mỗi (vùng, năm, độ phân giải).",
         "dl_cell": "⬇️ CSV theo ô (100% quan sát + LISA)", "dl_panel": "⬇️ CSV panel (1 dòng/vùng-năm)",
         "h_dl_cell": "Mỗi dòng là một ô lưới, gồm biến NTL gốc và kết quả LISA.",
@@ -98,7 +98,7 @@ T = {
         "tt": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái", "Cách lõi (km)"],
     },
     "en": {
-        "title": "🧭 LISA & Data Bridge for panel regression",
+        "title": "🧭 LISA & Data bridge for panel regression",
         "intro": "Detect **light hot/cold spots** with Local Moran's I and export panel-regression-ready variables.",
         "params": "⚙️ LISA test parameters",
         "p_stat": "Statistical test", "p_data": "Data handling", "p_cluster": "Cluster rules",
@@ -154,7 +154,7 @@ T = {
         "scat_help": "x: cell z-score; y: mean z-score of neighbours. The trend-line slope ≈ global Moran's I.",
         "sx": "NTL z-score (self)", "sy": "Spatial lag z-score (neighbours)", "slegend": "Class",
         "no_scat": "Not enough lit-cell data to draw the chart.",
-        "bridge_t": "📤 Data Bridge: export for regression",
+        "bridge_t": "📤 Data bridge: export for regression",
         "bridge_cap": "The cell CSV keeps 100% of observations. The panel CSV has one row per (region, year, resolution).",
         "dl_cell": "⬇️ Cell-level CSV (100% obs + LISA)", "dl_panel": "⬇️ Panel CSV (1 row / region-year)",
         "h_dl_cell": "One row per grid cell: raw NTL variables plus LISA results.",
@@ -172,7 +172,7 @@ T = {
 
 T["vi"].update({
     "flow": "**Quy trình:** ① chỉnh tham số → ② bấm *Cập nhật* → ③ đọc kết quả chính → ④ xem bản đồ cụm → ⑤ xuất dữ liệu cho hồi quy.",
-    "verdict_t": "Nhận định nhanh",
+    "verdict_t": "Nhận định nhanh:",
     "v_hot": "  Phát hiện **cụm điểm nóng (High-High)** liên thông từ {k} ô trở lên, chiếm **{hh:.2f}%** diện tích vùng.",
     "v_nohot": "  **Chưa có cụm điểm nóng đủ lớn** (cần ≥ {k} ô liên thông).",
     "v_frag": " Có {hh:.2f}% diện tích HH có ý nghĩa thống kê nhưng rời rạc.",
@@ -194,7 +194,7 @@ T["vi"].update({
 })
 T["en"].update({
     "flow": "**Workflow:** ① adjust parameters → ② press *Update* → ③ read the key results → ④ inspect the cluster map → ⑤ export for regression.",
-    "verdict_t": "Quick take",
+    "verdict_t": "Quick take:",
     "v_hot": "  Found **High-High hotspot clusters** of {k}+ connected cells, covering **{hh:.2f}%** of the region's area.",
     "v_nohot": "  **No hotspot cluster large enough** (needs ≥ {k} connected cells).",
     "v_frag": " {hh:.2f}% of the area is significant HH but fragmented.",
