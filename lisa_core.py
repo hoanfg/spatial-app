@@ -1,10 +1,8 @@
 """
-lisa_core.py — Phase 4 (Pragmatic & Academic)
-==============================================
+lisa_core.py
 Lõi tính toán KHÔNG phụ thuộc Streamlit / libpysal (chỉ numpy + pandas) nên kiểm thử và
 tái lập được ngoài giao diện.
 
-Luồng chuẩn:
     res = run_lisa(cx, cy, ntl, area_km2, cell_size_m, ...)
     res.cell_df          -> 1 dòng / ô lưới (100% quan sát, không lọc)
     res.region_metrics   -> dict 1 dòng / (vùng, năm) để bơm vào hồi quy panel
