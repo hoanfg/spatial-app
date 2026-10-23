@@ -21,7 +21,7 @@ Dự án này là một hệ thống thiết kế cho **Kinh tế lượng khôn
 
 * **Điện toán đám mây:** `earthengine-api` (Google Earth Engine) xác thực qua GCP Service Account và Streamlit Secrets
 
-* **Trực quan hóa:** `Folium`, `Altair` (Bản đồ nhiệt tương tác động)
+* **Trực quan hóa:** `folium`, `altair` (Bản đồ nhiệt tương tác động)
 
 * **Nguồn dữ liệu ranh giới:** Sử dụng **dữ liệu tĩnh GADM v4.1 (Shapefiles)** thay vì API thời gian thực (GADM, 2022)
 
@@ -30,7 +30,6 @@ Dự án này là một hệ thống thiết kế cho **Kinh tế lượng khôn
 ---
 
 ## ⚙️ Cơ chế thuật toán (4 trạm)
-### Giai đoạn 1: Xây dựng Lưới Không gian
 
 1. **Lưới hóa:** Chuyển đổi ranh giới gốc từ hệ tọa độ cầu `WGS84` (kinh độ/vĩ độ) sang hệ tọa độ phẳng `UTM EPSG:32648` (đo bằng mét) để đảm bảo các phép tính hình học không bị méo mó theo độ cong của Trái Đất. Sinh ma trận lưới vuông (500m, 1000m...) và dùng `gpd.clip()` để cắt gọt đa giác ranh giới.
 
@@ -52,7 +51,7 @@ Trong kinh tế lượng, nếu ta thực hiện phép đếm tổng dữ liệu
 
 Dự án áp dụng phương pháp Listwise Deletion (Loại bỏ danh sách). Các ô bị cắt bởi ranh giới và ô tối bị xóa hoàn toàn khỏi đồ thị láng giềng để không làm méo mó ma trận trọng số không gian (W)
 
-2. **Vấn đề đa kiểm định":**
+2. **Vấn đề đa kiểm định:**
 
 Việc kiểm định hàng ngàn ô lưới cùng lúc để tìm điểm nóng sẽ sinh ra hiện tượng dương tính giả (false positives - cụm ngẫu nhiên)
 
@@ -82,7 +81,7 @@ Mặc dù UI hiện tại mới chỉ là "trực quan hóa", nhưng **bảng d�
 ---
 
 ## 📚 Tài liệu tham khảo
-Anselin, L. (1995). Local Indicators of Spatial Association—LISA. Geographical Analysis, 27(2), 93-115. DOI: 10.1111/j.1538-4632.1995.tb00338.x
+Anselin, L. (1995). Local Indicators of Spatial Association - LISA. Geographical Analysis, 27(2), 93-115. DOI: 10.1111/j.1538-4632.1995.tb00338.x
 
 Caldas de Castro, M., & Singer, B. H. (2006). Controlling the false discovery rate: A new application to account for multiple and dependent tests in local statistics of spatial association. Geographical Analysis, 38(2), 180-208. DOI: 10.1111/j.0016-7363.2006.00682.x
 
