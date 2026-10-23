@@ -49,7 +49,7 @@ T = {
             "**Local Moran's I** so sánh giá trị NTL của từng ô với trung bình của các ô láng giềng (Queen, 8 hướng).\n\n"
             "- **Z-score:** NTL được chuẩn hóa chỉ trên ô sáng (μ, σ tính trên ô sáng, không biên).\n"
             "- **Hoán vị có điều kiện:** giữ nguyên giá trị ô i, rút ngẫu nhiên giá trị láng giềng để dựng phân phối null.\n"
-            "- **p nhỏ nhất** = 1/(số hoán vị + 1). Nếu FDR bật mà không có ô HH nào, hãy tăng số hoán vị.\n"
+            "- **p nhỏ nhất** = 2/(số hoán vị + 1) (kiểm định 2 phía). Nếu FDR bật mà không có ô HH nào, hãy tăng số hoán vị.\n"
             "- **FDR (BH):** điều chỉnh p-value cho nhiều phép kiểm định; thận trọng hơn nhưng ít dương tính giả.\n"
             "- **HH / LL / HL / LH:** sáng-sáng (điểm nóng), tối-tối, sáng giữa vùng tối, tối giữa vùng sáng."),
         "run": "Đang tính Local Moran's I...",
@@ -120,7 +120,7 @@ T = {
             "**Local Moran's I** compares each cell's NTL with the mean of its Queen (8-direction) neighbours.\n\n"
             "- **Z-score:** NTL is standardised on lit, non-edge cells only.\n"
             "- **Conditional permutation:** cell i is held fixed; neighbour values are drawn at random to build the null.\n"
-            "- **Minimum p** = 1/(permutations + 1). If FDR is on and HH is empty, raise permutations.\n"
+            "- **Minimum p** = 2/(permutations + 1) (two-sided). If FDR is on and HH is empty, raise permutations.\n"
             "- **FDR (BH):** adjusts for multiple testing; more conservative, fewer false positives.\n"
             "- **HH / LL / HL / LH:** bright-bright (hotspot), dark-dark, bright among dark, dark among bright."),
         "run": "Computing Local Moran's I...",
@@ -183,13 +183,13 @@ T["vi"].update({
     "guide_t": "📖 Cách đọc bản đồ LISA",
     "map_hint": "Rê chuột vào ô để xem NTL, z-score, p giả, trạng thái và khoảng cách tới lõi cụm. Ô không có ý nghĩa (NS) và ô tối được vẽ mờ.",
     "legend_desc": {
-        "HH": "Sáng giữa vùng sáng: **điểm nóng** thật sự.",
-        "LL": "Tối giữa vùng tối: **điểm lạnh**.",
-        "HL": "Ô sáng nằm giữa các ô tối: điểm sáng cô lập (ngoại lệ).",
-        "LH": "Ô tối nằm giữa các ô sáng: “lỗ hổng” trong vùng sáng.",
-        "NS": "Không có ý nghĩa thống kê (không khác ngẫu nhiên).",
-        "EDGE": "Ô biên bị cắt bởi ranh giới, loại khỏi phân tích.",
-        "DARK": "Ô không sáng, không tham gia đồ thị láng giềng.",
+        "HH": "Ô sáng cao nằm giữa các ô sáng cao: **điểm nóng (Hotspot)** thực sự.",
+        "LL": "Ô sáng yếu (< TB vùng sáng) nằm giữa các ô sáng yếu: **điểm lạnh (Coldspot)** của vùng sáng.",
+        "HL": "Ô sáng cao nằm giữa các ô sáng yếu: **điểm sáng nổi bật cục bộ** (Spatial Outlier).",
+        "LH": "Ô sáng yếu nằm giữa các ô sáng cao: **vùng trũng ánh sáng** giữa khu vực phát triển.",
+        "NS": "Không có ý nghĩa thống kê (không khác biệt so với phân bố ngẫu nhiên).",
+        "EDGE": "Ô biên bị cắt bởi ranh giới (< 99% diện tích chuẩn), loại khỏi kiểm định.",
+        "DARK": "Ô không sáng (NTL ≤ ngưỡng), tách riêng khỏi đồ thị láng giềng vùng sáng.",
     },
 })
 T["en"].update({
