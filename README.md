@@ -13,6 +13,7 @@
 > * Using satellite Nighttime Lights (NTL) as a proxy for GDP is a standard trick in economics. **BUT** the data is massive. Processing it usually crashes standard computers (RAM Out-Of-Memory) and takes weeks to do manually.
 > * **What this app does:** Pick a region $\rightarrow$ The app auto-fetches *Google Earth Engine* data $\rightarrow$ Uses a C/C++ backend to crush millions of pixels into grids $\rightarrow$ **Bypasses the strict 1GB RAM cloud server limit without crashing.**
 > * 1-click generates a perfectly clean CSV with ready-to-use economic indicators: Where is the true urban core? Where are the economic hotspots (LISA)? What is the inequality Gini? Just download it and plug it straight into your regression models.
+> * [CLICK HERE FOR THE LIVE DEMO](https://spatial-app-nq6xda5y4y5wek4hygc6wn.streamlit.app/?)
 
 --------------------------------------------------
 
