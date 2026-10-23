@@ -314,11 +314,11 @@ Bảng dưới đây định nghĩa đầy đủ các biến số trong tệp xu
 
 ### 6.1. Hạn chế của dữ liệu đầu vào
 
-* **Hiệu ứng lan sáng:** Do đặc tính quang học của cảm biến VIIRS DNB và sự tán xạ khí quyển, ánh sáng từ các nguồn bức xạ cường độ mạnh (cảng biển, khu công nghiệp, cầu lớn) có xu hướng tràn sang các điểm ảnh lân cận hoặc phản chiếu trên mặt nước (Elvidge et al., 2017; Gibson et al., 2021). Điều này có thể làm mở rộng nhẹ ranh giới của các cụm `High-High` ven sông/biển.
+* Do đặc tính quang học của cảm biến VIIRS DNB và sự tán xạ khí quyển, ánh sáng từ các nguồn bức xạ cường độ mạnh (cảng biển, khu công nghiệp, cầu lớn) có xu hướng tràn sang các điểm ảnh lân cận hoặc phản chiếu trên mặt nước (Elvidge et al., 2017; Gibson et al., 2021). Điều này có thể làm mở rộng nhẹ ranh giới của các cụm `High-High` ven sông/biển.
 
-* **Phương sai nhiễu nền ở vùng nông thôn hẻo lánh:** Việc cắt ngưỡng các giá trị bức xạ âm về $0$ sau quá trình hiệu chỉnh ánh sáng tạp (stray-light correction) giúp đảm bảo tính hợp lý vật lý, nhưng làm giảm phương sai thông tin tại các vùng nông thôn cực kỳ thưa dân có mật độ chiếu sáng gần bằng $0$ (Gibson et al., 2021).
+* Việc cắt ngưỡng các giá trị bức xạ âm về $0$ sau quá trình hiệu chỉnh ánh sáng tạp (stray-light correction) giúp đảm bảo tính hợp lý vật lý, nhưng làm giảm phương sai thông tin tại các vùng nông thôn cực kỳ thưa dân có mật độ chiếu sáng gần bằng $0$ (Gibson et al., 2021).
 
-* **Tương quan không gian nội sinh ở độ phân giải mịn (< 1000m):** Do độ phân giải gốc của sản phẩm VIIRS tháng xấp xỉ $463.83\text{ m}$, một ô lưới $500 \times 500\text{ m}$ chỉ chứa khoảng $1.16$ điểm ảnh gốc. Ở độ phân giải này, hai ô lưới liền kề có thể chia sẻ chung một điểm ảnh VIIRS qua phép trích xuất tỷ lệ phủ (`exactextract`), tạo ra tự tương quan không gian cơ học. Với các mô hình hồi quy nhân quả, khuyến nghị sử dụng kích thước lưới $\ge 1000\text{ m}$ và kiểm tra độ vững qua nhiều kích thước lưới.
+* Do độ phân giải gốc của sản phẩm VIIRS tháng xấp xỉ $463.83\text{ m}$, một ô lưới $500 \times 500\text{ m}$ chỉ chứa khoảng $1.16$ điểm ảnh gốc. Ở độ phân giải này, hai ô lưới liền kề có thể chia sẻ chung một điểm ảnh VIIRS qua phép trích xuất tỷ lệ phủ (`exactextract`), tạo ra tự tương quan không gian cơ học. Với các mô hình hồi quy nhân quả, khuyến nghị sử dụng kích thước lưới $\ge 1000\text{ m}$ và kiểm tra độ vững qua nhiều kích thước lưới.
 
 ### 6.2. Hạn chế phần cứng
 
