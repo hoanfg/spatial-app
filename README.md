@@ -1,4 +1,4 @@
-# 🌐 Spatial econometrics Project - Phase 1
+# 🌐 Spatial econometrics Project
 
 [ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
@@ -83,10 +83,16 @@ Although the UI provides visualization, the **hidden data table** beneath the ma
 ---
 
 ## 📚 References
-Elvidge, C. D., Baugh, K., Zhizhin, M., Hsu, F. C., & Ghosh, T. (2017). VIIRS night-time lights. International Journal of Remote Sensing, 38(21), 5860-5879.
 
-GADM. (2022). GADM database of Global Administrative Areas, version 4.1. Retrieve at: https://gadm.org/
+Anselin, L. (1995). Local Indicators of Spatial Association—LISA. Geographical Analysis, 27(2), 93-115. DOI: 10.1111/j.1538-4632.1995.tb00338.x
 
-Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growth from Outer Space. American Economic Review, 102(2), 994-1028.
+Caldas de Castro, M., & Singer, B. H. (2006). Controlling the false discovery rate: A new application to account for multiple and dependent tests in local statistics of spatial association. Geographical Analysis, 38(2), 180-208. DOI: 10.1111/j.0016-7363.2006.00682.x
 
-Openshaw, S. (1983). The Modifiable Areal Unit Problem. Concepts and Techniques in Modern Geography, 38.
+Elvidge, C. D., Baugh, K., Zhizhin, M., Hsu, F. C., & Ghosh, T. (2017). VIIRS night-time lights. International Journal of Remote Sensing, 38(21), 5860-5879. DOI: 10.1080/01431161.2017.1342050
+
+GADM. (2022). GADM database of Global Administrative Areas, version 4.1. Truy cập tại: https://gadm.org/
+
+Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growth from Outer Space. American Economic Review, 102(2), 994-1028. DOI: 10.1257/aer.102.2.994
+
+Openshaw, S. (1984). The Modifiable Areal Unit Problem. Concepts and Techniques in Modern Geography (CATMOG), 38. https://www.spatial-literacy.org/qmrg/catmog/catmog_38.pdf
+
