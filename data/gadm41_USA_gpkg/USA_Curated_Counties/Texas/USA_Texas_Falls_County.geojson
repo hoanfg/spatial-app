@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Falls_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Falls" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -97.071182250999982, 30.988040925000121 ], [ -97.278121947999921, 31.279300690000071 ], [ -96.799957274999883, 31.519161225000119 ], [ -96.594818113999963, 31.223510743000077 ], [ -96.830696106999937, 31.105279923000012 ], [ -96.827667234999979, 31.114330292000034 ], [ -97.071182250999982, 30.988040925000121 ] ] ] ] } }
+]
+}

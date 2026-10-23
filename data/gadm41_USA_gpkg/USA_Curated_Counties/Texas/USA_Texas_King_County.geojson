@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_King_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "King" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -100.520606993999934, 33.834980010000038 ], [ -100.052352903999918, 33.837501526000096 ], [ -99.999832152999943, 33.837970733000134 ], [ -99.998725890999879, 33.395000458000084 ], [ -100.519363402999886, 33.39656066900011 ], [ -100.520606993999934, 33.834980010000038 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Hall_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Hall" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -100.947158813999977, 34.313171388000058 ], [ -100.942962646999888, 34.746589660000154 ], [ -100.539642332999904, 34.747779846000071 ], [ -100.415451048999898, 34.747379304000162 ], [ -100.418685912999933, 34.3144493100001 ], [ -100.512145996999948, 34.314979553 ], [ -100.947158813999977, 34.313171388000058 ] ] ] ] } }
+]
+}

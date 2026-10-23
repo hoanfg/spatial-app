@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Carson_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Carson" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -101.086166382999977, 35.182640076000098 ], [ -101.624031066999919, 35.182361603000061 ], [ -101.624259947999974, 35.618591309000067 ], [ -101.624397278999936, 35.624938966000116 ], [ -101.086227417999964, 35.623828888999981 ], [ -101.086189268999988, 35.621109009000179 ], [ -101.086166382999977, 35.182640076000098 ] ] ] ] } }
+]
+}

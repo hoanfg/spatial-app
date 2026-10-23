@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Kansas_Wichita_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Kansas", "NAME_2": "Wichita" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -101.566917419999982, 38.263301850000062 ], [ -101.569351196999889, 38.700370789000146 ], [ -101.484992980999891, 38.700180054999976 ], [ -101.129280090999941, 38.700088501000039 ], [ -101.125396728999988, 38.264011384000128 ], [ -101.540527343999941, 38.263050079000095 ], [ -101.566917419999982, 38.263301850000062 ] ] ] ] } }
+]
+}

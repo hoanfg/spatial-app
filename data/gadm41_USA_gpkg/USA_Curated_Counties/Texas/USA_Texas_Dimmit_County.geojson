@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Dimmit_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Dimmit" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -99.400886534999927, 28.641719818000126 ], [ -99.393112182999971, 28.641679764000173 ], [ -99.390090942999848, 28.199131013 ], [ -100.000846862999936, 28.197191238000187 ], [ -100.110733031999871, 28.198972703000095 ], [ -100.111816405999889, 28.638280869000084 ], [ -99.400886534999927, 28.641719818000126 ] ] ] ] } }
+]
+}

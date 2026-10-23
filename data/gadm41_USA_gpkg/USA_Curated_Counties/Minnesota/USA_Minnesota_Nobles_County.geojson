@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Minnesota_Nobles_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Minnesota", "NAME_2": "Nobles" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -95.859413145999952, 43.503360748000034 ], [ -96.052558898999905, 43.502761840000176 ], [ -96.052963255999884, 43.852531433000138 ], [ -95.462196349999886, 43.850749969000162 ], [ -95.452682494999976, 43.850440980000087 ], [ -95.454795837999939, 43.503650665000123 ], [ -95.688346862999879, 43.503898621000189 ], [ -95.859413145999952, 43.503360748000034 ] ] ] ] } }
+]
+}
