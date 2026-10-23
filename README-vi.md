@@ -11,7 +11,7 @@
 > Bạn bị "ngợp" bởi hàng tá công thức toán học bên dưới? Đây là bản dịch nôm na nhất về những gì hệ thống này làm được:
 > 
 > * Muốn biết một vùng nghèo hay giàu mà không có số liệu GDP? Người ta dùng ảnh chụp độ sáng ban đêm từ vệ tinh. **NHƯNG** đống dữ liệu này siêu nặng. Cứ cố chạy trên máy tính bình thường là sập RAM trắng màn hình. Làm thủ công thì mất cả tuần.
-> * App này làm gì?:** Bạn chọn một khu vực $\rightarrow$ App tự động móc nối với *Google Earth Engine* tải ảnh về $\rightarrow$ Dùng "động cơ" C/C++ chém hàng triệu điểm ảnh thành từng ô lưới $\rightarrow$ **Luồn lách qua giới hạn 1GB RAM của server web mà không hề sập.**
+> * App này làm gì?:** Bạn chọn một khu vực $\rightarrow$ App tự động móc nối với *Google Earth Engine* tải ảnh về $\rightarrow$ Dùng C/C++ tách hàng triệu điểm ảnh thành từng ô lưới $\rightarrow$ **Luồn lách qua giới hạn 1GB RAM của server web mà không hề sập.**
 > * Bấm 1 nút, app trả về cho bạn 1 file CSV sạch sẽ, dọn sẵn các chỉ số kinh tế: Đâu là lõi đô thị? Chỗ nào là "điểm nóng" (LISA)? Độ bất bình đẳng (Gini) cao hay thấp? Việc của bạn chỉ là tải về và ném vào mô hình chạy hồi quy.
 
 --------------------------------------------------
