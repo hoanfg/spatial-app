@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_South_Dakota_Turner_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "South Dakota", "NAME_2": "Turner" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -96.922492980999891, 43.084060670000099 ], [ -97.159111023999969, 43.083938599000021 ], [ -97.158050536999895, 43.170379640000135 ], [ -97.396263121999937, 43.169410705000189 ], [ -97.401481628999989, 43.500030517000084 ], [ -97.129341125999986, 43.500179292000041 ], [ -96.923477171999878, 43.500209808000079 ], [ -96.922492980999891, 43.084060670000099 ] ] ] ] } }
+]
+}

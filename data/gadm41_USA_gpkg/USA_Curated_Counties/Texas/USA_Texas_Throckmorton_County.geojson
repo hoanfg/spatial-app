@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Throckmorton_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Throckmorton" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -99.47534942599998, 33.395629883000026 ], [ -98.954147337999984, 33.396160125 ], [ -98.952308653999978, 32.956520081000122 ], [ -99.094467163, 32.95637130700004 ], [ -99.472236632999909, 32.95692062500018 ], [ -99.47534942599998, 33.395629883000026 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Irion_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Irion" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -100.963836669999978, 31.082479477000163 ], [ -101.272186279999971, 31.079410554 ], [ -101.266632079999965, 31.523530960000073 ], [ -101.091590882, 31.525840760000051 ], [ -100.693122862999985, 31.526739120000173 ], [ -100.688827513999911, 31.086580277 ], [ -100.963836669999978, 31.082479477000163 ] ] ] ] } }
+]
+}

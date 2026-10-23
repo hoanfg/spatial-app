@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Kansas_Wilson_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Kansas", "NAME_2": "Wilson" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -95.963043211999945, 37.387130738000053 ], [ -95.960861204999958, 37.603382110000098 ], [ -95.960449217999894, 37.734409332000041 ], [ -95.5261917119999, 37.733219146000124 ], [ -95.526229857999965, 37.384479522000106 ], [ -95.963043211999945, 37.387130738000053 ] ] ] ] } }
+]
+}

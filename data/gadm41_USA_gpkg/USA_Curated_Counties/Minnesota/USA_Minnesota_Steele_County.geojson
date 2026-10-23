@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Minnesota_Steele_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Minnesota", "NAME_2": "Steele" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -93.046302795999964, 44.198459625000112 ], [ -93.046058653999921, 43.851760864000028 ], [ -93.050498961999949, 43.85177993800005 ], [ -93.405708311999945, 43.849769593000019 ], [ -93.404586791999975, 44.197830201000045 ], [ -93.046302795999964, 44.198459625000112 ] ] ] ] } }
+]
+}

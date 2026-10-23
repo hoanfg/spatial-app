@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_South_Dakota_Brookings_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "South Dakota", "NAME_2": "Brookings" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -96.453376768999931, 44.544448853000119 ], [ -96.453750610999975, 44.198329926000099 ], [ -96.887420654999914, 44.196510316000172 ], [ -97.128570557999922, 44.19646072400019 ], [ -97.128486633999898, 44.544971467000039 ], [ -96.887413024999944, 44.54458999700006 ], [ -96.453376768999931, 44.544448853000119 ] ] ] ] } }
+]
+}

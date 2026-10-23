@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Nebraska_Thayer_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Nebraska", "NAME_2": "Thayer" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -97.371147154999903, 40.003528596000194 ], [ -97.817749022999976, 40.003540038999972 ], [ -97.821540831999926, 40.003528596000194 ], [ -97.820602415999986, 40.350952149000193 ], [ -97.482688903999986, 40.350559235000162 ], [ -97.368606567999961, 40.351409913000055 ], [ -97.371147154999903, 40.003528596000194 ] ] ] ] } }
+]
+}
