@@ -1435,28 +1435,28 @@ with tab_data:
         st.warning(L["quality_warn"].format(s=size, px=px_per_cell))
 
     # --- Nhận định nhanh ---
- with st.container(border=True):  
-    st.subheader(L["sec_take"])
-    imax = int(np.argmax(ntl))
-    gdesc = L["gdesc"][0 if gini_v < 0.4 else (1 if gini_v < 0.6 else 2)]
-    take_lines = [
-        L["take"][0].format(gid=int(grid_utm["grid_id"].iloc[imax]), lat=lat_c[imax], lon=lon_c[imax],
-                            mx=float(ntl[imax]), ratio=float(ratio[imax])),
-        L["take"][1].format(top10=top10_share, gini=gini_v, gdesc=gdesc),
-        L["take"][2].format(lit=lit_share, dark=dark_area),
-    ]
-    if moran:
-        if moran["p"] < 0.05 and moran["I"] > moran["E"]:
-            mdesc = L["mdesc"][0]
-        elif moran["p"] < 0.05:
-            mdesc = L["mdesc"][2]
-        else:
-            mdesc = L["mdesc"][1]
-        take_lines.append(L["take"][3].format(mi=moran["I"], mp=moran["p"], mdesc=mdesc))
-    take_lines.append(L["take"][4].format(border=int(is_border.sum()), n=n))
-    st.info("\n\n".join(take_lines))
-
-    col_l, col_r = st.columns(2)
+    with st.container(border=True):  
+        st.subheader(L["sec_take"])
+        imax = int(np.argmax(ntl))
+        gdesc = L["gdesc"][0 if gini_v < 0.4 else (1 if gini_v < 0.6 else 2)]
+        take_lines = [
+            L["take"][0].format(gid=int(grid_utm["grid_id"].iloc[imax]), lat=lat_c[imax], lon=lon_c[imax],
+                                mx=float(ntl[imax]), ratio=float(ratio[imax])),
+            L["take"][1].format(top10=top10_share, gini=gini_v, gdesc=gdesc),
+            L["take"][2].format(lit=lit_share, dark=dark_area),
+        ]
+        if moran:
+            if moran["p"] < 0.05 and moran["I"] > moran["E"]:
+                mdesc = L["mdesc"][0]
+            elif moran["p"] < 0.05:
+                mdesc = L["mdesc"][2]
+            else:
+                mdesc = L["mdesc"][1]
+            take_lines.append(L["take"][3].format(mi=moran["I"], mp=moran["p"], mdesc=mdesc))
+        take_lines.append(L["take"][4].format(border=int(is_border.sum()), n=n))
+        st.info("\n\n".join(take_lines))
+ 
+        col_l, col_r = st.columns(2)
 
     # --- Thông tin chung ---
     with col_l:
@@ -1594,13 +1594,11 @@ with tab_data:
             file_name=f"{slug}.csv",
             mime="text/csv",
             type="primary",
-            help="CSV theo ô, đủ cột cho hồi quy không gian (xem Từ điển dữ liệu)." if LANG == "vi" else "Cell-level CSV with all regression-ready columns (see Data dictionary).")
+            help="CSV theo ô, đủ cột cho hồi quy không gian (xem Từ điển dữ liệu)." if LANG == "vi" else "Cell-level CSV with all regression-ready columns (see Data dictionary)."
         )
     with d2:
-        if st.toggle(L["prep_geo"], key="prep_geo",
-     help="Dựng GeoJSON mất vài giây nên chỉ làm khi bạn bật." if LANG == "vi" else "Building GeoJSON takes a few seconds, so it only runs when enabled.")
-                export_df, geometry=gpd.GeoSeries(grid_utm.to_crs(epsg=4326).geometry.values, crs=4326)
-            )
+        if st.toggle(L["prep_geo"], key="prep_geo", help="Dựng GeoJSON mất vài giây nên chỉ làm khi bạn bật." if LANG == "vi" else "Building GeoJSON takes a few seconds, so it only runs when enabled."):
+            geo_gdf = gpd.GeoDataFrame(export_df, geometry=gpd.GeoSeries(grid_utm.to_crs(epsg=4326).geometry.values, crs=4326))
             sx(
                 st.download_button,
                 label=L["download_geo"],
