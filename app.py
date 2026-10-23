@@ -1,13 +1,3 @@
-"""
-NTL Data Extractor (Global Scale) - v3
-Trích xuất Ánh sáng ban đêm (VIIRS) theo lưới ô vuông cho Kinh tế lượng không gian.
-
-Pipeline 4 trạm:
-  1. Gridding  : UTM động -> lưới mét -> clip theo ranh giới (nới biên 1 ô)
-  2. Fetch     : Google Earth Engine -> GeoTIFF về máy chủ (requests + tempfile)
-  3. Compute   : exactextract (C/C++) -> zonal mean theo tỷ lệ phủ + Moran's I
-  4. Visualize : folium Aviation Dark Mode + đầu dò song ngữ + phân tích + xuất CSV/GeoJSON
-"""
 import html as html_lib
 import inspect  # noqa: F401  (giữ để tương thích mở rộng)
 import gettext
@@ -46,13 +36,6 @@ except Exception:  # pragma: no cover
 # ==========================================
 st.set_page_config(page_title="NTL Data Extractor", page_icon="🌙", layout="wide")
 
-# Thư mục GỐC chứa dữ liệu ranh giới. Ứng dụng TỰ QUÉT mọi quốc gia nằm bên trong,
-# không còn trỏ cứng vào một bộ dữ liệu cụ thể. Đổi được bằng biến môi trường NTL_DATA_ROOT.
-#   Hỗ trợ cả hai cách bố trí:
-#     data/<bộ_dữ_liệu>/<thư_mục_quốc_gia>/<tỉnh>/<huyện>.geojson   (vd: data/gadm41_VNM_gpkg/VNM_Curated_Provinces/Hà_Nội/...)
-#     data/<thư_mục_quốc_gia>/<tỉnh>/<huyện>.geojson
-#   Muốn đặt tên quốc gia riêng: tạo data/country_names.json, ví dụ
-#     {"THA": {"vi": "Thái Lan", "en": "Thailand"}}
 DATA_ROOT = os.environ.get("NTL_DATA_ROOT", "data")
 GEE_DATASET = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG"
 GEE_SCALE_M = 463.83          # độ phân giải gốc VIIRS (~15 arc-sec)
@@ -1344,8 +1327,17 @@ zscore = (ntl - ntl.mean()) / std_ntl if std_ntl > 0 else np.zeros(n)
 local_codes = np.select([ntl <= 0, ntl >= q75, ntl <= q25], [3, 0, 2], default=1)
 is_border = area < 0.999 * (size / 1000) ** 2
 px_per_cell = round((size / GEE_SCALE_M) ** 2, 1)
-vmax = float(ntl.max())
-vmax = vmax if vmax > 0.1 else 1.0
+# Lọc lấy các ô thực sự có ánh sáng (loại bỏ nhiễu từ các vùng rừng/núi tối thui)
+lit_ntl = ntl[ntl > 0]
+
+if len(lit_ntl) > 10:
+    # Lấy phân vị 99 của các ô SÁNG làm mức trần để loại bỏ các điểm dị thường (nhà kính, cảng biển)
+    vmax_dynamic = float(np.quantile(lit_ntl, 0.99))
+else:
+    vmax_dynamic = float(ntl.max())
+
+# Đảm bảo vmax không quá nhỏ (tránh lỗi chia cho 0)
+vmax = vmax_dynamic if vmax_dynamic > 0.1 else 1.0
 
 cent_utm = grid_utm.geometry.centroid
 cent_wgs = gpd.GeoSeries(cent_utm, crs=grid_utm.crs).to_crs(epsg=4326)
