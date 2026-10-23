@@ -334,7 +334,7 @@ TEXT = {
                     "Thiết kế cho kinh tế lượng không gian (chống lỗi MAUP, độ phân giải gốc ~463m).",
         "sb_spatial": "1. Tham số không gian",
         "country": "Quốc gia",
-        "state": "Tỉnh / Thành phố",
+        "state": "Bang / Tỉnh / Thành phố",
         "county": "Quận / Hạt",
         "sb_analytic": "2. Tham số phân tích",
         "cell": "Độ phân giải lưới (mét)",
