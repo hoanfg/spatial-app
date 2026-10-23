@@ -3,26 +3,25 @@
 [ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
 ## 📌 Project overview
-This project builds a **spatial grid infrastructure and nighttime lights (NTL) extraction pipeline**, serving as a core data engineering tool for spatial econometrics
+This project is an end-to-end **Spatial grid infrastructure and nighttime lights (NTL) extraction pipeline**, serving as a core data engineering tool for spatial econometrics.
 
-The application resolves the complex task of standardizing irregular administrative boundaries into uniform spatial matrices, and directly interfaces with Cloud APIs to extract real-world raster data (SNPP-VIIRS) for micro-level economic analysis
+The application resolves the complex task of standardizing irregular administrative boundaries into uniform spatial matrices, directly interfaces with Google Earth Engine (GEE) to extract real-world raster data (SNPP-VIIRS), and computes rigorous micro-level spatial statistics (LISA) for macro-economic panel regressions.
 
 ---
 
 ## 🛠 Technical specification
 - **Language:** Python 3.x
   
-- **UI & Deployment:** Streamlit (with robust Session State management to prevent static system reruns)
+- **UI & Deployment:** Streamlit (with Session State management to prevent static system reruns)
   
 - **Geospatial engine:** 
   - `GeoPandas` & `Shapely`: Vector geometry processing, spatial algebraic operations
   - `NumPy`: Coordinate matrix generation optimized for performance
-  
-- **Raster processing:** `rasterstats`, `rasterio` (for local GeoTIFF fallback)
+  - `rasterio`, `exactextract`: Raster sub-pixel processing (for local GeoTIFF fallback)
   
 - **Cloud computing:** `earthengine-api` (Google Earth Engine) authenticated via GCP service accounts and Streamlit secrets
   
-- **Visualization:** `Folium`, `branca.colormap` (Dynamic Multi-layer Interactive Maps)
+- **Visualization:** `Folium`, `Altair` (Dynamic multi-layer interactive maps)
   
 - **Boundary data source:** Utilizing static GADM v4.1 (Shapefiles) instead of real-time APIs (GADM, 2022)
   
@@ -31,41 +30,43 @@ The application resolves the complex task of standardizing irregular administrat
 ---
 
 ## ⚙️ Core pipeline capabilities
-### Phase 1: Spatial grid generation:
 
-1. Converts original boundaries from the spherical coordinate system `WGS84` (longitude/latitude) to the projected coordinate system `UTM EPSG:32648` (measured in meters) to ensure geometric calculations are not distorted by the Earth's curvature
+The system operates on a optimized, memory-safe 4-step pipeline:
+
+1. Converts original boundaries from the spherical coordinate system `WGS84` (longitude/latitude) to the projected coordinate system `UTM EPSG:32648` (measured in meters) to ensure geometric calculations are not distorted by the Earth's curvature. Generates a strict square grid (e.g., 500m, 1000m) and uses gpd.clip() to trim excesses.
   
-2. Calculates extreme coordinates (`minx, miny, maxx, maxy`) encompassing the entire province/city
+2. Bypasses GEE's extraction limits by downloading the raw VIIRS GeoTIFF composite directly to the local server, ensuring maximum native resolution (~463m)
 
-3. Uses `NumPy` to iterate through X and Y axes with the step size `cell_size` (1000m, 2000m...), creating polygons covering the bounding box
+3. Utilizes the C++ `exactextract` engine to calculate area-weighted NTL means based on fractional pixel coverage, reduce to minimum the inaccuracies of traditional centroid-based methods
 
-4. Uses the `gpd.clip()` algorithm to trim the excess rough grid outside using the complex administrative boundary polygon
-
-5. Resets the coordinate system back to `WGS84` to render on the Leaflet/Folium web map platform
-
-### Phase 2: Cloud-native raster extraction
-
-1. Securely accesses the NOAA/VIIRS/DNB Monthly collection to extract real-world NTL luminosity
-
-2. Bypasses Google Cloud's HTTP 413 (Payload too large) errors by slicing complex GeoJSON multipolygon requests into manageable batches (100 cells/request)
-
-3. Implements local zonal statistics processing allowing users to upload compressed `.tif` files when cloud quotas are exceeded
+4. Runs the local indicators of spatial association (Local Moran's I) algorithm to detect economic hotspots (High-High clusters), exporting macro-variables like spatial lag, distance to CBD, and light Gini coefficients directly to a panel CSV
 
 ---
 
-## ⚠️ The "border cell" problem (MAUP)
+## ⚠️ Methodological rigor & solved problems
 
+**1. The "border cell" & MAUP problem:**
 When forcing a square grid matrix (e.g., 1x1 km = 1 km²) onto a winding administrative boundary, the clipping algorithm will generate a series of **border cells** with distorted shapes and reduced areas (e.g., only $0.15 km^2$ or $0.8 km^2$) (Openshaw, 1983)
 
 In econometrics, if we perform a total count of nighttime light data or population for all these grid cells, the border cells will have very low NTL values because they are too small (Henderson et al., 2012). The regression model will mistakenly understand that this border area is an "underdeveloped economic region", causing **heteroskedasticity** and severely distorting the bias of the entire model (Openshaw, 1983)
 
-### 💡 Self-proposed econometric standardization solution
+The pipeline strictly uses Listwise Deletion in its spatial graph generation. Edge-masked cells and unlit cells (zero-inflated noise) are completely removed from the spatial weights matrix (W) to prevent biased Local Moran's I calculations
 
-To solve the above problem, the pipeline proactively calculates and stores the actual area variable `(area_km2)` for each clipped grid cell. In Phase 2, the system will apply 2 strategies:
+**2. The Multiple Testing Problem in Spatial Clusters:**
 
-1. Instead of using $Total NTL$ as the dependent variable, the model will use $\frac{Total NTL}{area\_km2}$ (Economic intensity per actual 1 km²)
+Testing thousands of grid cells simultaneously for spatial clustering inevitably generates false positives (random chance clusters).
 
-2. Completely remove border grid cells with an area ratio $< 10\%$ of the standard grid area (e.g., $< 0.1 km^2$ for a 1x1km grid) to eliminate outliers from the dataset
+The LISA engine enforces the Benjamini-Hochberg False Discovery Rate (FDR) correction on conditional permutation p-values (Caldas de Castro & Singer, 2006). This guarantees that identified High-High bubbles are statistically robust.
+
+**3. Panel regression bridge (macro from micro):**
+
+Instead of raw grids, the tool outputs robust control variables for econometric models:
+
+`hh_area_share`: Replaces crude national housing prices by measuring the physical spatial expansion of economic bubbles.
+
+`ntl_raw_lag`: Captures spatial spillover effects without needing complex post-regression spatial matrices.
+
+`dist_to_core_km`: Controls for distance decay to validate whether credit growth in peripheries is speculative.
 
 ---
 
