@@ -401,6 +401,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                 min_cluster_cells=min_clu, meta=meta)
             status.update(label=L["st_done"], state="complete", expanded=False)
 
+    out = cache[ckey]
+    cdf, rm = out.cell_df, out.region_metrics
+                        
     # ---------- KPI ----------
     st.divider()
     st.markdown(f"#### {L['kpi_title']}")
