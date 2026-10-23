@@ -499,132 +499,108 @@ DATA_DICT = [
 GUIDE = {
     "vi": [
         ("1. NTL là gì và đo bằng gì?",
-         """
-* **NTL (Nighttime Lights)** là ánh sáng phát ra ban đêm, vệ tinh **VIIRS/DNB** (NOAA) đo hằng tháng.
-* **Đơn vị:** nW/cm²/sr (nano-watt trên cm² trên steradian) — là *bức xạ*, không phải số bóng đèn.
-* **Dữ liệu dùng:** `avg_rad` của sản phẩm đã hiệu chỉnh ánh sáng tạp. Với năm **{y}**, công cụ lấy **trung vị** các ảnh tháng để giảm nhiễu mây, trăng, cháy rừng.
-* **Vì sao liên quan kinh tế?** Đô thị sáng hơn thường có mật độ dân cư, thương mại, công nghiệp và hạ tầng cao hơn, nên NTL là *biến đại diện (proxy)* cho hoạt động kinh tế, đặc biệt ở nơi thiếu số liệu GDP chi tiết.
-* **Mốc tham khảo:** < 1 gần như tối; 5-15 khu dân cư/ven đô; 15-40 đô thị đông đúc; > 40 trung tâm thương mại, khu công nghiệp sáng mạnh.
-"""),
+         "*\t**NTL (Nighttime Lights)** là ánh sáng phát ra ban đêm, vệ tinh **VIIRS/DNB** (NOAA) đo hằng tháng.\n"
+         "*\t**Đơn vị:** nW/cm²/sr (nano-watt trên cm² trên steradian) — là *bức xạ*, không phải số bóng đèn.\n"
+         "*\t**Dữ liệu dùng:** `avg_rad` của sản phẩm đã hiệu chỉnh ánh sáng tạp. Với năm **{y}**, công cụ lấy **trung vị** các ảnh tháng để giảm nhiễu mây, trăng, cháy rừng.\n"
+         "*\t**Vì sao liên quan kinh tế?** Đô thị sáng hơn thường có mật độ dân cư, thương mại, công nghiệp và hạ tầng cao hơn, nên NTL là *biến đại diện (proxy)* cho hoạt động kinh tế, đặc biệt ở nơi thiếu số liệu GDP chi tiết.\n"
+         "*\t**Mốc tham khảo:** < 1 gần như tối; 5-15 khu dân cư/ven đô; 15-40 đô thị đông đúc; > 40 trung tâm thương mại, khu công nghiệp sáng mạnh."),
         ("2. Cách đọc bản đồ",
-         """
-* **Chế độ màu (3 loại):**
-  * *Cường độ NTL* — thang liên tục từ đen → nâu → cam → vàng → trắng. Càng sáng càng nhiều ánh sáng.
-  * *Nhóm kinh tế* — tô 5 màu rời rạc theo ngưỡng toàn cầu (trắng = thương mại/dịch vụ, vàng = đô thị lõi, cam = vành đai, nâu = ven đô, xám = không sáng). Phù hợp để so sánh **giữa các địa phương**.
-  * *Vị thế nội bộ* — Top 25% (vàng cam), giữa (xám), Bottom 25% (xanh), không sáng (đen). Phù hợp để thấy **điểm nóng/vùng trũng trong cùng địa phương**.
-* **Thang màu (chỉ cho chế độ NTL):** *Tuyến tính* giữ đúng tỷ lệ nhưng vùng ven đô dễ tối; *Căn bậc hai* và *Logarit* kéo sáng vùng thấp để thấy cấu trúc đô thị. Chú ý chú giải: mốc màu thay đổi theo thang.
-* **Độ đậm / Ẩn ô không sáng / Viền ô lưới:** chỉnh để nhìn rõ nền bản đồ bên dưới hoặc nhìn rõ từng ô vuông.
-* **Làm tối ngoài ranh giới:** phủ lớp tối lên vùng ngoài địa phương để mắt tập trung vào khu vực phân tích.
-* **Viền Top 10:** viền xanh lơ quanh 10 ô sáng nhất (điểm nóng).
-* **Bảng thông tin góc trái trên:** tên địa phương, năm, độ phân giải, NTL trung bình/cao nhất, tỷ lệ ô sáng.
-* **Nút lớp (góc phải):** đổi nền *Tối / Vệ tinh / Sáng / Đường phố*, bật/tắt lưới, ranh giới, lớp làm tối. Có nút toàn màn hình, tọa độ chuột và bản đồ nhỏ.
-"""),
+         "*\t**Chế độ màu (3 loại):**\n"
+         "  *\t*Cường độ NTL* — thang liên tục từ đen → nâu → cam → vàng → trắng. Càng sáng càng nhiều ánh sáng.\n"
+         "  *\t*Nhóm kinh tế* — tô 5 màu rời rạc theo ngưỡng toàn cầu (trắng = thương mại/dịch vụ, vàng = đô thị lõi, cam = vành đai, nâu = ven đô, xám = không sáng). Phù hợp để so sánh **giữa các địa phương**.\n"
+         "  *\t*Vị thế nội bộ* — Top 25% (vàng cam), giữa (xám), Bottom 25% (xanh), không sáng (đen). Phù hợp để thấy **điểm nóng/vùng trũng trong cùng địa phương**.\n"
+         "*\t**Thang màu (chỉ cho chế độ NTL):** *Tuyến tính* giữ đúng tỷ lệ nhưng vùng ven đô dễ tối; *Căn bậc hai* và *Logarit* kéo sáng vùng thấp để thấy cấu trúc đô thị. Chú ý chú giải: mốc màu thay đổi theo thang.\n"
+         "*\t**Độ đậm / Ẩn ô không sáng / Viền ô lưới:** chỉnh để nhìn rõ nền bản đồ bên dưới hoặc nhìn rõ từng ô vuông.\n"
+         "*\t**Làm tối ngoài ranh giới:** phủ lớp tối lên vùng ngoài địa phương để mắt tập trung vào khu vực phân tích.\n"
+         "*\t**Viền Top 10:** viền xanh lơ quanh 10 ô sáng nhất (điểm nóng).\n"
+         "*\t**Bảng thông tin góc trái trên:** tên địa phương, năm, độ phân giải, NTL trung bình/cao nhất, tỷ lệ ô sáng.\n"
+         "*\t**Nút lớp (góc phải):** đổi nền *Tối / Vệ tinh / Sáng / Đường phố*, bật/tắt lưới, ranh giới, lớp làm tối. Có nút toàn màn hình, tọa độ chuột và bản đồ nhỏ."),
         ("3. Cách đọc Đầu dò (tooltip)",
-         """
-Rê chuột vào một ô, đầu dò hiện theo thứ tự từ trên xuống:
-* **Tiêu đề:** `Ô #ID` và **huy hiệu nhóm kinh tế** (màu tương ứng bảng ngưỡng). Dòng nhỏ bên dưới là địa phương và năm.
-* **Số lớn + thanh màu:** cường độ NTL của ô; độ dài thanh = tỷ lệ so với ô sáng nhất của địa phương.
-* **Diện tích đo lường:** ô sát ranh giới bị cắt nên nhỏ hơn ô đầy đủ — khi hồi quy nên dùng diện tích làm trọng số.
-* **So với TB địa phương:** 2.0× nghĩa là sáng gấp đôi trung bình (theo diện tích) của địa phương.
-* **Thứ hạng / Phân vị:** #1 là ô sáng nhất; P90 nghĩa là sáng hơn 90% số ô.
-* **Tỷ trọng tổng ánh sáng:** phần trăm tổng SOL của địa phương nằm trong ô này.
-* **Độ lệch chuẩn (z):** +2 σ nghĩa là cao hơn trung bình ô 2 độ lệch chuẩn (dễ so sánh giữa các vùng).
-* **Tổng ánh sáng ô (SOL):** NTL × diện tích, dùng khi cộng gộp ô để tính cho cả vùng.
-* **Tâm ô (lat, lon):** tọa độ để tra cứu trên Google Maps hoặc ghép dữ liệu khác.
-* **Hai dòng cuối:** *Ước lượng kinh tế (Global)* — nhóm theo ngưỡng bức xạ chung toàn cầu; *Vị thế nội bộ (Local)* — Top 25% / trung bình / Bottom 25% so với các ô còn lại **trong cùng địa phương**.
-"""),
+         "Rê chuột vào một ô, đầu dò hiện theo thứ tự từ trên xuống:\n"
+         "*\t**Tiêu đề:** `Ô #ID` và **huy hiệu nhóm kinh tế** (màu tương ứng bảng ngưỡng). Dòng nhỏ bên dưới là địa phương và năm.\n"
+         "*\t**Số lớn + thanh màu:** cường độ NTL của ô; độ dài thanh = tỷ lệ so với ô sáng nhất của địa phương.\n"
+         "*\t**Diện tích đo lường:** ô sát ranh giới bị cắt nên nhỏ hơn ô đầy đủ — khi hồi quy nên dùng diện tích làm trọng số.\n"
+         "*\t**So với TB địa phương:** 2.0× nghĩa là sáng gấp đôi trung bình (theo diện tích) của địa phương.\n"
+         "*\t**Thứ hạng / Phân vị:** #1 là ô sáng nhất; P90 nghĩa là sáng hơn 90% số ô.\n"
+         "*\t**Tỷ trọng tổng ánh sáng:** phần trăm tổng SOL của địa phương nằm trong ô này.\n"
+         "*\t**Độ lệch chuẩn (z):** +2 σ nghĩa là cao hơn trung bình ô 2 độ lệch chuẩn (dễ so sánh giữa các vùng).\n"
+         "*\t**Tổng ánh sáng ô (SOL):** NTL × diện tích, dùng khi cộng gộp ô để tính cho cả vùng.\n"
+         "*\t**Tâm ô (lat, lon):** tọa độ để tra cứu trên Google Maps hoặc ghép dữ liệu khác.\n"
+         "*\t**Hai dòng cuối:** *Ước lượng kinh tế (Global)* — nhóm theo ngưỡng bức xạ chung toàn cầu; *Vị thế nội bộ (Local)* — Top 25% / trung bình / Bottom 25% so với các ô còn lại **trong cùng địa phương**."),
         ("4. Bảng ngưỡng phân loại (Global)", "__TABLE__"),
         ("5. Cách đọc tab Dữ liệu",
-         """
-* **Nhận định nhanh:** tóm tắt tự động ô sáng nhất, độ tập trung ánh sáng, vùng tối và tự tương quan không gian.
-* **Hệ số Gini:** 0 = ánh sáng phân bố đều; gần 1 = tập trung vào vài ô. Đô thị đơn cực thường có Gini cao.
-* **Tỷ trọng SOL của 10% ô sáng nhất:** càng cao càng tập trung vào lõi đô thị.
-* **CV và skewness:** CV lớn = chênh lệch mạnh giữa các ô; skewness dương lớn = đuôi phải dài (vài ô cực sáng) → cân nhắc dùng `ntl_log`.
-* **Moran's I:** đo ánh sáng có **tụ thành cụm** hay không. I dương và p < 0,05 → có phụ thuộc không gian; hồi quy OLS thường sẽ có sai số tương quan → cần mô hình không gian hoặc sai số chuẩn Conley.
-* **Cơ cấu nhóm / Histogram / Top 10:** cho biết bao nhiêu % ô, diện tích và ánh sáng thuộc từng nhóm kinh tế.
-* **Từ điển dữ liệu:** giải thích từng cột trong CSV tải về.
-"""),
+         "*\t**Nhận định nhanh:** tóm tắt tự động ô sáng nhất, độ tập trung ánh sáng, vùng tối và tự tương quan không gian.\n"
+         "*\t**Hệ số Gini:** 0 = ánh sáng phân bố đều; gần 1 = tập trung vào vài ô. Đô thị đơn cực thường có Gini cao.\n"
+         "*\t**Tỷ trọng SOL của 10% ô sáng nhất:** càng cao càng tập trung vào lõi đô thị.\n"
+         "*\t**CV và skewness:** CV lớn = chênh lệch mạnh giữa các ô; skewness dương lớn = đuôi phải dài (vài ô cực sáng) → cân nhắc dùng `ntl_log`.\n"
+         "*\t**Moran's I:** đo ánh sáng có **tụ thành cụm** hay không. I dương và p < 0,05 → có phụ thuộc không gian; hồi quy OLS thường sẽ có sai số tương quan → cần mô hình không gian hoặc sai số chuẩn Conley.\n"
+         "*\t**Cơ cấu nhóm / Histogram / Top 10:** cho biết bao nhiêu % ô, diện tích và ánh sáng thuộc từng nhóm kinh tế.\n"
+         "*\t**Từ điển dữ liệu:** giải thích từng cột trong CSV tải về."),
         ("6. MAUP và vì sao dùng lưới",
-         """
-* **MAUP** (Modifiable Areal Unit Problem): kết quả thống kê đổi khi đổi cách vẽ ranh giới. Phường/xã to nhỏ rất khác nhau nên dễ gây thiên lệch.
-* **Lưới đều {s}×{s} m** cho đơn vị không gian thống nhất; lưới căn theo bội số {s} m nên **ghép được giữa các địa phương**.
-* **Đánh đổi:** lưới càng mịn thì càng nhiều ô nhưng thông tin gốc không tăng thêm (VIIRS ~463 m). Lưới ≥ 1000 m thường ổn hơn cho hồi quy; thử nhiều độ phân giải để kiểm tra độ vững (robustness).
-"""),
+         "*\t**MAUP** (Modifiable Areal Unit Problem): kết quả thống kê đổi khi đổi cách vẽ ranh giới. Phường/xã to nhỏ rất khác nhau nên dễ gây thiên lệch.\n"
+         "*\t**Lưới đều {s}×{s} m** cho đơn vị không gian thống nhất; lưới căn theo bội số {s} m nên **ghép được giữa các địa phương**.\n"
+         "*\t**Đánh đổi:** lưới càng mịn thì càng nhiều ô nhưng thông tin gốc không tăng thêm (VIIRS ~463 m). Lưới ≥ 1000 m thường ổn hơn cho hồi quy; thử nhiều độ phân giải để kiểm tra độ vững (robustness)."),
         ("7. Dùng CSV trong nghiên cứu", "__CODE__"),
         ("8. Hạn chế cần biết",
-         """
-* NTL là **proxy**, không phải GDP: khu công nghiệp nặng, đèn chiếu sáng công cộng dày, sân bay, cảng có thể sáng hơn mức hoạt động kinh tế thực.
-* Nông thôn/khu thương mại ít đèn (hoặc dùng điện ít) có thể bị **đánh giá thấp**.
-* **Hiệu ứng lan sáng (blooming):** ánh sáng tràn sang mặt nước/ô lân cận.
-* **Giá trị âm** do nhiễu cảm biến đã đưa về 0. Ngưỡng phân loại là **tham khảo**, không phải chuẩn chính thức.
-* Ô biên nhỏ hơn ô đầy đủ → dùng `area_km2` để lọc hoặc đặt trọng số, hoặc lọc `is_border_cell == 0`.
-* Khi so sánh nhiều năm, nhớ rằng ảnh VIIRS đổi hiệu chuẩn/phiên bản theo thời gian; nên dùng sai phân hoặc hiệu ứng cố định theo năm.
-"""),
+         "*\tNTL là **proxy**, không phải GDP: khu công nghiệp nặng, đèn chiếu sáng công cộng dày, sân bay, cảng có thể sáng hơn mức hoạt động kinh tế thực.\n"
+         "*\tNông thôn/khu thương mại ít đèn (hoặc dùng điện ít) có thể bị **đánh giá thấp**.\n"
+         "*\t**Hiệu ứng lan sáng (blooming):** ánh sáng tràn sang mặt nước/ô lân cận.\n"
+         "*\t**Giá trị âm** do nhiễu cảm biến đã đưa về 0. Ngưỡng phân loại là **tham khảo**, không phải chuẩn chính thức.\n"
+         "*\tÔ biên nhỏ hơn ô đầy đủ → dùng `area_km2` để lọc hoặc đặt trọng số, hoặc lọc `is_border_cell == 0`.\n"
+         "*\tKhi so sánh nhiều năm, nhớ rằng ảnh VIIRS đổi hiệu chuẩn/phiên bản theo thời gian; nên dùng sai phân hoặc hiệu ứng cố định theo năm.")
     ],
     "en": [
         ("1. What is NTL and how is it measured?",
-         """
-* **NTL (Nighttime Lights)** is light emitted at night, measured monthly by the NOAA **VIIRS/DNB** satellite sensor.
-* **Unit:** nW/cm²/sr (nanowatts per cm² per steradian) — a *radiance*, not a count of lamps.
-* **Data used:** `avg_rad` from the stray-light-corrected product. For **{y}** the tool takes the **median** of monthly images to damp clouds, moonlight and fires.
-* **Why economics?** Brighter places usually have more people, commerce, industry and infrastructure, so NTL is a *proxy* for economic activity, especially where granular GDP data are missing.
-* **Rules of thumb:** < 1 almost dark; 5-15 residential/peri-urban; 15-40 dense urban; > 40 commercial hubs and brightly lit industry.
-"""),
+         "*\t**NTL (Nighttime Lights)** is light emitted at night, measured monthly by the NOAA **VIIRS/DNB** satellite sensor.\n"
+         "*\t**Unit:** nW/cm²/sr (nanowatts per cm² per steradian) — a *radiance*, not a count of lamps.\n"
+         "*\t**Data used:** `avg_rad` from the stray-light-corrected product. For **{y}** the tool takes the **median** of monthly images to damp clouds, moonlight and fires.\n"
+         "*\t**Why economics?** Brighter places usually have more people, commerce, industry and infrastructure, so NTL is a *proxy* for economic activity, especially where granular GDP data are missing.\n"
+         "*\t**Rules of thumb:** < 1 almost dark; 5-15 residential/peri-urban; 15-40 dense urban; > 40 commercial hubs and brightly lit industry."),
         ("2. Reading the map",
-         """
-* **Color modes (3):**
-  * *NTL intensity* — continuous scale black → brown → orange → yellow → white. Brighter = more light.
-  * *Economic class* — 5 discrete colors from global thresholds (white = commercial/services, yellow = urban core, orange = fringe, brown = peri-urban, grey = unlit). Best for comparing **across localities**.
-  * *Local standing* — Top 25% (amber), middle (grey), Bottom 25% (blue), unlit (black). Best for spotting **hotspots/coldspots within one locality**.
-* **Color scale (NTL mode only):** *Linear* keeps true proportions but peri-urban areas look dark; *Square root* and *Logarithmic* lift low values to reveal urban structure. Check the legend: color stops move with the scale.
-* **Opacity / Hide unlit cells / Cell borders:** adjust to see the base map or to see each square.
-* **Dim outside boundary:** darkens everything outside the locality so the eye stays on the study area.
-* **Outline Top 10:** cyan outlines around the 10 brightest cells (hotspots).
-* **Top-left info panel:** locality, year, resolution, mean/max NTL and share of lit cells.
-* **Layer control (top right):** switch *Dark / Satellite / Light / Streets* base maps, toggle grid, boundary and the dim layer. Fullscreen, mouse coordinates and a mini-map are included.
-"""),
+         "*\t**Color modes (3):**\n"
+         "  *\t*NTL intensity* — continuous scale black → brown → orange → yellow → white. Brighter = more light.\n"
+         "  *\t*Economic class* — 5 discrete colors from global thresholds (white = commercial/services, yellow = urban core, orange = fringe, brown = peri-urban, grey = unlit). Best for comparing **across localities**.\n"
+         "  *\t*Local standing* — Top 25% (amber), middle (grey), Bottom 25% (blue), unlit (black). Best for spotting **hotspots/coldspots within one locality**.\n"
+         "*\t**Color scale (NTL mode only):** *Linear* keeps true proportions but peri-urban areas look dark; *Square root* and *Logarithmic* lift low values to reveal urban structure. Check the legend: color stops move with the scale.\n"
+         "*\t**Opacity / Hide unlit cells / Cell borders:** adjust to see the base map or to see each square.\n"
+         "*\t**Dim outside boundary:** darkens everything outside the locality so the eye stays on the study area.\n"
+         "*\t**Outline Top 10:** cyan outlines around the 10 brightest cells (hotspots).\n"
+         "*\t**Top-left info panel:** locality, year, resolution, mean/max NTL and share of lit cells.\n"
+         "*\t**Layer control (top right):** switch *Dark / Satellite / Light / Streets* base maps, toggle grid, boundary and the dim layer. Fullscreen, mouse coordinates and a mini-map are included."),
         ("3. Reading the tooltip",
-         """
-Hover over a cell; the tooltip shows, top to bottom:
-* **Header:** `Cell #ID` and an **economic-class badge** (color matches the threshold table). The small line below is locality and year.
-* **Big number + color bar:** the cell's NTL; bar length = ratio to the locality's brightest cell.
-* **Survey area:** cells on the border are clipped and smaller than full cells — use area as a weight in regressions.
-* **Versus area average:** 2.0× means twice the (area-weighted) average of the locality.
-* **Rank / Percentile:** #1 is the brightest cell; P90 means brighter than 90% of cells.
-* **Share of total light:** percent of the locality's total SOL located in this cell.
-* **Std. deviations (z):** +2 σ means two standard deviations above the cell mean (comparable across areas).
-* **Cell SOL:** NTL × area, used when summing cells up to larger regions.
-* **Centroid (lat, lon):** to look the place up or join other data.
-* **Last two lines:** *Economic proxy (Global)* — class from global radiance thresholds; *Internal status (Local)* — Top 25% / average / Bottom 25% relative to other cells **in the same locality**.
-"""),
+         "Hover over a cell; the tooltip shows, top to bottom:\n"
+         "*\t**Header:** `Cell #ID` and an **economic-class badge** (color matches the threshold table). The small line below is locality and year.\n"
+         "*\t**Big number + color bar:** the cell's NTL; bar length = ratio to the locality's brightest cell.\n"
+         "*\t**Survey area:** cells on the border are clipped and smaller than full cells — use area as a weight in regressions.\n"
+         "*\t**Versus area average:** 2.0× means twice the (area-weighted) average of the locality.\n"
+         "*\t**Rank / Percentile:** #1 is the brightest cell; P90 means brighter than 90% of cells.\n"
+         "*\t**Share of total light:** percent of the locality's total SOL located in this cell.\n"
+         "*\t**Std. deviations (z):** +2 σ means two standard deviations above the cell mean (comparable across areas).\n"
+         "*\t**Cell SOL:** NTL × area, used when summing cells up to larger regions.\n"
+         "*\t**Centroid (lat, lon):** to look the place up or join other data.\n"
+         "*\t**Last two lines:** *Economic proxy (Global)* — class from global radiance thresholds; *Internal status (Local)* — Top 25% / average / Bottom 25% relative to other cells **in the same locality**."),
         ("4. Classification thresholds (Global)", "__TABLE__"),
         ("5. Reading the Data tab",
-         """
-* **Quick takeaways:** automatic summary of the brightest cell, light concentration, dark space and spatial autocorrelation.
-* **Gini coefficient:** 0 = evenly distributed light; near 1 = concentrated in a few cells. Monocentric cities usually have a high Gini.
-* **SOL share of the brightest 10% of cells:** the higher, the more concentrated in the urban core.
-* **CV and skewness:** large CV = strong differences between cells; large positive skewness = long right tail (a few extremely bright cells) → consider `ntl_log`.
-* **Moran's I:** tests whether light is **spatially clustered**. Positive I with p < 0.05 → spatial dependence; plain OLS will have correlated errors → use spatial models or Conley standard errors.
-* **Class breakdown / Histogram / Top 10:** show what % of cells, area and light fall in each economic class.
-* **Data dictionary:** explains every column of the downloadable CSV.
-"""),
+         "*\t**Quick takeaways:** automatic summary of the brightest cell, light concentration, dark space and spatial autocorrelation.\n"
+         "*\t**Gini coefficient:** 0 = evenly distributed light; near 1 = concentrated in a few cells. Monocentric cities usually have a high Gini.\n"
+         "*\t**SOL share of the brightest 10% of cells:** the higher, the more concentrated in the urban core.\n"
+         "*\t**CV and skewness:** large CV = strong differences between cells; large positive skewness = long right tail (a few extremely bright cells) → consider `ntl_log`.\n"
+         "*\t**Moran's I:** tests whether light is **spatially clustered**. Positive I with p < 0.05 → spatial dependence; plain OLS will have correlated errors → use spatial models or Conley standard errors.\n"
+         "*\t**Class breakdown / Histogram / Top 10:** show what % of cells, area and light fall in each economic class.\n"
+         "*\t**Data dictionary:** explains every column of the downloadable CSV."),
         ("6. MAUP and why a grid",
-         """
-* **MAUP** (Modifiable Areal Unit Problem): statistical results change when boundaries are redrawn. Wards/communes vary wildly in size, creating bias.
-* A **{s}×{s} m grid** gives uniform spatial units; it is snapped to multiples of {s} m so it **can be merged across localities**.
-* **Trade-off:** a finer grid has more cells but no extra information (VIIRS ~463 m). Grids ≥ 1000 m are usually safer for regressions; test several resolutions for robustness.
-"""),
+         "*\t**MAUP** (Modifiable Areal Unit Problem): statistical results change when boundaries are redrawn. Wards/communes vary wildly in size, creating bias.\n"
+         "*\tA **{s}×{s} m grid** gives uniform spatial units; it is snapped to multiples of {s} m so it **can be merged across localities**.\n"
+         "*\t**Trade-off:** a finer grid has more cells but no extra information (VIIRS ~463 m). Grids ≥ 1000 m are usually safer for regressions; test several resolutions for robustness."),
         ("7. Using the CSV in research", "__CODE__"),
         ("8. Limitations to keep in mind",
-         """
-* NTL is a **proxy**, not GDP: heavy industry, dense public lighting, airports and ports can be brighter than their economic activity.
-* Rural or low-light commercial areas can be **under-estimated**.
-* **Blooming:** light spills onto water or neighbouring cells.
-* **Negative values** from sensor noise are set to 0. Class thresholds are **indicative**, not an official standard.
-* Border cells are smaller than full cells → filter or weight with `area_km2`, or keep `is_border_cell == 0`.
-* When comparing years, remember VIIRS calibration/versions change over time; use first differences or year fixed effects.
-"""),
-    ],
+         "*\tNTL is a **proxy**, not GDP: heavy industry, dense public lighting, airports and ports can be brighter than their economic activity.\n"
+         "*\tRural or low-light commercial areas can be **under-estimated**.\n"
+         "*\t**Blooming:** light spills onto water or neighbouring cells.\n"
+         "*\t**Negative values** from sensor noise are set to 0. Class thresholds are **indicative**, not an official standard.\n"
+         "*\tBorder cells are smaller than full cells → filter or weight with `area_km2`, or keep `is_border_cell == 0`.\n"
+         "*\tWhen comparing years, remember VIIRS calibration/versions change over time; use first differences or year fixed effects.")
+    ]
 }
 
 CLASS_NOTES = {
