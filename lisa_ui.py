@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import shapely
 import streamlit as st
+import altair as alt
 from streamlit_folium import st_folium
 
 from lisa_core import ALL_LABELS, DARK, EDGE, NS, run_lisa
@@ -184,7 +185,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     except TypeError:
         st_folium(m, height=620, returned_objects=[], key=mkey)
 
-    # ---------- Cơ cấu trạng thái ----------
+    # ---------- Cơ cấu trạng thái & Moran Scatterplot ----------
     area = grid_utm["area_km2"].to_numpy(float)
     labs = cdf["lisa_class"].to_numpy()
     comp = pd.DataFrame({
@@ -192,8 +193,44 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         L["cells"]: [int((labs == k).sum()) for k in ALL_LABELS],
         L["area"]: [round(float(area[labs == k].sum() / area.sum() * 100), 2) for k in ALL_LABELS],
     })
-    st.markdown(f"**{L['comp']}**")
-    st.dataframe(comp, hide_index=True, use_container_width=True)
+    
+    # Chia giao diện làm 2 cột
+    col_tab, col_chart = st.columns([1, 1.5])
+    
+    with col_tab:
+        st.markdown(f"**{L['comp']}**")
+        st.dataframe(comp, hide_index=True, use_container_width=True)
+        
+    with col_chart:
+        st.markdown("**Biểu đồ phân tán Moran (Moran Scatterplot)**")
+        # Chỉ lấy các ô có dữ liệu hợp lệ (Bỏ ô tối và ô biên bị NaN)
+        plot_df = cdf[cdf['ntl_z_lit'].notna() & cdf['lisa_lag_z'].notna()].copy()
+        
+        if not plot_df.empty:
+            # Vẽ các điểm scatter
+            scatter = alt.Chart(plot_df).mark_circle(size=45, opacity=0.7).encode(
+                x=alt.X('ntl_z_lit:Q', title='Z-score NTL (Bản thân)'),
+                y=alt.Y('lisa_lag_z:Q', title='Spatial Lag Z-score (Hàng xóm)'),
+                color=alt.Color('lisa_class:N', 
+                                scale=alt.Scale(domain=list(COLORS.keys()), range=list(COLORS.values())),
+                                legend=alt.Legend(title="Trạng thái")),
+                tooltip=[
+                    alt.Tooltip('lisa_class:N', title='LISA'),
+                    alt.Tooltip('ntl_z_lit:Q', title='Z-score'),
+                    alt.Tooltip('lisa_lag_z:Q', title='Lag Z-score')
+                ]
+            )
+            # Vẽ 2 đường ngắt tọa độ (0,0) đứt nét mờ
+            hline = alt.Chart(pd.DataFrame({'y': [0]})).mark_rule(color='gray', strokeDash=[3,3], opacity=0.5).encode(y='y:Q')
+            vline = alt.Chart(pd.DataFrame({'x': [0]})).mark_rule(color='gray', strokeDash=[3,3], opacity=0.5).encode(x='x:Q')
+            
+            # Vẽ đường xu hướng Hồi quy tuyến tính (Slope = Global Moran's I)
+            trend = scatter.transform_regression('ntl_z_lit', 'lisa_lag_z').mark_line(color='#00e5ff', size=2)
+            
+            chart = (scatter + hline + vline + trend).interactive().properties(height=320)
+            st.altair_chart(chart, use_container_width=True)
+        else:
+            st.info("Không có đủ dữ liệu ô sáng để vẽ đồ thị.")
 
     # ---------- Data Bridge: luôn 100% quan sát ----------
     full = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True)], axis=1)
