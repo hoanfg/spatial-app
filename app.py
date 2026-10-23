@@ -407,10 +407,10 @@ TEXT = {
         "take": [
             "🔆 **Điểm sáng nhất:** ô **#{gid}** (lat {lat:.4f}, lon {lon:.4f}) có NTL = **{mx:.2f}**, "
             "gấp **{ratio:.1f}×** mức trung bình (theo diện tích) của địa phương.",
-            "🏙️ **Độ tập trung:** 10% ô sáng nhất chứa **{top10:.1f}%** tổng ánh sáng; Gini = **{gini:.2f}** — {gdesc}.",
+            "🏙️ **Độ tập trung:** 10% ô sáng nhất chứa **{top10:.1f}%** tổng ánh sáng; Gini = **{gini:.2f}**, {gdesc}.",
             "🌑 **Không gian tối:** {lit:.0f}% số ô có ánh sáng; {dark:.1f}% diện tích không có tín hiệu NTL.",
-            "🧭 **Tự tương quan không gian:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}) — {mdesc}.",
-            "🧩 **Chất lượng mẫu:** {border:,}/{n:,} ô là ô biên (bị cắt theo ranh giới) — nên dùng `area_km2` làm "
+            "🧭 **Tự tương quan không gian:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}), {mdesc}.",
+            "🧩 **Chất lượng mẫu:** {border:,}/{n:,} ô là ô biên (bị cắt theo ranh giới), nên dùng `area_km2` làm "
             "trọng số hoặc lọc bằng `is_border_cell`.",
         ],
         "gdesc": ["ánh sáng phân bố khá đồng đều", "mức tập trung vừa phải", "ánh sáng tập trung rất cao vào vài ô lõi"],
@@ -469,7 +469,7 @@ TEXT = {
         "download_geo": "⬇️ Tải GeoJSON",
         "csv_note": "CSV gồm mã địa phương, tọa độ tâm ô (WGS84 & UTM), diện tích, NTL, SOL, hạng, phân vị, z-score, "
                     "tỷ trọng, nhóm kinh tế (1 = sáng nhất, 5 = không sáng) và cờ ô biên.",
-        "guide_title": "### 📖 Hướng dẫn đọc dữ liệu (cho nhà phân tích / đầu tư / nhà nghiên cứu)",
+        "guide_title": "### 📖 Hướng dẫn đọc dữ liệu",
         "g_tab_cols": ["Nhóm", "Ngưỡng NTL (nW/cm²/sr)", "Diễn giải"],
         "g_code_title": "Ví dụ dùng CSV trong hồi quy và kiểm tra tự tương quan không gian",
     },
@@ -548,10 +548,10 @@ TEXT = {
         "take": [
             "🔆 **Brightest spot:** cell **#{gid}** (lat {lat:.4f}, lon {lon:.4f}) has NTL = **{mx:.2f}**, "
             "**{ratio:.1f}×** the (area-weighted) locality average.",
-            "🏙️ **Concentration:** the brightest 10% of cells hold **{top10:.1f}%** of all light; Gini = **{gini:.2f}** — {gdesc}.",
+            "🏙️ **Concentration:** the brightest 10% of cells hold **{top10:.1f}%** of all light; Gini = **{gini:.2f}**, {gdesc}.",
             "🌑 **Dark space:** {lit:.0f}% of cells are lit; {dark:.1f}% of the area has no NTL signal.",
-            "🧭 **Spatial autocorrelation:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}) — {mdesc}.",
-            "🧩 **Sample quality:** {border:,}/{n:,} cells are border cells (clipped by the boundary) — use `area_km2` "
+            "🧭 **Spatial autocorrelation:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}), {mdesc}.",
+            "🧩 **Sample quality:** {border:,}/{n:,} cells are border cells (clipped by the boundary), use `area_km2` "
             "as a weight or filter with `is_border_cell`.",
         ],
         "gdesc": ["fairly even light distribution", "moderate concentration", "light is extremely concentrated in a few core cells"],
@@ -626,14 +626,14 @@ DATA_DICT = [
     ("year", "Năm phân tích (trung vị 12 tháng)", "Analysis year (median of monthly composites)"),
     ("cell_size_m", "Cạnh ô lưới (mét)", "Grid cell side (metres)"),
     ("centroid_lon / centroid_lat", "Tọa độ tâm ô, WGS84 (độ)", "Cell centroid, WGS84 (degrees)"),
-    ("centroid_x_epsg{E} / centroid_y_epsg{E}", "Tọa độ tâm ô trong UTM (mét) — dùng tính khoảng cách/ma trận trọng số",
-     "Cell centroid in UTM (metres) — use for distances / spatial weights"),
+    ("centroid_x_epsg{E} / centroid_y_epsg{E}", "Tọa độ tâm ô trong UTM (mét), dùng tính khoảng cách/ma trận trọng số",
+     "Cell centroid in UTM (metres), use for distances / spatial weights"),
     ("area_km2", "Diện tích thực của ô sau khi cắt theo ranh giới (km²)", "True cell area after clipping (km²)"),
     ("is_border_cell", "1 = ô biên bị cắt nhỏ hơn ô đầy đủ; 0 = ô đầy đủ", "1 = clipped border cell; 0 = full cell"),
     ("ntl_mean", "NTL trung bình, trọng số theo tỷ lệ phủ điểm ảnh (nW/cm²/sr)",
      "Mean NTL weighted by fractional pixel coverage (nW/cm²/sr)"),
     ("ntl_sol", "Tổng ánh sáng của ô = ntl_mean × area_km2", "Sum of lights of the cell = ntl_mean × area_km2"),
-    ("ntl_log", "ln(1 + ntl_mean) — biến thường dùng trong hồi quy", "ln(1 + ntl_mean) — common regression variable"),
+    ("ntl_log", "ln(1 + ntl_mean), biến thường dùng trong hồi quy", "ln(1 + ntl_mean), common regression variable"),
     ("ntl_zscore", "Điểm chuẩn hóa z so với các ô cùng địa phương", "Z-score relative to cells in the same locality"),
     ("ntl_rank", "Thứ hạng sáng (1 = sáng nhất)", "Brightness rank (1 = brightest)"),
     ("ntl_pctile", "Phân vị 0-100", "Percentile 0-100"),
@@ -649,15 +649,15 @@ GUIDE = {
     "vi": [
         ("1. NTL là gì và đo bằng gì?",
          "*\t**NTL (Nighttime Lights)** là ánh sáng phát ra ban đêm, vệ tinh **VIIRS/DNB** (NOAA) đo hằng tháng.\n"
-         "*\t**Đơn vị:** nW/cm²/sr (nano-watt trên cm² trên steradian) — là *bức xạ*, không phải số bóng đèn.\n"
+         "*\t**Đơn vị:** nW/cm²/sr (nano-watt trên cm² trên steradian) là *bức xạ*, không phải số bóng đèn.\n"
          "*\t**Dữ liệu dùng:** `avg_rad` của sản phẩm đã hiệu chỉnh ánh sáng tạp. Với năm **{y}**, công cụ lấy **trung vị** các ảnh tháng để giảm nhiễu mây, trăng, cháy rừng.\n"
          "*\t**Vì sao liên quan kinh tế?** Đô thị sáng hơn thường có mật độ dân cư, thương mại, công nghiệp và hạ tầng cao hơn, nên NTL là *biến đại diện (proxy)* cho hoạt động kinh tế, đặc biệt ở nơi thiếu số liệu GDP chi tiết.\n"
          "*\t**Mốc tham khảo:** < 1 gần như tối; 5-15 khu dân cư/ven đô; 15-40 đô thị đông đúc; > 40 trung tâm thương mại, khu công nghiệp sáng mạnh."),
         ("2. Cách đọc bản đồ",
          "*\t**Chế độ màu (3 loại):**\n"
-         "  *\t*Cường độ NTL* — thang liên tục từ đen → nâu → cam → vàng → trắng. Càng sáng càng nhiều ánh sáng.\n"
-         "  *\t*Nhóm kinh tế* — tô 5 màu rời rạc theo ngưỡng toàn cầu (trắng = thương mại/dịch vụ, vàng = đô thị lõi, cam = vành đai, nâu = ven đô, xám = không sáng). Phù hợp để so sánh **giữa các địa phương**.\n"
-         "  *\t*Vị thế nội bộ* — Top 25% (vàng cam), giữa (xám), Bottom 25% (xanh), không sáng (đen). Phù hợp để thấy **điểm nóng/vùng trũng trong cùng địa phương**.\n"
+         "  *\t*Cường độ NTL*: thang liên tục từ đen → nâu → cam → vàng → trắng. Càng sáng càng nhiều ánh sáng.\n"
+         "  *\t*Nhóm kinh tế*: tô 5 màu rời rạc theo ngưỡng toàn cầu (trắng = thương mại/dịch vụ, vàng = đô thị lõi, cam = vành đai, nâu = ven đô, xám = không sáng). Phù hợp để so sánh **giữa các địa phương**.\n"
+         "  *\t*Vị thế nội bộ*: Top 25% (vàng cam), giữa (xám), Bottom 25% (xanh), không sáng (đen). Phù hợp để thấy **điểm nóng/vùng trũng trong cùng địa phương**.\n"
          "*\t**Thang màu (chỉ cho chế độ NTL):** *Tuyến tính* giữ đúng tỷ lệ nhưng vùng ven đô dễ tối; *Căn bậc hai* và *Logarit* kéo sáng vùng thấp để thấy cấu trúc đô thị. Chú ý chú giải: mốc màu thay đổi theo thang.\n"
          "*\t**Độ đậm / Ẩn ô không sáng / Viền ô lưới:** chỉnh để nhìn rõ nền bản đồ bên dưới hoặc nhìn rõ từng ô vuông.\n"
          "*\t**Làm tối ngoài ranh giới:** phủ lớp tối lên vùng ngoài địa phương để mắt tập trung vào khu vực phân tích.\n"
@@ -668,14 +668,14 @@ GUIDE = {
          "Rê chuột vào một ô, đầu dò hiện theo thứ tự từ trên xuống:\n"
          "*\t**Tiêu đề:** `Ô #ID` và **huy hiệu nhóm kinh tế** (màu tương ứng bảng ngưỡng). Dòng nhỏ bên dưới là địa phương và năm.\n"
          "*\t**Số lớn + thanh màu:** cường độ NTL của ô; độ dài thanh = tỷ lệ so với ô sáng nhất của địa phương.\n"
-         "*\t**Diện tích đo lường:** ô sát ranh giới bị cắt nên nhỏ hơn ô đầy đủ — khi hồi quy nên dùng diện tích làm trọng số.\n"
+         "*\t**Diện tích đo lường:** ô sát ranh giới bị cắt nên nhỏ hơn ô đầy đủ, khi hồi quy nên dùng diện tích làm trọng số.\n"
          "*\t**So với TB địa phương:** 2.0× nghĩa là sáng gấp đôi trung bình (theo diện tích) của địa phương.\n"
          "*\t**Thứ hạng / Phân vị:** #1 là ô sáng nhất; P90 nghĩa là sáng hơn 90% số ô.\n"
          "*\t**Tỷ trọng tổng ánh sáng:** phần trăm tổng SOL của địa phương nằm trong ô này.\n"
          "*\t**Độ lệch chuẩn (z):** +2 σ nghĩa là cao hơn trung bình ô 2 độ lệch chuẩn (dễ so sánh giữa các vùng).\n"
          "*\t**Tổng ánh sáng ô (SOL):** NTL × diện tích, dùng khi cộng gộp ô để tính cho cả vùng.\n"
          "*\t**Tâm ô (lat, lon):** tọa độ để tra cứu trên Google Maps hoặc ghép dữ liệu khác.\n"
-         "*\t**Hai dòng cuối:** *Ước lượng kinh tế (Global)* — nhóm theo ngưỡng bức xạ chung toàn cầu; *Vị thế nội bộ (Local)* — Top 25% / trung bình / Bottom 25% so với các ô còn lại **trong cùng địa phương**."),
+         "*\t**Hai dòng cuối:** *Ước lượng kinh tế (Global)*: nhóm theo ngưỡng bức xạ chung toàn cầu; *Vị thế nội bộ (Local)*, Top 25% / trung bình / Bottom 25% so với các ô còn lại **trong cùng địa phương**."),
         ("4. Bảng ngưỡng phân loại (Global)", "__TABLE__"),
         ("5. Cách đọc tab Dữ liệu",
          "*\t**Nhận định nhanh:** tóm tắt tự động ô sáng nhất, độ tập trung ánh sáng, vùng tối và tự tương quan không gian.\n"
@@ -701,15 +701,15 @@ GUIDE = {
     "en": [
         ("1. What is NTL and how is it measured?",
          "*\t**NTL (Nighttime Lights)** is light emitted at night, measured monthly by the NOAA **VIIRS/DNB** satellite sensor.\n"
-         "*\t**Unit:** nW/cm²/sr (nanowatts per cm² per steradian) — a *radiance*, not a count of lamps.\n"
+         "*\t**Unit:** nW/cm²/sr (nanowatts per cm² per steradian), a *radiance*, not a count of lamps.\n"
          "*\t**Data used:** `avg_rad` from the stray-light-corrected product. For **{y}** the tool takes the **median** of monthly images to damp clouds, moonlight and fires.\n"
          "*\t**Why economics?** Brighter places usually have more people, commerce, industry and infrastructure, so NTL is a *proxy* for economic activity, especially where granular GDP data are missing.\n"
          "*\t**Rules of thumb:** < 1 almost dark; 5-15 residential/peri-urban; 15-40 dense urban; > 40 commercial hubs and brightly lit industry."),
         ("2. Reading the map",
          "*\t**Color modes (3):**\n"
-         "  *\t*NTL intensity* — continuous scale black → brown → orange → yellow → white. Brighter = more light.\n"
-         "  *\t*Economic class* — 5 discrete colors from global thresholds (white = commercial/services, yellow = urban core, orange = fringe, brown = peri-urban, grey = unlit). Best for comparing **across localities**.\n"
-         "  *\t*Local standing* — Top 25% (amber), middle (grey), Bottom 25% (blue), unlit (black). Best for spotting **hotspots/coldspots within one locality**.\n"
+         "  *\t*NTL intensity*: continuous scale black → brown → orange → yellow → white. Brighter = more light.\n"
+         "  *\t*Economic class*: 5 discrete colors from global thresholds (white = commercial/services, yellow = urban core, orange = fringe, brown = peri-urban, grey = unlit). Best for comparing **across localities**.\n"
+         "  *\t*Local standing*: Top 25% (amber), middle (grey), Bottom 25% (blue), unlit (black). Best for spotting **hotspots/coldspots within one locality**.\n"
          "*\t**Color scale (NTL mode only):** *Linear* keeps true proportions but peri-urban areas look dark; *Square root* and *Logarithmic* lift low values to reveal urban structure. Check the legend: color stops move with the scale.\n"
          "*\t**Opacity / Hide unlit cells / Cell borders:** adjust to see the base map or to see each square.\n"
          "*\t**Dim outside boundary:** darkens everything outside the locality so the eye stays on the study area.\n"
@@ -720,14 +720,14 @@ GUIDE = {
          "Hover over a cell; the tooltip shows, top to bottom:\n"
          "*\t**Header:** `Cell #ID` and an **economic-class badge** (color matches the threshold table). The small line below is locality and year.\n"
          "*\t**Big number + color bar:** the cell's NTL; bar length = ratio to the locality's brightest cell.\n"
-         "*\t**Survey area:** cells on the border are clipped and smaller than full cells — use area as a weight in regressions.\n"
+         "*\t**Survey area:** cells on the border are clipped and smaller than full cells, use area as a weight in regressions.\n"
          "*\t**Versus area average:** 2.0× means twice the (area-weighted) average of the locality.\n"
          "*\t**Rank / Percentile:** #1 is the brightest cell; P90 means brighter than 90% of cells.\n"
          "*\t**Share of total light:** percent of the locality's total SOL located in this cell.\n"
          "*\t**Std. deviations (z):** +2 σ means two standard deviations above the cell mean (comparable across areas).\n"
          "*\t**Cell SOL:** NTL × area, used when summing cells up to larger regions.\n"
          "*\t**Centroid (lat, lon):** to look the place up or join other data.\n"
-         "*\t**Last two lines:** *Economic proxy (Global)* — class from global radiance thresholds; *Internal status (Local)* — Top 25% / average / Bottom 25% relative to other cells **in the same locality**."),
+         "*\t**Last two lines:** *Economic proxy (Global)*: class from global radiance thresholds; *Internal status (Local)*: Top 25% / average / Bottom 25% relative to other cells **in the same locality**."),
         ("4. Classification thresholds (Global)", "__TABLE__"),
         ("5. Reading the Data tab",
          "*\t**Quick takeaways:** automatic summary of the brightest cell, light concentration, dark space and spatial autocorrelation.\n"
@@ -1260,16 +1260,16 @@ with st.sidebar:
             _alt = suggest_cell_size(_bs["bounds"], _a, _bs["perimeter_km"], cell_size)
             if LANG == "vi":
                 _hint = (f"Hãy tăng kích thước ô lên **≥ {_alt:,} m** (hoặc chọn địa phương nhỏ hơn)."
-                         if _alt else "Ngay cả ô lớn nhất (5.000 m) vẫn vượt trần — hãy chọn địa phương nhỏ hơn.")
+                         if _alt else "Ngay cả ô lớn nhất (5.000 m) vẫn vượt trần, hãy chọn địa phương nhỏ hơn.")
                 st.error(
                     f"⛔ **Vùng quá lớn cho lưới {cell_size:,} m.** Diện tích {_a:,.0f} km² ≈ **{_est['n_clip']:,} ô**, "
-                    f"vượt/chạm trần {MAX_CELLS:,} ô — chạy tiếp có thể treo máy chủ. {_hint}")
+                    f"vượt/chạm trần {MAX_CELLS:,} ô, chạy tiếp có thể treo máy chủ. {_hint}")
             else:
                 _hint = (f"Raise the cell size to **≥ {_alt:,} m** (or pick a smaller locality)."
-                         if _alt else "Even the largest cell (5,000 m) exceeds the cap — pick a smaller locality.")
+                         if _alt else "Even the largest cell (5,000 m) exceeds the cap, pick a smaller locality.")
                 st.error(
                     f"⛔ **Area too large for a {cell_size:,} m grid.** {_a:,.0f} km² ≈ **{_est['n_clip']:,} cells**, "
-                    f"at/above the {MAX_CELLS:,}-cell cap — running could hang the server. {_hint}")
+                    f"at/above the {MAX_CELLS:,}-cell cap, running could hang the server. {_hint}")
         elif _est["slow"]:
             st.warning(
                 (f"⚠️ Vùng lớn: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} ô ({_a:,.0f} km²). Vẫn chạy được nhưng sẽ chậm; "
