@@ -385,7 +385,8 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     cache = st.session_state.setdefault("_lisa_cache", {})
     just_computed = ckey not in cache
     if ckey not in cache:
-        cache.clear()
+        if len(cache) >= 5:  # Giới hạn tối đa 5 bộ tham số trong RAM
+            cache.pop(next(iter(cache)))
         cent = grid_utm.geometry.centroid
         meta = {"iso3": res["iso3"], "region_id": region_id, "region_label": region_label, "year": yr}
         with st.status(L["st_title"].format(n=n, p=perms), expanded=True) as status:
@@ -399,8 +400,6 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                 perms=perms, alpha=alpha, fdr=fdr, log_transform=use_log, min_neighbors=min_nbr,
                 min_cluster_cells=min_clu, meta=meta)
             status.update(label=L["st_done"], state="complete", expanded=False)
-    out = cache[ckey]
-    cdf, rm = out.cell_df, out.region_metrics
 
     # ---------- KPI ----------
     st.divider()
