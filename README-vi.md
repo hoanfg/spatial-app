@@ -34,7 +34,7 @@ Hệ thống được thiết kế không chỉ như một công cụ trích xu�
 
 Môi trường triển khai mục tiêu của hệ thống là Streamlit Community Cloud (hoặc các docker container chi phí thấp), nơi tài nguyên bị giới hạn ở mức **~1GB RAM** và **1 CPU Core**.
 
-Xử lý hình học không gian có mức tiêu thụ bộ nhớ tăng rất nhanh theo độ phân giải lưới. Khi thực hiện phép cắt `geopandas.clip()` trên lưới 500m cho một đơn vị hành chính rộng $30,000 \, \text{km}^2$, số lượng đa giác sinh ra có thể vượt ngưỡng $150,000$. Việc lưu trữ đồng thời cấu trúc hình học (topology) của số lượng đa giác này trên RAM sẽ kích hoạt cơ chế Linux OOM Killer làm sập tiến trình máy chủ.
+Xử lý hình học không gian có mức tiêu thụ bộ nhớ tăng rất nhanh theo độ phân giải lưới. Khi thực hiện phép cắt `geopandas.clip()` trên lưới 500m cho một đơn vị hành chính rộng $30,000 \, \mathrm{km}^2$, số lượng đa giác sinh ra có thể vượt ngưỡng $150,000$. Việc lưu trữ đồng thời cấu trúc hình học (topology) của số lượng đa giác này trên RAM sẽ kích hoạt cơ chế Linux OOM Killer làm sập tiến trình máy chủ.
 
 **Cơ chế phòng thủ:**
 
@@ -62,31 +62,31 @@ Trong các nghiên cứu kinh tế học không gian thực nghiệm, việc s�
 
 **Thuật toán chiếu tọa độ động:**
 
-Thay vì sử dụng cố định một mã EPSG cục bộ như ở bản thử nghiệm Phase 1 (`EPSG:32648`), hệ thống tự động nội suy múi chiếu phẳng **UTM (Universal Transverse Mercator)** tối ưu dựa trên kinh độ và vĩ độ tâm $(\lambda_{\text{center}}, \phi_{\text{center}})$ của hộp bao vùng nghiên cứu:
+Thay vì sử dụng cố định một mã EPSG cục bộ như ở bản thử nghiệm Phase 1 (`EPSG:32648`), hệ thống tự động nội suy múi chiếu phẳng **UTM (Universal Transverse Mercator)** tối ưu dựa trên kinh độ và vĩ độ tâm $(\lambda_{\mathrm{center}}, \phi_{\mathrm{center}})$ của hộp bao vùng nghiên cứu:
 
 $$
-\text{Zone} = \min\left(60, \, \max\left(1, \, \left\lfloor \frac{\lambda_{\text{center}} + 180}{6} \right\rfloor + 1\right)\right)
+\mathrm{Zone} = \min\left(60, \, \max\left(1, \, \left\lfloor \frac{\lambda_{\mathrm{center}} + 180}{6} \right\rfloor + 1\right)\right)
 $$
 
 Mã hệ tọa độ chuẩn EPSG (đơn vị: mét) được xác định tự động cho cả Bắc và Nam bán cầu:
 
 $$
-\text{EPSG} = \begin{cases} 32600 + \text{Zone} & \text{nếu } \phi_{\text{center}} \ge 0 \text{ (Bắc bán cầu)} \\ 32700 + \text{Zone} & \text{nếu } \phi_{\text{center}} < 0 \text{ (Nam bán cầu)} \end{cases}
+\mathrm{EPSG} = \begin{cases} 32600 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} \ge 0 \text{ (Bắc bán cầu)} \\ 32700 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} < 0 \text{ (Nam bán cầu)} \end{cases}
 $$
 
-Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới đều được căn chuẩn theo bội số nguyên của kích thước cạnh ô $\text{size}$ trong không gian phẳng UTM, đảm bảo lưới của các quận/huyện liền kề khớp nhau tuyệt đối khi ghép nối.
+Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới đều được căn chuẩn theo bội số nguyên của kích thước cạnh ô $\mathrm{size}$ trong không gian phẳng UTM, đảm bảo lưới của các quận/huyện liền kề khớp nhau tuyệt đối khi ghép nối.
 
 ### 2.2. Lọc mây trên GEE và trích xuất Zonal statistics bằng tỷ lệ phủ (fractional coverage)
 
-Hệ thống khai thác chuỗi ảnh tháng từ bộ dữ liệu vệ tinh `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` (độ phân giải gốc $\approx 15\text{ arc-giây} \approx 463.83\text{ m}$ tại xích đạo). Tại các vùng nhiệt đới gió mùa, mây che phủ dày đặc trong các tháng mùa mưa có thể khiến điểm ảnh không có quan sát hợp lệ ($\text{cf\_cvg} = 0$), dẫn đến giá trị bức xạ bằng $0$ giả tạo. Để loại bỏ thiên lệch âm này, hệ thống áp dụng mặt nạ lọc mây $\text{cf\_cvg} > 0$ cho từng ảnh tháng trước khi lấy **trung vị năm (annual median composite)** (Elvidge et al., 2017, 2021).
+Hệ thống khai thác chuỗi ảnh tháng từ bộ dữ liệu vệ tinh `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` (độ phân giải gốc $\approx 15\text{ arc-giây} \approx 463.83\text{ m}$ tại xích đạo). Tại các vùng nhiệt đới gió mùa, mây che phủ dày đặc trong các tháng mùa mưa có thể khiến điểm ảnh không có quan sát hợp lệ (`cf_cvg` $= 0$), dẫn đến giá trị bức xạ bằng $0$ giả tạo. Để loại bỏ thiên lệch âm này, hệ thống áp dụng mặt nạ lọc mây `cf_cvg` $> 0$ cho từng ảnh tháng trước khi lấy **trung vị năm (annual median composite)** (Elvidge et al., 2017, 2021).
 
-Tiếp theo, thay vì sử dụng phương pháp tâm điểm ảnh (center-of-pixel) truyền thống vốn gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS, hệ thống tích hợp thư viện C/C++ `exactextract` (Baston, 2023). Cường độ bức xạ trung bình $\text{NTL}_i$ của ô lưới $i$ được tính bằng trung bình có trọng số theo tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
+Tiếp theo, thay vì sử dụng phương pháp tâm điểm ảnh (center-of-pixel) truyền thống vốn gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS, hệ thống tích hợp thư viện C/C++ `exactextract` (Baston, 2023). Cường độ bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ được tính bằng trung bình có trọng số theo tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
 
 $$
-\text{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
+\mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
 $$
 
-Các giá trị rỗng hoặc âm phát sinh từ quá trình hiệu chỉnh ánh sáng nền của cảm biến được chuẩn hóa về $0.0$. Tổng lượng ánh sáng (sum of lights – SOL) của từng ô được tính bằng tích số giữa cường độ bức xạ trung bình và diện tích thực tế sau khi cắt: $\text{SOL}_i = \text{NTL}_i \times A_i$.
+Các giá trị rỗng hoặc âm phát sinh từ quá trình hiệu chỉnh ánh sáng nền của cảm biến được chuẩn hóa về $0.0$. Tổng lượng ánh sáng (sum of lights – SOL) của từng ô được tính bằng tích số giữa cường độ bức xạ trung bình và diện tích thực tế sau khi cắt: $\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$.
 
 ---
 
@@ -94,24 +94,25 @@ Các giá trị rỗng hoặc âm phát sinh từ quá trình hiệu chỉnh án
 
 Mô-đun `lisa_core.py` được thiết kế độc lập hoàn toàn bằng đại số mảng trên `numpy` và `pandas`, loại bỏ sự phụ thuộc vào các thư viện nặng như `libpysal` hay `esda`, đồng thời giảm độ phức tạp tính toán đồ thị láng giềng xuống $\mathcal{O}(N \log N)$.
 
-### 3.1. Xử lý dữ liệu lạm phát Số 0 và ô biên
+### 3.1. Xử lý dữ liệu lạm phát số 0 và ô biên
 
 Dữ liệu bức xạ đêm tự nhiên thường chứa tỷ lệ lớn các quan sát bằng $0$ (rừng núi, mặt nước, đất nông nghiệp) và các mảnh đa giác biên bị cắt hẹp bởi ranh giới hành chính. Hệ thống xử lý đồng thời hai vấn đề này theo quy trình 3 bước:
 
 1. **Lọc ô biên:** Một ô lưới $i$ được gắn cờ là ô biên (`is_border_cell = 1` và `is_edge_masked = 1`) và bị loại khỏi đồ thị láng giềng nếu diện tích thực tế sau khi cắt $A_i$ nhỏ hơn $99\%$ diện tích ô lưới chuẩn:
 
-   $$
-   A_i < 0.99 \times \left(\frac{\text{size}}{1000}\right)^2 \quad (\text{km}^2)
-   $$
+$$
+A_i < 0.99 \times \left(\frac{\mathrm{size}}{1000}\right)^2 \quad (\mathrm{km}^2)
+$$
 
-2. **Chuẩn hóa Z-score trên tập tham chiếu lõi ($S$):** Gọi $S$ là tập các ô lõi (không phải ô biên, $A_i \ge 0.99 \times (\text{size}/1000)^2$) thỏa mãn điều kiện đưa vào kiểm định. Ở chế độ mặc định (`include_zeros = False`), $S$ gồm các ô lõi có ánh sáng vượt ngưỡng ($\text{NTL}_i > \text{threshold}$). Ở chế độ mở rộng (`include_zeros = True`), $S$ bao gồm toàn bộ các ô lõi. Điểm chuẩn hóa $z_i$ được tính với độ lệch chuẩn mẫu hiệu chỉnh Bessel ($\text{ddof} = 1$):
+2. **Chuẩn hóa Z-score trên tập tham chiếu lõi ($S$):** Gọi $S$ là tập các ô lõi (không phải ô biên, $A_i \ge 0.99 \times (\mathrm{size}/1000)^2$) thỏa mãn điều kiện đưa vào kiểm định. Ở chế độ mặc định (`include_zeros = False`), $S$ gồm các ô lõi có ánh sáng vượt ngưỡng ($\mathrm{NTL}_i > \mathrm{threshold}$). Ở chế độ mở rộng (`include_zeros = True`), $S$ bao gồm toàn bộ các ô lõi. Điểm chuẩn hóa $z_i$ được tính với độ lệch chuẩn mẫu hiệu chỉnh Bessel ($\mathrm{ddof} = 1$):
 
-   $$
-   \mu_S = \frac{1}{|S|} \sum_{i \in S} v_i, \quad \sigma_S = \sqrt{\frac{1}{|S|-1} \sum_{i \in S} (v_i - \mu_S)^2}, \quad z_i = \frac{v_i - \mu_S}{\sigma_S} \quad \forall i \in S
-   $$
-   trong đó $v_i = \ln(\text{NTL}_i)$ (hoặc $\ln(1 + \text{NTL}_i)$ khi bao gồm số $0$) nếu người dùng bật tùy chọn biến đổi logarit để nén đuôi phân phối lệch phải, và $v_i = \text{NTL}_i$ nếu giữ nguyên thang đo bức xạ gốc.
+$$
+\mu_S = \frac{1}{\lvert S \rvert} \sum_{i \in S} v_i, \quad \sigma_S = \sqrt{\frac{1}{\lvert S \rvert - 1} \sum_{i \in S} (v_i - \mu_S)^2}, \quad z_i = \frac{v_i - \mu_S}{\sigma_S} \quad \forall i \in S
+$$
 
-3. **Hệ quả phương pháp luận của chế độ Chỉ kiểm định ô sáng (`lit_only`):** Khi loại các ô tối ($\text{NTL}_i \le \text{threshold}$, gán nhãn `DARK`) khỏi đồ thị láng giềng $W$, trung bình $\mu_S$ đại diện cho **mức sáng trung bình nội bộ của khu vực có hoạt động chiếu sáng**. Khi đó:
+Trong đó $v_i = \ln(\mathrm{NTL}_i)$ (hoặc $\ln(1 + \mathrm{NTL}_i)$ khi bao gồm số $0$) nếu người dùng bật tùy chọn biến đổi logarit để nén đuôi phân phối lệch phải, và $v_i = \mathrm{NTL}_i$ nếu giữ nguyên thang đo bức xạ gốc.
+
+3. **Hệ quả phương pháp luận của chế độ chỉ kiểm định ô sáng (`lit_only`):** Khi loại các ô tối ($\mathrm{NTL}_i \le \mathrm{threshold}$, gán nhãn `DARK`) khỏi đồ thị láng giềng $W$, trung bình $\mu_S$ đại diện cho **mức sáng trung bình nội bộ của khu vực có hoạt động chiếu sáng**. Khi đó:
 
    * Cụm **High-High (HH)** phản ánh lõi đô thị/thương mại có bức xạ cao vượt trội nằm liền kề nhau.
 
@@ -124,7 +125,7 @@ Dữ liệu bức xạ đêm tự nhiên thường chứa tỷ lệ lớn các q
 Ma trận trọng số không gian $W$ được xây dựng theo quy tắc tiếp xúc Queen (8 hướng lân cận: 4 cạnh và 4 góc) trên lưới đều cho các ô thuộc tập kiểm định $S$. Từ tọa độ tâm $(c_{x,i}, c_{y,i})$ trong hệ mét UTM, thuật toán ánh xạ từng ô về cặp chỉ số nguyên $(ix_i, iy_i)$ và tạo khóa băm một chiều duy nhất:
 
 $$
-ix_i = \left\lfloor \frac{c_{x,i} + \epsilon}{\text{size}} \right\rfloor, \quad iy_i = \left\lfloor \frac{c_{y,i} + \epsilon}{\text{size}} \right\rfloor, \quad \text{Key}_i = ix_i \cdot H + iy_i
+ix_i = \left\lfloor \frac{c_{x,i} + \epsilon}{\mathrm{size}} \right\rfloor, \quad iy_i = \left\lfloor \frac{c_{y,i} + \epsilon}{\mathrm{size}} \right\rfloor, \quad \mathrm{Key}_i = ix_i \cdot H + iy_i
 $$
 
 (với $\epsilon = 10^{-6}\text{ m}$ là hằng số bù sai số dấu phẩy động IEEE-754 và $H = \max(iy) - \min(iy) + 4$). Thuật toán sử dụng tìm kiếm nhị phân vector hóa `numpy.searchsorted` trên mảng khóa đã sắp xếp để xác định 8 láng giềng $(dx, dy) \in \{-1, 0, 1\}^2 \setminus \{(0,0)\}$. Trọng số không gian $w_{ij}$ được chuẩn hóa theo hàng:
@@ -133,14 +134,14 @@ $$
 w_{ij} = \begin{cases} \frac{1}{k_i} & \text{nếu } j \in N(i) \cap S \\ 0 & \text{nếu ngược lại} \end{cases}
 $$
 
-với $k_i = |N(i) \cap S|$ là số láng giềng hợp lệ của ô $i$. Chỉ các ô $i \in S$ có $k_i \ge k_{\min}$ (mặc định $k_{\min} = 1$) mới được đưa vào tập kiểm định $\text{Focal}$.
+với $k_i = \lvert N(i) \cap S \rvert$ là số láng giềng hợp lệ của ô $i$. Chỉ các ô $i \in S$ có $k_i \ge k_{\min}$ (mặc định $k_{\min} = 1$) mới được đưa vào tập kiểm định $\mathrm{Focal}$.
 
 ### 3.3. Kiểm định Local Moran's I (LISA) và hoán vị có điều kiện
 
-Thống kê Local Moran's I (Anselin, 1995) và biến trễ không gian chuẩn hóa ($\text{Spatial Lag } z$) cho mỗi ô $i \in \text{Focal}$ được xác định bởi:
+Thống kê Local Moran's I (Anselin, 1995) và biến trễ không gian chuẩn hóa ($\mathrm{Spatial\ Lag}\ z$) cho mỗi ô $i \in \mathrm{Focal}$ được xác định bởi:
 
 $$
-I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \text{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{|S|} \sum_{r \in S} z_r^2
+I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert} \sum_{r \in S} z_r^2
 $$
 
 **Hoán vị có điều kiện vector hóa:**
@@ -161,39 +162,40 @@ $$
 
 ### 3.4. Kiểm soát tỷ lệ phát hiện sai (FDR – Benjamini-Hochberg)
 
-Khi thực hiện kiểm định đồng thời trên $m = |\text{Focal}|$ ô lưới (có thể lên tới hàng chục ngàn ô ở độ phân giải 500m), việc áp dụng trực tiếp ngưỡng $\alpha = 0.05$ cho từng ô đơn lẻ sẽ làm bùng nổ sai số loại I (multiple testing problem) (Caldas de Castro & Singer, 2006). Hệ thống tích hợp thủ tục kiểm soát tỷ lệ phát hiện sai (false discovery rate – FDR) của Benjamini & Hochberg (1995):
+Khi thực hiện kiểm định đồng thời trên $m = \lvert \mathrm{Focal} \rvert$ ô lưới (có thể lên tới hàng chục ngàn ô ở độ phân giải 500m), việc áp dụng trực tiếp ngưỡng $\alpha = 0.05$ cho từng ô đơn lẻ sẽ làm bùng nổ sai số loại I (multiple testing problem) (Caldas de Castro & Singer, 2006). Hệ thống tích hợp thủ tục kiểm soát tỷ lệ phát hiện sai (false discovery rate – FDR) của Benjamini & Hochberg (1995):
 
 1. Sắp xếp các giá trị $p_i$ của $m$ ô được kiểm định theo thứ tự tăng dần: $p_{(1)} \le p_{(2)} \le \dots \le p_{(m)}$.
 
 2. Tìm chỉ số $k \in \{1, \dots, m\}$ lớn nhất thỏa mãn bất đẳng thức:
-   $$
-   p_{(k)} \le \frac{k}{m} \alpha
-   $$
+
+$$
+p_{(k)} \le \frac{k}{m} \alpha
+$$
 
 3. Nếu tồn tại $k$, bác bỏ giả thuyết không $H_0$ (công nhận có cụm không gian có ý nghĩa thống kê) cho toàn bộ các ô có $p_i \le p_{(k)}$.
 
-Do mức sàn nhỏ nhất của pseudo p-value hai phía là $p_{\text{floor}} = \frac{2}{R + 1}$, điều kiện cần toán học để thủ tục Benjamini–Hochberg có thể bác bỏ ít nhất một giả thuyết là số lượng ô đạt mức sàn $p_{\text{floor}}$ phải thỏa mãn:
+Do mức sàn nhỏ nhất của pseudo p-value hai phía là $p_{\mathrm{floor}} = \frac{2}{R + 1}$, điều kiện cần toán học để thủ tục Benjamini–Hochberg có thể bác bỏ ít nhất một giả thuyết là số lượng ô đạt mức sàn $p_{\mathrm{floor}}$ phải thỏa mãn:
 
 $$
-k_{\text{hit}} \ge \left\lceil \frac{p_{\text{floor}} \cdot m}{\alpha} \right\rceil = \left\lceil \frac{2m}{(R + 1)\alpha} \right\rceil
+k_{\mathrm{hit}} \ge \left\lceil \frac{p_{\mathrm{floor}} \cdot m}{\alpha} \right\rceil = \left\lceil \frac{2m}{(R + 1)\alpha} \right\rceil
 $$
 
-Hệ thống tự động tính toán ngưỡng $k_{\text{hit}}$ (`fdr_min_hits_needed`) và hiển thị cảnh báo hướng dẫn người dùng tăng số hoán vị $R$ lên $999$ khi kích thước mẫu $m$ lớn.
+Hệ thống tự động tính toán ngưỡng $k_{\mathrm{hit}}$ (`fdr_min_hits_needed`) và hiển thị cảnh báo hướng dẫn người dùng tăng số hoán vị $R$ lên $999$ khi kích thước mẫu $m$ lớn.
 
 ### 3.5. Gom cụm điểm nóng liên thông và xác định tâm lõi kinh tế
 
 Để phục vụ các mô hình kinh tế học đô thị nghiên cứu độ dốc mật độ kinh tế theo khoảng cách tới trung tâm, hệ thống tự động trích xuất các thành phần liên thông của các ô đạt chuẩn `High-High` trên đồ thị Queen bằng thuật toán lan truyền nhãn có bước nhảy con trỏ.
 
-Một cụm `High-High` liên thông thứ $c$ được công nhận là một **cực tăng trưởng / điểm nóng đô thị** nếu số lượng ô của cụm đạt ngưỡng tối thiểu $n_c \ge n_{\min}$ (mặc định $n_{\min} = 4$ ô). Thay vì chọn tâm lõi kinh tế (central business district – CBD) bằng ô đơn lẻ có bức xạ cực đại $\arg\max_i(\text{NTL}_i)$ — vốn rất dễ bị lệch bởi các điểm nhiễu công nghiệp, cảng biển hoặc sân bay ở vùng rìa, tọa độ tâm lõi $(\text{CBD}_x, \text{CBD}_y)$ được xác định bằng **trọng tâm có trọng số tổng ánh sáng (SOL-weighted centroid) của cụm High-High có diện tích lớn nhất** ($C^*$):
+Một cụm `High-High` liên thông thứ $c$ được công nhận là một **cực tăng trưởng / điểm nóng đô thị** nếu số lượng ô của cụm đạt ngưỡng tối thiểu $n_c \ge n_{\min}$ (mặc định $n_{\min} = 4$ ô). Thay vì chọn tâm lõi kinh tế (central business district – CBD) bằng ô đơn lẻ có bức xạ cực đại $\arg\max_i(\mathrm{NTL}_i)$ vốn rất dễ bị lệch bởi các điểm nhiễu công nghiệp, cảng biển hoặc sân bay ở vùng rìa, tọa độ tâm lõi $(\mathrm{CBD}_x, \mathrm{CBD}_y)$ được xác định bằng **trọng tâm có trọng số tổng ánh sáng (SOL-weighted centroid) của cụm High-High có diện tích lớn nhất** ($C^{\star}$):
 
 $$
-\text{CBD}_x = \frac{\sum_{i \in C^*} c_{x,i} \cdot (\text{NTL}_i \cdot A_i)}{\sum_{i \in C^*} (\text{NTL}_i \cdot A_i)}, \quad \text{CBD}_y = \frac{\sum_{i \in C^*} c_{y,i} \cdot (\text{NTL}_i \cdot A_i)}{\sum_{i \in C^*} (\text{NTL}_i \cdot A_i)}
+\mathrm{CBD}_x = \frac{\sum_{i \in C^{\star}} c_{x,i} \cdot (\mathrm{NTL}_i \cdot A_i)}{\sum_{i \in C^{\star}} (\mathrm{NTL}_i \cdot A_i)}, \quad \mathrm{CBD}_y = \frac{\sum_{i \in C^{\star}} c_{y,i} \cdot (\mathrm{NTL}_i \cdot A_i)}{\sum_{i \in C^{\star}} (\mathrm{NTL}_i \cdot A_i)}
 $$
 
-Trong trường hợp địa phương chưa hình thành cụm `High-High` nào đạt ngưỡng $n_{\min}$, hệ thống tự động chuyển sang phương án dự phòng vững (robust fallback): chọn ô lõi không biên có điểm tổ hợp trung bình trượt không gian $0.5 \cdot \text{NTL}_i + 0.5 \cdot \text{Lag}(\text{NTL}_i)$ cao nhất làm tâm. Từ đó, khoảng cách Euclid từ mọi ô lưới $i$ tới tâm lõi kinh tế (đơn vị: km) được xuất ra thành biến `dist_to_core_km`:
+Trong trường hợp địa phương chưa hình thành cụm `High-High` nào đạt ngưỡng $n_{\min}$, hệ thống tự động chuyển sang phương án dự phòng vững (robust fallback): chọn ô lõi không biên có điểm tổ hợp trung bình trượt không gian $0.5 \cdot \mathrm{NTL}_i + 0.5 \cdot \mathrm{Lag}(\mathrm{NTL}_i)$ cao nhất làm tâm. Từ đó, khoảng cách Euclid từ mọi ô lưới $i$ tới tâm lõi kinh tế (đơn vị: km) được xuất ra thành biến `dist_to_core_km`:
 
 $$
-d_{\text{core}, i} = \frac{1}{1000}\sqrt{(c_{x,i} - \text{CBD}_x)^2 + (c_{y,i} - \text{CBD}_y)^2}
+d_{\mathrm{core}, i} = \frac{1}{1000}\sqrt{(c_{x,i} - \mathrm{CBD}_x)^2 + (c_{y,i} - \mathrm{CBD}_y)^2}
 $$
 
 ---
@@ -202,21 +204,21 @@ $$
 
 ### 4.1. Cầu chì ước lượng quy mô lưới
 
-Trước khi cho phép thực thi `geopandas.clip()`, hệ thống kích hoạt thuật toán chặn trước để dự phóng số lượng ô lưới sau khi cắt ($N_{\text{clip}}$) và số lượng ô của hộp bao chữ nhật ($N_{\text{bbox}}$) chỉ từ diện tích ($\text{Area}$, $\text{km}^2$) và chu vi ($\text{Perimeter}$, $\text{km}$) của ranh giới hành chính:
+Trước khi cho phép thực thi `geopandas.clip()`, hệ thống kích hoạt thuật toán chặn trước để dự phóng số lượng ô lưới sau khi cắt ($N_{\mathrm{clip}}$) và số lượng ô của hộp bao chữ nhật ($N_{\mathrm{bbox}}$) chỉ từ diện tích ($\mathrm{Area}$, $\mathrm{km}^2$) và chu vi ($\mathrm{Perimeter}$, $\mathrm{km}$) của ranh giới hành chính:
 
 $$
-N_{\text{clip}} \approx \frac{\text{Area}}{(\text{size}/1000)^2} + \beta \frac{\text{Perimeter}}{\text{size}/1000}
+N_{\mathrm{clip}} \approx \frac{\mathrm{Area}}{(\mathrm{size}/1000)^2} + \beta \frac{\mathrm{Perimeter}}{\mathrm{size}/1000}
 $$
 
-với $\beta = 0.65$ là hệ số hiệu chỉnh hình học cho các ô biên bị cắt. Nếu $N_{\text{clip}} \ge \text{MAX\_CELLS} = 150,000$ hoặc $N_{\text{bbox}} > 4 \times \text{MAX\_CELLS}$, nút thực thi sẽ tự động khóa và gợi ý độ phân giải lưới tối thiểu an toàn kế tiếp.
+với $\beta = 0.65$ là hệ số hiệu chỉnh hình học cho các ô biên bị cắt. Nếu $N_{\mathrm{clip}} \ge N_{\max} = 150,000$ (`MAX_CELLS`) hoặc $N_{\mathrm{bbox}} > 4 \times N_{\max}$, nút thực thi sẽ tự động khóa và gợi ý độ phân giải lưới tối thiểu an toàn kế tiếp.
 
 ### 4.2. Kỹ thuật Winsorization động và cắt ngưỡng hiển thị trình duyệt
 
-1. **Winsorization động cho thang màu bản đồ nhiệt:** Để ngăn chặn các điểm dị thường bức xạ cực cao (cảng biển, khu công nghiệp nặng, trạm đốt khí) làm mất độ tương phản của các khu dân cư đô thị, mức trần hiển thị $v_{\max}$ được tính động tại phân vị thứ 99 của tập các ô có ánh sáng $\text{NTL}_{\text{lit}} = \{\text{NTL}_i \mid \text{NTL}_i > 0\}$:
+1. **Winsorization động cho thang màu bản đồ nhiệt:** Để ngăn chặn các điểm dị thường bức xạ cực cao (cảng biển, khu công nghiệp nặng, trạm đốt khí) làm mất độ tương phản của các khu dân cư đô thị, mức trần hiển thị $v_{\max}$ được tính động tại phân vị thứ 99 của tập các ô có ánh sáng $\mathrm{NTL}_{\mathrm{lit}} = \{\mathrm{NTL}_i \mid \mathrm{NTL}_i > 0\}$:
 
-   $$
-   v_{\text{raw}} = \begin{cases} P_{99}(\text{NTL}_{\text{lit}}) & \text{nếu } |\text{NTL}_{\text{lit}}| > 10 \\ \max_i(\text{NTL}_i) & \text{nếu } |\text{NTL}_{\text{lit}}| \le 10 \end{cases}, \quad v_{\max} = \begin{cases} v_{\text{raw}} & \text{nếu } v_{\text{raw}} > 0.1 \\ 1.0 & \text{nếu } v_{\text{raw}} \le 0.1 \end{cases}
-   $$
+$$
+v_{\mathrm{raw}} = \begin{cases} P_{99}(\mathrm{NTL}_{\mathrm{lit}}) & \text{nếu } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert > 10 \\ \max_i(\mathrm{NTL}_i) & \text{nếu } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert \le 10 \end{cases}, \quad v_{\max} = \begin{cases} v_{\mathrm{raw}} & \text{nếu } v_{\mathrm{raw}} > 0.1 \\ 1.0 & \text{nếu } v_{\mathrm{raw}} \le 0.1 \end{cases}
+$$
 
 2. **Trần kết xuất DOM trình duyệt (`RENDER_CAP = 30,000`):** Khi số lượng ô lưới vượt quá $30,000$, trình duyệt người dùng có nguy cơ bị treo khi dựng cây DOM SVG/Canvas của Leaflet. Hệ thống tự động ưu tiên giữ lại các ô có ý nghĩa thống kê LISA và các ô có bức xạ cao nhất để vẽ lên bản đồ, đồng thời làm tròn tọa độ hình học ở mức $10^{-6}$ độ (`shapely.set_precision`) để giảm dung lượng chuỗi GeoJSON. Toàn bộ tệp CSV xuất ra vẫn bảo toàn 100% quan sát gốc.
 
@@ -233,10 +235,10 @@ Tệp CSV cấp độ ô lưới xuất ra 100% quan sát của địa phương 
 **Các nhóm biến số vi mô trọng tâm:**
 
 * **Nhóm biến cường độ và quy mô ánh sáng (`ntl_mean`, `ntl_sol`, `ntl_log`):**
-  Biến `ntl_log` được định nghĩa là $\ln(1 + \text{ntl\_mean})$, giúp nén đuôi phân phối lệch phải và giảm ảnh hưởng của các quan sát cực trị trong hồi quy OLS/WLS. Tuy nhiên, theo chứng minh lý thuyết của Chen & Roth (2024), các phép biến đổi dạng $\ln(1 + Y)$ nhạy cảm với đơn vị đo của $Y$ khi dữ liệu có nhiều giá trị bằng $0$ (kết quả ước lượng trộn lẫn tác động theo chiều rộng: *extensive margin* và chiều sâu: *intensive margin*). Do đó, hệ thống cung cấp đồng thời cả `ntl_mean` và `ntl_sol` ở thang đo gốc để nhà nghiên cứu dễ dàng thực hiện hồi quy **Poisson Pseudo-Maximum Likelihood (PPML)** nhằm kiểm định độ vững (robustness check).
+  Biến `ntl_log` được định nghĩa là $\ln(1 + \mathrm{NTL}_i)$, giúp nén đuôi phân phối lệch phải và giảm ảnh hưởng của các quan sát cực trị trong hồi quy OLS/WLS. Tuy nhiên, theo chứng minh lý thuyết của Chen & Roth (2024), các phép biến đổi dạng $\ln(1 + Y)$ nhạy cảm với đơn vị đo của $Y$ khi dữ liệu có nhiều giá trị bằng $0$ (kết quả ước lượng trộn lẫn tác động theo chiều rộng: *extensive margin* và chiều sâu: *intensive margin*). Do đó, hệ thống cung cấp đồng thời cả `ntl_mean` và `ntl_sol` ở thang đo gốc để nhà nghiên cứu dễ dàng thực hiện hồi quy **Poisson Pseudo-Maximum Likelihood (PPML)** nhằm kiểm định độ vững (robustness check).
 
 * **Nhóm biến trễ không gian và vị thế tương đối (`ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km`):**
-  Cung cấp trực tiếp biến trễ không gian của bức xạ gốc ($\text{Lag}(\text{NTL}_i)$), trễ không gian của điểm chuẩn hóa ($\text{Lag}(z_i)$) và khoảng cách tới tâm lõi kinh tế (`dist_to_core_km`) để ước lượng hiệu ứng lan tỏa cũng như hàm suy giảm mật độ kinh tế từ tâm đô thị.
+  Cung cấp trực tiếp biến trễ không gian của bức xạ gốc ($\mathrm{Lag}(\mathrm{NTL}_i)$), trễ không gian của điểm chuẩn hóa ($\mathrm{Lag}(z_i)$) và khoảng cách tới tâm lõi kinh tế (`dist_to_core_km`) để ước lượng hiệu ứng lan tỏa cũng như hàm suy giảm mật độ kinh tế từ tâm đô thị.
 
 * **Nhóm biến phân loại cụm LISA (`lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id`):**
   Cho phép tạo các biến giả hoặc phân tích ranh giới đô thị bằng thiết kế hồi quy gián đoạn không gian (spatial regression discontinuity design – Spatial RDD).
@@ -246,32 +248,40 @@ Tệp CSV cấp độ ô lưới xuất ra 100% quan sát của địa phương 
 Đối với các nghiên cứu vĩ mô phân tích sự phát triển cấp Quận/Huyện/Tỉnh qua nhiều năm, hệ thống tự động tổng hợp dữ liệu vi mô thành một dòng quan sát duy nhất cho mỗi tổ hợp `(iso3, region_id, year, cell_size_m)`. Các chỉ số được thiết kế để đo lường **cấu trúc không gian của sự phát triển**:
 
 1. **Hệ số Gini bất bình đẳng ánh sáng (`gini_ntl_core_all`, `gini_ntl_core_lit`, `gini_sol_all`):**
-   Kế thừa phương pháp chỉ số phát triển ánh sáng Đêm (NLDI) của Elvidge et al. (2012) và các nghiên cứu bất bình đẳng không gian từ vệ tinh của Lessmann & Seidel (2017) và Mirza et al. (2021), hệ số Gini đo lường mức độ tập trung hoạt động kinh tế:
-   $$
-   G = \frac{2 \sum_{i=1}^n i \cdot x_{(i)}}{n \sum_{i=1}^n x_{(i)}} - \frac{n + 1}{n}
-   $$
-   (với $x_{(1)} \le x_{(2)} \le \dots \le x_{(n)}$ là chuỗi giá trị đã sắp xếp không giảm). Hệ thống xuất 3 biến thể Gini: `gini_ntl_core_all` (tính trên toàn bộ các ô lõi không biên, gồm cả ô tối, đảm bảo diện tích mỗi ô bằng nhau tuyệt đối), `gini_ntl_core_lit` (bất bình đẳng nội bộ trong khu vực có điện/ánh sáng), và `gini_sol_all` (Gini tính trên tổng lượng ánh sáng $\text{SOL}_i$ của mọi ô).
+   Kế thừa phương pháp chỉ số phát triển ánh sáng đêm (NLDI) của Elvidge et al. (2012) và các nghiên cứu bất bình đẳng không gian từ vệ tinh của Lessmann & Seidel (2017) và Mirza et al. (2021), hệ số Gini đo lường mức độ tập trung hoạt động kinh tế:
+
+$$
+G = \frac{2 \sum_{i=1}^n i \cdot x_{(i)}}{n \sum_{i=1}^n x_{(i)}} - \frac{n + 1}{n}
+$$
+
+(với $x_{(1)} \le x_{(2)} \le \dots \le x_{(n)}$ là chuỗi giá trị đã sắp xếp không giảm). Hệ thống xuất 3 biến thể Gini: `gini_ntl_core_all` (tính trên toàn bộ các ô lõi không biên, gồm cả ô tối, đảm bảo diện tích mỗi ô bằng nhau tuyệt đối), `gini_ntl_core_lit` (bất bình đẳng nội bộ trong khu vực có điện/ánh sáng), và `gini_sol_all` (Gini tính trên tổng lượng ánh sáng $\mathrm{SOL}_i$ của mọi ô).
 
 2. **Tỷ trọng diện tích điểm nóng (`hh_area_share`, `hh_cluster_area_share`) và đa cực đô thị (`n_hh_clusters`):**
    Đo lường tỷ lệ diện tích lãnh thổ nằm trong các ô `High-High` có ý nghĩa thống kê (`hh_area_share`) hoặc nằm trong các cụm `High-High` liên thông đạt quy mô tối thiểu (`hh_cluster_area_share`):
-   $$
-   \text{HH\_Share} = \frac{\sum_{i \in \text{HH}} A_i}{\sum_{i=1}^N A_i}
-   $$
-   Đây là biến đại diện (proxy) cho **mức độ đô thị hóa thực tế (de facto urbanization)**, khắc phục nhược điểm của số liệu diện tích đô thị hành chính truyền thống. Kết hợp với số lượng cụm điểm nóng độc lập (`n_hh_clusters`) và diện tích cụm lớn nhất (`largest_hh_cluster_km2`), nhà nghiên cứu có thể định lượng quá trình chuyển dịch từ cấu trúc đô thị đơn cực sang đa cực.
+
+$$
+\mathrm{HH}_{\mathrm{share}} = \frac{\sum_{i \in \mathrm{HH}} A_i}{\sum_{i=1}^N A_i}
+$$
+
+Đây là biến đại diện (proxy) cho **mức độ đô thị hóa thực tế (de facto urbanization)**, khắc phục nhược điểm của số liệu diện tích đô thị hành chính truyền thống. Kết hợp với số lượng cụm điểm nóng độc lập (`n_hh_clusters`) và diện tích cụm lớn nhất (`largest_hh_cluster_km2`), nhà nghiên cứu có thể định lượng quá trình chuyển dịch từ cấu trúc đô thị đơn cực sang đa cực.
 
 3. **Chỉ số tự tương quan không gian toàn cục: Global Moran's I (hiển thị tại tab Dữ liệu `app.py`):**
-   Được tính trên toàn bộ $N$ ô lưới (bao gồm cả các ô $\text{NTL} = 0$) với ma trận trọng số nhị phân Queen đối xứng (Moran, 1950):
-   $$
-   I_{\text{global}} = \frac{N}{\sum_{i=1}^N \sum_{j=1}^N w_{ij}} \frac{\sum_{i=1}^N \sum_{j=1}^N w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i=1}^N (x_i - \bar{x})^2}
-   $$
-   Nếu $I_{\text{global}} > E[I] = -\frac{1}{N-1}$ và có ý nghĩa thống kê ($p < 0.05$), phần dư của hồi quy OLS truyền thống sẽ vi phạm giả định độc lập không gian, đòi hỏi nhà nghiên cứu phải sử dụng các mô hình Kinh tế lượng Không gian như SAR, SEM, SDM (LeSage & Pace, 2009) hoặc sai số chuẩn hiệu chỉnh tự tương quan không gian Conley (Conley, 1999).
+   Được tính trên toàn bộ $N$ ô lưới (bao gồm cả các ô $\mathrm{NTL} = 0$) với ma trận trọng số nhị phân Queen đối xứng (Moran, 1950):
+
+$$
+I_{\mathrm{global}} = \frac{N}{\sum_{i=1}^N \sum_{j=1}^N w_{ij}} \frac{\sum_{i=1}^N \sum_{j=1}^N w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i=1}^N (x_i - \bar{x})^2}
+$$
+
+Nếu $I_{\mathrm{global}} > E[I] = -\frac{1}{N-1}$ và có ý nghĩa thống kê ($p < 0.05$), phần dư của hồi quy OLS truyền thống sẽ vi phạm giả định độc lập không gian, đòi hỏi nhà nghiên cứu phải sử dụng các mô hình Kinh tế lượng Không gian như SAR, SEM, SDM (LeSage & Pace, 2009) hoặc sai số chuẩn hiệu chỉnh tự tương quan không gian Conley (Conley, 1999).
 
 4. **Chỉ số kết tụ nội tại vùng sáng: `moran_I_lit` (xuất trong bảng Panel CSV `lisa_core.py`):**
    Là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
-   $$
-   \bar{I}_{\text{lit}} = \frac{1}{|\text{Focal}|} \sum_{i \in \text{Focal}} I_i
-   $$
-   Chỉ số này đo lường cường độ kết tụ không gian bên trong ranh giới khu vực đã đô thị hóa/điện khí hóa của địa phương qua các năm.
+
+$$
+\bar{I}_{\mathrm{lit}} = \frac{1}{\lvert \mathrm{Focal} \rvert} \sum_{i \in \mathrm{Focal}} I_i
+$$
+
+Chỉ số này đo lường cường độ kết tụ không gian bên trong ranh giới khu vực đã đô thị hóa/điện khí hóa của địa phương qua các năm.
 
 ### 5.3. Từ điển biến số cấp vùng – năm 
 
@@ -281,20 +291,20 @@ Bảng dưới đây định nghĩa đầy đủ các biến số trong tệp xu
 | :--- | :--- |
 | `iso3`, `region_id`, `region_label`, `year` | Bộ khóa định danh đơn vị hành chính và thời gian của dữ liệu bảng. |
 | `cell_size_m` | Độ phân giải cạnh ô lưới vuông (mét): biến kiểm soát quy mô không gian (MAUP). |
-| `n_cells`, `n_cells_edge_masked` | Tổng số ô lưới của địa phương và số lượng ô biên bị cắt ($A_i < 0.99 \times \text{size}^2$). |
-| `n_cells_lit`, `n_cells_tested` | Số lượng ô có ánh sáng ($\text{NTL} > \text{threshold}$) và số ô lõi đủ láng giềng được đưa vào kiểm định LISA. |
-| `area_total_km2` | Tổng diện tích tự nhiên của địa phương tính theo lưới cắt ($\text{km}^2$). |
+| `n_cells`, `n_cells_edge_masked` | Tổng số ô lưới của địa phương và số lượng ô biên bị cắt ($A_i < 0.99 \times \mathrm{size}^2$). |
+| `n_cells_lit`, `n_cells_tested` | Số lượng ô có ánh sáng ($\mathrm{NTL} > \mathrm{threshold}$) và số ô lõi đủ láng giềng được đưa vào kiểm định LISA. |
+| `area_total_km2` | Tổng diện tích tự nhiên của địa phương tính theo lưới cắt ($\mathrm{km}^2$). |
 | `lit_area_share` | Tỷ trọng diện tích lãnh thổ có tín hiệu ánh sáng ban đêm ($\in [0, 1]$): proxy cho độ phủ điện khí hóa/hạ tầng. |
 | `hh_area_share` | Tỷ trọng diện tích toàn vùng thuộc các ô điểm nóng `High-High` có ý nghĩa thống kê. |
 | `hh_area_share_of_tested` | Tỷ trọng diện tích `High-High` tính trên tổng diện tích các ô lõi được kiểm định. |
 | `hh_cluster_area_share` | Tỷ trọng diện tích toàn vùng thuộc các cụm `High-High` liên thông đạt ngưỡng quy mô tối thiểu (`min_cluster_cells`). |
 | `ll_area_share`, `hl_area_share`, `lh_area_share` | Tỷ trọng diện tích toàn vùng thuộc các trạng thái `Low-Low`, `High-Low` và `Low-High`. |
-| `n_hh_clusters` | Số lượng cụm điểm nóng `High-High` liên thông độc lập - proxy đo lường cấu trúc đô thị đa cực. |
-| `largest_hh_cluster_km2` | Diện tích ($\text{km}^2$) của cụm điểm nóng `High-High` liên thông lớn nhất (hạt nhân đô thị chính). |
+| `n_hh_clusters` | Số lượng cụm điểm nóng `High-High` liên thông độc lập, proxy đo lường cấu trúc đô thị đa cực. |
+| `largest_hh_cluster_km2` | Diện tích ($\mathrm{km}^2$) của cụm điểm nóng `High-High` liên thông lớn nhất (hạt nhân đô thị chính). |
 | `hotspot_dummy` | Biến giả nhị phân (`1/0`): nhận giá trị `1` nếu `n_hh_clusters > 0`. Sẵn sàng cho mô hình Hiệu số trong Hiệu số (DiD). |
 | `gini_ntl_core_all` | Hệ số Gini bức xạ tính trên toàn bộ các ô lõi không biên (gồm cả ô tối), đo lường bất bình đẳng không gian tổng thể. |
 | `gini_ntl_core_lit` | Hệ số Gini bức xạ tính riêng trên các ô lõi có ánh sáng, đo lường chênh lệch phân hóa nội bộ vùng sáng. |
-| `gini_sol_all` | Hệ số Gini của tổng lượng ánh sáng ($\text{SOL}_i = \text{NTL}_i \times A_i$) trên toàn bộ các ô lưới. |
+| `gini_sol_all` | Hệ số Gini của tổng lượng ánh sáng ($\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$) trên toàn bộ các ô lưới. |
 | `moran_I_lit` | Trung bình cộng thống kê Local Moran's I của các ô sáng được kiểm định, đo lường mức độ kết tụ đô thị. |
 | `p_cfg_*`, `p_floor`, `fdr_min_hits_needed` | Tập siêu tham số lưu vết cấu hình kiểm định (`perms`, `alpha`, `fdr`, `log`, `lit_thr`, `edge_tol`, `min_nbr`, `min_cluster`) đảm bảo tính tái lập khoa học. |
 
@@ -312,13 +322,13 @@ Bảng dưới đây định nghĩa đầy đủ các biến số trong tệp xu
 
 ### 6.2. Hạn chế phần cứng
 
-* Việc triển khai trên hạ tầng đám mây miễn phí (~1GB RAM) giới hạn số lượng đa giác xử lý đồng thời ở mức $\text{MAX\_CELLS} = 150,000$ ô. Do đó, ở độ phân giải siêu mịn ($500\text{ m}$), hệ thống phù hợp nhất cho phân tích cấp quận/hạt/huyện hoặc bang/tỉnh/thành phố vừa và nhỏ; đối với quy mô vùng lớn hoặc quốc gia, người dùng cần nâng độ phân giải lưới lên $2000\text{ m} - 5000\text{ m}$ hoặc triển khai trên máy trạm cục bộ.
+* Việc triển khai trên hạ tầng đám mây miễn phí (~1GB RAM) giới hạn số lượng đa giác xử lý đồng thời ở mức `MAX_CELLS` $= 150,000$ ô. Do đó, ở độ phân giải siêu mịn ($500\text{ m}$), hệ thống phù hợp nhất cho phân tích cấp quận/hạt/huyện hoặc bang/tỉnh/thành phố vừa và nhỏ; đối với quy mô vùng lớn hoặc quốc gia, người dùng cần nâng độ phân giải lưới lên $2000\text{ m} - 5000\text{ m}$ hoặc triển khai trên máy trạm cục bộ.
 
 ### 6.3. Hướng mở rộng
 
 1. **Tích hợp bộ dữ liệu VIIRS chuẩn hóa đa năm (Annual VNL V2):** Tích hợp thêm nguồn ảnh năm đã khử nhiễu nền và pháo sáng khí đốt của Earth Observation Group (`NOAA/VIIRS/DNB/ANNUAL_V21` / `V22`) (Elvidge et al., 2021) song song với bộ tổng hợp trung vị tháng hiện tại, kết hợp hiệu ứng cố định theo năm (Year Fixed Effects) cho hồi quy chuỗi thời gian dài.
 
-2. **Động học không gian - thời gian (Spatio-Temporal LISA – LISTA):** Nâng cấp mô-đun `lisa_core.py` để tính toán ma trận dịch chuyển Markov không gian (Spatial Markov Transitions) và thống kê tự tương quan không – thời gian cục bộ (LISTA) (Rey, Murray, & Anselin, 2011; Ye & Rey, 2013), cho phép theo dõi trực tiếp quỹ đạo lan tỏa của các cụm điểm nóng qua từng giai đoạn phát triển.
+2. **Động học không gian – thời gian (Spatio-Temporal LISA – LISTA):** Nâng cấp mô-đun `lisa_core.py` để tính toán ma trận dịch chuyển Markov không gian (Spatial Markov Transitions) và thống kê tự tương quan không – thời gian cục bộ (LISTA) (Rey, Murray, & Anselin, 2011; Ye & Rey, 2013), cho phép theo dõi trực tiếp quỹ đạo lan tỏa của các cụm điểm nóng qua từng giai đoạn phát triển.
 
 ---
 
