@@ -960,22 +960,31 @@ with st.sidebar:
         st.stop()
 
     sel_country = st.selectbox(
-        L["country"], countries, format_func=lambda c: country_label(c, LANG), key="country"
+        L["country"], countries, format_func=lambda c: country_label(c, LANG), key="sb_opt_country"
     )
+    # Chốt an toàn 1: Nếu Streamlit bị "lú" truyền sai giá trị, ép về mặc định
+    if sel_country not in countries: 
+        sel_country = countries[0]
 
     states = subdirs(os.path.join(BASE_DATA_DIR, sel_country))
     if not states:
         st.warning(L["no_state"])
         st.stop()
-    sel_state = st.selectbox(L["state"], states, format_func=clean_state, key=f"state_{sel_country}")
+        
+    sel_state = st.selectbox(
+        L["state"], states, format_func=clean_state, key="sb_opt_state"
+    )
+    # Chốt an toàn 2
+    if sel_state not in states: 
+        sel_state = states[0]
 
     counties = list_counties(sel_country, sel_state)
     if not counties:
         st.warning(L["no_county"])
         st.stop()
+        
     sel_county_file = st.selectbox(
-        L["county"], list(counties.keys()), format_func=lambda f: counties[f],
-        key=f"county_{sel_country}_{sel_state}",
+        L["county"], list(counties.keys()), format_func=lambda f: counties[f], key="sb_opt_county"
     )
     sel_county = counties[sel_county_file]
     file_path = os.path.join(BASE_DATA_DIR, sel_country, sel_state, sel_county_file)
