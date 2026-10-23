@@ -233,6 +233,14 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     focal = members & (k >= max(1, min_neighbors))
 
     I, lagz, p, q = local_moran(z, nbr, focal, members, perms, seed)
+    
+    valid_nbr = nbr >= 0  # Lọc các hàng xóm hợp lệ
+    # Lấy cường độ NTL thực tế của các hàng xóm (nếu không hợp lệ thì gán 0)
+    ntl_nbrs = np.where(valid_nbr, ntl[np.maximum(nbr, 0)], 0.0)
+    # Tính trung bình cộng (Tổng NTL hàng xóm / số lượng hàng xóm k)
+    # Nếu ô nào bị cô lập (k=0), gán cho nó giá trị NaN
+    raw_lag = np.where(k > 0, ntl_nbrs.sum(axis=1) / k, np.nan)
+                 
     sig = np.zeros(n, dtype=bool)
     f_idx = np.flatnonzero(focal)
     if f_idx.size:
@@ -298,6 +306,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
 
     quad = np.array([QUADRANTS[c] if c >= 0 else "" for c in range(-1, 4)], dtype=object)[q.astype(int) + 1]
     cell_df = pd.DataFrame({
+        "ntl_raw_lag": np.round(raw_lag, 4),
         "ntl_z_lit": np.round(z, 4),
         "lisa_n_neighbors": k.astype(int),
         "lisa_I": np.round(I, 4),
