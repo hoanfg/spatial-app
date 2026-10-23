@@ -1,6 +1,6 @@
-# TECHNICAL MANUAL & METHODOLOGICAL FRAMEWORK
+# SỔ TAY KỸ THUẬT VÀ KHUNG PHƯƠNG PHÁP LUẬN
 
-**Nighttime lights (NTL) data extractor & spatial econometrics engine**
+**Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) & Công cụ kinh tế lượng không gian**
 
 [ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
