@@ -1144,7 +1144,12 @@ c4.metric(L["m_sol"], f"{sol:,.1f}")
 c5.metric(L["m_area"], f"{area.sum():,.1f} km²")
 c6.metric(L["m_lit"], f"{(ntl > 0).mean() * 100:.0f}%")
 
-tab_map, tab_data, tab_guide = st.tabs([L["tab_map"], L["tab_data"], L["tab_guide"]])
+tab_map, tab_data, tab_lisa, tab_guide = st.tabs([
+    L["tab_map"], 
+    L["tab_data"], 
+    "🧭 LISA (Panel)", 
+    L["tab_guide"]
+])
 
 # ==========================================
 # 8. TAB BẢN ĐỒ
@@ -1541,3 +1546,28 @@ with tab_guide:
                 st.markdown(fill(body, y=yr, s=size))
             if "MAUP" in title and size < 1000:
                 st.warning(L["quality_warn"].format(s=size, px=px_per_cell))
+
+
+# ==========================================
+# 11. TAB LISA (DATA BRIDGE CHO PANEL REGRESSION)
+# ==========================================
+with tab_lisa:
+    from lisa_ui import render_lisa_tab
+    
+    # Tạo mã định danh vùng duy nhất (Ví dụ: VNM_hoan_kiem)
+    region_id = f"{res['iso3']}_{slugify(res['district'])}"
+    
+    # Truyền dữ liệu vào lõi LISA
+    try:
+        render_lisa_tab(
+            res=res,
+            grid_utm=grid_utm,
+            export_df=export_df,
+            lang=LANG,
+            region_id=region_id,
+            region_label=place,
+            render_cap=RENDER_CAP,
+            basemap="CartoDB dark_matter" 
+        )
+    except Exception as e:
+        st.error(f"Lỗi khi khởi chạy mô-đun LISA: {e}")
