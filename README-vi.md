@@ -1,4 +1,4 @@
-# 🌐 Dự án Kinh tế lượng không gian: Hạ tầng lưới & trích xuất dữ liệu ánh sáng ban đêm
+# 🌐 Dự án Kinh tế lượng không gian
 
 [ 🇬🇧 English ](README.md) | [ 🇻🇳 Tiếng Việt ](README-vi.md)
 
