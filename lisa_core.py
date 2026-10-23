@@ -240,7 +240,14 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     # Tính trung bình cộng (Tổng NTL hàng xóm / số lượng hàng xóm k)
     # Nếu ô nào bị cô lập (k=0), gán cho nó giá trị NaN
     raw_lag = np.where(k > 0, ntl_nbrs.sum(axis=1) / k, np.nan)
-                 
+
+    # 1. Tìm vị trí của ô có ánh sáng cao nhất (tâm lõi)
+    cbd_idx = np.argmax(ntl)
+    cbd_x, cbd_y = cx[cbd_idx], cy[cbd_idx]
+    
+    # 2. Tính khoảng cách Pytago từ mọi ô đến ô lõi (chia 1000 để đổi từ mét sang km)
+    dist_to_core_km = np.sqrt((cx - cbd_x)**2 + (cy - cbd_y)**2) / 1000.0
+
     sig = np.zeros(n, dtype=bool)
     f_idx = np.flatnonzero(focal)
     if f_idx.size:
@@ -306,6 +313,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
 
     quad = np.array([QUADRANTS[c] if c >= 0 else "" for c in range(-1, 4)], dtype=object)[q.astype(int) + 1]
     cell_df = pd.DataFrame({
+        "dist_to_core_km": np.round(dist_to_core_km, 3),
         "ntl_raw_lag": np.round(raw_lag, 4),
         "ntl_z_lit": np.round(z, 4),
         "lisa_n_neighbors": k.astype(int),
