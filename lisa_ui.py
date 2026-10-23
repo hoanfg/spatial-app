@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import re
+
 import folium
 import geopandas as gpd
 import numpy as np
@@ -7,6 +10,8 @@ import pandas as pd
 import shapely
 import streamlit as st
 import altair as alt
+from branca.element import MacroElement
+from jinja2 import Template
 from streamlit_folium import st_folium
 
 from lisa_core import ALL_LABELS, DARK, EDGE, NS, run_lisa
@@ -165,22 +170,165 @@ T = {
     },
 }
 
+T["vi"].update({
+    "flow": "**Quy trình:** ① chỉnh tham số → ② bấm *Cập nhật* → ③ đọc kết quả chính → ④ xem bản đồ cụm → ⑤ xuất dữ liệu cho hồi quy.",
+    "verdict_t": "🧠 Nhận định nhanh",
+    "v_hot": "🔥 Phát hiện **cụm điểm nóng (High-High)** liên thông từ {k} ô trở lên, chiếm **{hh:.2f}%** diện tích vùng.",
+    "v_nohot": "❄️ **Chưa có cụm điểm nóng đủ lớn** (cần ≥ {k} ô liên thông).",
+    "v_frag": " Có {hh:.2f}% diện tích HH có ý nghĩa thống kê nhưng rời rạc.",
+    "v_mi_pos": "📈 Moran's I (ô sáng) = **{mi:.3f}** > 0: các ô sáng có xu hướng **tụ cụm** trong không gian.",
+    "v_mi_neg": "📉 Moran's I (ô sáng) = **{mi:.3f}** ≤ 0: chưa thấy xu hướng tụ cụm (ngẫu nhiên hoặc xen kẽ).",
+    "v_gini": "⚖️ Gini ánh sáng = **{g:.3f}** — ánh sáng {gd}.",
+    "gini_desc": ["phân bố tương đối đều", "tập trung ở mức vừa phải", "tập trung rất cao vào vài ô"],
+    "guide_t": "📖 Cách đọc bản đồ LISA",
+    "map_hint": "Rê chuột vào ô để xem NTL, z-score, p giả, trạng thái và khoảng cách tới lõi cụm. Ô không có ý nghĩa (NS) và ô tối được vẽ mờ.",
+    "legend_desc": {
+        "HH": "Sáng giữa vùng sáng — **điểm nóng** thật sự.",
+        "LL": "Tối giữa vùng tối — **điểm lạnh**.",
+        "HL": "Ô sáng nằm giữa các ô tối — điểm sáng cô lập (ngoại lệ).",
+        "LH": "Ô tối nằm giữa các ô sáng — “lỗ hổng” trong vùng sáng.",
+        "NS": "Không có ý nghĩa thống kê (không khác ngẫu nhiên).",
+        "EDGE": "Ô biên bị cắt bởi ranh giới — loại khỏi phân tích.",
+        "DARK": "Ô không sáng — không tham gia đồ thị láng giềng.",
+    },
+})
+T["en"].update({
+    "flow": "**Workflow:** ① adjust parameters → ② press *Update* → ③ read the key results → ④ inspect the cluster map → ⑤ export for regression.",
+    "verdict_t": "🧠 Quick take",
+    "v_hot": "🔥 Found **High-High hotspot clusters** of {k}+ connected cells, covering **{hh:.2f}%** of the region's area.",
+    "v_nohot": "❄️ **No hotspot cluster large enough** (needs ≥ {k} connected cells).",
+    "v_frag": " {hh:.2f}% of the area is significant HH but fragmented.",
+    "v_mi_pos": "📈 Moran's I (lit cells) = **{mi:.3f}** > 0: bright cells tend to **cluster** in space.",
+    "v_mi_neg": "📉 Moran's I (lit cells) = **{mi:.3f}** ≤ 0: no clustering tendency (random or alternating).",
+    "v_gini": "⚖️ Light Gini = **{g:.3f}** — light is {gd}.",
+    "gini_desc": ["fairly evenly spread", "moderately concentrated", "highly concentrated in a few cells"],
+    "guide_t": "📖 How to read the LISA map",
+    "map_hint": "Hover a cell for NTL, z-score, pseudo p, class and distance to the cluster core. Non-significant (NS) and dark cells are drawn faint.",
+    "legend_desc": {
+        "HH": "Bright among bright — a true **hotspot**.",
+        "LL": "Dark among dark — a **cold spot**.",
+        "HL": "A bright cell surrounded by dark ones — isolated bright spot (outlier).",
+        "LH": "A dark cell surrounded by bright ones — a “hole” in a lit area.",
+        "NS": "Not statistically significant (indistinguishable from chance).",
+        "EDGE": "Border cell clipped by the boundary — excluded from the analysis.",
+        "DARK": "Unlit cell — not part of the neighbour graph.",
+    },
+})
+
 _CSS = """
 <style>
-.lisa-hero{padding:2px 0 4px;color:#9aa0aa;font-size:.95rem}
+@keyframes lisaUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.lisa-hero{padding:2px 0 4px;color:#9aa0aa;font-size:.95rem;animation:lisaUp .5s both}
 div[data-testid="stMetric"]{background:rgba(127,127,140,.07);border:1px solid rgba(127,127,140,.22);
-  border-radius:12px;padding:10px 14px}
+  border-radius:12px;padding:10px 14px;transition:transform .18s ease,border-color .18s ease;animation:lisaUp .5s both}
+div[data-testid="stMetric"]:hover{transform:translateY(-3px);border-color:rgba(255,183,3,.6)}
 div[data-testid="stMetricValue"]{font-weight:700}
+.lisa-leg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.lisa-li{display:flex;gap:10px;align-items:flex-start;border:1px solid rgba(127,127,140,.22);border-radius:12px;
+  padding:9px 12px;background:rgba(127,127,140,.06);transition:transform .18s ease,border-color .18s ease;animation:lisaUp .5s both}
+.lisa-li:hover{transform:translateY(-2px);border-color:rgba(255,183,3,.55)}
+.lisa-li i{width:16px;height:16px;border-radius:4px;flex:none;margin-top:2px;border:1px solid rgba(127,127,140,.6)}
+.lisa-li b{display:block;font-size:.88rem}.lisa-li span{font-size:.8rem;opacity:.8;line-height:1.4}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 """
 
+LISA_MAP_CSS = """
+<style>
+@keyframes ntFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes ntSlideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.leaflet-container{animation:ntFadeIn .8s both}
+.lisa-legend{position:fixed;bottom:24px;left:12px;z-index:9999;background:rgba(10,10,14,.86);color:#fff;padding:8px 11px;
+  border-radius:10px;border:1px solid rgba(255,255,255,.18);font:12px Inter,Arial,sans-serif;animation:ntSlideUp .7s .5s both}
+.lisa-legend div{margin-top:3px;white-space:nowrap}
+.lisa-legend span{width:12px;height:12px;display:inline-block;margin-right:7px;border:1px solid rgba(255,255,255,.4);
+  vertical-align:-2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){.leaflet-container,.lisa-legend{animation:none!important}}
+</style>
+"""
+
+_CLS_KEY = {"High-High": "HH", "Low-Low": "LL", "High-Low": "HL", "Low-High": "LH", NS: "NS", EDGE: "EDGE", DARK: "DARK"}
+
 
 def _legend(lang):
-    items = "".join(
-        f'<div><span style="background:{COLORS[k]};width:12px;height:12px;display:inline-block;'
-        f'margin-right:6px;border:1px solid #666"></span>{k}</div>' for k in ALL_LABELS)
-    return ('<div style="position:fixed;bottom:24px;left:12px;z-index:9999;background:rgba(255,255,255,.92);'
-            f'padding:8px 10px;border-radius:6px;font:12px sans-serif;color:#222">{items}</div>')
+    items = "".join(f'<div><span style="background:{COLORS[k]}"></span>{k}</div>' for k in ALL_LABELS)
+    return f'<div class="lisa-legend">{items}</div>'
+
+
+def _legend_guide_html(L):
+    def _b(t):  # khối này là HTML thô nên đổi **đậm** của Markdown sang <b>
+        return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
+    cards = "".join(
+        f'<div class="lisa-li" style="animation-delay:{0.05 * i:.2f}s"><i style="background:{COLORS[k]}"></i>'
+        f'<div><b>{k}</b><span>{_b(L["legend_desc"].get(_CLS_KEY.get(k, ""), ""))}</span></div></div>'
+        for i, k in enumerate(ALL_LABELS))
+    return f'<div class="lisa-leg">{cards}</div>'
+
+
+class _LisaIntro(MacroElement):
+    """Hoạt cảnh mở đầu cho bản đồ LISA (chỉ đổi style hiển thị, không đụng dữ liệu)."""
+    _template = Template(
+        """
+        {% macro script(this, kwargs) %}
+        (function () {
+            var map = {{ this._parent.get_name() }};
+            var layer = {{ this.layer.get_name() }};
+            var C = {{ this.cfg }};
+            if (!C.on) { return; }
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+            var items = [];
+            layer.eachLayer(function (l) { if (l.getBounds) { items.push(l); } });
+            var N = items.length;
+            var ripple = !!C.ripple && N > 0 && N <= C.max;
+            var c0 = map.getCenter(), z0 = map.getZoom();
+            if (C.fly) { map.setView(c0, Math.max(z0 - 2, 1), {animate: false}); }
+            var base = [], dist = [], last = [], i, d, o, ctr, dx, dy, dmax = 1e-12;
+            if (ripple) {
+                for (i = 0; i < N; i++) {
+                    o = items[i].options;
+                    ctr = items[i].getBounds().getCenter();
+                    dx = ctr.lng - C.cx; dy = ctr.lat - C.cy;
+                    d = Math.sqrt(dx * dx + dy * dy);
+                    base.push([o.fillOpacity == null ? 0.2 : o.fillOpacity, o.opacity == null ? 1 : o.opacity]);
+                    dist.push(d); last.push(0);
+                    if (d > dmax) { dmax = d; }
+                }
+                for (i = 0; i < N; i++) {
+                    dist[i] = dist[i] / dmax;
+                    items[i].setStyle({fillOpacity: 0, opacity: 0});
+                }
+            }
+            setTimeout(function () {
+                if (C.fly) { map.flyTo(c0, z0, {duration: 1.7, easeLinearity: 0.25}); }
+                if (!ripple) { return; }
+                var t0 = null;
+                function step(ts) {
+                    if (t0 === null) { t0 = ts; }
+                    var t = Math.min(1, (ts - t0) / C.dur), j, p;
+                    for (j = 0; j < N; j++) {
+                        p = (t - 0.55 * dist[j]) / 0.45;
+                        p = p < 0 ? 0 : (p > 1 ? 1 : p);
+                        p = p * p * (3 - 2 * p);
+                        if (t >= 1) { p = 1; }
+                        if (p !== last[j]) {
+                            last[j] = p;
+                            items[j].setStyle({fillOpacity: base[j][0] * p, opacity: base[j][1] * p});
+                        }
+                    }
+                    if (t < 1) { requestAnimationFrame(step); }
+                }
+                requestAnimationFrame(step);
+            }, 350);
+        })();
+        {% endmacro %}
+        """
+    )
+
+    def __init__(self, layer, cfg):
+        super().__init__()
+        self._name = "LisaIntro"
+        self.layer = layer
+        self.cfg = json.dumps(cfg)
 
 
 def _popover(brief, title, body):
@@ -214,6 +362,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with h2c:
         _popover(L["pop_params_brief"], L["pop_params"], L["pop_params_body"])
     st.markdown(f'<div class="lisa-hero">{L["intro"]}</div>', unsafe_allow_html=True)
+    st.caption(L["flow"])
 
     # ---------- tham số ----------
     with st.expander(L["params"], expanded=True):
@@ -229,11 +378,12 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             min_clu = c6.slider(L["clu"], 1, 30, 4, help=L["h_clu"]) 
             min_nbr = c7.slider(L["nbr"], 1, 4, 1, help=L["h_nbr"])
             
-            submit_lisa = st.form_submit_button("🔄 Cập nhật tham số LISA", type="primary")
+            submit_lisa = st.form_submit_button(L["submit"], type="primary", help=L["h_submit"])
 
     # ---------- tính (cache trong session theo kết quả + tham số) ----------
     ckey = (res["ts"], size, perms, alpha, fdr, use_log, thr, min_clu, min_nbr)
     cache = st.session_state.setdefault("_lisa_cache", {})
+    just_computed = ckey not in cache
     if ckey not in cache:
         cache.clear()
         cent = grid_utm.geometry.centroid
@@ -262,6 +412,21 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     k4.metric(L["k_mi"], f"{rm['moran_I_lit']:.3f}", help=L["h_k_mi"])
     if fdr and rm["n_cells_tested"] and rm["hh_area_share"] == 0:
         st.warning(L["fdr_warn"].format(m=rm["n_cells_tested"], p=perms, pf=rm["p_floor"], k=rm["fdr_min_hits_needed"]))
+    _hh_pct = float(rm["hh_area_share"]) * 100
+    _mi = float(rm["moran_I_lit"])
+    _g = float(rm["gini_ntl_core_all"])
+    _lines = []
+    if rm["hotspot_dummy"]:
+        _lines.append(L["v_hot"].format(k=min_clu, hh=_hh_pct))
+    else:
+        _lines.append(L["v_nohot"].format(k=min_clu) + (L["v_frag"].format(hh=_hh_pct) if _hh_pct > 0 else ""))
+    if np.isfinite(_mi):
+        _lines.append((L["v_mi_pos"] if _mi > 0 else L["v_mi_neg"]).format(mi=_mi))
+    if np.isfinite(_g):
+        _lines.append(L["v_gini"].format(g=_g, gd=L["gini_desc"][0 if _g < 0.4 else (1 if _g < 0.6 else 2)]))
+    with st.container(border=True):
+        st.markdown(f"**{L['verdict_t']}**")
+        st.markdown("\n\n".join(_lines))
     with st.expander(L["note_t"]):
         st.caption(L["note"])
 
@@ -274,6 +439,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     hide_edge = h2.toggle(L["hide_edge"], value=False, key="lisa_hide_edge", help=L["h_hide_edge"])
     if forced:
         st.warning(L["degrade"].format(n=n, c=render_cap))
+    st.caption(L["map_hint"])
 
     show = np.ones(n, dtype=bool)
     if hide0:
@@ -318,17 +484,25 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         max_zoom=16,
     )
 
-    folium.GeoJson(
+    lisa_layer = folium.GeoJson(
         gj, name="LISA",
         style_function=lambda f: {"fillColor": f["properties"]["col"], "color": f["properties"]["col"],
                                   "weight": 0.4, "fillOpacity": 0.15 if f["properties"]["k"] in (NS, DARK) else 0.8},
         tooltip=folium.GeoJsonTooltip(fields=["c", "v", "z", "p", "k", "d"], aliases=L["tt"], sticky=False),
-    ).add_to(m)
+    )
+    lisa_layer.add_to(m)
     folium.GeoJson(res["boundary_wgs"], interactive=False,
                    style_function=lambda _: {"fill": False, "color": "#222", "weight": 1.5}).add_to(m)
+    m.get_root().header.add_child(folium.Element(LISA_MAP_CSS))
+    _LisaIntro(lisa_layer, {
+        "on": True, "fly": bool(just_computed), "ripple": bool(just_computed), "max": 9000, "dur": 1500,
+        "cx": float((minx + maxx) / 2), "cy": float((miny + maxy) / 2),
+    }).add_to(m)
     m.get_root().html.add_child(folium.Element(_legend(lang)))
     import streamlit.components.v1 as components
     components.html(m.get_root().render(), height=640)
+    with st.expander(L["guide_t"], expanded=False):
+        st.markdown(_legend_guide_html(L), unsafe_allow_html=True)
 
     # ---------- Cơ cấu trạng thái & Moran Scatterplot ----------
     st.divider()
