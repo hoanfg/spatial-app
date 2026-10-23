@@ -917,6 +917,71 @@ def build_grid(boundary_utm: gpd.GeoDataFrame, size: int):
     return clipped
 
 
+# ------------------------------------------
+# 4b. CẦU CHÌ TRƯỚC KHI PHÂN TÍCH (chỉ đọc/ước lượng, KHÔNG thay đổi pipeline)
+# ------------------------------------------
+# Lý do: build_grid chỉ chặn SAU khi bấm "Phân tích". Với địa phương rộng + lưới mịn, bước dựng
+# lưới/cắt (gpd.clip) trên hàng trăm nghìn ô có thể treo máy chủ. Cầu chì này ước lượng số ô ngay
+# khi người dùng chọn quận/huyện + kích thước ô, và khóa nút Phân tích nếu vượt trần.
+FUSE_WARN_RATIO = 0.70        # từ 70% trần MAX_CELLS trở lên: cảnh báo vàng (vẫn cho chạy)
+FUSE_BORDER_FACTOR = 0.65     # hệ số ô biên: ~0.65 * chu vi / cạnh ô (ô bị cắt cũng tính nguyên 1 ô)
+CELL_SIZE_STEPS = list(range(500, 5001, 500))   # trùng với slider kích thước ô
+
+
+def estimate_grid_cells(bounds, area_km2: float, perimeter_km: float, size: int) -> dict:
+    """Ước lượng số ô mà build_grid sẽ tạo (hàm thuần, không phụ thuộc geopandas).
+
+    n_clip: số ô SAU khi cắt theo ranh giới (đại lượng bị so với MAX_CELLS).
+    n_bbox: số ô của lưới chữ nhật bao ngoài (đại lượng bị so với MAX_CELLS * 4, giống build_grid).
+    """
+    minx, miny, maxx, maxy = bounds
+    x0 = math.floor(minx / size) * size - size
+    y0 = math.floor(miny / size) * size - size
+    nx = max(1, math.ceil((maxx + 2 * size - x0) / size))
+    ny = max(1, math.ceil((maxy + 2 * size - y0) / size))
+    cell_km = size / 1000.0
+    n_clip = area_km2 / (cell_km ** 2) + FUSE_BORDER_FACTOR * perimeter_km / cell_km
+    n_bbox = nx * ny
+    blocked = (n_clip >= MAX_CELLS) or (n_bbox > MAX_CELLS * 4)   # đúng hai điều kiện lõi sẽ ném lỗi
+    slow = (not blocked) and (n_clip >= MAX_CELLS * FUSE_WARN_RATIO or n_bbox > MAX_CELLS * 2)
+    return {"n_clip": int(round(n_clip)), "n_bbox": int(n_bbox), "blocked": bool(blocked), "slow": bool(slow)}
+
+
+def suggest_cell_size(bounds, area_km2: float, perimeter_km: float, current: int):
+    """Kích thước ô nhỏ nhất (trong các bước của slider, lớn hơn `current`) để không bị khóa; None nếu không có."""
+    for sz in CELL_SIZE_STEPS:
+        if sz <= current:
+            continue
+        if not estimate_grid_cells(bounds, area_km2, perimeter_km, sz)["blocked"]:
+            return sz
+    return None
+
+
+@st.cache_data(show_spinner=False, max_entries=64)
+def boundary_stats(path: str, mtime: float):
+    """Đọc ranh giới (chỉ đọc) và trả về bbox UTM, diện tích, chu vi. Lỗi → None (cầu chì bỏ qua, pipeline tự báo lỗi)."""
+    try:
+        b = gpd.read_file(path)
+        if b.crs is None:
+            b = b.set_crs(epsg=4326)
+        b = b[b.geometry.notna() & ~b.geometry.is_empty]
+        b = b[b.geometry.type.isin(["Polygon", "MultiPolygon", "GeometryCollection"])]
+        if b.empty:
+            return None
+        b = gpd.GeoDataFrame(geometry=b.geometry.make_valid(), crs=b.crs)
+        wgs = gpd.GeoDataFrame(geometry=[union_geoms(b.to_crs(4326))], crs=4326)
+        x0, y0, x1, y1 = wgs.total_bounds
+        utm = wgs.to_crs(epsg=get_dynamic_utm_crs((x0 + x1) / 2, (y0 + y1) / 2))
+        geom = utm.geometry.iloc[0]
+        return {
+            "bounds": tuple(float(v) for v in utm.total_bounds),
+            "area_km2": float(geom.area / 1e6),
+            "perimeter_km": float(geom.length / 1000.0),
+        }
+    except Exception:  # noqa: BLE001
+        return None
+
+
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
 def fetch_ntl_raster(bbox: tuple, year: int) -> bytes:
     """Tải GeoTIFF NTL trung vị năm `year` trong bbox (WGS84). Cache theo (bbox, năm)."""
@@ -1179,8 +1244,44 @@ with st.sidebar:
                            else "Grid < 1000 m: neighbouring cells are not independent."))
     year = st.selectbox(L["year"], YEARS, index=len(YEARS) - 2, help=H["year"])
 
+    # ----- Cầu chì: kiểm tra quy mô TRƯỚC khi cho phép bấm Phân tích -----
+    fuse_blocked = False
+    try:
+        _mt = os.path.getmtime(file_path)
+    except OSError:
+        _mt = 0.0
+    with st.spinner("Đang kiểm tra quy mô vùng..." if LANG == "vi" else "Checking area size..."):
+        _bs = boundary_stats(file_path, _mt)
+    if _bs:
+        _est = estimate_grid_cells(_bs["bounds"], _bs["area_km2"], _bs["perimeter_km"], cell_size)
+        _a = _bs["area_km2"]
+        if _est["blocked"]:
+            fuse_blocked = True
+            _alt = suggest_cell_size(_bs["bounds"], _a, _bs["perimeter_km"], cell_size)
+            if LANG == "vi":
+                _hint = (f"Hãy tăng kích thước ô lên **≥ {_alt:,} m** (hoặc chọn địa phương nhỏ hơn)."
+                         if _alt else "Ngay cả ô lớn nhất (5.000 m) vẫn vượt trần — hãy chọn địa phương nhỏ hơn.")
+                st.error(
+                    f"⛔ **Vùng quá lớn cho lưới {cell_size:,} m.** Diện tích {_a:,.0f} km² ≈ **{_est['n_clip']:,} ô**, "
+                    f"vượt/chạm trần {MAX_CELLS:,} ô — chạy tiếp có thể treo máy chủ. {_hint}")
+            else:
+                _hint = (f"Raise the cell size to **≥ {_alt:,} m** (or pick a smaller locality)."
+                         if _alt else "Even the largest cell (5,000 m) exceeds the cap — pick a smaller locality.")
+                st.error(
+                    f"⛔ **Area too large for a {cell_size:,} m grid.** {_a:,.0f} km² ≈ **{_est['n_clip']:,} cells**, "
+                    f"at/above the {MAX_CELLS:,}-cell cap — running could hang the server. {_hint}")
+        elif _est["slow"]:
+            st.warning(
+                (f"⚠️ Vùng lớn: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} ô ({_a:,.0f} km²). Vẫn chạy được nhưng sẽ chậm; "
+                 "cân nhắc tăng kích thước ô." if LANG == "vi" else
+                 f"⚠️ Large area: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} cells ({_a:,.0f} km²). It will run but slowly; "
+                 "consider a larger cell size."))
+        else:
+            st.caption((f"📐 {_a:,.0f} km² ≈ {_est['n_clip']:,} ô (trần {MAX_CELLS:,})" if LANG == "vi"
+                        else f"📐 {_a:,.0f} km² ≈ {_est['n_clip']:,} cells (cap {MAX_CELLS:,})"))
+
     st.divider()
-    run_btn = sx(st.button, L["run"], type="primary", disabled=not gee_ok, help=H["run"])
+    run_btn = sx(st.button, L["run"], type="primary", disabled=(not gee_ok) or fuse_blocked, help=H["run"])
     if not gee_ok:
         st.caption("🔌 " + ("Chưa kết nối Google Earth Engine." if LANG == "vi" else "Google Earth Engine not connected."))
 
@@ -1291,7 +1392,7 @@ def run_pipeline():
     }
 
 
-if run_btn:
+if run_btn and not fuse_blocked:   # chốt chặn kép: nút đã bị khóa, điều kiện này phòng trường hợp rerun lệch trạng thái
     st.session_state["result"] = run_pipeline()
 
 res = st.session_state.get("result")
