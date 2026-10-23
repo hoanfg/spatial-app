@@ -148,6 +148,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     except Exception:  # noqa: BLE001
         pass
     lab = cdf["lisa_class"].to_numpy()[idx]
+
+    dist_arr = cdf.get("dist_to_core_km", pd.Series(np.zeros(len(cdf)))).to_numpy()
+                        
     gj = gpd.GeoDataFrame({
         "c": [f"#{int(i)}" for i in grid_utm["grid_id"].to_numpy()[idx]],
         "v": np.round(grid_utm["ntl_mean"].to_numpy()[idx], 2),
