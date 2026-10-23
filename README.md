@@ -98,7 +98,7 @@ Openshaw, S. (1984). The Modifiable Areal Unit Problem. Concepts and Techniques 
 
 ---
 
-## 🗺️ Roadmap & Scaling Plan
+## 🗺️ Roadmap & scaling plan
 - [x] **Phase 1 (Pilot):** Validate pipeline and LISA econometric bridge using Vietnam administrative boundaries (`VNM`).
 - [ ] **Phase 2 (Expansion):** Integrate regional Southeast Asia boundary datasets (e.g., Thailand, Indonesia, Philippines).
 - [ ] **Phase 3 (Global scale):** Generalize automated boundary ingestion for global GADM vector tiles.
