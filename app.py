@@ -45,7 +45,7 @@ except Exception:  # pragma: no cover
 # ==========================================
 st.set_page_config(page_title="NTL Data Extractor", page_icon="🌙", layout="wide")
 
-BASE_DATA_DIR = "data"
+BASE_DATA_DIR = "data/gadm41_VNM_gpkg"
 GEE_DATASET = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG"
 GEE_SCALE_M = 463.83          # độ phân giải gốc VIIRS (~15 arc-sec)
 MAX_CELLS = 150_000           # trần số ô lưới để tránh treo máy chủ
