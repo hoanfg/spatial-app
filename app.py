@@ -10,6 +10,7 @@ Pipeline 4 trạm:
 """
 import html as html_lib
 import inspect  # noqa: F401  (giữ để tương thích mở rộng)
+import gettext
 import io
 import json
 import math
@@ -45,7 +46,14 @@ except Exception:  # pragma: no cover
 # ==========================================
 st.set_page_config(page_title="NTL Data Extractor", page_icon="🌙", layout="wide")
 
-BASE_DATA_DIR = "data/gadm41_VNM_gpkg"
+# Thư mục GỐC chứa dữ liệu ranh giới. Ứng dụng TỰ QUÉT mọi quốc gia nằm bên trong,
+# không còn trỏ cứng vào một bộ dữ liệu cụ thể. Đổi được bằng biến môi trường NTL_DATA_ROOT.
+#   Hỗ trợ cả hai cách bố trí:
+#     data/<bộ_dữ_liệu>/<thư_mục_quốc_gia>/<tỉnh>/<huyện>.geojson   (vd: data/gadm41_VNM_gpkg/VNM_Curated_Provinces/Hà_Nội/...)
+#     data/<thư_mục_quốc_gia>/<tỉnh>/<huyện>.geojson
+#   Muốn đặt tên quốc gia riêng: tạo data/country_names.json, ví dụ
+#     {"THA": {"vi": "Thái Lan", "en": "Thailand"}}
+DATA_ROOT = os.environ.get("NTL_DATA_ROOT", "data")
 GEE_DATASET = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG"
 GEE_SCALE_M = 463.83          # độ phân giải gốc VIIRS (~15 arc-sec)
 MAX_CELLS = 150_000           # trần số ô lưới để tránh treo máy chủ
@@ -71,8 +79,42 @@ LOCAL_COLORS = ["#ffb703", "#6c7a89", "#2b6cb0", "#2a2a33"]
 # ==========================================
 # 1. TÊN HIỂN THỊ (BEGIN NAMES) — Việt Nam / Hà Nội / Hoàn Kiếm
 # ==========================================
-ISO_NAMES = {"vi": {"VNM": "Việt Nam"}, "en": {"VNM": "Vietnam"}}
-COUNTY_SUFFIXES = {"district", "county", "town", "city", "municipality", "urban", "rural"}
+# ISO3 -> (tên tiếng Việt, tên tiếng Anh). Quốc gia không có ở đây vẫn được xử lý
+# tự động qua `pycountry` (nếu cài) hoặc file data/country_names.json.
+COUNTRY_NAMES = {
+    "VNM": ("Việt Nam", "Vietnam"), "THA": ("Thái Lan", "Thailand"), "LAO": ("Lào", "Laos"),
+    "KHM": ("Campuchia", "Cambodia"), "MMR": ("Myanmar", "Myanmar"), "MYS": ("Malaysia", "Malaysia"),
+    "SGP": ("Singapore", "Singapore"), "IDN": ("Indonesia", "Indonesia"), "PHL": ("Philippines", "Philippines"),
+    "BRN": ("Brunei", "Brunei"), "TLS": ("Đông Timor", "Timor-Leste"),
+    "CHN": ("Trung Quốc", "China"), "TWN": ("Đài Loan", "Taiwan"), "HKG": ("Hồng Kông", "Hong Kong"),
+    "MAC": ("Ma Cao", "Macau"), "JPN": ("Nhật Bản", "Japan"), "KOR": ("Hàn Quốc", "South Korea"),
+    "PRK": ("Triều Tiên", "North Korea"), "MNG": ("Mông Cổ", "Mongolia"),
+    "IND": ("Ấn Độ", "India"), "PAK": ("Pakistan", "Pakistan"), "BGD": ("Bangladesh", "Bangladesh"),
+    "LKA": ("Sri Lanka", "Sri Lanka"), "NPL": ("Nepal", "Nepal"), "BTN": ("Bhutan", "Bhutan"),
+    "MDV": ("Maldives", "Maldives"), "AFG": ("Afghanistan", "Afghanistan"),
+    "KAZ": ("Kazakhstan", "Kazakhstan"), "UZB": ("Uzbekistan", "Uzbekistan"),
+    "AUS": ("Úc", "Australia"), "NZL": ("New Zealand", "New Zealand"),
+    "USA": ("Hoa Kỳ", "United States"), "CAN": ("Canada", "Canada"), "MEX": ("Mexico", "Mexico"),
+    "BRA": ("Brazil", "Brazil"), "ARG": ("Argentina", "Argentina"), "CHL": ("Chile", "Chile"),
+    "COL": ("Colombia", "Colombia"), "PER": ("Peru", "Peru"), "VEN": ("Venezuela", "Venezuela"),
+    "CUB": ("Cuba", "Cuba"),
+    "GBR": ("Vương quốc Anh", "United Kingdom"), "IRL": ("Ireland", "Ireland"), "FRA": ("Pháp", "France"),
+    "DEU": ("Đức", "Germany"), "ITA": ("Ý", "Italy"), "ESP": ("Tây Ban Nha", "Spain"),
+    "PRT": ("Bồ Đào Nha", "Portugal"), "NLD": ("Hà Lan", "Netherlands"), "BEL": ("Bỉ", "Belgium"),
+    "CHE": ("Thụy Sĩ", "Switzerland"), "AUT": ("Áo", "Austria"), "POL": ("Ba Lan", "Poland"),
+    "CZE": ("Cộng hòa Séc", "Czechia"), "HUN": ("Hungary", "Hungary"), "ROU": ("Romania", "Romania"),
+    "BGR": ("Bulgaria", "Bulgaria"), "GRC": ("Hy Lạp", "Greece"), "TUR": ("Thổ Nhĩ Kỳ", "Türkiye"),
+    "RUS": ("Nga", "Russia"), "UKR": ("Ukraine", "Ukraine"), "SWE": ("Thụy Điển", "Sweden"),
+    "NOR": ("Na Uy", "Norway"), "DNK": ("Đan Mạch", "Denmark"), "FIN": ("Phần Lan", "Finland"),
+    "ISL": ("Iceland", "Iceland"),
+    "SAU": ("Ả Rập Xê Út", "Saudi Arabia"), "ARE": ("Các Tiểu vương quốc Ả Rập Thống nhất", "United Arab Emirates"),
+    "QAT": ("Qatar", "Qatar"), "ISR": ("Israel", "Israel"), "IRN": ("Iran", "Iran"), "IRQ": ("Iraq", "Iraq"),
+    "EGY": ("Ai Cập", "Egypt"), "ZAF": ("Nam Phi", "South Africa"), "NGA": ("Nigeria", "Nigeria"),
+    "KEN": ("Kenya", "Kenya"), "ETH": ("Ethiopia", "Ethiopia"), "MAR": ("Ma Rốc", "Morocco"),
+    "DZA": ("Algeria", "Algeria"), "GHA": ("Ghana", "Ghana"), "TZA": ("Tanzania", "Tanzania"),
+}
+COUNTY_SUFFIXES = {"district", "county", "town", "city", "municipality", "urban", "rural",
+                   "ward", "commune", "subdistrict", "borough", "prefecture", "regency"}
 
 
 def _nfc(s):
@@ -98,31 +140,111 @@ def iso3_of(folder):
     return m.group(1).upper() if m else None
 
 
-def country_label(folder, lang="vi"):
-    """'VNM_Curated_Provinces' -> 'Việt Nam' / 'Vietnam'."""
-    iso = iso3_of(folder)
-    if iso is None:
-        return _nfc(re.sub(r"\s+", " ", folder.replace("_", " ")).strip())
-    if iso in ISO_NAMES.get(lang, {}):
-        return ISO_NAMES[lang][iso]
+def _is_valid_iso(iso):
+    if not iso:
+        return False
+    if iso in COUNTRY_NAMES:
+        return True
     if pycountry is not None:
+        try:
+            return pycountry.countries.get(alpha_3=iso) is not None
+        except Exception:  # noqa: BLE001
+            return False
+    return False
+
+
+def resolve_iso(folder, dataset=None):
+    """Suy ra mã ISO3 từ tên thư mục quốc gia, tên bộ dữ liệu (gadm41_XXX_gpkg) hoặc tên nước. '' nếu không rõ."""
+    iso = iso3_of(folder)
+    if _is_valid_iso(iso):
+        return iso
+    if dataset:
+        m = re.match(r"^gadm\d*_([A-Za-z]{3})(?:_|$)", dataset, re.I)
+        if m and _is_valid_iso(m.group(1).upper()):
+            return m.group(1).upper()
+    want = _fold(clean_state(folder))
+    for code, (vi_name, en_name) in COUNTRY_NAMES.items():   # khớp theo tên (Việt/Anh), không phân biệt dấu
+        if want in (_fold(vi_name), _fold(en_name)):
+            return code
+    if pycountry is not None:
+        try:
+            return pycountry.countries.lookup(clean_state(folder)).alpha_3
+        except Exception:  # noqa: BLE001
+            pass
+    return ""
+
+
+@st.cache_data(show_spinner=False, ttl=30)
+def _name_overrides(root):
+    """Đọc data/country_names.json: {"THA": {"vi": "Thái Lan", "en": "Thailand"}} (khóa = ISO3 hoặc tên thư mục)."""
+    try:
+        with open(os.path.join(root, "country_names.json"), encoding="utf-8") as fh:
+            raw = json.load(fh)
+    except Exception:  # noqa: BLE001
+        return {}
+    out = {}
+    if isinstance(raw, dict):
+        for k, v in raw.items():
+            if isinstance(v, dict):
+                out[str(k).upper()] = {lg: _nfc(v[lg]) for lg in ("vi", "en") if v.get(lg)}
+    return out
+
+
+def _pycountry_vi(c):
+    """Tên tiếng Việt từ bản dịch của pycountry (nếu có)."""
+    try:
+        t = gettext.translation("iso3166-1", pycountry.LOCALES_DIR, languages=["vi"])
+        s = t.gettext(c.name)
+        return s if s and s != c.name else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def country_name(info, lang="vi"):
+    """Tên quốc gia theo thứ tự ưu tiên: country_names.json -> bảng tích hợp -> pycountry -> tên thư mục."""
+    iso, folder = info.get("iso3", ""), info.get("folder", "")
+    ov = _name_overrides(DATA_ROOT)
+    for k in (iso, str(folder).upper()):
+        if k and lang in ov.get(k, {}):
+            return ov[k][lang]
+    if iso in COUNTRY_NAMES:
+        return COUNTRY_NAMES[iso][0 if lang == "vi" else 1]
+    if iso and pycountry is not None:
         try:
             c = pycountry.countries.get(alpha_3=iso)
             if c:
-                return getattr(c, "common_name", None) or c.name
+                en = getattr(c, "common_name", None) or c.name
+                return (_pycountry_vi(c) or en) if lang == "vi" else en
         except Exception:  # noqa: BLE001
             pass
-    return iso
+    return clean_state(folder) if folder else iso
+
+
+def country_label(key, lang="vi"):
+    """Khóa quốc gia (vd 'gadm41_VNM_gpkg/VNM_Curated_Provinces') -> 'Việt Nam' / 'Vietnam'."""
+    info = COUNTRIES.get(key) or {"folder": str(key).split("/")[-1], "iso3": ""}
+    return country_name(info, lang)
+
+
+def _split_camel(s):
+    """'HàNội' -> 'Hà Nội' (GADM hay viết liền tên); nhận biết chữ có dấu."""
+    out = []
+    for i, ch in enumerate(s):
+        if i and ch.isupper() and s[i - 1].islower():
+            out.append(" ")
+        out.append(ch)
+    return "".join(out)
 
 
 def clean_state(folder):
-    """'Hà_Nội' -> 'Hà Nội'."""
-    return _nfc(re.sub(r"\s+", " ", folder.replace("_", " ")).strip())
+    """'Hà_Nội' -> 'Hà Nội'; 'HàNội' -> 'Hà Nội'."""
+    s = re.sub(r"\s+", " ", _nfc(folder).replace("_", " ")).strip()
+    return _split_camel(s) if " " not in s else s
 
 
 def split_county(stem, state_name):
     """'VNM Hà Nội Hoàn Kiếm District' -> ('Hoàn Kiếm', 'District')."""
-    tokens = _nfc(stem).replace("_", " ").split()
+    tokens = [t for tok in _nfc(stem).replace("_", " ").split() for t in _split_camel(tok).split()]
     if tokens and len(tokens[0]) == 3 and tokens[0].isalpha() and tokens[0].isupper():
         tokens = tokens[1:]
     st_tokens = state_name.split()
@@ -137,15 +259,59 @@ def split_county(stem, state_name):
 
 
 def subdirs(path):
+    """Thư mục con (bỏ thư mục ẩn/rác như .git, __MACOSX), sắp xếp tự nhiên."""
     if not os.path.isdir(path):
         return []
-    return sorted((d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))), key=_natkey)
+    return sorted(
+        (d for d in os.listdir(path)
+         if not d.startswith((".", "__")) and os.path.isdir(os.path.join(path, d))),
+        key=_natkey,
+    )
 
 
-@st.cache_data(show_spinner=False)
-def list_counties(country, state):
+def _dir_has_geojson(p):
+    try:
+        return any(f.lower().endswith(".geojson") for f in os.listdir(p))
+    except OSError:
+        return False
+
+
+def _is_country_dir(p):
+    """Thư mục quốc gia = có ít nhất một thư mục tỉnh/thành chứa file .geojson."""
+    return any(_dir_has_geojson(os.path.join(p, s)) for s in subdirs(p))
+
+
+@st.cache_data(show_spinner=False, ttl=30)
+def discover_countries(root):
+    """Quét `root` và trả về {khóa: {key, path, folder, dataset, iso3}} cho MỌI quốc gia tìm thấy.
+    Thêm quốc gia mới = chỉ cần thả thư mục vào `root`, không phải sửa code/đường dẫn."""
+    out = {}
+
+    def add(path, dataset):
+        folder = os.path.basename(path)
+        key = "/".join(x for x in (dataset, folder) if x)
+        out[key] = {"key": key, "path": path, "folder": folder, "dataset": dataset or "",
+                    "iso3": resolve_iso(folder, dataset)}
+
+    for d in subdirs(root):
+        p = os.path.join(root, d)
+        if _is_country_dir(p):                      # data/<quốc_gia>/<tỉnh>/...
+            add(p, None)
+        else:                                       # data/<bộ_dữ_liệu>/<quốc_gia>/<tỉnh>/...
+            for c in subdirs(p):
+                cp = os.path.join(p, c)
+                if _is_country_dir(cp):
+                    add(cp, d)
+    return out
+
+
+COUNTRIES = discover_countries(DATA_ROOT)
+
+
+@st.cache_data(show_spinner=False, ttl=30)
+def list_counties(country_path, state):
     """Trả về {tên_file: tên_hiển_thị} (sắp xếp tự nhiên, không trùng nhãn)."""
-    p = os.path.join(BASE_DATA_DIR, country, state)
+    p = os.path.join(country_path, state)
     if not os.path.isdir(p):
         return {}
     state_name = clean_state(state)
@@ -661,7 +827,7 @@ def sx(fn, *args, **kwargs):
 
 HELP = {
     "vi": {
-        "country": "Quốc gia chứa dữ liệu ranh giới (thư mục trong data/gadm41_VNM_gpkg).",
+        "country": "Quốc gia chứa dữ liệu ranh giới (tự quét từ thư mục data/). Thêm quốc gia mới chỉ cần thả thư mục vào đó.",
         "state": "Tỉnh/Thành phố. Danh sách đổi theo quốc gia đã chọn.",
         "county": "Quận/Huyện cần phân tích. Mỗi file .geojson là một địa phương.",
         "cell": "Cạnh ô lưới vuông (m). Lưới mịn → nhiều ô hơn nhưng VIIRS gốc chỉ ~463 m, nên ô < 1000 m không độc lập thông tin.",
@@ -677,7 +843,7 @@ HELP = {
         "mask": "Phủ tối vùng ngoài ranh giới để tập trung vào địa phương.",
     },
     "en": {
-        "country": "Country holding the boundary data (folder in data/gadm41_VNM_gpkg).",
+        "country": "Country holding the boundary data (auto-scanned from the data/ folder). To add one, just drop its folder there.",
         "state": "Province/City. The list follows the selected country.",
         "county": "District to analyse. Each .geojson file is one locality.",
         "cell": "Square cell side (m). Finer grid = more cells, but native VIIRS is ~463 m, so cells < 1000 m are not informationally independent.",
@@ -977,39 +1143,50 @@ st.markdown(L["subtitle"])
 
 with st.sidebar:
     st.header(L["sb_spatial"])
-    countries = subdirs(BASE_DATA_DIR)
-    if not countries:
-        st.error(L["no_data"].format(d=BASE_DATA_DIR))
+    if not COUNTRIES:
+        st.error(L["no_data"].format(d=DATA_ROOT))
         st.stop()
 
+    # Danh sách quốc gia tự quét từ DATA_ROOT, hiển thị theo tên chuẩn (Việt Nam / Vietnam, Thái Lan / Thailand...)
+    country_keys = sorted(COUNTRIES.keys(), key=lambda k: _natkey(country_label(k, LANG)))
+    if st.session_state.get("sb_opt_country") not in country_keys:   # lựa chọn cũ không còn tồn tại
+        st.session_state.pop("sb_opt_country", None)
     sel_country = st.selectbox(
-        L["country"], countries, format_func=lambda c: country_label(c, LANG),
+        L["country"], country_keys, format_func=lambda k: country_label(k, LANG),
         key="sb_opt_country", help=H["country"],
     )
-    if sel_country not in countries:
-        sel_country = countries[0]
+    c_info = COUNTRIES[sel_country]
+    country_path = c_info["path"]
+    sel_iso = c_info["iso3"]
 
-    states = subdirs(os.path.join(BASE_DATA_DIR, sel_country))
+    # Khóa widget gắn với cấp cha: đổi quốc gia/tỉnh thì widget con được tạo mới, không bao giờ giữ giá trị cũ không hợp lệ
+    states = [s for s in subdirs(country_path) if _dir_has_geojson(os.path.join(country_path, s))]
     if not states:
         st.warning(L["no_state"])
         st.stop()
 
-    sel_state = st.selectbox(L["state"], states, format_func=clean_state, key="sb_opt_state", help=H["state"])
-    if sel_state not in states:
-        sel_state = states[0]
+    sel_state = st.selectbox(L["state"], states, format_func=clean_state,
+                             key=f"sb_opt_state::{sel_country}", help=H["state"])
 
-    counties = list_counties(sel_country, sel_state)
+    counties = list_counties(country_path, sel_state)
     if not counties:
         st.warning(L["no_county"])
         st.stop()
 
     sel_county_file = st.selectbox(
         L["county"], list(counties.keys()), format_func=lambda f: counties[f],
-        key="sb_opt_county", help=H["county"],
+        key=f"sb_opt_county::{sel_country}::{sel_state}", help=H["county"],
     )
     sel_county = counties[sel_county_file]
-    file_path = os.path.join(BASE_DATA_DIR, sel_country, sel_state, sel_county_file)
+    file_path = os.path.join(country_path, sel_state, sel_county_file)
     st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state)} / {sel_county}")
+    if st.button("🔄 " + ("Quét lại dữ liệu" if LANG == "vi" else "Rescan data"), key="rescan_data",
+                 help=("Cập nhật danh sách sau khi thêm quốc gia/tỉnh/huyện mới vào thư mục dữ liệu."
+                       if LANG == "vi" else "Refresh the lists after adding a new country/province/district to the data folder.")):
+        discover_countries.clear()
+        list_counties.clear()
+        _name_overrides.clear()
+        st.rerun()
 
     st.divider()
     st.header(L["sb_analytic"])
@@ -1120,9 +1297,10 @@ def run_pipeline():
         "boundary_wgs": boundary_wgs,
         "epsg": epsg,
         "country_raw": sel_country,
+        "country_names": {"vi": country_label(sel_country, "vi"), "en": country_label(sel_country, "en")},
         "state_name": clean_state(sel_state),
         "district": sel_county,
-        "iso3": iso3_of(sel_country) or "",
+        "iso3": sel_iso,
         "size": cell_size,
         "year": int(year),
         "moran": moran,
@@ -1143,7 +1321,8 @@ if not res:
 # ==========================================
 grid_utm = res["grid_utm"].reset_index(drop=True)
 size, yr, epsg = res["size"], res["year"], res["epsg"]
-country_disp = country_label(res["country_raw"], LANG)
+_cn = res.get("country_names") or {lg: country_label(res["country_raw"], lg) for lg in ("vi", "en")}
+country_disp = _cn[LANG]
 state_disp, district = res["state_name"], res["district"]
 place = f"{country_disp} / {state_disp} / {district}"
 
@@ -1370,7 +1549,7 @@ with tab_map:
 export_df = pd.DataFrame(
     {
         "iso3": res["iso3"],
-        "country": country_label(res["country_raw"], "en"),
+        "country": _cn["en"],
         "province": state_disp,
         "district": district,
         "grid_id": grid_utm["grid_id"].to_numpy(dtype="int64"),
@@ -1615,7 +1794,8 @@ with tab_lisa:
     from lisa_ui import render_lisa_tab
     
     # Tạo mã định danh vùng duy nhất (Ví dụ: VNM_hoan_kiem)
-    region_id = f"{res['iso3']}_{slugify(res['district'])}"
+    _iso_id = res["iso3"] or slugify(str(res["country_raw"]).split("/")[-1]).upper()
+    region_id = f"{_iso_id}_{slugify(res['district'])}"
     
     # Truyền dữ liệu vào lõi LISA
     try:
