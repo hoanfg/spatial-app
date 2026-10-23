@@ -96,3 +96,9 @@ Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growt
 
 Openshaw, S. (1984). The Modifiable Areal Unit Problem. Concepts and Techniques in Modern Geography (CATMOG), 38. https://www.spatial-literacy.org/qmrg/catmog/catmog_38.pdf
 
+---
+
+## 🗺️ Roadmap & Scaling Plan
+- [x] **Phase 1 (Pilot):** Validate pipeline and LISA econometric bridge using Vietnam administrative boundaries (`VNM`).
+- [ ] **Phase 2 (Expansion):** Integrate regional Southeast Asia boundary datasets (e.g., Thailand, Indonesia, Philippines).
+- [ ] **Phase 3 (Global scale):** Generalize automated boundary ingestion for global GADM vector tiles.
