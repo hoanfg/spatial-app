@@ -18,16 +18,16 @@ Hệ thống được thiết kế không chỉ như một công cụ trích xu�
 
 Để giải quyết tính phức tạp của việc kết hợp dữ liệu vector (ranh giới hành chính), dữ liệu raster (ảnh vệ tinh VIIRS) và thống kê suy diễn không gian, hệ thống phân rã luồng công việc thành 4 tầng độc lập:
 
-* **Tier 1: ** 
+* **Tier 1:** 
   Tầng này chịu trách nhiệm quét đệ quy cấu trúc thư mục GADM cục bộ. Bằng việc sử dụng thuật toán nhận diện mẫu, chuẩn hóa Unicode (NFC/NFD) và thư viện `pycountry`, hệ thống tự động suy diễn mã định danh ISO3, chuẩn hóa tên gọi hành chính và nạp vào giao diện người dùng (UI) mà không phụ thuộc vào cơ sở dữ liệu tĩnh.
 
-* **Tier 2: ** 
+* **Tier 2:** 
   Chịu trách nhiệm xử lý hình học đa giác. Tầng này chiếu toàn bộ dữ liệu vector về hệ tọa độ phẳng UTM (Universal Transverse Mercator) động dựa trên kinh độ/vĩ độ tâm của hộp bao (bounding box), sau đó kiến tạo lưới không gian đều bằng kỹ thuật vector hóa qua `numpy.meshgrid` và `shapely.box`.
   
-* **Tier 3: ** 
+* **Tier 3:** 
   Máy chủ gửi truy vấn không gian tới Google Earth Engine (GEE) API để lọc mây, tổng hợp trung vị năm và cắt ảnh raster theo ranh giới vùng phân tích. Luồng byte-stream của ảnh GeoTIFF được nạp vào bộ nhớ tạm để **C/C++ engine** (`exactextract`) thực hiện tính toán thống kê vùng theo tỷ lệ phủ diện tích điểm ảnh giữa lưới Vector và Raster.
 
-* **Tier 4: ** 
+* **Tier 4:** 
   Tính toán kinh tế lượng không gian (Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini) và kết xuất bản đồ tương tác đa lớp (Folium/Leaflet). Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu dưới dạng tệp CSV cấp độ ô lưới và cấp độ vùng – năm.
 
 ### 1.2. Giới hạn phần cứng và cơ chế phòng thủ "out-of-memory" (OOM) trên Cloud
