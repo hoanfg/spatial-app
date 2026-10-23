@@ -6,7 +6,9 @@ shapely
 folium
 streamlit-folium
 branca
+altair
+requests
+jinja2
 earthengine-api
-rasterio
 exactextract
 pycountry
