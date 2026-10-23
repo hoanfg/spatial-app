@@ -30,13 +30,13 @@ T = {
         "log": "Dùng ln(NTL) trước khi chuẩn hóa", "thr": "Ngưỡng 'ô sáng' (nW/cm²/sr)",
         "clu": "Số ô tối thiểu của cụm HH", "nbr": "Số láng giềng tối thiểu để kiểm định",
         "submit": "🔄 Cập nhật tham số LISA",
-        "h_perms": "Số lần xáo trộn ngẫu nhiên để tính p-value giả (pseudo p). Càng nhiều càng chính xác nhưng chạy chậm hơn.",
-        "h_alpha": "Ngưỡng bác bỏ giả thuyết 'không có cụm'. 0,05 = chấp nhận 5% rủi ro báo nhầm.",
-        "h_fdr": "Kiểm soát tỷ lệ phát hiện sai khi kiểm định hàng nghìn ô cùng lúc. Bật để kết quả thận trọng hơn.",
-        "h_log": "Lấy logarit để giảm ảnh hưởng của vài ô sáng cực đoan (NTL lệch phải mạnh). Khuyến nghị cho kiểm tra độ vững.",
-        "h_thr": "Ô có NTL ≤ ngưỡng được coi là 'tối' và bị loại khỏi đồ thị láng giềng. Mặc định 0.",
-        "h_clu": "Cụm HH liên thông có ít ô hơn mức này không được tính vào biến 'hotspot_dummy'.",
-        "h_nbr": "Ô sáng có ít láng giềng sáng hơn mức này sẽ không được kiểm định.",
+        "h_perms": "Số lần xáo trộn ngẫu nhiên để tạo phân phối tham chiếu. Số càng cao (999) p-value càng chính xác nhưng chạy chậm hơn.",
+        "h_alpha": "Ngưỡng ý nghĩa p-value để quyết định cụm không gian có thực sự tồn tại hay do ngẫu nhiên (thường dùng 0.05).",
+        "h_fdr": "Cơ chế siêu khắt khe (FDR) chặn đứng việc máy tính báo động giả khi kiểm định hàng ngàn ô lưới cùng lúc.",
+        "h_log": "Chuyển NTL sang dạng logarit tự nhiên (ln). Giúp giảm nhiễu cục bộ từ các ô siêu sáng (nhà máy, sân bay).",
+        "h_thr": "Chỉ các ô có độ sáng lớn hơn ngưỡng này mới được đưa vào kiểm định (giúp loại bỏ hoàn toàn nhiễu vùng tối).",
+        "h_clu": "Chỉ ghi nhận biến giả (Hotspot Dummy = 1) nếu phát hiện một cụm điểm nóng High-High liên tục lớn hơn số ô này.",
+        "h_nbr": "Loại bỏ các ô cô lập (quá ít hàng xóm) khỏi phép kiểm định để tránh kết quả bị nhiễu do thiếu liên kết không gian.",
         "h_submit": "Áp dụng các tham số ở trên. Kết quả được lưu đệm nên đổi qua lại không tính lại nếu tham số đã chạy.",
         "pop_params": "Hướng dẫn tham số LISA",
         "pop_params_brief": "Bấm để xem giải thích chi tiết từng tham số",
@@ -101,13 +101,13 @@ T = {
         "log": "Use ln(NTL) before standardising", "thr": "'Lit' threshold (nW/cm²/sr)",
         "clu": "Min cells per HH cluster", "nbr": "Min neighbours to be tested",
         "submit": "🔄 Update LISA parameters",
-        "h_perms": "Number of random shuffles used to compute the pseudo p-value. More = more precise but slower.",
-        "h_alpha": "Rejection threshold for 'no clustering'. 0.05 = accept a 5% false-alarm risk.",
-        "h_fdr": "Controls the false discovery rate when testing thousands of cells at once. Turn on for more conservative results.",
-        "h_log": "Log-transform to damp a few extreme bright cells (NTL is strongly right-skewed). Good for robustness checks.",
-        "h_thr": "Cells with NTL ≤ threshold are 'dark' and dropped from the neighbour graph. Default 0.",
-        "h_clu": "Connected HH clusters smaller than this do not count towards 'hotspot_dummy'.",
-        "h_nbr": "Lit cells with fewer lit neighbours than this are not tested.",
+        "h_perms": "Number of random permutations for pseudo p-value. 999 gives the most precise p-value but takes longer.",
+        "h_alpha": "Significance level (p-value threshold) to determine if structural clusters exist.",
+        "h_fdr": "Strict multiple testing correction (Benjamini-Hochberg) to minimize False Positives.",
+        "h_log": "Apply natural log (ln) to NTL before standardizing. Mitigates outliers from ultra-bright pixels.",
+        "h_thr": "Only cells strictly brighter than this threshold are tested (removes dark area noise).",
+        "h_clu": "Hotspot Dummy = 1 only if a contiguous High-High cluster contains at least this many cells.",
+        "h_nbr": "Exclude isolated cells (few neighbors) from testing to avoid spurious spatial association.",
         "h_submit": "Apply the parameters above. Results are cached, so revisiting a parameter set does not recompute.",
         "pop_params": "LISA parameter guide",
         "pop_params_brief": "Click for a detailed explanation of each parameter",
@@ -217,28 +217,19 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     # ---------- tham số ----------
     with st.expander(L["params"], expanded=True):
-        with st.form(key="lisa_params_form", border=False):
-            st.caption(f"**{L['p_stat']}**")
-            c1, c2, c3 = st.columns(3)
+        with st.form(key="lisa_params_form"):
+            c1, c2, c3, c4 = st.columns(4)
             perms = c1.selectbox(L["perms"], [199, 499, 999], index=1, help=L["h_perms"])
             alpha = c2.selectbox(L["alpha"], [0.05, 0.01], index=0, help=L["h_alpha"])
-            with c3:
-                fdr = st.toggle(L["fdr"], value=True, help=L["h_fdr"])
-
-            st.divider()
-            st.caption(f"**{L['p_data']}**")
-            c4, c5 = st.columns(2)
-            with c4:
-                use_log = st.toggle(L["log"], value=False, help=L["h_log"])
+            fdr = c3.toggle(L["fdr"], value=True, help=L["h_fdr"])
+            use_log = c4.toggle(L["log"], value=False, help=L["h_log"])
+            
+            c5, c6, c7 = st.columns(3)
             thr = c5.number_input(L["thr"], min_value=0.0, max_value=5.0, value=0.0, step=0.1, help=L["h_thr"])
-
-            st.divider()
-            st.caption(f"**{L['p_cluster']}**")
-            c6, c7 = st.columns(2)
-            min_clu = c6.slider(L["clu"], 1, 30, 4, help=L["h_clu"])
+            min_clu = c6.slider(L["clu"], 1, 30, 4, help=L["h_clu"]) 
             min_nbr = c7.slider(L["nbr"], 1, 4, 1, help=L["h_nbr"])
-
-            submit_lisa = st.form_submit_button(L["submit"], type="primary", help=L["h_submit"])
+            
+            submit_lisa = st.form_submit_button("🔄 Cập nhật tham số LISA", type="primary")
 
     # ---------- tính (cache trong session theo kết quả + tham số) ----------
     ckey = (res["ts"], size, perms, alpha, fdr, use_log, thr, min_clu, min_nbr)
