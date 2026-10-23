@@ -38,7 +38,7 @@ T = {
         "add": "➕ Thêm vùng-năm này vào bảng panel", "panel": "Bảng panel tích lũy",
         "note": "Ô tối không tham gia đồ thị láng giềng (listwise deletion); ô biên bị loại khỏi cả vai trò tâm lẫn láng giềng. "
                 "Ô sáng cô lập (không có láng giềng sáng) không được kiểm định.",
-        "tt": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái"],
+        "tt": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái", "Cách lõi (km)"],
     },
     "en": {
         "title": "🧭 LISA & Data Bridge for panel regression",
@@ -60,7 +60,7 @@ T = {
         "add": "➕ Add this region-year to the panel table", "panel": "Accumulated panel table",
         "note": "Dark cells are excluded from the neighbour graph (listwise deletion); edge cells are removed as both centres "
                 "and neighbours. Isolated lit cells (no lit neighbour) are not tested.",
-        "tt": ["Cell", "NTL", "z (lit)", "pseudo p", "Class"],
+        "tt": ["Cell", "NTL", "z (lit)", "pseudo p", "Class", "Dist to core (km)"],
     },
 }
 
@@ -154,6 +154,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         "z": np.round(cdf["ntl_z_lit"].to_numpy()[idx], 2),
         "p": np.round(cdf["lisa_p_sim"].to_numpy()[idx], 4),
         "k": lab,
+        "d": np.round(cdf["dist_to_core_km"].to_numpy()[idx], 2),
         "col": [COLORS[x] for x in lab],
     }, geometry=sub.values, crs=4326)
 
@@ -174,7 +175,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         gj, name="LISA",
         style_function=lambda f: {"fillColor": f["properties"]["col"], "color": f["properties"]["col"],
                                   "weight": 0.4, "fillOpacity": 0.15 if f["properties"]["k"] in (NS, DARK) else 0.8},
-        tooltip=folium.GeoJsonTooltip(fields=["c", "v", "z", "p", "k"], aliases=L["tt"], sticky=False),
+        tooltip=folium.GeoJsonTooltip(fields=["c", "v", "z", "p", "k", "d"], aliases=L["tt"], sticky=False),
     ).add_to(m)
     folium.GeoJson(res["boundary_wgs"], interactive=False,
                    style_function=lambda _: {"fill": False, "color": "#222", "weight": 1.5}).add_to(m)
