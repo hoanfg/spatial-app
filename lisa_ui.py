@@ -152,15 +152,18 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     }, geometry=sub.values, crs=4326)
 
     minx, miny, maxx, maxy = res["boundary_wgs"].total_bounds
+    
     m = folium.Map(
         location=[(miny + maxy) / 2, (minx + maxx) / 2], 
-        zoom_start=12, 
+        zoom_start=13, # Tự động zoom vừa phải vào tâm
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
         attr="Esri",
         control_scale=True, 
-        prefer_canvas=True
+        prefer_canvas=True,
+        no_wrap=True,  # Chặn duplicate bản đồ thế giới
+        max_zoom=16    # Esri Dark chỉ hỗ trợ tối đa zoom 16
     )
-    m.fit_bounds([[miny, minx], [maxy, maxx]])
+                        
     folium.GeoJson(
         gj, name="LISA",
         style_function=lambda f: {"fillColor": f["properties"]["col"], "color": f["properties"]["col"],
