@@ -154,7 +154,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         "z": np.round(cdf["ntl_z_lit"].to_numpy()[idx], 2),
         "p": np.round(cdf["lisa_p_sim"].to_numpy()[idx], 4),
         "k": lab,
-        "d": np.round(cdf["dist_to_core_km"].to_numpy()[idx], 2),
+        "d": np.round(dist_arr[idx], 2),
         "col": [COLORS[x] for x in lab],
     }, geometry=sub.values, crs=4326)
 
@@ -180,11 +180,8 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     folium.GeoJson(res["boundary_wgs"], interactive=False,
                    style_function=lambda _: {"fill": False, "color": "#222", "weight": 1.5}).add_to(m)
     m.get_root().html.add_child(folium.Element(_legend(lang)))
-    mkey = f"lisa_map_{lang}_{res['ts']}_{perms}_{alpha}_{fdr}_{use_log}_{thr}_{min_nbr}_{hide0}_{hide_edge}"
-    try:
-        st_folium(m, use_container_width=True, height=620, returned_objects=[], key=mkey)
-    except TypeError:
-        st_folium(m, height=620, returned_objects=[], key=mkey)
+    import streamlit.components.v1 as components
+    components.html(m.get_root().render(), height=640)
 
     # ---------- Cơ cấu trạng thái & Moran Scatterplot ----------
     area = grid_utm["area_km2"].to_numpy(float)
