@@ -329,9 +329,9 @@ def slugify(s):
 # ==========================================
 TEXT = {
     "vi": {
-        "title": "🌙 Công cụ trích xuất Ánh sáng ban đêm (NTL)",
+        "title": "🌙 Công cụ trích xuất ánh sáng ban đêm (NTL)",
         "subtitle": "Kiến trúc: tải raster từ Cloud về máy chủ + động cơ C/C++ (`exactextract`). "
-                    "Thiết kế cho Kinh tế lượng không gian (chống lỗi MAUP, độ phân giải gốc ~463m).",
+                    "Thiết kế cho kinh tế lượng không gian (chống lỗi MAUP, độ phân giải gốc ~463m).",
         "sb_spatial": "1. Tham số không gian",
         "country": "Quốc gia",
         "state": "Tỉnh / Thành phố",
