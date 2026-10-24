@@ -1337,7 +1337,7 @@ with st.sidebar:
      )
     raw_county_label = counties[sel_county_file]
     sel_county = clean_county(raw_county_label, iso=sel_iso, lang=LANG)
-     file_path = os.path.join(country_path, sel_state, sel_county_file)
+    file_path = os.path.join(country_path, sel_state, sel_county_file)
      st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state, iso=sel_iso, lang=LANG)} / {sel_county}")
      if st.button("🔄 " + ("Quét lại dữ liệu" if LANG == "vi" else "Rescan data"), key="rescan_data",
                   help=("Cập nhật danh sách sau khi thêm quốc gia/tỉnh/huyện mới vào thư mục dữ liệu."
