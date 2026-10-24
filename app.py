@@ -113,7 +113,7 @@ import json
 @st.cache_data(show_spinner=False)
 def load_china_districts():
     """Tải từ điển Hán-Việt 2900+ quận huyện Trung Quốc từ file JSON (chỉ tải 1 lần vào RAM)"""
-    dict_path = os.path.join(DATA_ROOT, "china_districts.json")
+    dict_path = os.path.join(DATA_ROOT, "china_districts_hanzi.json")
     try:
         with open(dict_path, "r", encoding="utf-8") as f:
             return json.load(f)
