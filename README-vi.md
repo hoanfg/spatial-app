@@ -164,7 +164,7 @@ Vì bức xạ ánh sáng ban đêm không tuân theo phân phối chuẩn, ý n
 Gọi $M_i$ là số lần mô phỏng rơi vào miền cực trị ở đuôi gần hơn (xử lý đồng hạng với dung sai số học $10^{-12}$):
 
 $$
-M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right), \; \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
+M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right); \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
 $$
 
 Giá trị pseudo p-value hai phía (two-sided) được tính theo quy chuẩn của Anselin (1995) và Rey & Anselin (2007):
