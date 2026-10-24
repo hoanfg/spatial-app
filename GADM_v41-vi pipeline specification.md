@@ -56,7 +56,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 
 ### Nhóm 1: `STANDARD_ADM2` (Chuẩn cấp 2, Chiếm ~85% quốc gia)
 
-* **Đặc điểm:** Cấp 1 (`NAME_1`) là Bang / Tỉnh / Thành phố trực thuộc trung ương; Cấp 2 (`NAME_2`) là Quận / Huyện / Hạt / Thành phố thuộc tỉnh, phủ kín 100% lãnh thổ và có quy mô diện tích lý tưởng cho lưới NTL ($500	ext{ m} - 2000	ext{ m}$).
+* **Đặc điểm:** Cấp 1 (`NAME_1`) là Bang / Tỉnh / Thành phố trực thuộc trung ương; Cấp 2 (`NAME_2`) là Quận / Huyện / Hạt / Thành phố thuộc tỉnh, phủ kín 100% lãnh thổ và có quy mô diện tích lý tưởng cho lưới NTL ($$500 \text{ km}^2$$ - $$2000 \text{ km}^2$$).
 
 * **Cấu hình trích xuất:**
   * `layer`: `ADM_ADM_2`
