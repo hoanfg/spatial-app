@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Mordovia_Kovylkino_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Mordovia", "NAME_2": "Kovylkino" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 43.681598663000102, 54.03240966900006 ], [ 43.661403656000061, 54.002357483000083 ], [ 43.591869355000142, 54.01210403500005 ], [ 43.616821288999972, 54.036708833000148 ], [ 43.681598663000102, 54.03240966900006 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Khanty-Mansiy_Surgut_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Khanty-Mansiy", "NAME_2": "Surgut" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 73.555580140000131, 61.360778809000124 ], [ 73.489898681999989, 61.329204559000118 ], [ 73.442459107000161, 61.338485719000118 ], [ 73.439109802000019, 61.357254028000057 ], [ 73.479667662999987, 61.402553559000125 ], [ 73.543022156000063, 61.390151978000119 ], [ 73.555580140000131, 61.360778809000124 ] ] ] ] } }
+]
+}

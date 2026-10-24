@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Altay_Belokurikha_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Altay", "NAME_2": "Belokurikha" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 84.939910888999975, 52.007022858000028 ], [ 84.933586120000086, 52.004665375000116 ], [ 84.933341981000069, 52.0046997070001 ], [ 84.933395386000143, 52.006286622000061 ], [ 84.939941405000013, 52.007202149000079 ], [ 84.939910888999975, 52.007022858000028 ] ] ] ] } }
+]
+}

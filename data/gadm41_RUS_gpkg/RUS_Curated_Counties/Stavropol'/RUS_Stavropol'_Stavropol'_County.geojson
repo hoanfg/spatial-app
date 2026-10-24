@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Stavropol'_Stavropol'_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Stavropol'", "NAME_2": "Stavropol'" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.143192291000162, 45.025997163000113 ], [ 42.114006043000074, 44.972881316999974 ], [ 42.017017364000139, 44.984378815000071 ], [ 41.956081391, 45.022815704000038 ], [ 41.826435088000039, 44.99452209500015 ], [ 41.785881043000188, 45.007995607000112 ], [ 41.925281525000173, 45.142021180000086 ], [ 42.143192291000162, 45.025997163000113 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Vladimir_Sobinka_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Vladimir", "NAME_2": "Sobinka" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 40.033145904000094, 55.950084687000071 ], [ 40.009223938000162, 55.940505981000115 ], [ 39.971916199000191, 55.948005676999969 ], [ 39.964904786000147, 55.95576095600012 ], [ 39.978294373000153, 55.962680818000138 ], [ 40.026618958000086, 55.965019227000084 ], [ 40.033145904000094, 55.950084687000071 ] ] ] ] } }
+]
+}

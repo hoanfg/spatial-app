@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Kirov_Vyatskie_Polyany_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kirov", "NAME_2": "Vyatskie Polyany" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 51.085124969000162, 56.219242095000027 ], [ 51.071178435000149, 56.209518432000095 ], [ 51.052879333000021, 56.219764710000049 ], [ 51.071151734000125, 56.226810455000077 ], [ 51.085124969000162, 56.219242095000027 ] ] ] ] } }
+]
+}

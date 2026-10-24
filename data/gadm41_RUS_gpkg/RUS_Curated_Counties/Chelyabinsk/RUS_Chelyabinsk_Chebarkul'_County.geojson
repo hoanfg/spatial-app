@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Chelyabinsk_Chebarkul'_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Chelyabinsk", "NAME_2": "Chebarkul'" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 60.379894257000103, 54.959918976000097 ], [ 60.370807649000028, 54.957324982000046 ], [ 60.361015320000092, 54.963100433000193 ], [ 60.362056731000166, 54.968677522 ], [ 60.366596222000169, 54.971267701000045 ], [ 60.381282807000048, 54.971672058000195 ], [ 60.379894257000103, 54.959918976000097 ] ] ] ] } }
+]
+}

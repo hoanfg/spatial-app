@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Penza_Kuznetsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Penza", "NAME_2": "Kuznetsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 46.681873321000182, 53.09856414800015 ], [ 46.610626222000121, 53.087081909 ], [ 46.579891204000091, 53.098110199000189 ], [ 46.598789215000068, 53.147480012000074 ], [ 46.645679474000133, 53.140071870000099 ], [ 46.673919678000118, 53.125453950000121 ], [ 46.681873321000182, 53.09856414800015 ] ] ] ] } }
+]
+}

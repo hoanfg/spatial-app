@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Ozery_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Moskva", "NAME_2": "Ozery" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 38.591743468, 54.839477540000075 ], [ 38.550769806, 54.818565368000179 ], [ 38.501140594999981, 54.832324982000159 ], [ 38.545623779000152, 54.853519441000117 ], [ 38.591743468, 54.839477540000075 ] ] ] ] } }
+]
+}

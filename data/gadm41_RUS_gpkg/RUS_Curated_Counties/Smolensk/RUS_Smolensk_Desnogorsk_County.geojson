@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Smolensk_Desnogorsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Smolensk", "NAME_2": "Desnogorsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 33.33345413100011, 54.14436340300017 ], [ 33.325069428000063, 54.135555268000132 ], [ 33.301757813000108, 54.143577576000098 ], [ 33.301399231000119, 54.144573212000012 ], [ 33.313213348000033, 54.151218414000084 ], [ 33.33345413100011, 54.14436340300017 ] ] ] ] } }
+]
+}

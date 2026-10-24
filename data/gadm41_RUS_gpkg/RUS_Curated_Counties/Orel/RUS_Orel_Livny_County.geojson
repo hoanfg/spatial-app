@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Orel_Livny_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Orel", "NAME_2": "Livny" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 37.6281051630001, 52.396842958000093 ], [ 37.594074250000176, 52.376445770000089 ], [ 37.56714630100015, 52.401309967000088 ], [ 37.543987274000187, 52.406478882000101 ], [ 37.573764801000095, 52.430625916000167 ], [ 37.637596130000134, 52.42126846300016 ], [ 37.6281051630001, 52.396842958000093 ] ] ] ] } }
+]
+}

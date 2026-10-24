@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Tomsk_Tomsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tomsk", "NAME_2": "Tomsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 84.970550537000122, 56.661888122000107 ], [ 84.881263733000139, 56.607334138000169 ], [ 84.787063599000135, 56.644905091000112 ], [ 84.718750000000114, 56.726219177000075 ], [ 84.870956420000084, 56.754100800000174 ], [ 84.941513061000023, 56.72161483800005 ], [ 84.970550537000122, 56.661888122000107 ] ] ] ] } }
+]
+}

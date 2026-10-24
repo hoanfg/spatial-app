@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Samara_Oktyabr'sk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Samara", "NAME_2": "Oktyabr'sk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 48.689155578000054, 53.178043366000054 ], [ 48.688720703000058, 53.16687011800019 ], [ 48.672649384000181, 53.169631958000082 ], [ 48.673751831000175, 53.176223754000148 ], [ 48.689155578000054, 53.178043366000054 ] ] ] ] } }
+]
+}

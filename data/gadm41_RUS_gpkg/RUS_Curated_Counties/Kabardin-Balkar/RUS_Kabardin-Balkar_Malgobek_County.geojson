@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Kabardin-Balkar_Malgobek_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kabardin-Balkar", "NAME_2": "Malgobek" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 44.442012787000067, 43.614151002000142 ], [ 44.437953949000132, 43.613018037000074 ], [ 44.434501648000037, 43.613430023000092 ], [ 44.432971954000152, 43.616443635 ], [ 44.433425903000114, 43.62104034500004 ], [ 44.4410438540001, 43.619724274000134 ], [ 44.442569733000141, 43.616710662000173 ], [ 44.442012787000067, 43.614151002000142 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Zaraysk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Moskva", "NAME_2": "Zaraysk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 38.916549683000028, 54.717876435000164 ], [ 38.866901397000106, 54.716419221000194 ], [ 38.876102448000154, 54.74419021500006 ], [ 38.915203095000152, 54.73671341000005 ], [ 38.916549683000028, 54.717876435000164 ] ] ] ] } }
+]
+}

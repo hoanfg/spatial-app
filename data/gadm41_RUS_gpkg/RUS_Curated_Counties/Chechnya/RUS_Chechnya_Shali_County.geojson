@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Chechnya_Shali_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Chechnya", "NAME_2": "Shali" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 45.87478256300011, 43.110328674000129 ], [ 45.870029450000061, 43.10975265400009 ], [ 45.865894317000141, 43.111732484000129 ], [ 45.865818023000031, 43.114784240000063 ], [ 45.869827271000133, 43.117893218000063 ], [ 45.877429962000065, 43.113418579000097 ], [ 45.87478256300011, 43.110328674000129 ] ] ] ] } }
+]
+}

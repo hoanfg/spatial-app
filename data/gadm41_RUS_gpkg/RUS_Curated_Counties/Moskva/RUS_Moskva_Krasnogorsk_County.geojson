@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Krasnogorsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Moskva", "NAME_2": "Krasnogorsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 37.291748046000066, 55.807540893000066 ], [ 37.277076721000185, 55.807369232000156 ], [ 37.245727540000132, 55.831996919000119 ], [ 37.252613067000027, 55.840774536000083 ], [ 37.286125183000138, 55.839412689000142 ], [ 37.298358918000133, 55.820911406999983 ], [ 37.291748046000066, 55.807540893000066 ] ] ] ] } }
+]
+}

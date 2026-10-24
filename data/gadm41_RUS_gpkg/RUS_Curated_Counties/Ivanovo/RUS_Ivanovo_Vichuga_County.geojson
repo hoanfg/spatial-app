@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Ivanovo_Vichuga_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Ivanovo", "NAME_2": "Vichuga" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 41.946304320000081, 57.199920653999982 ], [ 41.895660400000054, 57.189159394000114 ], [ 41.871677398000088, 57.203941345000032 ], [ 41.872943878000058, 57.221305848000156 ], [ 41.939178466000101, 57.229663850000179 ], [ 41.946304320000081, 57.199920653999982 ] ] ] ] } }
+]
+}
