@@ -1335,7 +1335,7 @@ with st.sidebar:
          key=f"sb_opt_county::{sel_country}::{sel_state}",
          help=H["county"],
      )
-     raw_county_label = counties[sel_county_file]
+    raw_county_label = counties[sel_county_file]
      sel_county = clean_county(raw_county_label, iso=sel_iso, lang=LANG)
      file_path = os.path.join(country_path, sel_state, sel_county_file)
      st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state, iso=sel_iso, lang=LANG)} / {sel_county}")
