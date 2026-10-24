@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Tula_Aleksin_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tula", "NAME_2": "Aleksin" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 37.113796235000052, 54.45945358300014 ], [ 37.103988648000097, 54.45783615199997 ], [ 37.101165771000183, 54.465293884000118 ], [ 37.115604400000166, 54.464488984000127 ], [ 37.113796235000052, 54.45945358300014 ] ] ] ] } }
-]
-}

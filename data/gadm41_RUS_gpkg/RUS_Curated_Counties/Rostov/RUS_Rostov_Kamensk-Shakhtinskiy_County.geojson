@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Rostov_Kamensk-Shakhtinskiy_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Rostov", "NAME_2": "Kamensk-Shakhtinskiy" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 40.26245880100015, 48.206600189000142 ], [ 40.227619171000185, 48.191131591000101 ], [ 40.213195801000154, 48.204719543000124 ], [ 40.154422759000056, 48.260089875000119 ], [ 40.214992522000045, 48.328422547000173 ], [ 40.357292175, 48.294063569000173 ], [ 40.329475402000185, 48.236358643000131 ], [ 40.26245880100015, 48.206600189000142 ] ] ] ] } }
-]
-}

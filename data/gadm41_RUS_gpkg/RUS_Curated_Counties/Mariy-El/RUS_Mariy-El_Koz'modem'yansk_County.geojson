@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Mariy-El_Koz'modem'yansk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Mariy-El", "NAME_2": "Koz'modem'yansk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 46.534130097, 56.25951385500008 ], [ 46.526767730000074, 56.258464813000103 ], [ 46.523960113000044, 56.260990144000061 ], [ 46.52109909100011, 56.266559602000086 ], [ 46.531188965000013, 56.27016449100006 ], [ 46.535892487000183, 56.264602661000083 ], [ 46.534130097, 56.25951385500008 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_South_Dakota_Hamlin_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "South Dakota", "NAME_2": "Hamlin" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -96.887413024999944, 44.54458999700006 ], [ -97.128486633999898, 44.544971467000039 ], [ -97.492095946999882, 44.543621064000092 ], [ -97.491378783999892, 44.804672242000152 ], [ -97.369789123999908, 44.803710937000119 ], [ -97.247512816999972, 44.803539276000038 ], [ -96.885719299999948, 44.804302216999986 ], [ -96.887413024999944, 44.54458999700006 ] ] ] ] } }
-]
-}

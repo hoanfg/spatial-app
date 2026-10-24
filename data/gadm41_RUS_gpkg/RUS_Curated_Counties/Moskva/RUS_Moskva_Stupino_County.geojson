@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Moskva_Stupino_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Moskva", "NAME_2": "Stupino" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 38.13446045000012, 54.904636384000128 ], [ 38.131336211000189, 54.879795075000061 ], [ 38.106704712000067, 54.881492614000081 ], [ 38.105953217000149, 54.899883271000022 ], [ 38.083412170000031, 54.907882691000054 ], [ 38.111732483000139, 54.917236329 ], [ 38.13446045000012, 54.904636384000128 ] ] ] ] } }
-]
-}

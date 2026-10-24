@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Texas_Gillespie_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Gillespie" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -98.585533141999917, 30.49888038600011 ], [ -98.589607238999974, 30.137500764000151 ], [ -98.921699524999894, 30.138980866000054 ], [ -99.303421019999973, 30.139778138000111 ], [ -99.303222655999889, 30.28895187300003 ], [ -99.301956175999919, 30.500257492 ], [ -98.964698791999922, 30.499429704000079 ], [ -98.585533141999917, 30.49888038600011 ] ] ] ] } }
-]
-}

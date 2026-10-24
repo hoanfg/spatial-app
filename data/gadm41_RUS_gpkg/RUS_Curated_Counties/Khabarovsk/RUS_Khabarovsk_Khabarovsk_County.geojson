@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Khabarovsk_Khabarovsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Khabarovsk", "NAME_2": "Khabarovsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 135.085678100000337, 48.374168396000073 ], [ 135.04396057200006, 48.371932983000136 ], [ 135.009765625000114, 48.37840652400007 ], [ 134.980728149000015, 48.416881562000128 ], [ 135.040161132000094, 48.461299896000185 ], [ 135.098373412000228, 48.452266693000183 ], [ 135.123321534000183, 48.411983490000182 ], [ 135.085678100000337, 48.374168396000073 ] ] ] ] } }
-]
-}

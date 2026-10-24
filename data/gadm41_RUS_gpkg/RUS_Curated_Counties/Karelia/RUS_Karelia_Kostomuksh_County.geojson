@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Karelia_Kostomuksh_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Karelia", "NAME_2": "Kostomuksh" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 30.58871460000006, 64.616470338000113 ], [ 30.558414460000165, 64.603294373000153 ], [ 30.525159836000057, 64.611763000000167 ], [ 30.524263382000129, 64.619514466000055 ], [ 30.555143356000031, 64.631706237000117 ], [ 30.587835311000049, 64.624214172999984 ], [ 30.58871460000006, 64.616470338000113 ] ] ] ] } }
-]
-}

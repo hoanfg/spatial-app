@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Tula_Novomoskovsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tula", "NAME_2": "Novomoskovsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 38.203884126000048, 54.082111358000077 ], [ 38.188156129000163, 54.081920624000077 ], [ 38.191329955000072, 54.094974518000129 ], [ 38.207454681000172, 54.089561462000063 ], [ 38.203884126000048, 54.082111358000077 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Texas_Howard_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Howard" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -101.691513060999966, 32.525218963000043 ], [ -101.17600250299995, 32.527179718000184 ], [ -101.177589416999979, 32.487071991000164 ], [ -101.173896788999912, 32.089698792000036 ], [ -101.262596129999906, 32.089649200000167 ], [ -101.694168090999938, 32.088088990000017 ], [ -101.691513060999966, 32.525218963000043 ] ] ] ] } }
-]
-}

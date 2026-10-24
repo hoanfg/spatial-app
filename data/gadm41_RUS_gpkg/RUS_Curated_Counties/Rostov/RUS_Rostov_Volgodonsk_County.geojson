@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Rostov_Volgodonsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Rostov", "NAME_2": "Volgodonsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.146003723000092, 47.507320404000154 ], [ 42.135120393000193, 47.504215240000121 ], [ 42.12414169300007, 47.508754731000067 ], [ 42.117416381000169, 47.522174835000101 ], [ 42.139774323000154, 47.529949189000092 ], [ 42.155315399000131, 47.517993926000088 ], [ 42.146003723000092, 47.507320404000154 ] ] ] ] } }
-]
-}

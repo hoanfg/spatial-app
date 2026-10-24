@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Texas_Lubbock_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Lubbock" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -101.56437683099989, 33.829650880000145 ], [ -101.565528869999923, 33.749149323000154 ], [ -101.561378478999984, 33.541351318000125 ], [ -101.559547424999892, 33.393970490000129 ], [ -102.077392577999888, 33.389411926000093 ], [ -102.086723327999948, 33.823680878 ], [ -101.56437683099989, 33.829650880000145 ] ] ] ] } }
-]
-}

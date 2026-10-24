@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Orel_Orel_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Orel", "NAME_2": "Orel" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 36.172115326000039, 52.972690582000098 ], [ 36.036865234000061, 52.928413392000152 ], [ 35.971427917000028, 52.957408905000193 ], [ 36.030456543000128, 53.016860961000191 ], [ 36.125091553000118, 53.044254303000116 ], [ 36.131637574000024, 53.00783157300009 ], [ 36.172115326000039, 52.972690582000098 ] ] ] ] } }
-]
-}

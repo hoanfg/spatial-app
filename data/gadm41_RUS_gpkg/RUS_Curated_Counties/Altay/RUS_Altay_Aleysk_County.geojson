@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Altay_Aleysk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Altay", "NAME_2": "Aleysk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 82.81357574499998, 52.536010742000144 ], [ 82.8121109020002, 52.531818390000012 ], [ 82.811759948000145, 52.532630921000191 ], [ 82.809707642000149, 52.534530640000071 ], [ 82.812118530000134, 52.537021637000066 ], [ 82.81357574499998, 52.536010742000144 ] ] ] ] } }
-]
-}

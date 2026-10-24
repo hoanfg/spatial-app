@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Chelyabinsk_Magnitogorsk_gorsovet_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Chelyabinsk", "NAME_2": "Magnitogorsk gorsovet" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 58.870124818000193, 53.394264221000128 ], [ 58.88159942600015, 53.454177856 ], [ 58.874568939000142, 53.549053192000144 ], [ 58.938968659000011, 53.601642609000123 ], [ 59.111171723000041, 53.542251588000113 ], [ 59.146423340000069, 53.454425813 ], [ 59.064033509000126, 53.385700225000107 ], [ 58.870124818000193, 53.394264221000128 ] ] ] ] } }
-]
-}

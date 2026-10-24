@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Sverdlovsk_Kamensk-Ural'sk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Sverdlovsk", "NAME_2": "Kamensk-Ural'sk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 61.963497161000134, 56.362377167000147 ], [ 61.896804809000059, 56.328979491999974 ], [ 61.851139069000169, 56.337718964000146 ], [ 61.807010651000098, 56.413349151000148 ], [ 61.805065155000079, 56.492652894000173 ], [ 61.942802429000096, 56.55488205000006 ], [ 61.984775543000183, 56.384208680000029 ], [ 61.963497161000134, 56.362377167000147 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Kostroma_Galich_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kostroma", "NAME_2": "Galich" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.359821320000094, 58.349769592000087 ], [ 42.354106902000126, 58.348541260000047 ], [ 42.348468780000076, 58.349056244000053 ], [ 42.351524353000059, 58.352890014000195 ], [ 42.361770629000148, 58.352214814000092 ], [ 42.359821320000094, 58.349769592000087 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Khanty-Mansiy_Uray_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Khanty-Mansiy", "NAME_2": "Uray" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 64.83040619000019, 60.097686768000074 ], [ 64.786766052000189, 60.091915131000121 ], [ 64.77324676600017, 60.112094878999983 ], [ 64.79934692400019, 60.122825622000107 ], [ 64.823554994000119, 60.122245789000033 ], [ 64.833732606000069, 60.113536834 ], [ 64.83040619000019, 60.097686768000074 ] ] ] ] } }
-]
-}

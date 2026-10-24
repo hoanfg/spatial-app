@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Kansas_Haskell_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Kansas", "NAME_2": "Haskell" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -101.090415954999969, 37.736968994000051 ], [ -100.65262603799988, 37.736412047999977 ], [ -100.652038574999949, 37.475719452000135 ], [ -100.651809691999915, 37.387760163000166 ], [ -101.068420410999977, 37.388278962000015 ], [ -101.088119506999988, 37.388309479000156 ], [ -101.090415954999969, 37.736968994000051 ] ] ] ] } }
-]
-}

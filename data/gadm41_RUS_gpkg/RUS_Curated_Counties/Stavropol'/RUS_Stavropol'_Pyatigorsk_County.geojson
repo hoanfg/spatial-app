@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Stavropol'_Pyatigorsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Stavropol'", "NAME_2": "Pyatigorsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 43.122451781000052, 44.070842743000014 ], [ 43.12202453600014, 44.007617950000053 ], [ 43.02214431800013, 44.022567750000178 ], [ 43.033599853, 44.075759888 ], [ 43.06861114600008, 44.082748413000104 ], [ 43.122451781000052, 44.070842743000014 ] ] ] ] } }
-]
-}

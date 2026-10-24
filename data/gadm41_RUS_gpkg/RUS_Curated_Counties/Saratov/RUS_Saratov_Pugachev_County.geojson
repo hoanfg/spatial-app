@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Saratov_Pugachev_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Saratov", "NAME_2": "Pugachev" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 48.894145966, 52.048069000000169 ], [ 48.830295564000096, 52.004871368000011 ], [ 48.74521255500008, 52.005672455000138 ], [ 48.697063446000129, 52.042980194000108 ], [ 48.814754486000083, 52.108802795000088 ], [ 48.872299195000096, 52.078922273000103 ], [ 48.894145966, 52.048069000000169 ] ] ] ] } }
-]
-}

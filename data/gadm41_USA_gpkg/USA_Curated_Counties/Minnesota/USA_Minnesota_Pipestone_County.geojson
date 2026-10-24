@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Minnesota_Pipestone_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Minnesota", "NAME_2": "Pipestone" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -96.453750610999975, 44.198329926000099 ], [ -96.078750610999975, 44.199298859000066 ], [ -96.062789915999986, 44.198688508000089 ], [ -96.065650939999841, 43.852729797 ], [ -96.453163145999952, 43.851478576000147 ], [ -96.453750610999975, 44.198329926000099 ] ] ] ] } }
-]
-}

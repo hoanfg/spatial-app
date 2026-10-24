@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Tula_Uzlovaya_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tula", "NAME_2": "Uzlovaya" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 38.171550751000098, 53.992900848000033 ], [ 38.172733306000111, 53.985446931000126 ], [ 38.161861419000047, 53.985477448000097 ], [ 38.160762787000067, 53.99410629200014 ], [ 38.171550751000098, 53.992900848000033 ] ] ] ] } }
-]
-}

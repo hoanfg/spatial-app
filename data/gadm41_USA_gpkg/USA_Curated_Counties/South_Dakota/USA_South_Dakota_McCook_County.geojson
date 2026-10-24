@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_South_Dakota_McCook_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "South Dakota", "NAME_2": "McCook" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -97.604827879999903, 43.498741149000125 ], [ -97.608322143999942, 43.849990846000139 ], [ -97.367813110999919, 43.849979401000155 ], [ -97.128570557999922, 43.849559784000178 ], [ -97.129341125999986, 43.500179292000041 ], [ -97.401481628999989, 43.500030517000084 ], [ -97.604827879999903, 43.498741149000125 ] ] ] ] } }
-]
-}
