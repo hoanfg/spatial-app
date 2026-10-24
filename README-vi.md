@@ -78,7 +78,7 @@ Trong các nghiên cứu kinh tế học không gian thực nghiệm, việc s�
 Thay vì sử dụng cố định một mã EPSG cục bộ như ở bản thử nghiệm Phase 1 (`EPSG:32648`), hệ thống tự động nội suy múi chiếu phẳng **UTM (Universal Transverse Mercator)** tối ưu dựa trên kinh độ và vĩ độ tâm $(\lambda_{\mathrm{center}}, \phi_{\mathrm{center}})$ của hộp bao vùng nghiên cứu:
 
 $$
-\mathrm{Zone} = \min\left(60, \max\left(1, \, \left\lfloor \frac{\lambda_{\mathrm{center}} + 180}{6} \right\rfloor + 1\right)\right)
+\mathrm{Zone} = \min\left(60, \max\left(1, \left\lfloor \frac{\lambda_{\mathrm{center}} + 180}{6} \right\rfloor + 1\right)\right)
 $$
 
 Mã hệ tọa độ chuẩn EPSG (đơn vị: mét) được xác định tự động cho cả Bắc và Nam bán cầu:
