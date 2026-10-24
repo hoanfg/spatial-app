@@ -138,6 +138,107 @@ CHINA_PROVINCES = {
     "Macau": "Ma Cao",
     "Taiwan": "Đài Loan",
 }
+
+CHINA_DISTRICTS = {
+    # --- Tỉnh An Huy (Anhui) ---
+    "Anqing": "An Khánh",
+    "Bengbu": "Bạng Phụ",
+    "Bozhou": "Bạc Châu",
+    "Chaohu": "Sào Hồ",
+    "Chizhou": "Trì Châu",
+    "Chuzhou": "Trừ Châu",
+    "Fuyang": "Phụ Dương",
+    "Hefei": "Hợp Phì",
+    "Huaibei": "Hoài Bắc",
+    "Huainan": "Hoài Nam",
+    "Huangshan": "Hoàng Sơn",
+    "Lu'an": "Lục An",
+    "Ma'anshan": "Mã An Sơn",
+    "Suzhou": "Túc Châu",
+    "Tongling": "Đồng Lăng",
+    "Wuhu": "Vu Hồ",
+    "Xuancheng": "Tuyên Thành",
+
+    # --- Bắc Kinh (Beijing) ---
+    "Dongcheng": "Đông Thành",
+    "Xicheng": "Tây Thành",
+    "Chaoyang": "Triều Dương",
+    "Haidian": "Hải Điến",
+    "Fengtai": "Phong Đài",
+    "Shijingshan": "Thạch Cảnh Sơn",
+    "Mentougou": "Môn Đầu Câu",
+    "Fangshan": "Phòng Sơn",
+    "Tongzhou": "Thông Châu",
+    "Shunyi": "Thuận Nghĩa",
+    "Changping": "Xương Bình",
+    "Daxing": "Đại Hưng",
+    "Huairou": "Hoài Nhu",
+    "Pinggu": "Bình Cốc",
+    "Miyun": "Mật Vân",
+    "Yanqing": "Diên Khánh",
+
+    # --- Thượng Hải (Shanghai) ---
+    "Huangpu": "Hoàng Phố",
+    "Xuhui": "Từ Hối",
+    "Changning": "Trường Ninh",
+    "Jing'an": "Tĩnh An",
+    "Putuo": "Phổ Đà",
+    "Hongkou": "Hồng Khẩu",
+    "Yangpu": "Dương Phố",
+    "Minhang": "Mẫn Hàng",
+    "Baoshan": "Bảo Sơn",
+    "Jiading": "Gia Định",
+    "Pudong": "Phố Đông",
+    "Jinshan": "Kim Sơn",
+    "Songjiang": "Tùng Giang",
+    "Qingpu": "Thanh Phố",
+    "Fengxian": "Phụng Hiền",
+    "Chongming": "Sùng Minh",
+
+    # --- Quảng Đông (Guangdong) ---
+    "Guangzhou": "Quảng Châu",
+    "Shenzhen": "Thâm Quyến",
+    "Zhuhai": "Chu Hải",
+    "Shantou": "Sán Đầu",
+    "Foshan": "Phật Sơn",
+    "Shaoguan": "Thiều Quan",
+    "Zhanjiang": "Trạm Giang",
+    "Zhaoqing": "Triệu Khánh",
+    "Jiangmen": "Giang Môn",
+    "Maoming": "Mậu Danh",
+    "Huizhou": "Huệ Châu",
+    "Meizhou": "Mai Châu",
+    "Shanwei": "Sán Vĩ",
+    "Heyuan": "Hà Nguyên",
+    "Yangjiang": "Dương Giang",
+    "Qingyuan": "Thanh Viễn",
+    "Dongguan": "Đông Hoản",
+    "Zhongshan": "Trung Sơn",
+    "Chaozhou": "Triều Châu",
+    "Jieyang": "Yết Dương",
+    "Yunfu": "Vân Phù",
+
+    # --- Các thành phố lớn khác ---
+    "Chengdu": "Thành Đô",
+    "Wuhan": "Vũ Hán",
+    "Xi'an": "Tây An",
+    "Hangzhou": "Hàng Châu",
+    "Nanjing": "Nam Kinh",
+    "Changsha": "Trường Sa",
+    "Chongqing": "Trùng Khánh",
+    "Tianjin": "Thiên Tân",
+    "Shenyang": "Thẩm Dương",
+    "Dalian": "Đại Liên",
+    "Harbin": "Cáp Nhĩ Tân",
+    "Kunming": "Côn Minh",
+    "Guilin": "Quế Lâm",
+    "Nanning": "Nam Ninh",
+    "Haikou": "Hải Khẩu",
+    "Sanya": "Tam Á",
+    "Lhasa": "La Tát",
+    "Urumqi": "Ô Lỗ Mộc Tề",
+}
+
 COUNTY_SUFFIXES = {"district", "county", "town", "city", "municipality", "urban", "rural",
                    "ward", "commune", "subdistrict", "borough", "prefecture", "regency"}
 
@@ -278,6 +379,15 @@ def clean_state(folder, iso="", lang="vi"):
             
     return clean  # Trả về tên gốc Pinyin cho tiếng Anh hoặc khi không khớp từ điển
 
+def clean_county(name, iso="", lang="vi"):
+    """
+    Chuẩn hóa tên quận/huyện:
+    - Nếu là Trung Quốc và chọn Tiếng Việt: dịch sang Hán - Việt nếu có trong từ điển.
+    - Ngược lại: giữ nguyên tên gốc Pinyin.
+    """
+    if iso == "CHN" and lang == "vi":
+        return CHINA_DISTRICTS.get(name, name)
+    return name
 
 def split_county(stem, state_name):
     """'VNM Hà Nội Hoàn Kiếm District' -> ('Hoàn Kiếm', 'District')."""
@@ -1285,10 +1395,14 @@ with st.sidebar:
         st.stop()
 
     sel_county_file = st.selectbox(
-        L["county"], list(counties.keys()), format_func=lambda f: counties[f],
-        key=f"sb_opt_county::{sel_country}::{sel_state}", help=H["county"],
+        L["county"], 
+        list(counties.keys()), 
+        format_func=lambda f: clean_county(counties[f], iso=sel_iso, lang=LANG),
+        key=f"sb_opt_county::{sel_country}::{sel_state}", 
+        help=H["county"],
     )
-    sel_county = counties[sel_county_file]
+    # Lấy tên hiển thị theo ngôn ngữ được chọn
+    sel_county = clean_county(counties[sel_county_file], iso=sel_iso, lang=LANG)
     file_path = os.path.join(country_path, sel_state, sel_county_file)
     st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state, iso=sel_iso, lang=LANG)} / {sel_county}")
     if st.button("🔄 " + ("Quét lại dữ liệu" if LANG == "vi" else "Rescan data"), key="rescan_data",
