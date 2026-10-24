@@ -148,14 +148,14 @@ Mỗi tệp `.geojson` trước khi được ghi xuống ổ cứng để đưa 
 1. **Lần 1: Kiểm tra chuỗi rác:**
    Mọi giá trị thuộc tập `{"NA", "N/A", "NULL", "NONE", "UNKNOWN", "?", "", "NAN"}` (không phân biệt hoa thường, đã cắt khoảng trắng) đều bị ép về `None` thực sự trước khi phân tích. Mọi dòng có `NAME_1 is None` (như `bang NA` trong `gadm41_GBR.gpkg`) đều bị loại bỏ hoặc gán lại từ cấp con nếu hợp lệ.
 
-3. **Lần 2: Bộ lọc thủy văn:**
+2. **Lần 2: Bộ lọc thủy văn:**
    Loại bỏ hoàn toàn các đa giác có `TYPE_x` hoặc `ENGTYPE_x` chứa từ khóa `Water body`, `Lake`, `Inland water`, `Sea`, `Estuary`.
    
-5. **Lần 3: Hợp nhất hình học theo mã định danh:**
+3. **Lần 3: Hợp nhất hình học theo mã định danh:**
    Sửa lỗi tự cắt (self-intersection) bằng `shapely.make_valid()` và gộp (`dissolve`) theo đúng mã `GID` mục tiêu để đảm bảo 1 đơn vị hành chính = 1 tệp `.geojson` duy nhất.
    
-7. **Lần 4: Chống ghi đè trùng tên:**
+4. **Lần 4: Chống ghi đè trùng tên:**
    Nếu trong cùng một thư mục Tỉnh/Bang có 2 đơn vị khác mã `GID` nhưng trùng tên hiển thị (ví dụ: *Fairfax County* và *Fairfax City*), hệ thống tự động gắn hậu tố phân biệt từ `ENGTYPE_x` (ví dụ: `USA_Virginia_Fairfax_County.geojson` và `USA_Virginia_Fairfax_Independent_City.geojson`), tương thích với hàm `list_counties()` và `split_county()` trong `app.py`.
    
-9. **Lần 5: Kiểm tra diện tích tối thiểu cho VIIRS:**
+5. **Lần 5: Kiểm tra diện tích tối thiểu cho VIIRS:**
    Cảnh báo nếu đa giác có diện tích $$< 0.25 \text{ km}^2$$ (nhỏ hơn 1 ô lưới $$500 \times 500 \text{ m}$$).
