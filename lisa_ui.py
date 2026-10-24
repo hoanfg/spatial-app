@@ -205,13 +205,13 @@ T["en"].update({
     "guide_t": "📖 How to read the LISA map",
     "map_hint": "Hover a cell for NTL, z-score, pseudo p, class and distance to the cluster core. Non-significant (NS) and dark cells are drawn faint.",
     "legend_desc": {
-        "HH": "Bright among bright: a true **hotspot**.",
-        "LL": "Dark among dark: a **cold spot**.",
-        "HL": "A bright cell surrounded by dark ones: isolated bright spot (outlier).",
-        "LH": "A dark cell surrounded by bright ones: a “hole” in a lit area.",
-        "NS": "Not statistically significant (indistinguishable from chance).",
-        "EDGE": "Border cell clipped by the boundary: excluded from the analysis.",
-        "DARK": "Unlit cell: not part of the neighbour graph.",
+        "HH": "High-radiance cell surrounded by high-radiance cells: a true **hotspot**.",
+        "LL": "Low-lit cell (< lit-area mean) surrounded by low-lit cells: a **cold spot** within the lit area.",
+        "HL": "High-radiance cell surrounded by low-lit cells: **local bright outlier** (Spatial Outlier).",
+        "LH": "Low-lit cell surrounded by high-radiance cells: **dim pocket** inside a developed zone.",
+        "NS": "Not statistically significant (indistinguishable from spatial randomness).",
+        "EDGE": "Border cell clipped by the boundary (< 99% standard area), excluded from testing.",
+        "DARK": "Unlit cell (NTL ≤ threshold), excluded from the lit-area neighbour graph.",
     },
 })
 
