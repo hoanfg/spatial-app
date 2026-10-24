@@ -10,7 +10,7 @@
 
 ## 1. CHẨN ĐOÁN NGUYÊN NHÂN GỐC RỄ CỦA DỮ LIỆU RÁC TRONG GADM v4.1
 
-Khi xử lý tự động các tệp GeoPackage (`gadm41_XXX.gpkg`), có 5 cạm bẫy kỹ thuật khiến các kịch bản trích xuất thông thường sinh ra dữ liệu rác hoặc làm méo mó kết quả hồi quy không gian:
+Khi xử lý tự động các tệp GeoPackage (`gadm41_XXX.gpkg`), có 5 bẫy kỹ thuật khiến các kịch bản trích xuất thông thường sinh ra dữ liệu rác hoặc làm méo mó kết quả hồi quy không gian:
 
 1. **Bẫy chuỗi ký tự `"NA"` (literal string `"NA"` vs. SQL `NULL`):**
    Cơ sở dữ liệu GADM v4.1 được xuất từ môi trường R (`terra` / `sf`), trong đó rất nhiều giá trị khuyết thiếu ở các cột `NAME_1`, `NAME_2`, `NAME_3`, `TYPE_2`, `ENGTYPE_2` được lưu dưới dạng **chuỗi văn bản `"NA"`** (hoặc `"?"`, `"Unknown"`) thay vì giá trị `NULL` (`NaN`). Do đó, hàm `.dropna()` của Pandas hoàn toàn bỏ lọt các dòng này, dẫn đến:
