@@ -150,14 +150,14 @@ Before being written to disk for use in `app.py`, every `.geojson` file must pas
 1. **Check 1: Garbage strings**
    Every value in the set `{"NA", "N/A", "NULL", "NONE", "UNKNOWN", "?", "", "NAN"}` (case-insensitive, with surrounding whitespace trimmed) is converted to actual `None` before processing. Every row with `NAME_1 is None` (such as the `NA` state in `gadm41_GBR.gpkg`) is removed or reassigned from a child level if valid.
 
-3. **Check 2: Hydrological filter**
+2. **Check 2: Hydrological filter**
    Completely remove polygons whose `TYPE_x` or `ENGTYPE_x` contains the keywords `Water body`, `Lake`, `Inland water`, `Sea`, or `Estuary`.
 
-5. **Check 3: Geometry merging by identifier**
+3. **Check 3: Geometry merging by identifier**
    Fix self-intersections using `shapely.make_valid()` and merge (`dissolve`) by the correct target `GID` to ensure that one administrative unit corresponds to exactly one `.geojson` file.
 
-7. **Check 4: Prevent overwriting files with duplicate names**
+4. **Check 4: Prevent overwriting files with duplicate names**
    If two units with different `GID` codes but the same display name exist in the same province/state folder (e.g., *Fairfax County* and *Fairfax City*), the system automatically appends a distinguishing suffix from `ENGTYPE_x` (e.g., `USA_Virginia_Fairfax_County.geojson` and `USA_Virginia_Fairfax_Independent_City.geojson`), compatible with the `list_counties()` and `split_county()` functions in `app.py`.
 
-9. **Check 5: Minimum area check for VIIRS**
+5. **Check 5: Minimum area check for VIIRS**
    Issue a warning if a polygon has an area of $$< 0.25 \text{ km}^2$$ (smaller than one $$500 \times 500 \text{ m}$$ grid cell).
