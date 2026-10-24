@@ -140,103 +140,253 @@ CHINA_PROVINCES = {
 }
 
 CHINA_DISTRICTS = {
-    # --- Tỉnh An Huy (Anhui) ---
-    "Anqing": "An Khánh",
-    "Bengbu": "Bạng Phụ",
-    "Bozhou": "Bạc Châu",
-    "Chaohu": "Sào Hồ",
-    "Chizhou": "Trì Châu",
-    "Chuzhou": "Trừ Châu",
-    "Fuyang": "Phụ Dương",
-    "Hefei": "Hợp Phì",
-    "Huaibei": "Hoài Bắc",
-    "Huainan": "Hoài Nam",
-    "Huangshan": "Hoàng Sơn",
-    "Lu'an": "Lục An",
-    "Ma'anshan": "Mã An Sơn",
-    "Suzhou": "Túc Châu",
-    "Tongling": "Đồng Lăng",
-    "Wuhu": "Vu Hồ",
-    "Xuancheng": "Tuyên Thành",
-
+    # =========================================================================
+    # 1. BỐN THÀNH PHỐ TRỰC THUỘC TRUNG ƯƠNG
+    # =========================================================================
     # --- Bắc Kinh (Beijing) ---
-    "Dongcheng": "Đông Thành",
-    "Xicheng": "Tây Thành",
-    "Chaoyang": "Triều Dương",
-    "Haidian": "Hải Điến",
-    "Fengtai": "Phong Đài",
-    "Shijingshan": "Thạch Cảnh Sơn",
-    "Mentougou": "Môn Đầu Câu",
-    "Fangshan": "Phòng Sơn",
-    "Tongzhou": "Thông Châu",
-    "Shunyi": "Thuận Nghĩa",
-    "Changping": "Xương Bình",
-    "Daxing": "Đại Hưng",
-    "Huairou": "Hoài Nhu",
-    "Pinggu": "Bình Cốc",
-    "Miyun": "Mật Vân",
-    "Yanqing": "Diên Khánh",
+    "Dongcheng": "Đông Thành", "Xicheng": "Tây Thành", "Chaoyang": "Triều Dương",
+    "Fengtai": "Phong Đài", "Shijingshan": "Thạch Cảnh Sơn", "Haidian": "Hải Điến",
+    "Mentougou": "Môn Đầu Câu", "Fangshan": "Phòng Sơn", "Tongzhou": "Thông Châu",
+    "Shunyi": "Thuận Nghĩa", "Changping": "Xương Bình", "Daxing": "Đại Hưng",
+    "Huairou": "Hoài Nhu", "Pinggu": "Bình Cốc", "Miyun": "Mật Vân", "Yanqing": "Diên Khánh",
+
+    # --- Thiên Tân (Tianjin) ---
+    "Heping": "Hòa Bình", "Hedong": "Hà Đông", "Hexi": "Hà Tây", "Nankai": "Nam Khai",
+    "Hebei": "Hà Bắc", "Hongqiao": "Hồng Kiều", "Dongli": "Đông Lệ", "Xiqing": "Tây Thanh",
+    "Jinnan": "Tân Nam", "Beichen": "Bắc Thần", "Wuqing": "Vũ Thanh", "Baodi": "Bảo Trì",
+    "Binhai": "Tân Hải", "Ninghe": "Ninh Hà", "Jinghai": "Tĩnh Hải", "Jizhou": "Kế Châu",
 
     # --- Thượng Hải (Shanghai) ---
-    "Huangpu": "Hoàng Phố",
-    "Xuhui": "Từ Hối",
-    "Changning": "Trường Ninh",
-    "Jing'an": "Tĩnh An",
-    "Putuo": "Phổ Đà",
-    "Hongkou": "Hồng Khẩu",
-    "Yangpu": "Dương Phố",
-    "Minhang": "Mẫn Hàng",
-    "Baoshan": "Bảo Sơn",
-    "Jiading": "Gia Định",
-    "Pudong": "Phố Đông",
-    "Jinshan": "Kim Sơn",
-    "Songjiang": "Tùng Giang",
-    "Qingpu": "Thanh Phố",
-    "Fengxian": "Phụng Hiền",
-    "Chongming": "Sùng Minh",
+    "Huangpu": "Hoàng Phố", "Xuhui": "Từ Hối", "Changning": "Trường Ninh",
+    "Jing'an": "Tĩnh An", "Putuo": "Phổ Đà", "Hongkou": "Hồng Khẩu", "Yangpu": "Dương Phố",
+    "Minhang": "Mẫn Hàng", "Baoshan": "Bảo Sơn", "Jiading": "Gia Định", "Pudong": "Phố Đông",
+    "Jinshan": "Kim Sơn", "Songjiang": "Tùng Giang", "Qingpu": "Thanh Phố",
+    "Fengxian": "Phụng Hiền", "Chongming": "Sùng Minh",
 
+    # --- Trùng Khánh (Chongqing) ---
+    "Yuzhong": "Du Trung", "Dadukou": "Đại Độ Khẩu", "Jiangbei": "Giang Bắc",
+    "Shapingba": "Sa Bình Bá", "Jiulongpo": "Cửu Long Pha", "Nan'an": "Nam Ngạn",
+    "Beibei": "Bắc Bối", "Qijiang": "Kỳ Giang", "Dazu": "Đại Túc", "Yubei": "Du Bắc",
+    "Banan": "Ba Nam", "Qianjiang": "Kiềm Giang", "Changshou": "Trường Thọ",
+    "Jiangjin": "Giang Tân", "Hechuan": "Hợp Xuyên", "Yongchuan": "Vĩnh Xuyên",
+    "Nanchuan": "Nam Xuyên", "Bishan": "Bích Sơn", "Tongliang": "Đồng Lương",
+    "Tongnan": "Đồng Nam", "Rongchang": "Vinh Xương", "Kaizhou": "Khai Châu",
+    "Liangping": "Lương Bình", "Wulong": "Vũ Long", "Chengkou": "Thành Khẩu",
+    "Fengdu": "Phong Đô", "Dianjiang": "Điệm Giang", "Zhongxian": "Trung Huyện",
+    "Kaixian": "Khai Huyện", "Yunyang": "Vân Dương", "Fengjie": "Phụng Tiết",
+    "Wushan": "Vu Sơn", "Wuxi": "Vu Khê", "Shizhu": "Thạch Trụ", "Xiushan": "Tú Sơn",
+    "Youyang": "Dậu Dương", "Pengshui": "Bành Thủy",
+
+    # =========================================================================
+    # 2. KHU VỰC MIỀN ĐÔNG & ĐÔNG NAM
+    # =========================================================================
+    # --- Phúc Kiến (Fujian) ---
+    "Fuzhou": "Phúc Châu", "Xiamen": "Hạ Môn", "Putian": "Bồ Điền", "Sanming": "Tam Minh",
+    "Quanzhou": "Tuyền Châu", "Zhangzhou": "Chương Châu", "Nanping": "Nam Bình",
+    "Longyan": "Long Nham", "Ningde": "Ninh Đức",
+
+    # --- Giang Tô (Jiangsu) ---
+    "Nanjing": "Nam Kinh", "Wuxi": "Vô Tích", "Xuzhou": "Từ Châu", "Changzhou": "Thường Châu",
+    "Suzhou": "Tô Châu", "Nantong": "Nam Thông", "Lianyungang": "Liên Vân Cảng",
+    "Huai'an": "Hoài An", "Yancheng": "Diêm Thành", "Yangzhou": "Dương Châu",
+    "Zhenjiang": "Trấn Giang", "Taizhou": "Thái Châu", "Suqian": "Tú Thiên",
+
+    # --- Chiết Giang (Zhejiang) ---
+    "Hangzhou": "Hàng Châu", "Ningbo": "Ninh Ba", "Wenzhou": "Ôn Châu", "Jiaxing": "Gia Hưng",
+    "Huzhou": "Hồ Châu", "Shaoxing": "Thiệu Hưng", "Jinhua": "Kim Hoa", "Quzhou": "Cù Châu",
+    "Zhoushan": "Chu Sơn", "Lishui": "Lệ Thủy",
+
+    # --- An Huy (Anhui) ---
+    "Hefei": "Hợp Phì", "Wuhu": "Vu Hồ", "Bengbu": "Bạng Phụ", "Huainan": "Hoài Nam",
+    "Ma'anshan": "Mã An Sơn", "Huaibei": "Hoài Bắc", "Tongling": "Đồng Lăng",
+    "Anqing": "An Khánh", "Huangshan": "Hoàng Sơn", "Chuzhou": "Trừ Châu",
+    "Fuyang": "Phụ Dương", "Suzhou (Anhui)": "Túc Châu", "Lu'an": "Lục An",
+    "Bozhou": "Bạc Châu", "Chizhou": "Trì Châu", "Xuancheng": "Tuyên Thành", "Chaohu": "Sào Hồ",
+
+    # --- Giang Tây (Jiangxi) ---
+    "Nanchang": "Nam Xương", "Jingdezhen": "Cảnh Đức Trấn", "Pingxiang": "Bình Hương",
+    "Jiujiang": "Cửu Giang", "Xinyu": "Tân Dư", "Yingtan": "Ưng Đàm", "Ganzhou": "Cám Châu",
+    "Ji'an": "Cát An", "Yichun (Jiangxi)": "Nghi Xuân", "Fuzhou (Jiangxi)": "Phủ Châu",
+    "Shangrao": "Thượng Nhiêu",
+
+    # --- Sơn Đông (Shandong) ---
+    "Jinan": "Tế Nam", "Qingdao": "Thanh Đảo", "Zibo": "Truy Bác", "Zaozhuang": "Tảo Trang",
+    "Dongying": "Đông Doanh", "Yantai": "Yên Đài", "Weifang": "Duy Phường", "Jining": "Tế Ninh",
+    "Tai'an": "Thái An", "Weihai": "Uy Hải", "Rizhao": "Nhật Chiếu", "Linyi": "Lâm Nghi",
+    "Dezhou": "Đức Châu", "Liaocheng": "Liêu Thành", "Binzhou": "Tân Châu", "Heze": "Hà Trạch",
+
+    # =========================================================================
+    # 3. KHU VỰC MIỀN NAM & ĐẶC KHU
+    # =========================================================================
     # --- Quảng Đông (Guangdong) ---
-    "Guangzhou": "Quảng Châu",
-    "Shenzhen": "Thâm Quyến",
-    "Zhuhai": "Chu Hải",
-    "Shantou": "Sán Đầu",
-    "Foshan": "Phật Sơn",
-    "Shaoguan": "Thiều Quan",
-    "Zhanjiang": "Trạm Giang",
-    "Zhaoqing": "Triệu Khánh",
-    "Jiangmen": "Giang Môn",
-    "Maoming": "Mậu Danh",
-    "Huizhou": "Huệ Châu",
-    "Meizhou": "Mai Châu",
-    "Shanwei": "Sán Vĩ",
-    "Heyuan": "Hà Nguyên",
-    "Yangjiang": "Dương Giang",
-    "Qingyuan": "Thanh Viễn",
-    "Dongguan": "Đông Hoản",
-    "Zhongshan": "Trung Sơn",
-    "Chaozhou": "Triều Châu",
-    "Jieyang": "Yết Dương",
-    "Yunfu": "Vân Phù",
+    "Guangzhou": "Quảng Châu", "Shaoguan": "Thiều Quan", "Shenzhen": "Thâm Quyến",
+    "Zhuhai": "Chu Hải", "Shantou": "Sán Đầu", "Foshan": "Phật Sơn", "Jiangmen": "Giang Môn",
+    "Zhanjiang": "Trạm Giang", "Maoming": "Mậu Danh", "Zhaoqing": "Triệu Khánh",
+    "Huizhou": "Huệ Châu", "Meizhou": "Mai Châu", "Shanwei": "Sán Vĩ", "Heyuan": "Hà Nguyên",
+    "Yangjiang": "Dương Giang", "Qingyuan": "Thanh Viễn", "Dongguan": "Đông Hoản",
+    "Zhongshan": "Trung Sơn", "Chaozhou": "Triều Châu", "Jieyang": "Yết Dương", "Yunfu": "Vân Phù",
 
-    # --- Các thành phố lớn khác ---
-    "Chengdu": "Thành Đô",
-    "Wuhan": "Vũ Hán",
-    "Xi'an": "Tây An",
-    "Hangzhou": "Hàng Châu",
-    "Nanjing": "Nam Kinh",
-    "Changsha": "Trường Sa",
-    "Chongqing": "Trùng Khánh",
-    "Tianjin": "Thiên Tân",
-    "Shenyang": "Thẩm Dương",
-    "Dalian": "Đại Liên",
-    "Harbin": "Cáp Nhĩ Tân",
-    "Kunming": "Côn Minh",
-    "Guilin": "Quế Lâm",
-    "Nanning": "Nam Ninh",
-    "Haikou": "Hải Khẩu",
-    "Sanya": "Tam Á",
-    "Lhasa": "La Tát",
-    "Urumqi": "Ô Lỗ Mộc Tề",
+    # --- Quảng Tây (Guangxi) ---
+    "Nanning": "Nam Ninh", "Liuzhou": "Liễu Châu", "Guilin": "Quế Lâm", "Wuzhou": "Ngô Châu",
+    "Beihai": "Bắc Hải", "Fangchenggang": "Phòng Thành Cảng", "Qinzhou": "Khâm Châu",
+    "Guigang": "Quý Cảng", "Yulin (Guangxi)": "Ngọc Lâm", "Baise": "Bách Sắc",
+    "Hezhou": "Hạ Châu", "Hechi": "Hà Trì", "Laibin": "Lai Tân", "Chongzuo": "Sùng Tả",
+
+    # --- Hải Nam (Hainan) ---
+    "Haikou": "Hải Khẩu", "Sanya": "Tam Á", "Sansha": "Tam Sa", "Danzhou": "Đam Châu",
+    "Wuzhishan": "Ngũ Chỉ Sơn", "Qionghai": "Quỳnh Hải", "Wenchang": "Văn Xương",
+    "Wanning": "Vạn Ninh", "Dongfang": "Đông Phương", "Ding'an": "Định An",
+    "Tunchang": "Đồn Xương", "Chengmai": "Trừng Mai", "Lingao": "Lâm Cao",
+    "Baisha": "Bạch Sa", "Changjiang": "Xương Giang", "Ledong": "Lạc Đông",
+    "Lingshui": "Lăng Thủy", "Baoting": "Bảo Đình", "Qiongzhong": "Quỳnh Trung",
+
+    # --- Hồng Kông (Hong Kong) ---
+    "Central and Western": "Trung Tây", "Wan Chai": "Loan Tể", "Eastern": "Đông Khu",
+    "Southern": "Nam Khu", "Yau Tsim Mong": "Du Tiêm Vượng", "Sham Shui Po": "Thâm Thủy Bộ",
+    "Kowloon City": "Cửu Long Thành", "Wong Tai Sin": "Hoàng Đại Tiên", "Kwun Tong": "Quan Đường",
+    "Tsuen Wan": "Thuyên Loan", "Tuen Mun": "Đồn Môn", "Yuen Long": "Nguyên Lãng",
+    "North": "Bắc Khu", "Tai Po": "Đại Bộ", "Sai Kung": "Tây Cống", "Sha Tin": "Sa Điền",
+    "Kwai Tsing": "Quỳ Thanh", "Islands": "Li Đảo",
+
+    # --- Ma Cao (Macau) ---
+    "Nossa Senhora de Fátima": "Hoa Địa Mã", "Santo António": "Thánh An Đa Ni",
+    "São Lázaro": "Vọng Đức", "São Lourenço": "Phong Thuận", "Sé": "Đại Đường",
+    "Nossa Senhora do Carmo": "Gia Mô", "Taipa": "Đãng Tử", "Coloane": "Lộ Hoàn",
+    "Cotai": "Lộ Đãng",
+
+    # =========================================================================
+    # 4. KHU VỰC MIỀN TRUNG
+    # =========================================================================
+    # --- Hà Nam (Henan) ---
+    "Zhengzhou": "Trịnh Châu", "Kaifeng": "Khai Phong", "Luoyang": "Lạc Dương",
+    "Pingdingshan": "Bình Đỉnh Sơn", "Anyang": "An Dương", "Hebi": "Hạc Bích",
+    "Xinxiang": "Tân Hương", "Jiaozuo": "Tiêu Tác", "Puyang": "Bộc Dương",
+    "Xuchang": "Hứa Xương", "Luohe": "Tháp Hà", "Sanmenxia": "Tam Môn Hiệp",
+    "Nanyang": "Nam Dương", "Shangqiu": "Thương Khâu", "Xinyang": "Tín Dương",
+    "Zhoukou": "Chu Khẩu", "Zhumadian": "Trú Mã Điếm", "Jiyuan": "Tế Nguyên",
+
+    # --- Hồ Bắc (Hubei) ---
+    "Wuhan": "Vũ Hán", "Huangshi": "Hoàng Thạch", "Shiyan": "Thập Yển", "Yichang": "Nghi Xương",
+    "Xiangyang": "Tương Dương", "Xiangfan": "Tương Phàn", "Ezhou": "Ngạc Châu",
+    "Jingmen": "Kinh Môn", "Xiaogan": "Hiếu Cảm", "Jingzhou": "Kinh Châu",
+    "Huanggang": "Hoàng Cương", "Xianning": "Hàm Ninh", "Suizhou": "Tùy Châu",
+    "Enshi": "Ân Thi", "Xiantao": "Tiên Đào", "Qianjiang": "Tiềm Giang",
+    "Tianmen": "Thiên Môn", "Shennongjia": "Thần Nông Giá",
+
+    # --- Hồ Nam (Hunan) ---
+    "Changsha": "Trường Sa", "Zhuzhou": "Chu Châu", "Xiangtan": "Tương Đàm",
+    "Hengyang": "Hành Dương", "Shaoyang": "Thiệu Dương", "Yueyang": "Nhạc Dương",
+    "Changde": "Thường Đức", "Zhangjiajie": "Trương Gia Giới", "Yiyang": "Ích Dương",
+    "Chenzhou": "Sâm Châu", "Yongzhou": "Vĩnh Châu", "Huaihua": "Hoài Hóa",
+    "Loudi": "Lâu Đê", "Xiangxi": "Tương Tây",
+
+    # =========================================================================
+    # 5. KHU VỰC MIỀN BẮC & ĐÔNG BẮC
+    # =========================================================================
+    # --- Hà Bắc (Hebei) ---
+    "Shijiazhuang": "Thạch Gia Trang", "Tangshan": "Đường Sơn", "Qinhuangdao": "Tần Hoàng Đảo",
+    "Handan": "Hàm Đan", "Xingtai": "Hình Đài", "Baoding": "Bảo Định",
+    "Zhangjiakou": "Trương Gia Khẩu", "Chengde": "Thừa Đức", "Cangzhou": "Thương Châu",
+    "Langfang": "Lang Phường", "Hengshui": "Hành Thủy",
+
+    # --- Sơn Tây (Shanxi) ---
+    "Taiyuan": "Thái Nguyên", "Datong": "Đại Đồng", "Yangquan": "Dương Tuyền",
+    "Changzhi": "Trường Trị", "Jincheng": "Tấn Thành", "Shuozhou": "Sóc Châu",
+    "Jinzhong": "Tấn Trung", "Yuncheng": "Vận Thành", "Xinzhou": "Hân Châu",
+    "Linfen": "Lâm Phần", "Lüliang": "Lữ Lương", "Luliang": "Lữ Lương",
+
+    # --- Liêu Ninh (Liaoning) ---
+    "Shenyang": "Thẩm Dương", "Dalian": "Đại Liên", "Anshan": "An Sơn", "Fushun": "Phủ Thuận",
+    "Benxi": "Bản Khê", "Dandong": "Đan Đông", "Jinzhou": "Cẩm Châu", "Yingkou": "Dinh Khẩu",
+    "Fuxin": "Phụ Tân", "Liaoyang": "Liêu Dương", "Panjin": "Bàn Cẩm", "Tieling": "Thiết Lĩnh",
+    "Chaoyang (Liaoning)": "Triều Dương", "Huludao": "Hồ Lô Đảo",
+
+    # --- Cát Lâm (Jilin) ---
+    "Changchun": "Trường Xuân", "Jilin": "Cát Lâm", "Siping": "Tứ Bình",
+    "Liaoyuan": "Liêu Nguyên", "Tonghua": "Thông Hóa", "Baishan": "Bạch Sơn",
+    "Songyuan": "Tùng Nguyên", "Baicheng": "Bạch Thành", "Yanbian": "Diên Biên",
+
+    # --- Hắc Long Giang (Heilongjiang) ---
+    "Harbin": "Cáp Nhĩ Tân", "Qiqihar": "Tề Tề Cáp Nhĩ", "Jixi": "Kê Tây", "Hegang": "Hạc Cương",
+    "Shuangyashan": "Song Áp Sơn", "Daqing": "Đại Khánh", "Yichun (Heilongjiang)": "Y Xuân",
+    "Jiamusi": "Giai Mộc Tư", "Qitaihe": "Thất Đài Hà", "Mudanjiang": "Mẫu Đơn Giang",
+    "Heihe": "Hắc Hà", "Suihua": "Tùy Hóa", "Daxing'anling": "Đại Hưng An Lĩnh",
+
+    # --- Nội Mông (Inner Mongolia / Nei Mongol) ---
+    "Hohhot": "Hô Hòa Hạo Đặc", "Baotou": "Bao Đầu", "Wuhai": "Ô Hải", "Chifeng": "Xích Phong",
+    "Tongliao": "Thông Liêu", "Ordos": "Ngạc Nhĩ Đa Tư", "Hulunbuir": "Hô Luân Bối Nhĩ",
+    "Bayannur": "Ba Ngạn Náo Nhĩ", "Ulanqab": "Ô Lan Sát Bố", "Hinggan": "Hưng An",
+    "Xilingol": "Tích Lâm Quách Lặc", "Alxa": "A Lạp Thiện",
+
+    # =========================================================================
+    # 6. KHU VỰC TÂY NAM & TÂY BẮC
+    # =========================================================================
+    # --- Tứ Xuyên (Sichuan) ---
+    "Chengdu": "Thành Đô", "Zigong": "Tự Cống", "Panzhihua": "Phan Chi Hoa",
+    "Luzhou": "Lô Châu", "Deyang": "Đức Dương", "Mianyang": "Miên Dương",
+    "Guangyuan": "Quảng Nguyên", "Suining": "Toại Ninh", "Neijiang": "Nội Giang",
+    "Leshan": "Lạc Sơn", "Nanchong": "Nam Sung", "Meishan": "Mi Sơn", "Yibin": "Nghi Tân",
+    "Guang'an": "Quảng An", "Dazhou": "Đạt Châu", "Ya'an": "Nhã An", "Bazhong": "Ba Trung",
+    "Ziyang": "Tư Dương", "Ngawa": "A Bá", "Aba": "A Bá", "Garzê": "Cam Tư",
+    "Ganzi": "Cam Tư", "Liangshan": "Lương Sơn",
+
+    # --- Quý Châu (Guizhou) ---
+    "Guiyang": "Quý Dương", "Liupanshui": "Lục Bàn Thủy", "Zunyi": "Tuân Nghĩa",
+    "Anshun": "An Thuận", "Bijie": "Tất Tiết", "Tongren": "Đồng Nhân",
+    "Qianxinan": "Kiềm Tây Nam", "Qiandongnan": "Kiềm Đông Nam", "Qiannan": "Kiềm Nam",
+
+    # --- Vân Nam (Yunnan) ---
+    "Kunming": "Côn Minh", "Qujing": "Khúc Tĩnh", "Yuxi": "Ngọc Khê", "Baoshan": "Bảo Sơn",
+    "Zhaotong": "Chiêu Thông", "Lijiang": "Lệ Giang", "Pu'er": "Phổ Nhĩ", "Simao": "Tư Mao",
+    "Lincang": "Lâm Thương", "Chuxiong": "Sở Hùng", "Honghe": "Hồng Hà", "Wenshan": "Văn Sơn",
+    "Xishuangbanna": "Tây Song Bản Nạp", "Dali": "Đại Lý", "Dehong": "Đức Hoành",
+    "Nujiang": "Nộ Giang", "Dêqên": "Địch Khánh", "Diqing": "Địch Khánh",
+
+    # --- Tây Tạng (Tibet / Xizang) ---
+    "Lhasa": "La Tát", "Shigatse": "Nhật Khách Tắc", "Xigazê": "Nhật Khách Tắc",
+    "Chamdo": "Xương Đô", "Qamdo": "Xương Đô", "Nyingchi": "Lâm Chi",
+    "Shannan": "Sơn Nam", "Lhoka": "Sơn Nam", "Nagqu": "Na Khúc", "Ngari": "Ngải Lý",
+
+    # --- Thiểm Tây (Shaanxi) ---
+    "Xi'an": "Tây An", "Tongchuan": "Đồng Xuyên", "Baoji": "Bảo Kê", "Xianyang": "Hàm Dương",
+    "Weinan": "Vị Nam", "Yan'an": "Diên An", "Hanzhong": "Hán Trung", "Yulin (Shaanxi)": "Du Lâm",
+    "Ankang": "An Khang", "Shangluo": "Thương Lạc",
+
+    # --- Cam Túc (Gansu) ---
+    "Lanzhou": "Lan Châu", "Jiayuguan": "Gia Dục Quan", "Jinchang": "Kim Xương",
+    "Baiyin": "Bạch Ngân", "Tianshui": "Thiên Thủy", "Wuwei": "Vũ Uy", "Zhangye": "Trương Dịch",
+    "Pingliang": "Bình Lương", "Jiuquan": "Tửu Tuyền", "Qingyang": "Khánh Dương",
+    "Dingxi": "Định Tây", "Longnan": "Lũng Nam", "Linxia": "Lâm Hạ", "Gannan": "Cam Nam",
+
+    # --- Thanh Hải (Qinghai) ---
+    "Xining": "Tây Ninh", "Haidong": "Hải Đông", "Haibei": "Hải Bắc", "Huangnan": "Hoàng Nam",
+    "Hainan (Qinghai)": "Hải Nam", "Golog": "Quả Lạc", "Guoluo": "Quả Lạc",
+    "Gyêgu": "Ngọc Thụ", "Yushu": "Ngọc Thụ", "Haixi": "Hải Tây",
+
+    # --- Ninh Hạ (Ningxia) ---
+    "Yinchuan": "Ngân Xuyên", "Shizuishan": "Thạch Chủy Sơn", "Wuzhong": "Ngô Trung",
+    "Guyuan": "Cố Nguyên", "Zhongwei": "Trung Vệ",
+
+    # --- Tân Cương (Xinjiang) ---
+    "Urumqi": "Ô Lỗ Mộc Tề", "Karamay": "Khắc Lạp Mã Y", "Turpan": "Thổ Lỗ Phồn",
+    "Hami": "Cáp Mật", "Kumul": "Cáp Mật", "Changji": "Xương Cát", "Bortala": "Bác Nhĩ Tháp Lạp",
+    "Bayingolin": "Ba Âm Quách Lăng", "Aksu": "A Khắc Tô", "Kizilsu": "Khắc Tư Lặc Tô",
+    "Kashgar": "Khách Thập", "Kashi": "Khách Thập", "Hotan": "Hòa Điền", "Ili": "Y Lê",
+    "Tacheng": "Tháp Thành", "Altay": "A Lặc Thái", "Shihezi": "Thạch Hạp Tử",
+    "Aral": "A Lạp Nhĩ", "Tumxuk": "Đồ Mộc Thư Khắc", "Wujiaqu": "Ngũ Gia Cừ",
+    "Beitun": "Bắc Đồn", "Tiemenguan": "Thiết Môn Quan", "Shuanghe": "Song Hà",
+    "Kokdala": "Khả Khắc Đạt Lạp", "Kunyu": "Côn Ngọc", "Huyanghe": "Hồ Dương Hà",
+
+    # =========================================================================
+    # 7. ĐÀI LOAN (Taiwan)
+    # =========================================================================
+    "Taipei": "Đài Bắc", "New Taipei": "Tân Bắc", "Taoyuan": "Đào Viên",
+    "Taichung": "Đài Trung", "Tainan": "Đài Nam", "Kaohsiung": "Cao Hùng",
+    "Keelung": "Cơ Long", "Hsinchu": "Tân Trúc", "Chiayi": "Gia Nghĩa",
+    "Yilan": "Nghi Lan", "Miaoli": "Miêu Lật", "Changhua": "Chương Hóa",
+    "Nantou": "Nam Đầu", "Yunlin": "Vân Lâm", "Pingtung": "Bình Đông",
+    "Taitung": "Đài Đông", "Hualien": "Hoa Liên", "Penghu": "Bành Hồ",
+    "Kinmen": "Kim Môn", "Lienchiang": "Liên Giang",
 }
 
 COUNTY_SUFFIXES = {"district", "county", "town", "city", "municipality", "urban", "rural",
@@ -381,12 +531,32 @@ def clean_state(folder, iso="", lang="vi"):
 
 def clean_county(name, iso="", lang="vi"):
     """
-    Chuẩn hóa tên quận/huyện:
-    - Nếu là Trung Quốc và chọn Tiếng Việt: dịch sang Hán - Việt nếu có trong từ điển.
-    - Ngược lại: giữ nguyên tên gốc Pinyin.
+    Chuẩn hóa tên quận/huyện sang Hán - Việt:
+    - Loại bỏ hậu tố hành chính thừa trước khi tra từ điển (City, Prefecture, County, v.v.).
+    - Khớp từ điển CHINA_DISTRICTS khi iso='CHN' và lang='vi'.
+    - Giữ nguyên gốc Pinyin khi lang='en'.
     """
     if iso == "CHN" and lang == "vi":
-        return CHINA_DISTRICTS.get(name, name)
+        # 1. Thử khớp trực tiếp
+        if name in CHINA_DISTRICTS:
+            return CHINA_DISTRICTS[name]
+
+        # 2. Bóc tách bỏ hậu tố hành chính tiếng Anh nếu GADM để nguyên
+        cleaned_stem = re.sub(
+            r"\s+(City|District|County|Prefecture|Autonomous County|Autonomous Prefecture)$", 
+            "", 
+            name, 
+            flags=re.IGNORECASE
+        ).strip()
+        if cleaned_stem in CHINA_DISTRICTS:
+            return CHINA_DISTRICTS[cleaned_stem]
+
+        # 3. Thử khớp sau khi bỏ dấu nháy hoặc khoảng trắng thừa
+        fold_name = _fold(cleaned_stem)
+        for k, v in CHINA_DISTRICTS.items():
+            if _fold(k) == fold_name:
+                return v
+
     return name
 
 def split_county(stem, state_name):
