@@ -32,7 +32,7 @@ The system is designed not merely as a remote sensing data extractor, but as a w
 To handle the complexity of combining vector data (administrative boundaries), raster data (VIIRS satellite imagery), and spatial inferential statistics, the system decomposes the workflow into 4 independent tiers:
 
 * **Tier 1:** 
-  This tier is responsible for recursively scanning the local GADM directory structure. Using pattern recognition, Unicode normalization (NFC/NFD), and the `pycountry` library, the system automatically infers ISO3 identifiers, standardizes administrative names, and loads them into the user interface (UI) without relying on a static database.
+  This tier is responsible for recursively scanning the local GADM directory structure. Using pattern recognition, Unicode normalization (NFC/NFD), and the `pycountry` library, the system automatically infers ISO3 identifiers, standardizes administrative names, and loads them into the user interface (UI) without relying on a static database - [Read the technical specification for country classification here](https://github.com/hoanfg/spatial-app/blob/main/GADM_v41-en%20pipeline%20specification.md).
 
 * **Tier 2:** 
   Responsible for polygon geometry processing. This tier projects all vector data into a dynamic flat UTM (Universal Transverse Mercator) coordinate system based on the centroid longitude and latitude of the bounding box, and then constructs a regular spatial grid via vectorization using `numpy.meshgrid` and `shapely.box`.
