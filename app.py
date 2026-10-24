@@ -96,6 +96,45 @@ COUNTRY_NAMES = {
     "KEN": ("Kenya", "Kenya"), "ETH": ("Ethiopia", "Ethiopia"), "MAR": ("Ma Rốc", "Morocco"),
     "DZA": ("Algeria", "Algeria"), "GHA": ("Ghana", "Ghana"), "TZA": ("Tanzania", "Tanzania"),
 }
+CHINA_PROVINCES = {
+    "Anhui": "An Huy",
+    "Beijing": "Bắc Kinh",
+    "Chongqing": "Trùng Khánh",
+    "Fujian": "Phúc Kiến",
+    "Gansu": "Cam Túc",
+    "Guangdong": "Quảng Đông",
+    "Guangxi": "Quảng Tây",
+    "Guizhou": "Quý Châu",
+    "Hainan": "Hải Nam",
+    "Hebei": "Hà Bắc",
+    "Heilongjiang": "Hắc Long Giang",
+    "Henan": "Hà Nam",
+    "Hubei": "Hồ Bắc",
+    "Hunan": "Hồ Nam",
+    "Jiangsu": "Giang Tô",
+    "Jiangxi": "Giang Tây",
+    "Jilin": "Cát Lâm",
+    "Liaoning": "Liêu Ninh",
+    "Nei Mongol": "Nội Mông",
+    "Inner Mongolia": "Nội Mông",
+    "Ningxia": "Ninh Hạ",
+    "Qinghai": "Thanh Hải",
+    "Shaanxi": "Thiểm Tây",
+    "Shandong": "Sơn Đông",
+    "Shanghai": "Thượng Hải",
+    "Shanxi": "Sơn Tây",
+    "Sichuan": "Tứ Xuyên",
+    "Tianjin": "Thiên Tân",
+    "Xinjiang": "Tân Cương",
+    "Xizang": "Tây Tạng",
+    "Tibet": "Tây Tạng",
+    "Yunnan": "Vân Nam",
+    "Zhejiang": "Chiết Giang",
+    "Hong Kong": "Hồng Kông",
+    "Macao": "Ma Cao",
+    "Macau": "Ma Cao",
+    "Taiwan": "Đài Loan",
+}
 COUNTY_SUFFIXES = {"district", "county", "town", "city", "municipality", "urban", "rural",
                    "ward", "commune", "subdistrict", "borough", "prefecture", "regency"}
 
@@ -219,10 +258,20 @@ def _split_camel(s):
     return "".join(out)
 
 
-def clean_state(folder):
-    """'Hà_Nội' -> 'Hà Nội'; 'HàNội' -> 'Hà Nội'."""
+def clean_state(folder, iso="", lang="vi"):
+    """Chuẩn hóa tên tỉnh/thành. Hỗ trợ Hán - Việt cho Trung Quốc khi chọn tiếng Việt."""
     s = re.sub(r"\s+", " ", _nfc(folder).replace("_", " ")).strip()
-    return _split_camel(s) if " " not in s else s
+    clean = _split_camel(s) if " " not in s else s
+    
+    # Nếu là Trung Quốc và đang chọn tiếng Việt -> ưu tiên tên Hán - Việt
+    if iso == "CHN" and lang == "vi":
+        # Tra cứu theo tên gốc hoặc tên đã bỏ dấu cách
+        vi_name = CHINA_PROVINCES.get(clean) or CHINA_PROVINCES.get(folder)
+        if vi_name:
+            return f"{vi_name} ({clean})"  # Hiển thị cả 2 dạng: An Huy (Anhui)
+            # Hoặc nếu chỉ muốn hiện thuần tiếng Việt: return vi_name
+            
+    return clean
 
 
 def split_county(stem, state_name):
@@ -1217,8 +1266,13 @@ with st.sidebar:
         st.warning(L["no_state"])
         st.stop()
 
-    sel_state = st.selectbox(L["state"], states, format_func=clean_state,
-                             key=f"sb_opt_state::{sel_country}", help=H["state"])
+    sel_state = st.selectbox(
+        L["state"], 
+        states, 
+        format_func=lambda s: clean_state(s, iso=sel_iso, lang=LANG),
+        key=f"sb_opt_state::{sel_country}", 
+        help=H["state"]
+    )
 
     counties = list_counties(country_path, sel_state)
     if not counties:
@@ -1231,7 +1285,7 @@ with st.sidebar:
     )
     sel_county = counties[sel_county_file]
     file_path = os.path.join(country_path, sel_state, sel_county_file)
-    st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state)} / {sel_county}")
+    st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state, iso=sel_iso, lang=LANG)} / {sel_county}")
     if st.button("🔄 " + ("Quét lại dữ liệu" if LANG == "vi" else "Rescan data"), key="rescan_data",
                  help=("Cập nhật danh sách sau khi thêm quốc gia/tỉnh/huyện mới vào thư mục dữ liệu."
                        if LANG == "vi" else "Refresh the lists after adding a new country/province/district to the data folder.")):
@@ -1386,7 +1440,7 @@ def run_pipeline():
         "epsg": epsg,
         "country_raw": sel_country,
         "country_names": {"vi": country_label(sel_country, "vi"), "en": country_label(sel_country, "en")},
-        "state_name": clean_state(sel_state),
+        "state_name": clean_state(sel_state, iso=sel_iso, lang=LANG),
         "district": sel_county,
         "iso3": sel_iso,
         "size": cell_size,
