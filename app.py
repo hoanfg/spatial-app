@@ -1328,7 +1328,7 @@ with st.sidebar:
          counties.keys(),
          key=lambda f: _natkey(clean_county(counties[f], iso=sel_iso, lang=LANG)),
      )
-     sel_county_file = st.selectbox(
+    sel_county_file = st.selectbox(
          L["county"],
          county_files_sorted,
          format_func=lambda f: clean_county(counties[f], iso=sel_iso, lang=LANG),
