@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Saratov_Balashov_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Saratov", "NAME_2": "Balashov", "TYPE_2": "City", "GID_2": "RUS.63.7_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 43.250522613000157, 51.509342193000123 ], [ 43.167095183000072, 51.483425141000168 ], [ 43.105445862000067, 51.598239898000088 ], [ 43.16636657700019, 51.604038240000079 ], [ 43.250522613000157, 51.509342193000123 ] ] ] } }
+]
+}

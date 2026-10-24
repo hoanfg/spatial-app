@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Vladimir_Kol'chugino_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Vladimir", "NAME_2": "Kol'chugino", "TYPE_2": "City", "GID_2": "RUS.76.6_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 39.391677857000104, 56.268981933000077 ], [ 39.369548798000096, 56.259395599000015 ], [ 39.320625305000021, 56.26240539500003 ], [ 39.308563233000143, 56.266742706000173 ], [ 39.321044922000056, 56.282367706000173 ], [ 39.365013123000097, 56.28977584800009 ], [ 39.391677857000104, 56.268981933000077 ] ] ] } }
+]
+}

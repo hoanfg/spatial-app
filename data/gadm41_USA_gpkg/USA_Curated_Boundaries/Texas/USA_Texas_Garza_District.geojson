@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Garza_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Garza", "TYPE_2": "County", "GID_2": "USA.44.85_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -101.173767089999899, 32.962730407000038 ], [ -101.555335997999975, 32.958919526000102 ], [ -101.559547424999892, 33.393970490000129 ], [ -101.040557860999968, 33.396209717000033 ], [ -101.037078857999973, 32.970050813000171 ], [ -101.173316955999894, 32.962741853000125 ], [ -101.173767089999899, 32.962730407000038 ] ] ] } }
+]
+}

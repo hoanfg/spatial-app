@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_North_Carolina_Person_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "North Carolina", "NAME_2": "Person", "TYPE_2": "County", "GID_2": "USA.34.73_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -79.153793334999932, 36.242240905000017 ], [ -79.143531799999892, 36.54272079500015 ], [ -78.97625732399996, 36.544738770000038 ], [ -78.927017211999953, 36.544540406000124 ], [ -78.799285888999975, 36.544139862000065 ], [ -78.801902770999959, 36.236068726000155 ], [ -78.950737, 36.239269256000114 ], [ -79.153793334999932, 36.242240905000017 ] ] ] } }
+]
+}

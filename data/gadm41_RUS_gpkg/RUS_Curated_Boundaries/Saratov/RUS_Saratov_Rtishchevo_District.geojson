@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Saratov_Rtishchevo_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Saratov", "NAME_2": "Rtishchevo", "TYPE_2": "City", "GID_2": "RUS.63.40_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 43.876296998000157, 52.28392410400005 ], [ 43.836696625000172, 52.236968994000051 ], [ 43.731685639000034, 52.247516633000089 ], [ 43.752079010000159, 52.293418884000118 ], [ 43.876296998000157, 52.28392410400005 ] ] ] } }
+]
+}

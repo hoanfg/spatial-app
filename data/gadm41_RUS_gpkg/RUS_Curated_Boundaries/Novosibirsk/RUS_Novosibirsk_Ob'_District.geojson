@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Novosibirsk_Ob'_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Novosibirsk", "NAME_2": "Ob'", "TYPE_2": "District", "GID_2": "RUS.50.26_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 82.704223633000197, 54.982242585 ], [ 82.683425904000046, 54.982101441000054 ], [ 82.679252624000071, 54.991130829000042 ], [ 82.684265136000079, 55.000049592000153 ], [ 82.707450867000091, 55.003517152000029 ], [ 82.722595215000069, 54.996128083000144 ], [ 82.716415405000191, 54.98406982400013 ], [ 82.704223633000197, 54.982242585 ] ] ] } }
+]
+}

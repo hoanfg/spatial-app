@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Kansas_Harvey_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Kansas", "NAME_2": "Harvey", "TYPE_2": "County", "GID_2": "USA.17.40_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -97.153656005999835, 38.087928773000044 ], [ -97.152770996999948, 37.912948608000079 ], [ -97.701736450999931, 37.912319184000069 ], [ -97.701828002999889, 38.173851014000036 ], [ -97.37222289999994, 38.174438475999978 ], [ -97.153831481999987, 38.174510955000017 ], [ -97.153656005999835, 38.087928773000044 ] ] ] } }
+]
+}

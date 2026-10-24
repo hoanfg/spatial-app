@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Rostov_Gukovo_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Rostov", "NAME_2": "Gukovo", "TYPE_2": "District", "GID_2": "RUS.58.13_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 39.988182069000061, 48.022579193000013 ], [ 39.88660812400019, 48.022266388000162 ], [ 39.937835693000125, 48.090820313000165 ], [ 40.055400849000193, 48.048484802000019 ], [ 39.988182069000061, 48.022579193000013 ] ] ] } }
+]
+}

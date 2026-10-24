@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Novgorod_Velikiy_Novgorod_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Novgorod", "NAME_2": "Velikiy Novgorod", "TYPE_2": "District", "GID_2": "RUS.49.23_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 31.357059479000156, 58.482498169000053 ], [ 31.276866913000049, 58.43133545000012 ], [ 31.250410081000155, 58.44057464500014 ], [ 31.201227189, 58.500751495000088 ], [ 31.227735519000078, 58.589145660000156 ], [ 31.264879227000051, 58.609405519000177 ], [ 31.303232194000032, 58.592227936000086 ], [ 31.378950119000024, 58.526939392000145 ], [ 31.357059479000156, 58.482498169000053 ] ] ] } }
+]
+}

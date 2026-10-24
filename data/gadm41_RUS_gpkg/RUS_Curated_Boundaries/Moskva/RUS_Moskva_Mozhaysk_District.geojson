@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Mozhaysk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Moskva", "NAME_2": "Mozhaysk", "TYPE_2": "City", "GID_2": "RUS.44.35_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.037738799000124, 55.434291840000014 ], [ 36.017120361000025, 55.432876587000067 ], [ 35.988479614000028, 55.439975739000033 ], [ 36.003170014000091, 55.467605591000165 ], [ 36.050220489000083, 55.453990936000139 ], [ 36.037738799000124, 55.434291840000014 ] ] ] } }
+]
+}

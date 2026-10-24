@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Kabardin-Balkar_Prokhladniy_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Kabardin-Balkar", "NAME_2": "Prokhladniy", "TYPE_2": "City", "GID_2": "RUS.20.9_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 44.059978485000158, 43.772808075000114 ], [ 44.01237869199997, 43.739616394000166 ], [ 43.94987487800006, 43.757328034000125 ], [ 43.939662933000079, 43.787532807000048 ], [ 44.047889709000174, 43.789718629000049 ], [ 44.059978485000158, 43.772808075000114 ] ] ] } }
+]
+}

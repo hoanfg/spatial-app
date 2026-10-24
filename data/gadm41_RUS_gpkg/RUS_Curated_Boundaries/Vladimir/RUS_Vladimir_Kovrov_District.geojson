@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Vladimir_Kovrov_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Vladimir", "NAME_2": "Kovrov", "TYPE_2": "City", "GID_2": "RUS.76.8_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 41.321086883000191, 56.308040619000053 ], [ 41.273914337000122, 56.283874511000022 ], [ 41.237388611000085, 56.297916412000063 ], [ 41.262527466000051, 56.332256318000077 ], [ 41.261955262000129, 56.347518921000187 ], [ 41.304698945000155, 56.35313034100011 ], [ 41.318672180000135, 56.34105301000011 ], [ 41.321086883000191, 56.308040619000053 ] ] ] } }
+]
+}

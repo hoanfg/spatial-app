@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Sverdlovsk_Rezh_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Sverdlovsk", "NAME_2": "Rezh", "TYPE_2": "City", "GID_2": "RUS.66.39_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 61.476291656000058, 57.383163453000122 ], [ 61.455936432000044, 57.376163483000028 ], [ 61.43012619000001, 57.386928559000069 ], [ 61.424835205000022, 57.39792251700004 ], [ 61.441799165000134, 57.403759003000118 ], [ 61.454170227000191, 57.405452728 ], [ 61.47554016100014, 57.395713806000174 ], [ 61.476291656000058, 57.383163453000122 ] ] ] } }
+]
+}

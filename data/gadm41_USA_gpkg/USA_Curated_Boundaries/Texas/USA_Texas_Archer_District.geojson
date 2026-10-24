@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Archer_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Archer", "TYPE_2": "County", "GID_2": "USA.44.5_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -98.954147337999984, 33.396160125 ], [ -98.953269958999954, 33.833690644000114 ], [ -98.423171996999884, 33.835700989000088 ], [ -98.422737121999887, 33.465171814000087 ], [ -98.422508240999946, 33.394649506000178 ], [ -98.954147337999984, 33.396160125 ] ] ] } }
+]
+}

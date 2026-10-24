@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Baylor_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Baylor", "TYPE_2": "County", "GID_2": "USA.44.12_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -98.953269958999954, 33.833690644000114 ], [ -98.954147337999984, 33.396160125 ], [ -99.47534942599998, 33.395629883000026 ], [ -99.47860717899988, 33.733581544000174 ], [ -99.478500366, 33.831790923000028 ], [ -98.953269958999954, 33.833690644000114 ] ] ] } }
+]
+}

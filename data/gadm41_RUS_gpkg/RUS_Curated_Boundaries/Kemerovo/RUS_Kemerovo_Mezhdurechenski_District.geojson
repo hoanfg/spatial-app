@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Kemerovo_Mezhdurechenski_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Kemerovo", "NAME_2": "Mezhdurechenski", "TYPE_2": "District", "GID_2": "RUS.27.16_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 88.1145401, 53.64488983300015 ], [ 88.073768616000052, 53.631885528000169 ], [ 88.049957276000043, 53.64909744300013 ], [ 88.064346312999987, 53.675407410000162 ], [ 88.111473083000192, 53.671562195000092 ], [ 88.1145401, 53.64488983300015 ] ] ] } }
+]
+}

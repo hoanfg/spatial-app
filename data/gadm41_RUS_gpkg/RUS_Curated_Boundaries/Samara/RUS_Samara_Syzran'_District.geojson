@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Samara_Syzran'_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Samara", "NAME_2": "Syzran'", "TYPE_2": "District", "GID_2": "RUS.62.30_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 48.473678588000155, 53.153381347999982 ], [ 48.443851471000073, 53.152210236000087 ], [ 48.441745757000092, 53.165954590000069 ], [ 48.466514587000063, 53.168201446000182 ], [ 48.473678588000155, 53.153381347999982 ] ] ] } }
+]
+}

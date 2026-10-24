@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Kabardin-Balkar_Mayskiy_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Kabardin-Balkar", "NAME_2": "Mayskiy", "TYPE_2": "District", "GID_2": "RUS.20.6_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 44.059139251000147, 43.606010438000169 ], [ 44.012149812000075, 43.598407745000031 ], [ 43.881713867000087, 43.619941711000081 ], [ 44.048236848000045, 43.69863510100015 ], [ 44.095836638000094, 43.731826782000098 ], [ 44.267318726000099, 43.71348953200004 ], [ 44.135372161000191, 43.622142792000034 ], [ 44.119316101000095, 43.618804933000149 ], [ 44.059139251000147, 43.606010438000169 ] ] ] } }
+]
+}

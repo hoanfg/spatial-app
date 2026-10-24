@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Chuvash_Alatyr'_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Chuvash", "NAME_2": "Alatyr'", "TYPE_2": "City", "GID_2": "RUS.13.1_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 46.629550934000065, 54.854824067000038 ], [ 46.622493743000121, 54.85073089500014 ], [ 46.612701417000096, 54.852210999000192 ], [ 46.61433029300008, 54.863391876000094 ], [ 46.630371094000054, 54.86041641200012 ], [ 46.629550934000065, 54.854824067000038 ] ] ] } }
+]
+}

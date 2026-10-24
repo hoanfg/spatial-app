@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Saratov_Atkarsk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Saratov", "NAME_2": "Atkarsk", "TYPE_2": "City", "GID_2": "RUS.63.3_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 45.051696777000188, 51.841060639000148 ], [ 45.042766571000129, 51.838348389000089 ], [ 45.032676698000046, 51.842224121000129 ], [ 45.029922486000089, 51.847763061000137 ], [ 45.043800354000098, 51.850570680000146 ], [ 45.04884338300019, 51.848632812000062 ], [ 45.052993775000061, 51.84820556700015 ], [ 45.051696777000188, 51.841060639000148 ] ] ] } }
+]
+}

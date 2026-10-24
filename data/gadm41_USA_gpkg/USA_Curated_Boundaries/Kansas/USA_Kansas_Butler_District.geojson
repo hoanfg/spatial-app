@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Kansas_Butler_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Kansas", "NAME_2": "Butler", "TYPE_2": "County", "GID_2": "USA.17.8_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -96.840248106999979, 38.086360932000105 ], [ -96.52382659999995, 38.087100984000074 ], [ -96.525558470999897, 37.607929230000082 ], [ -96.526145935999921, 37.476921081000171 ], [ -97.151420593999887, 37.476390839000032 ], [ -97.152770996999948, 37.912948608000079 ], [ -97.153656005999835, 38.087928773000044 ], [ -96.840248106999979, 38.086360932000105 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Buryat_Gusinoozersk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Buryat", "NAME_2": "Gusinoozersk", "TYPE_2": "District", "GID_2": "RUS.9.5_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 106.590202331000114, 51.283088685000109 ], [ 106.574089050000168, 51.27613449200004 ], [ 106.559768677000193, 51.280620575 ], [ 106.552017211000077, 51.297698975000174 ], [ 106.577316284000176, 51.304100037000126 ], [ 106.591552734000061, 51.291671753000116 ], [ 106.590202331000114, 51.283088685000109 ] ] ] } }
+]
+}

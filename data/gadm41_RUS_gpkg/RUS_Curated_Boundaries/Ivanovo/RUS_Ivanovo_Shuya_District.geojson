@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Ivanovo_Shuya_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Ivanovo", "NAME_2": "Shuya", "TYPE_2": "City", "GID_2": "RUS.19.18_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 41.415164947000051, 56.830852509000067 ], [ 41.349296570000035, 56.825252532000093 ], [ 41.341815949000079, 56.842739106000067 ], [ 41.353706359000114, 56.862655640000071 ], [ 41.396785735000094, 56.858028413000113 ], [ 41.415164947000051, 56.830852509000067 ] ] ] } }
+]
+}

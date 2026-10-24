@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Glasscock_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Glasscock", "TYPE_2": "County", "GID_2": "USA.44.87_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -101.694168090999938, 32.088088990000017 ], [ -101.262596129999906, 32.089649200000167 ], [ -101.265426634999983, 31.652231216000075 ], [ -101.776992796999934, 31.652128221000169 ], [ -101.776489257999913, 31.84922027600004 ], [ -101.776382445999957, 32.08819198700013 ], [ -101.694168090999938, 32.088088990000017 ] ] ] } }
+]
+}

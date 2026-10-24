@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Sakhalin_Dolinsk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Sakhalin", "NAME_2": "Dolinsk", "TYPE_2": "City", "GID_2": "RUS.61.3_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 142.909820556000113, 47.332603454000036 ], [ 142.892395019000105, 47.317504884000073 ], [ 142.870361329000161, 47.318363189000138 ], [ 142.855377197000053, 47.328655244000174 ], [ 142.865997315000186, 47.352817536000089 ], [ 142.901092529000039, 47.348705291000101 ], [ 142.909820556000113, 47.332603454000036 ] ] ] } }
+]
+}

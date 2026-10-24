@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Khakass_Abakan_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Khakass", "NAME_2": "Abakan", "TYPE_2": "City", "GID_2": "RUS.29.1_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 91.452789307000046, 53.701721191 ], [ 91.443862914000192, 53.697429657000043 ], [ 91.425094605000083, 53.69891357400013 ], [ 91.430313109000053, 53.714515686000027 ], [ 91.43953704900008, 53.717380524000077 ], [ 91.45078277600004, 53.71098709000006 ], [ 91.452789307000046, 53.701721191 ] ] ] } }
+]
+}

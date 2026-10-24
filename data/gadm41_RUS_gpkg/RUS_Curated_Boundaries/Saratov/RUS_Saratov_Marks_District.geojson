@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Saratov_Marks_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Saratov", "NAME_2": "Marks", "TYPE_2": "City", "GID_2": "RUS.63.27_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 46.770805358000132, 51.693538666000109 ], [ 46.757686615000125, 51.691459656000177 ], [ 46.753566742000089, 51.692970277000029 ], [ 46.753486634000183, 51.702117921000195 ], [ 46.767417907000095, 51.705722810000111 ], [ 46.773216248000153, 51.70014953600014 ], [ 46.770805358000132, 51.693538666000109 ] ] ] } }
+]
+}

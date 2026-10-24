@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Krasnodar_Kropotkin_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Krasnodar", "NAME_2": "Kropotkin", "TYPE_2": "City", "GID_2": "RUS.34.22_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 40.593402862000175, 45.414489747000061 ], [ 40.491115571000023, 45.386894227000141 ], [ 40.476524353000173, 45.45589828500016 ], [ 40.531558991000054, 45.525180817000148 ], [ 40.564353943000128, 45.521846771000128 ], [ 40.593402862000175, 45.414489747000061 ] ] ] } }
+]
+}

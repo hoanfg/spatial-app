@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Karachay-Cherkess_Karachayevsk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Karachay-Cherkess", "NAME_2": "Karachayevsk", "TYPE_2": "District", "GID_2": "RUS.25.3_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 42.007728576000034, 43.762245179000104 ], [ 41.962638856000183, 43.716831207000041 ], [ 41.94360733100018, 43.72034072800011 ], [ 41.951957703000062, 43.75297165000012 ], [ 42.007728576000034, 43.762245179000104 ] ] ] } }
+]
+}
