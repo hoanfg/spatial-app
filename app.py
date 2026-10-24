@@ -1307,7 +1307,7 @@ with st.sidebar:
      (s for s in subdirs(country_path) if _dir_has_geojson(os.path.join(country_path, s))),
      key=lambda s: _natkey(clean_state(s, iso=sel_iso, lang=LANG)),
      )
-     if not states:
+    if not states:
          st.warning(L["no_state"])
          st.stop()
 
