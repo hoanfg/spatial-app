@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Kemerovo_Myski_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kemerovo", "NAME_2": "Myski" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 87.783447265000177, 53.710559844999977 ], [ 87.781257630000084, 53.709594727000081 ], [ 87.777366638000046, 53.710575103 ], [ 87.777748108000139, 53.712169648000042 ], [ 87.781349182000042, 53.71255874600007 ], [ 87.783752442000093, 53.712818146000075 ], [ 87.784065246000068, 53.711826324000072 ], [ 87.783447265000177, 53.710559844999977 ] ] ] ] } }
-]
-}

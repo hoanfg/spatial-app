@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Tambov_Michurinsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tambov", "NAME_2": "Michurinsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 40.555339812999989, 52.891628266000168 ], [ 40.534336089000135, 52.843421937000073 ], [ 40.435844421000127, 52.843685151000045 ], [ 40.435901641000044, 52.966220856 ], [ 40.507091522000053, 52.988834381000117 ], [ 40.555339812999989, 52.891628266000168 ] ] ] ] } }
-]
-}

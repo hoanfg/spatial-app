@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Kansas_Grant_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Kansas", "NAME_2": "Grant" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -101.090415954999969, 37.736968994000051 ], [ -101.088119506999988, 37.388309479000156 ], [ -101.524482726999963, 37.388648987000181 ], [ -101.527046203999987, 37.736438752000083 ], [ -101.090415954999969, 37.736968994000051 ] ] ] ] } }
-]
-}

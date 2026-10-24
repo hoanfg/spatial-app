@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Kansas_Mitchell_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Kansas", "NAME_2": "Mitchell" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -97.930473326999959, 39.567539216000171 ], [ -97.926887511999951, 39.567520142000035 ], [ -97.928947447999917, 39.307338716000174 ], [ -97.929641722999918, 39.218952179000041 ], [ -98.490837097999986, 39.219810487000188 ], [ -98.486618041999975, 39.5670318600001 ], [ -97.930473326999959, 39.567539216000171 ] ] ] ] } }
-]
-}

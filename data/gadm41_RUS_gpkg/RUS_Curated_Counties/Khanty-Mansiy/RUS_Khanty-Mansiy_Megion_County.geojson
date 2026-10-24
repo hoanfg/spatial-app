@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Khanty-Mansiy_Megion_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Khanty-Mansiy", "NAME_2": "Megion" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 76.322761536000087, 60.961284638000166 ], [ 76.227432251000153, 60.944442749000132 ], [ 76.190902709000113, 60.960910796000121 ], [ 76.201919556000121, 61.008754731000067 ], [ 76.258895873000029, 61.013469696000186 ], [ 76.315109252000184, 61.000442506000013 ], [ 76.322761536000087, 60.961284638000166 ] ] ] ] } }
-]
-}

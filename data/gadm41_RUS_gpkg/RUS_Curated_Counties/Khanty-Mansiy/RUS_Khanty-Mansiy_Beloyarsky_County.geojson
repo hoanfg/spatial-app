@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Khanty-Mansiy_Beloyarsky_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Khanty-Mansiy", "NAME_2": "Beloyarsky" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 66.739738465000073, 63.654182434000063 ], [ 66.681594848000088, 63.641197205000083 ], [ 66.642242431, 63.661190034000072 ], [ 66.639526366999974, 63.678482057000053 ], [ 66.711219788000051, 63.686531067000089 ], [ 66.746246337000116, 63.676090240000121 ], [ 66.754310608000083, 63.664966584000069 ], [ 66.739738465000073, 63.654182434000063 ] ] ] ] } }
-]
-}

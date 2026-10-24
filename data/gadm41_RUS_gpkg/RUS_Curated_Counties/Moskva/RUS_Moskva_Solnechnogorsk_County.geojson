@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Moskva_Solnechnogorsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Moskva", "NAME_2": "Solnechnogorsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 36.978256226000155, 56.149612427000136 ], [ 36.962234498000043, 56.126701356000069 ], [ 36.930183411000144, 56.131702423000092 ], [ 36.931659698000146, 56.166751863000172 ], [ 36.966342926000152, 56.162479400000052 ], [ 36.978256226000155, 56.149612427000136 ] ] ] ] } }
-]
-}

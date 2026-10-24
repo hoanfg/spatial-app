@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Kursk_L'gov_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kursk", "NAME_2": "L'gov" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 35.293403625000053, 51.59594726600011 ], [ 35.254741669000168, 51.556602477000183 ], [ 35.229679107000038, 51.565708161000032 ], [ 35.217754363000154, 51.592777252000189 ], [ 35.235336304000157, 51.627235412000061 ], [ 35.293403625000053, 51.59594726600011 ] ] ] ] } }
-]
-}

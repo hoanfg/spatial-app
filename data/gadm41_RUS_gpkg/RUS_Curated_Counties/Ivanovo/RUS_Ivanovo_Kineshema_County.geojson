@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Ivanovo_Kineshema_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Ivanovo", "NAME_2": "Kineshema" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.159801482000148, 57.441238404000103 ], [ 42.110252380000077, 57.427024841000105 ], [ 42.073783874000185, 57.441860199000132 ], [ 42.100627899000187, 57.468383789000029 ], [ 42.143833161000089, 57.453300477000084 ], [ 42.159801482000148, 57.441238404000103 ] ] ] ] } }
-]
-}

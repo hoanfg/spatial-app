@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Orel_Mtsensk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Orel", "NAME_2": "Mtsensk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 36.584602355000129, 53.300373077000074 ], [ 36.574306488000104, 53.277290345000154 ], [ 36.539314270000091, 53.295082093000133 ], [ 36.555912018000129, 53.307449341000051 ], [ 36.584602355000129, 53.300373077000074 ] ] ] ] } }
-]
-}

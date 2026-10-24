@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Texas_Fisher_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Fisher" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -100.143066406999935, 32.958950043000073 ], [ -100.142242430999886, 32.798702241000171 ], [ -100.146636961999945, 32.521339416000103 ], [ -100.664299011999901, 32.52585983300014 ], [ -100.655517577999944, 32.96332931500001 ], [ -100.519218443999989, 32.963321685000096 ], [ -100.143066406999935, 32.958950043000073 ] ] ] ] } }
-]
-}

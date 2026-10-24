@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Irkutsk_Nizhneudinsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Irkutsk", "NAME_2": "Nizhneudinsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 99.026290894000113, 54.900165559000129 ], [ 98.962287902000128, 54.893154145000153 ], [ 98.944229126000039, 54.909515382000052 ], [ 98.948547362999989, 54.936130524000021 ], [ 98.978500367000152, 54.946449280000081 ], [ 99.018905640000071, 54.943202972999984 ], [ 99.03702545200008, 54.923240663000115 ], [ 99.026290894000113, 54.900165559000129 ] ] ] ] } }
-]
-}

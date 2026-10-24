@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Sverdlovsk_Sukhoy_Log_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Sverdlovsk", "NAME_2": "Sukhoy Log" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 62.067203521000181, 56.861717224000017 ], [ 62.059047699000189, 56.860622407000164 ], [ 62.052539826000043, 56.863494874000025 ], [ 62.052875519000054, 56.87125778300009 ], [ 62.062675476000038, 56.876312255000187 ], [ 62.074981690000072, 56.871181489000037 ], [ 62.074756622000109, 56.86600112900004 ], [ 62.067203521000181, 56.861717224000017 ] ] ] ] } }
-]
-}

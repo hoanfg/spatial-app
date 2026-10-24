@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Ivanovo_Ivanovo_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Ivanovo", "NAME_2": "Ivanovo" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 41.096092225000064, 57.011001586000191 ], [ 40.951248170000099, 56.985523225000179 ], [ 40.861938477000137, 57.016227721000121 ], [ 40.945358277000082, 57.097393037000074 ], [ 40.993667603000063, 57.091629029000103 ], [ 41.0758667, 57.041622161000191 ], [ 41.096092225000064, 57.011001586000191 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Kalmyk_Elista_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kalmyk", "NAME_2": "Elista" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 44.390800475000049, 46.387554169000168 ], [ 44.33650970400015, 46.284675599000082 ], [ 44.216381072000104, 46.287693025000181 ], [ 44.188201904000039, 46.388645173000043 ], [ 44.335376740000015, 46.400711061000038 ], [ 44.390800475000049, 46.387554169000168 ] ] ] ] } }
-]
-}

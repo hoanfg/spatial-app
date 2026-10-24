@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Kaluga_Obninsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Kaluga", "NAME_2": "Obninsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 36.659488679000106, 55.082054137000171 ], [ 36.614929199000073, 55.05342102100019 ], [ 36.591266632000043, 55.060562135000055 ], [ 36.603565216000163, 55.084789276000095 ], [ 36.659523011000147, 55.091823578000174 ], [ 36.659488679000106, 55.082054137000171 ] ] ] ] } }
-]
-}

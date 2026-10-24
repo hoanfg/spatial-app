@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Texas_Castro_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Castro" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -102.526878355999941, 34.746749878000116 ], [ -102.172698974999889, 34.747501373000034 ], [ -101.995903014999953, 34.747920990000182 ], [ -101.996307373999912, 34.309902192000095 ], [ -102.090881347999982, 34.309608461000039 ], [ -102.525497435999966, 34.311439514000142 ], [ -102.526878355999941, 34.746749878000116 ] ] ] ] } }
-]
-}

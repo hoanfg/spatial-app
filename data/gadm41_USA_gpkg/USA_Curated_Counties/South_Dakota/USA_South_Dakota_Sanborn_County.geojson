@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_South_Dakota_Sanborn_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "South Dakota", "NAME_2": "Sanborn" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -98.326553344999979, 43.850990295000145 ], [ -98.331008910999913, 43.85015106100019 ], [ -98.332008361999954, 43.938549041000101 ], [ -98.332031250999989, 44.197399140000186 ], [ -97.850585937999881, 44.19641113400013 ], [ -97.849426268999935, 43.850479126000039 ], [ -97.966156005999892, 43.850952149000193 ], [ -98.326553344999979, 43.850990295000145 ] ] ] ] } }
-]
-}

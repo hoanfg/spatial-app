@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Bashkortostan_Dyurtyuli_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Bashkortostan", "NAME_2": "Dyurtyuli" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 54.895095826000158, 55.478698731000179 ], [ 54.87210464400016, 55.473037721000196 ], [ 54.866035462000127, 55.487743378000062 ], [ 54.884819032000166, 55.490612030000079 ], [ 54.895095826000158, 55.478698731000179 ] ] ] ] } }
-]
-}

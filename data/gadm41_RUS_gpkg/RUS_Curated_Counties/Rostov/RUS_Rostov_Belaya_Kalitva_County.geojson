@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Rostov_Belaya_Kalitva_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Rostov", "NAME_2": "Belaya Kalitva" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 40.756252288000155, 48.174377441000161 ], [ 40.791271209000172, 48.102630616000113 ], [ 40.726810456000067, 48.118381500000055 ], [ 40.725257873000146, 48.152751923000153 ], [ 40.756252288000155, 48.174377441000161 ] ] ] ] } }
-]
-}

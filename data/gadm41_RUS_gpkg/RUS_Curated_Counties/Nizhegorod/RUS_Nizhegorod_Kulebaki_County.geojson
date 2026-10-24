@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Nizhegorod_Kulebaki_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Nizhegorod", "NAME_2": "Kulebaki" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.531204223000145, 55.405490876000044 ], [ 42.524387359000116, 55.402175903000114 ], [ 42.513828277000073, 55.407363890999989 ], [ 42.510574341000108, 55.411823273000039 ], [ 42.521457672000111, 55.418861390000188 ], [ 42.531528473000151, 55.417720794000104 ], [ 42.535858153999982, 55.411781311000084 ], [ 42.531204223000145, 55.405490876000044 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Texas_Rockwall_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Texas", "NAME_2": "Rockwall" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -96.518539429999919, 32.984729768000136 ], [ -96.299179077999895, 32.982379913000102 ], [ -96.301856993999934, 32.843059540000127 ], [ -96.302597045999903, 32.815738679000049 ], [ -96.521057127999882, 32.81534195 ], [ -96.518539429999919, 32.984729768000136 ] ] ] ] } }
-]
-}

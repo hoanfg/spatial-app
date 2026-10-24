@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Krasnoyarsk_Bogotol_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Krasnoyarsk", "NAME_2": "Bogotol" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 89.625015259, 56.22392654500004 ], [ 89.602554322000117, 56.214736939000147 ], [ 89.562332154000103, 56.217090607000046 ], [ 89.548202515000128, 56.229682922000165 ], [ 89.564773559000059, 56.245643617000155 ], [ 89.590339660000041, 56.24856948900009 ], [ 89.619308472000114, 56.239425659000062 ], [ 89.625015259, 56.22392654500004 ] ] ] ] } }
-]
-}

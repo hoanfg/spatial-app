@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Orenburg_Orenburg_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Orenburg", "NAME_2": "Orenburg" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 55.136322022000115, 51.606380462000061 ], [ 55.081451416000164, 51.604293824000081 ], [ 55.020587921000129, 51.735645294000051 ], [ 55.089378357000101, 51.822208406000186 ], [ 55.120582580000075, 51.829128265000122 ], [ 55.250457763000043, 51.848155976000044 ], [ 55.371185303000118, 51.820632935000162 ], [ 55.136322022000115, 51.606380462000061 ] ] ] ] } }
-]
-}

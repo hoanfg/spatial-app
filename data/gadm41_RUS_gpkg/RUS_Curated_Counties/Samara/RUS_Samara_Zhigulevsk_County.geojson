@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Samara_Zhigulevsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Samara", "NAME_2": "Zhigulevsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 49.798408509000012, 53.325160981000067 ], [ 49.785480498000027, 53.323902131000182 ], [ 49.768775940000069, 53.331363679000049 ], [ 49.768600465000191, 53.343055726000159 ], [ 49.799079895000148, 53.351070405000087 ], [ 49.815483094000172, 53.338527679000038 ], [ 49.798408509000012, 53.325160981000067 ] ] ] ] } }
-]
-}

@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "USA_Minnesota_Mahnomen_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "United States", "GID_0": "USA", "NAME_1": "Minnesota", "NAME_2": "Mahnomen" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -95.550216674999945, 47.150939941 ], [ -95.910842895999906, 47.151081085000158 ], [ -96.068290710999918, 47.154209137000123 ], [ -96.067886352999949, 47.5013198850001 ], [ -96.041748047999988, 47.501338958000133 ], [ -95.549850462999984, 47.501670838000052 ], [ -95.54644012499989, 47.499889375 ], [ -95.550216674999945, 47.150939941 ] ] ] ] } }
-]
-}

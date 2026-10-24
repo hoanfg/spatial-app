@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Perm'_Solikamsk_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Perm'", "NAME_2": "Solikamsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 56.791889191000109, 59.609119415000123 ], [ 56.767501831000061, 59.606266021000124 ], [ 56.755474090000121, 59.614311218000068 ], [ 56.7566528320001, 59.629093171000193 ], [ 56.784507752000195, 59.633235932000048 ], [ 56.802238464000141, 59.616573334000179 ], [ 56.791889191000109, 59.609119415000123 ] ] ] ] } }
-]
-}

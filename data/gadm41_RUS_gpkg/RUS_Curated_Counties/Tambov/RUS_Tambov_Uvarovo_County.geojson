@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Tambov_Uvarovo_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tambov", "NAME_2": "Uvarovo" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.311477662000073, 52.005996705000143 ], [ 42.308891296000127, 51.93609237700008 ], [ 42.243270874000132, 51.937747955000077 ], [ 42.250732423000102, 52.014503479000041 ], [ 42.285022735000098, 52.033351897999978 ], [ 42.311477662000073, 52.005996705000143 ] ] ] ] } }
-]
-}

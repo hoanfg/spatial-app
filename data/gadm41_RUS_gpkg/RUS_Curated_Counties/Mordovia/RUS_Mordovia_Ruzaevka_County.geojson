@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "RUS_Mordovia_Ruzaevka_County",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Mordovia", "NAME_2": "Ruzaevka" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 45.002414703000056, 54.026718140000128 ], [ 44.955520630000194, 53.993320465000011 ], [ 44.914131165000185, 54.017940521000128 ], [ 44.950748444000055, 54.048114777000137 ], [ 44.990711212000065, 54.049877168000194 ], [ 45.002414703000056, 54.026718140000128 ] ] ] ] } }
-]
-}
