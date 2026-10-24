@@ -1320,7 +1320,7 @@ with st.sidebar:
      )
 
     counties = list_counties(country_path, sel_state)
-     if not counties:
+    if not counties:
          st.warning(L["no_county"])
          st.stop()
 
