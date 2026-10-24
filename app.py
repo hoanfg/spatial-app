@@ -116,21 +116,21 @@ CHINA_DISTRICTS = {
     "Dongcheng": "Đông Thành", "Xicheng": "Tây Thành", "Chaoyang": "Triều Dương",
     "Fengtai": "Phong Đài", "Shijingshan": "Thạch Cảnh Sơn", "Haidian": "Hải Điến",
     "Mentougou": "Môn Đầu Câu", "Fangshan": "Phòng Sơn", "Tongzhou": "Thông Châu",
-    "Shunyi": "Thuận Nghĩa", "Changping": "Xương Bình", "Daxing": "Đại Hưng",
+    "Shunyi": "Thuận Nghĩa", "Changping": "Xương Bình", "Daxing": "Đại Hưng", "Beijing": "Nội đô Bắc Kinh",
     "Huairou": "Hoài Nhu", "Pinggu": "Bình Cốc", "Miyun": "Mật Vân", "Yanqing": "Diên Khánh",
 
     # --- Thiên Tân (Tianjin) ---
     "Heping": "Hòa Bình", "Hedong": "Hà Đông", "Hexi": "Hà Tây", "Nankai": "Nam Khai",
     "Hebei": "Hà Bắc", "Hongqiao": "Hồng Kiều", "Dongli": "Đông Lệ", "Xiqing": "Tây Thanh",
     "Jinnan": "Tân Nam", "Beichen": "Bắc Thần", "Wuqing": "Vũ Thanh", "Baodi": "Bảo Trì",
-    "Binhai": "Tân Hải", "Ninghe": "Ninh Hà", "Jinghai": "Tĩnh Hải", "Jizhou": "Kế Châu",
+    "Binhai": "Tân Hải", "Ninghe": "Ninh Hà", "Jinghai": "Tĩnh Hải", "Jizhou": "Kế Châu", "Tianjin": "Nội đô Thiên Tân",
 
     # --- Thượng Hải (Shanghai) ---
     "Huangpu": "Hoàng Phố", "Xuhui": "Từ Hối", "Changning": "Trường Ninh",
     "Jing'an": "Tĩnh An", "Putuo": "Phổ Đà", "Hongkou": "Hồng Khẩu", "Yangpu": "Dương Phố",
     "Minhang": "Mẫn Hàng", "Baoshan": "Bảo Sơn", "Jiading": "Gia Định", "Pudong": "Phố Đông",
     "Jinshan": "Kim Sơn", "Songjiang": "Tùng Giang", "Qingpu": "Thanh Phố",
-    "Fengxian": "Phụng Hiền", "Chongming": "Sùng Minh",
+    "Fengxian": "Phụng Hiền", "Chongming": "Sùng Minh", "Shanghai": "Nội đô Thượng Hải",
 
     # --- Trùng Khánh (Chongqing) ---
     "Yuzhong": "Du Trung", "Dadukou": "Đại Độ Khẩu", "Jiangbei": "Giang Bắc",
@@ -144,7 +144,7 @@ CHINA_DISTRICTS = {
     "Fengdu": "Phong Đô", "Dianjiang": "Điệm Giang", "Zhongxian": "Trung Huyện",
     "Kaixian": "Khai Huyện", "Yunyang": "Vân Dương", "Fengjie": "Phụng Tiết",
     "Wushan": "Vu Sơn", "Wuxi": "Vu Khê", "Shizhu": "Thạch Trụ", "Xiushan": "Tú Sơn",
-    "Youyang": "Dậu Dương", "Pengshui": "Bành Thủy",
+    "Youyang": "Dậu Dương", "Pengshui": "Bành Thủy", "Chongqing": "Nội đô Trùng Khánh",
 
     # =========================================================================
     # 2. KHU VỰC MIỀN ĐÔNG & ĐÔNG NAM
