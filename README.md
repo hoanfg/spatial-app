@@ -78,7 +78,7 @@ In empirical spatial economics, using administrative boundaries (provinces, dist
 Instead of relying on a hardcoded local EPSG code as in the Phase 1 prototype (`EPSG:32648`), the system dynamically interpolates the optimal **UTM (Universal Transverse Mercator)** zone from the centroid longitude and latitude $(\lambda_{\mathrm{center}}, \phi_{\mathrm{center}})$ of the study area's bounding box:
 
 $$
-\mathrm{Zone} = \min\left(60, \, \max\left(1, \, \left\lfloor \frac{\lambda_{\mathrm{center}} + 180}{6} \right\rfloor + 1\right)\right)
+\mathrm{Zone} = \min\left(60, \max\left(1, \left\lfloor \frac{\lambda_{\mathrm{center}} + 180}{6} \right\rfloor + 1\right)\right)
 $$
 
 The standard EPSG coordinate reference code (in meters) is assigned automatically for both the Northern and Southern hemispheres:
@@ -164,13 +164,13 @@ Because nighttime light radiance does not follow a normal distribution, the stat
 Let $M_i$ denote the number of simulations falling into the nearer extreme tail (accounting for numerical ties within $10^{-12}$):
 
 $$
-M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right), \; \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
+M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right); \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
 $$
 
 The two-sided pseudo p-value follows the convention of Anselin (1995) and Rey & Anselin (2007):
 
 $$
-p_i = \min\left(1.0, \; 2 \times \frac{M_i + 1}{R + 1}\right)
+p_i = \min\left(1.0; 2 \times \frac{M_i + 1}{R + 1}\right)
 $$
 
 ### 3.4. Controlling the false discovery rate (FDR – Benjamini-Hochberg)
