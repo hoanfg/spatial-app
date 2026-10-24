@@ -104,6 +104,7 @@ CHINA_PROVINCES = {
     "Gansu": "Cam Túc",
     "Guangdong": "Quảng Đông",
     "Guangxi": "Quảng Tây",
+    "Guangxi Zhuang": "Quảng Tây",
     "Guizhou": "Quý Châu",
     "Hainan": "Hải Nam",
     "Hebei": "Hà Bắc",
@@ -118,6 +119,7 @@ CHINA_PROVINCES = {
     "Nei Mongol": "Nội Mông",
     "Inner Mongolia": "Nội Mông",
     "Ningxia": "Ninh Hạ",
+    "Ningxia Hui": "Ninh Hạ",
     "Qinghai": "Thanh Hải",
     "Shaanxi": "Thiểm Tây",
     "Shandong": "Sơn Đông",
@@ -126,6 +128,7 @@ CHINA_PROVINCES = {
     "Sichuan": "Tứ Xuyên",
     "Tianjin": "Thiên Tân",
     "Xinjiang": "Tân Cương",
+    "Xinjiang Uygur": "Tân Cương",
     "Xizang": "Tây Tạng",
     "Tibet": "Tây Tạng",
     "Yunnan": "Vân Nam",
@@ -259,19 +262,21 @@ def _split_camel(s):
 
 
 def clean_state(folder, iso="", lang="vi"):
-    """Chuẩn hóa tên tỉnh/thành. Hỗ trợ Hán - Việt cho Trung Quốc khi chọn tiếng Việt."""
+    """
+    Chuẩn hóa tên tỉnh:
+    - Tiếng Việt (lang='vi'): hiển thị thuần Hán - Việt nếu là Trung Quốc (bỏ ngoặc).
+    - Tiếng Anh (lang='en'): hiển thị tên gốc Pinyin của GADM.
+    """
     s = re.sub(r"\s+", " ", _nfc(folder).replace("_", " ")).strip()
     clean = _split_camel(s) if " " not in s else s
     
-    # Nếu là Trung Quốc và đang chọn tiếng Việt -> ưu tiên tên Hán - Việt
     if iso == "CHN" and lang == "vi":
-        # Tra cứu theo tên gốc hoặc tên đã bỏ dấu cách
+        # Tìm theo tên đã xử lý hoặc tên thư mục gốc
         vi_name = CHINA_PROVINCES.get(clean) or CHINA_PROVINCES.get(folder)
         if vi_name:
-            return f"{vi_name} ({clean})"  # Hiển thị cả 2 dạng: An Huy (Anhui)
-            # Hoặc nếu chỉ muốn hiện thuần tiếng Việt: return vi_name
+            return vi_name  # Trả về thuần Hán - Việt, không kèm (Pinyin)
             
-    return clean
+    return clean  # Trả về tên gốc Pinyin cho tiếng Anh hoặc khi không khớp từ điển
 
 
 def split_county(stem, state_name):
