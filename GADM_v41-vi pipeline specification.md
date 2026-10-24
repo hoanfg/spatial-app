@@ -158,4 +158,4 @@ Mỗi tệp `.geojson` trước khi được ghi xuống ổ cứng để đưa 
    Nếu trong cùng một thư mục Tỉnh/Bang có 2 đơn vị khác mã `GID` nhưng trùng tên hiển thị (ví dụ: *Fairfax County* và *Fairfax City*), hệ thống tự động gắn hậu tố phân biệt từ `ENGTYPE_x` (ví dụ: `USA_Virginia_Fairfax_County.geojson` và `USA_Virginia_Fairfax_Independent_City.geojson`), tương thích với hàm `list_counties()` và `split_county()` trong `app.py`.
    
 9. **Lần 5: Kiểm tra diện tích tối thiểu cho VIIRS:**
-   Cảnh báo nếu đa giác có diện tích $$< 0.25 \text{ km}^2$$ (nhỏ hơn 1 ô lưới $500 	imes 500	ext{ m}$).
+   Cảnh báo nếu đa giác có diện tích $$< 0.25 \text{ km}^2$$ (nhỏ hơn 1 ô lưới $$500 \times 500 \text{ m}$$).
