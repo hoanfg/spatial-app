@@ -4,7 +4,7 @@
 
 **Phiên bản tài liệu:** 1.0  
 
-**Mục tiêu:** Chuẩn hóa ranh giới hành chính toàn cầu từ cơ sở dữ liệu GADM v4.1 (`.gpkg`) sang cấu trúc 3 cấp đồng nhất (`Quốc gia -> Thư mục Cấp 1 -> Tệp GeoJSON Cấp 2`) phục vụ trích xuất bức xạ đêm VIIRS và kiểm định LISA/Moran's I.
+**Mục tiêu:** Chuẩn hóa ranh giới hành chính toàn cầu từ cơ sở dữ liệu GADM v4.1 (`.gpkg`) sang cấu trúc 3 cấp đồng nhất (`Quốc gia -> Thư mục Cấp 1 -> Tệp GeoJSON Cấp 2`) phục vụ trích xuất bức xạ đêm VIIRS và kiểm định LISA/Moran's I [[Đọc sổ tay kỹ thuật tại đây]](README-vi.md).
 
 ---
 
