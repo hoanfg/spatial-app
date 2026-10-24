@@ -4,7 +4,7 @@
 
 **Document version:** 1.0  
 
-**Objective:** Standardize global administrative boundaries from the GADM v4.1 database (`.gpkg`) into a consistent 3-level structure (`Country -> Level 1 Folder -> Level 2 GeoJSON File`) for VIIRS nighttime radiance extraction and LISA/Moran's I testing - [[Read the technical manual here]](README-vi.md).
+**Objective:** Standardize global administrative boundaries from the GADM v4.1 database (`.gpkg`) into a consistent 3-level structure (`Country -> Level 1 Folder -> Level 2 GeoJSON File`) for VIIRS nighttime radiance extraction and LISA/Moran's I testing - [[Read the technical manual here]](README-en.md).
 
 ---
 
