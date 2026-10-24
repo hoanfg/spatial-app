@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Krasnodar_Tuapse_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Krasnodar", "NAME_2": "Tuapse", "TYPE_2": "City", "GID_2": "RUS.34.49_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 39.067409515000122, 44.117938995000031 ], [ 39.039264679000041, 44.116184235000105 ], [ 39.03804397600004, 44.127246857999978 ], [ 39.055259705000083, 44.136287689000085 ], [ 39.068481444999975, 44.129981994000161 ], [ 39.067409515000122, 44.117938995000031 ] ] ] } }
+]
+}

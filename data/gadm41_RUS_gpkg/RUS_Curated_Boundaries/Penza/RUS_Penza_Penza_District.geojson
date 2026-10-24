@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Penza_Penza_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Penza", "NAME_2": "Penza", "TYPE_2": "District", "GID_2": "RUS.54.24_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 44.962245940000116, 53.167678833000195 ], [ 44.785717011000031, 53.165401459000066 ], [ 44.755718232000106, 53.206939698000156 ], [ 44.788024901000028, 53.225402833000032 ], [ 44.84572219800009, 53.246170044000166 ], [ 45.007904052000129, 53.210124970000095 ], [ 44.962245940000116, 53.167678833000195 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Mitchell_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Mitchell", "TYPE_2": "County", "GID_2": "USA.44.168_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -100.669807434999939, 32.083789826000157 ], [ -100.815299987999879, 32.085109710000097 ], [ -101.173896788999912, 32.089698792000036 ], [ -101.177589416999979, 32.487071991000164 ], [ -101.17600250299995, 32.527179718000184 ], [ -100.664299011999901, 32.52585983300014 ], [ -100.66810607799988, 32.33266067500017 ], [ -100.669807434999939, 32.083789826000157 ] ] ] } }
+]
+}

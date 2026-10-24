@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Minnesota_Dodge_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Minnesota", "NAME_2": "Dodge", "TYPE_2": "County", "GID_2": "USA.24.20_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -93.040557861999901, 44.198440552000193 ], [ -92.680358887999887, 44.197158814000034 ], [ -92.677520751999907, 43.851810456000067 ], [ -92.688941954999962, 43.851421356 ], [ -93.046058653999921, 43.851760864000028 ], [ -93.046302795999964, 44.198459625000112 ], [ -93.040557861999901, 44.198440552000193 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Vologda_Velikiy_Ustyug_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Vologda", "NAME_2": "Velikiy Ustyug", "TYPE_2": "District", "GID_2": "RUS.78.23_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 46.394962311000086, 60.733142853000174 ], [ 46.357563019000111, 60.717716218000191 ], [ 46.319435119, 60.732723236000027 ], [ 46.326393128000063, 60.74849319499998 ], [ 46.351413728000125, 60.755741120000096 ], [ 46.37136840800008, 60.755344391000051 ], [ 46.390468597999984, 60.74631118800005 ], [ 46.394962311000086, 60.733142853000174 ] ] ] } }
+]
+}

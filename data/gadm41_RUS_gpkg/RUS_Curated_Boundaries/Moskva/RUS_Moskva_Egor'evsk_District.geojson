@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Egor'evsk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Moskva", "NAME_2": "Egor'evsk", "TYPE_2": "City", "GID_2": "RUS.44.8_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 39.07396698000008, 55.345699311000089 ], [ 39.008563995000031, 55.33357238800005 ], [ 38.998920441000053, 55.361557007000158 ], [ 39.030574799000078, 55.383155824000141 ], [ 39.046680451000043, 55.384254456000065 ], [ 39.07396698000008, 55.345699311000089 ] ] ] } }
+]
+}

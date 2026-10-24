@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Amur_Blagoveshchensk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Amur", "NAME_2": "Blagoveshchensk", "TYPE_2": "District", "GID_2": "RUS.3.4_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 127.595626831000118, 50.275894164000022 ], [ 127.558563232000097, 50.268173217000083 ], [ 127.510368347000053, 50.296421051000152 ], [ 127.521392823000156, 50.314517974000125 ], [ 127.560592652000196, 50.327156066000043 ], [ 127.586120606000122, 50.323207856000067 ], [ 127.605216981000012, 50.293605804000038 ], [ 127.595626831000118, 50.275894164000022 ] ] ] } }
+]
+}

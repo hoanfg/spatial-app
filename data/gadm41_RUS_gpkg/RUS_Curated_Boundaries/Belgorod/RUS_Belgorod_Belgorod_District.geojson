@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Belgorod_Belgorod_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Belgorod", "NAME_2": "Belgorod", "TYPE_2": "City", "GID_2": "RUS.7.3_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.701175690000071, 50.544521332000045 ], [ 36.68278503300013, 50.535549164000031 ], [ 36.52013397200011, 50.573406220000095 ], [ 36.529724121000186, 50.640235902000143 ], [ 36.689266204000035, 50.65384674000012 ], [ 36.701175690000071, 50.544521332000045 ] ] ] } }
+]
+}

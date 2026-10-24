@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Novosibirsk_Berdsk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Novosibirsk", "NAME_2": "Berdsk", "TYPE_2": "District", "GID_2": "RUS.50.4_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 83.263206482000101, 54.755790711000145 ], [ 83.24384308000009, 54.709224702000085 ], [ 83.116157532000045, 54.720115662000069 ], [ 83.073593140000014, 54.722724914000139 ], [ 83.127349854000045, 54.775901794000163 ], [ 83.207580566000161, 54.784717559000114 ], [ 83.263206482000101, 54.755790711000145 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Mississippi_Pike_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Mississippi", "NAME_2": "Pike", "TYPE_2": "County", "GID_2": "USA.25.57_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -90.348167417999946, 31.00115966900006 ], [ -90.504806517999953, 31.000270843000067 ], [ -90.550163268999938, 31.000049592000153 ], [ -90.549858093999944, 31.34940147500015 ], [ -90.263717650999922, 31.348619461000112 ], [ -90.263664245999962, 31.001649857000132 ], [ -90.348167417999946, 31.00115966900006 ] ] ] } }
+]
+}

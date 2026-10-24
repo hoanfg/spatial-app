@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Hale_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Hale", "TYPE_2": "County", "GID_2": "USA.44.95_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -102.090881347999982, 34.309608461000039 ], [ -101.996307373999912, 34.309902192000095 ], [ -101.564086912999983, 34.312419892000094 ], [ -101.56437683099989, 33.829650880000145 ], [ -102.086723327999948, 33.823680878 ], [ -102.090881347999982, 34.309608461000039 ] ] ] } }
+]
+}

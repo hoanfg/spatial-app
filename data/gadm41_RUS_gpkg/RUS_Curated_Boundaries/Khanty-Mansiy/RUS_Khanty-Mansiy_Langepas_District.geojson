@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Khanty-Mansiy_Langepas_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Khanty-Mansiy", "NAME_2": "Langepas", "TYPE_2": "City", "GID_2": "RUS.30.8_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 75.235885620000147, 61.270309449000194 ], [ 75.191047669000056, 61.269771577000085 ], [ 75.179222108000147, 61.278366089000144 ], [ 75.195175170000084, 61.300521850000052 ], [ 75.244506837000188, 61.30956268400007 ], [ 75.257415772000058, 61.279636384000185 ], [ 75.235885620000147, 61.270309449000194 ] ] ] } }
+]
+}

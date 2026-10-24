@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Sverdlovsk_Tavda_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Sverdlovsk", "NAME_2": "Tavda", "TYPE_2": "City", "GID_2": "RUS.66.51_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 65.247337342000037, 58.017330170000093 ], [ 65.231018067000036, 58.014949798000146 ], [ 65.220680238000114, 58.020130158000143 ], [ 65.220573425000055, 58.033306123000102 ], [ 65.249977111000192, 58.033798219000118 ], [ 65.255348205000189, 58.023017884000126 ], [ 65.247337342000037, 58.017330170000093 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Tambov_Rasskazovo_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Tambov", "NAME_2": "Rasskazovo", "TYPE_2": "City", "GID_2": "RUS.67.17_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 41.97144699100005, 52.669826506999982 ], [ 41.90754318200004, 52.609260559000063 ], [ 41.839729309000177, 52.63204193100006 ], [ 41.944351196000127, 52.690475465000191 ], [ 41.97144699100005, 52.669826506999982 ] ] ] } }
+]
+}

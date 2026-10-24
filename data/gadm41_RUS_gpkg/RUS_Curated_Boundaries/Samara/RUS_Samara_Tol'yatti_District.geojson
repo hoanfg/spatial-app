@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Samara_Tol'yatti_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Samara", "NAME_2": "Tol'yatti", "TYPE_2": "District", "GID_2": "RUS.62.32_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 49.481212616000164, 53.478931425999974 ], [ 49.467372894000107, 53.477184297000122 ], [ 49.446498871000074, 53.487270355000135 ], [ 49.454547881000053, 53.507438660000048 ], [ 49.480998993000185, 53.504352570000151 ], [ 49.489097595000032, 53.496051788000102 ], [ 49.481212616000164, 53.478931425999974 ] ] ] } }
+]
+}

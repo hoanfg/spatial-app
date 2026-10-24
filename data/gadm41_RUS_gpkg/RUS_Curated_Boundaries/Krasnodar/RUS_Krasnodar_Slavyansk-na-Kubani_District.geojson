@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Krasnodar_Slavyansk-na-Kubani_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Krasnodar", "NAME_2": "Slavyansk-na-Kubani", "TYPE_2": "City", "GID_2": "RUS.34.40_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 38.076262591000102, 45.248624351000103 ], [ 37.936866761000147, 45.218391418000124 ], [ 37.847164243000066, 45.289436271 ], [ 37.887176245000092, 45.334045517999982 ], [ 37.944347, 45.397785000000169 ], [ 38.037697, 45.374992 ], [ 38.085656908000146, 45.30734798900005 ], [ 38.120490936000181, 45.258216986000036 ], [ 38.076262591000102, 45.248624351000103 ] ] ] } }
+]
+}

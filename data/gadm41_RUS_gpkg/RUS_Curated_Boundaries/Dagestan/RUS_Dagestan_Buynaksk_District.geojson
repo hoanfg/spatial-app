@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Dagestan_Buynaksk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Dagestan", "NAME_2": "Buynaksk", "TYPE_2": "City", "GID_2": "RUS.15.7_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 47.136356355000032, 42.790641786000151 ], [ 47.107940673000087, 42.768257142000095 ], [ 47.099151611000138, 42.788105012000074 ], [ 47.06667709400017, 42.80133438200005 ], [ 47.109306335000099, 42.822204590000069 ], [ 47.135692596000126, 42.809474946000194 ], [ 47.136356355000032, 42.790641786000151 ] ] ] } }
+]
+}

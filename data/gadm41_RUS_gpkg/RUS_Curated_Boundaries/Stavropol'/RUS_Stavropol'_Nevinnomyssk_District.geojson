@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Stavropol'_Nevinnomyssk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Stavropol'", "NAME_2": "Nevinnomyssk", "TYPE_2": "City", "GID_2": "RUS.65.23_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 42.016517640000188, 44.589385986000082 ], [ 41.937858582000104, 44.561542511000141 ], [ 41.913108825, 44.569335937000119 ], [ 41.89892578000007, 44.642528534000064 ], [ 41.92043685800013, 44.69170761099997 ], [ 41.992240905000131, 44.652843475000111 ], [ 42.016517640000188, 44.589385986000082 ] ] ] } }
+]
+}

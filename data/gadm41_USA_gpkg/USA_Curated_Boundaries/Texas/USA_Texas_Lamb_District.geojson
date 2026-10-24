@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Lamb_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Lamb", "TYPE_2": "County", "GID_2": "USA.44.141_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -102.615959167999961, 33.825660706000065 ], [ -102.613952635999908, 34.310852051000097 ], [ -102.525497435999966, 34.311439514000142 ], [ -102.090881347999982, 34.309608461000039 ], [ -102.086723327999948, 33.823680878 ], [ -102.615959167999961, 33.825660706000065 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Sverdlovsk_Verkhnyaya_Salda_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Sverdlovsk", "NAME_2": "Verkhnyaya Salda", "TYPE_2": "City", "GID_2": "RUS.66.57_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 60.64953231700008, 58.025341035000054 ], [ 60.628219604000094, 58.018806459000132 ], [ 60.612323761000027, 58.028785706000065 ], [ 60.617691040000125, 58.037540437000132 ], [ 60.637100220000036, 58.041687011000022 ], [ 60.65110015800019, 58.031906128000173 ], [ 60.64953231700008, 58.025341035000054 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Ryazan'_Sasovo_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Ryazan'", "NAME_2": "Sasovo", "TYPE_2": "City", "GID_2": "RUS.59.20_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 41.906509400000118, 54.345226288000163 ], [ 41.884132385000044, 54.322296143000131 ], [ 41.860591889000091, 54.327331544000117 ], [ 41.857845307, 54.340957642000092 ], [ 41.870693207000102, 54.35632705800009 ], [ 41.885345459000064, 54.35852432300004 ], [ 41.906509400000118, 54.345226288000163 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Texas_Parker_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Texas", "NAME_2": "Parker", "TYPE_2": "County", "GID_2": "USA.44.184_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -97.615486144999977, 32.553329468000186 ], [ -98.067031860999919, 32.555541992000144 ], [ -98.056648253999981, 33.00260925300006 ], [ -97.920440673999963, 33.001121521000073 ], [ -97.543617248999965, 32.995010377000142 ], [ -97.548019407999959, 32.553260804000047 ], [ -97.615486144999977, 32.553329468000186 ] ] ] } }
+]
+}

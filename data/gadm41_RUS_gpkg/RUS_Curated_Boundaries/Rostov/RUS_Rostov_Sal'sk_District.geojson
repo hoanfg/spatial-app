@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Rostov_Sal'sk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Rostov", "NAME_2": "Sal'sk", "TYPE_2": "City", "GID_2": "RUS.58.40_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 41.619659424000133, 46.468357086000083 ], [ 41.584270478000178, 46.414787293000131 ], [ 41.504657745000145, 46.438240052000083 ], [ 41.568172454000148, 46.495002747 ], [ 41.619659424000133, 46.468357086000083 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Irkutsk_Sayansk_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Irkutsk", "NAME_2": "Sayansk", "TYPE_2": "City", "GID_2": "RUS.18.29_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 102.252296447, 54.104022980000082 ], [ 102.21414947400001, 54.10337829700012 ], [ 102.203102112000067, 54.124450684000067 ], [ 102.213623047000112, 54.135734558000024 ], [ 102.240982056000064, 54.140197755000145 ], [ 102.258926392000149, 54.131916047 ], [ 102.2649688730001, 54.11022567800012 ], [ 102.252296447, 54.104022980000082 ] ] ] } }
+]
+}

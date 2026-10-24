@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Klin_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Moskva", "NAME_2": "Klin", "TYPE_2": "City", "GID_2": "RUS.44.20_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.737583161000032, 56.290527343000178 ], [ 36.673347472999978, 56.279872894000164 ], [ 36.638980865000065, 56.338069916000052 ], [ 36.73547363199998, 56.314498901000093 ], [ 36.737583161000032, 56.290527343000178 ] ] ] } }
+]
+}

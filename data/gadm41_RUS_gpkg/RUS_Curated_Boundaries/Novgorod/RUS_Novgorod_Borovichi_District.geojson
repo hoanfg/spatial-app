@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Novgorod_Borovichi_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "RUS", "COUNTRY": "Russia", "NAME_1": "Novgorod", "NAME_2": "Borovichi", "TYPE_2": "City", "GID_2": "RUS.49.2_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 34.145259857000156, 58.393112183000085 ], [ 34.037662507000107, 58.371818543000188 ], [ 33.957592010000042, 58.406555176000097 ], [ 34.01649856500012, 58.435356140000124 ], [ 34.080608367000025, 58.42430114800004 ], [ 34.145259857000156, 58.393112183000085 ] ] ] } }
+]
+}

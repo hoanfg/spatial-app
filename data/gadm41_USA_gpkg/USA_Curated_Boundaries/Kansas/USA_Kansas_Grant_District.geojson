@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "USA_Kansas_Grant_District",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "GID_0": "USA", "COUNTRY": "United States", "NAME_1": "Kansas", "NAME_2": "Grant", "TYPE_2": "County", "GID_2": "USA.17.34_1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -101.090415954999969, 37.736968994000051 ], [ -101.088119506999988, 37.388309479000156 ], [ -101.524482726999963, 37.388648987000181 ], [ -101.527046203999987, 37.736438752000083 ], [ -101.090415954999969, 37.736968994000051 ] ] ] } }
+]
+}
