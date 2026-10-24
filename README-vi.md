@@ -170,7 +170,7 @@ $$
 Giá trị pseudo p-value hai phía (two-sided) được tính theo quy chuẩn của Anselin (1995) và Rey & Anselin (2007):
 
 $$
-p_i = \min\left(1.0, \; 2 \times \frac{M_i + 1}{R + 1}\right)
+p_i = \min\left(1.0; 2 \times \frac{M_i + 1}{R + 1}\right)
 $$
 
 ### 3.4. Kiểm soát tỷ lệ phát hiện sai (FDR – Benjamini-Hochberg)
