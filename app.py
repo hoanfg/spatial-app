@@ -108,51 +108,32 @@ CHINA_PROVINCES = {
     "Zhejiang": "Chiết Giang", "Hong Kong": "Hồng Kông", "Macao": "Ma Cao", "Macau": "Ma Cao", "Taiwan": "Đài Loan",
 }
 
-import json
-
 @st.cache_data(show_spinner=False)
 def load_china_districts():
-    """Tải từ điển Hán-Việt 2900+ quận huyện Trung Quốc từ file JSON (chỉ tải 1 lần vào RAM)"""
+    """Tải từ điển Hán-Việt 2900+ quận huyện Trung Quốc từ file JSON (kèm bảng băm O(1))."""
     dict_path = os.path.join(DATA_ROOT, "china_districts_hanzi.json")
     try:
         with open(dict_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            raw = json.load(f)
     except FileNotFoundError:
-        # Nếu chưa có file JSON, trả về từ điển rỗng
-        return {}
+        raw = {}
+    folded = {}
+    for k, v in raw.items():
+        s = unicodedata.normalize("NFD", str(k))
+        s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+        fk = s.replace("đ", "d").replace("Đ", "D").casefold().strip()
+        folded[fk] = v
+    return raw, folded
 
-# Nạp từ điển vào biến toàn cục
-CHINA_DISTRICTS = load_china_districts()
 
-def clean_county(name, iso="", lang="vi"):
-    """
-    Chuẩn hóa tên quận/huyện sang Hán - Việt:
-    """
-    if iso == "CHN" and lang == "vi":
-        # 1. Thử khớp trực tiếp
-        if name in CHINA_DISTRICTS:
-            return CHINA_DISTRICTS[name]
+CHINA_DISTRICTS, CHINA_DISTRICTS_FOLD = load_china_districts()
 
-        # 2. Bóc tách bỏ hậu tố hành chính tiếng Anh nếu GADM để nguyên
-        cleaned_stem = re.sub(
-            r"\s+(City|District|County|Prefecture|Autonomous County|Autonomous Prefecture)$", 
-            "", 
-            name, 
-            flags=re.IGNORECASE
-        ).strip()
-        if cleaned_stem in CHINA_DISTRICTS:
-            return CHINA_DISTRICTS[cleaned_stem]
-
-        # 3. Thử khớp sau khi bỏ dấu nháy hoặc khoảng trắng thừa
-        fold_name = _fold(cleaned_stem)
-        for k, v in CHINA_DISTRICTS.items():
-            if _fold(k) == fold_name:
-                return v
-
-    return name
-
-COUNTY_SUFFIXES = {"district", "county", "town", "city", "municipality", "urban", "rural",
-                   "ward", "commune", "subdistrict", "borough", "prefecture", "regency"}
+COUNTY_SUFFIXES = {
+    "district", "county", "town", "city", "municipality", "urban", "rural",
+    "ward", "commune", "subdistrict", "borough", "prefecture", "regency",
+    "authority", "unitary", "metropolitan", "independent", "autonomous",
+    "banner", "league", "parish", "division", "department", "council", "area",
+}
 
 
 def _nfc(s):
@@ -201,7 +182,7 @@ def resolve_iso(folder, dataset=None):
         if m and _is_valid_iso(m.group(1).upper()):
             return m.group(1).upper()
     want = _fold(clean_state(folder))
-    for code, (vi_name, en_name) in COUNTRY_NAMES.items():   # khớp theo tên (Việt/Anh), không phân biệt dấu
+    for code, (vi_name, en_name) in COUNTRY_NAMES.items():
         if want in (_fold(vi_name), _fold(en_name)):
             return code
     if pycountry is not None:
@@ -214,7 +195,7 @@ def resolve_iso(folder, dataset=None):
 
 @st.cache_data(show_spinner=False, ttl=30)
 def _name_overrides(root):
-    """Đọc data/country_names.json: {"THA": {"vi": "Thái Lan", "en": "Thailand"}} (khóa = ISO3 hoặc tên thư mục)."""
+    """Đọc data/country_names.json: {"THA": {"vi": "Thái Lan", "en": "Thailand"}}."""
     try:
         with open(os.path.join(root, "country_names.json"), encoding="utf-8") as fh:
             raw = json.load(fh)
@@ -274,52 +255,63 @@ def _split_camel(s):
     return "".join(out)
 
 
-def clean_state(folder, iso="", lang="vi"):
-    """
-    Chuẩn hóa tên tỉnh:
-    - Tiếng Việt (lang='vi'): hiển thị thuần Hán - Việt nếu là Trung Quốc (bỏ ngoặc).
-    - Tiếng Anh (lang='en'): hiển thị tên gốc Pinyin của GADM.
-    """
-    s = re.sub(r"\s+", " ", _nfc(folder).replace("_", " ")).strip()
-    clean = _split_camel(s) if " " not in s else s
-    
-    if iso == "CHN" and lang == "vi":
-        # Tìm theo tên đã xử lý hoặc tên thư mục gốc
-        vi_name = CHINA_PROVINCES.get(clean) or CHINA_PROVINCES.get(folder)
-        if vi_name:
-            return vi_name  # Trả về thuần Hán - Việt, không kèm (Pinyin)
-            
-    return clean  # Trả về tên gốc Pinyin cho tiếng Anh hoặc khi không khớp từ điển
-
 def clean_county(name, iso="", lang="vi"):
-    """
-    Chuẩn hóa tên quận/huyện sang Hán - Việt:
-    - Loại bỏ hậu tố hành chính thừa trước khi tra từ điển (City, Prefecture, County, v.v.).
-    - Khớp từ điển CHINA_DISTRICTS khi iso='CHN' và lang='vi'.
-    - Giữ nguyên gốc Pinyin khi lang='en'.
-    """
-    if iso == "CHN" and lang == "vi":
-        # 1. Thử khớp trực tiếp
-        if name in CHINA_DISTRICTS:
-            return CHINA_DISTRICTS[name]
+    """Chuẩn hóa tên quận/huyện sang Hán - Việt với tốc độ tra cứu O(1)."""
+    if iso != "CHN" or lang != "vi" or not CHINA_DISTRICTS:
+        return name
 
-        # 2. Bóc tách bỏ hậu tố hành chính tiếng Anh nếu GADM để nguyên
-        cleaned_stem = re.sub(
-            r"\s+(City|District|County|Prefecture|Autonomous County|Autonomous Prefecture)$", 
-            "", 
-            name, 
-            flags=re.IGNORECASE
-        ).strip()
-        if cleaned_stem in CHINA_DISTRICTS:
-            return CHINA_DISTRICTS[cleaned_stem]
+    # Nếu tên có kèm phần phân biệt trong ngoặc đơn, vd: "Chaoyang (County)"
+    suffix_paren = ""
+    base_name = str(name).strip()
+    m_paren = re.match(r"^(.+?)\s*(\([^)]+\))$", base_name)
+    if m_paren:
+        base_name, suffix_paren = m_paren.group(1).strip(), " " + m_paren.group(2)
 
-        # 3. Thử khớp sau khi bỏ dấu nháy hoặc khoảng trắng thừa
-        fold_name = _fold(cleaned_stem)
-        for k, v in CHINA_DISTRICTS.items():
-            if _fold(k) == fold_name:
-                return v
+    if base_name in CHINA_DISTRICTS:
+        return CHINA_DISTRICTS[base_name] + suffix_paren
+
+    cleaned_stem = re.sub(
+        r"\s+(City|District|County|Prefecture|Autonomous County|Autonomous Prefecture|Banner|Autonomous Banner)$",
+        "",
+        base_name,
+        flags=re.IGNORECASE,
+    ).strip()
+    if cleaned_stem in CHINA_DISTRICTS:
+        return CHINA_DISTRICTS[cleaned_stem] + suffix_paren
+
+    hit = CHINA_DISTRICTS_FOLD.get(_fold(cleaned_stem))
+    if hit:
+        return hit + suffix_paren
 
     return name
+
+
+def clean_state(folder, iso="", lang="vi"):
+    """
+    Chuẩn hóa tên tỉnh / địa khu:
+    - Tách CamelCase trên từng thành phần ngăn cách bởi dấu '_'.
+    - Với Trung Quốc (iso='CHN'): tách Tỉnh (NAME_1) và Địa khu (NAME_2) từ cấu trúc 'Zhejiang_Jinhua'.
+    """
+    tokens = [_split_camel(t) for t in _nfc(folder).replace("_", " ").split() if t]
+    clean = re.sub(r"\s+", " ", " ".join(tokens)).strip()
+
+    if iso == "CHN":
+        # Khớp tiền tố tỉnh dài nhất trong CHINA_PROVINCES (hỗ trợ cả tỉnh 2 từ như 'Nei Mongol', 'Xinjiang Uygur')
+        words = clean.split()
+        for k in range(min(3, len(words)), 0, -1):
+            prov_en = " ".join(words[:k])
+            if prov_en in CHINA_PROVINCES:
+                prov_vi = CHINA_PROVINCES[prov_en]
+                pref_en = " ".join(words[k:]).strip()
+                if not pref_en:
+                    return prov_vi if lang == "vi" else prov_en
+                if lang == "vi":
+                    pref_vi = clean_county(pref_en, iso="CHN", lang="vi")
+                    return f"{prov_vi} · {pref_vi}"
+                return f"{prov_en} · {pref_en}"
+
+    return clean
+
 
 def split_county(stem, state_name):
     """'VNM Hà Nội Hoàn Kiếm District' -> ('Hoàn Kiếm', 'District')."""
@@ -332,6 +324,9 @@ def split_county(stem, state_name):
         tokens = tokens[n:]
     removed = []
     while len(tokens) > 1 and _fold(tokens[-1]) in COUNTY_SUFFIXES:
+        # Không cắt từ "City" nếu trước đó là "of" (vd: "Bristol, City of")
+        if _fold(tokens[-1]) == "city" and len(tokens) >= 2 and _fold(tokens[-2]) == "of":
+            break
         removed.insert(0, tokens.pop())
     name = " ".join(tokens) if tokens else _nfc(stem).replace("_", " ")
     return name, " ".join(removed)
@@ -1308,42 +1303,50 @@ with st.sidebar:
     sel_iso = c_info["iso3"]
 
     # Khóa widget gắn với cấp cha: đổi quốc gia/tỉnh thì widget con được tạo mới, không bao giờ giữ giá trị cũ không hợp lệ
-    states = [s for s in subdirs(country_path) if _dir_has_geojson(os.path.join(country_path, s))]
-    if not states:
-        st.warning(L["no_state"])
-        st.stop()
+    states = sorted(
+     (s for s in subdirs(country_path) if _dir_has_geojson(os.path.join(country_path, s))),
+     key=lambda s: _natkey(clean_state(s, iso=sel_iso, lang=LANG)),
+     )
+     if not states:
+         st.warning(L["no_state"])
+         st.stop()
 
     sel_state = st.selectbox(
-        L["state"], 
-        states, 
-        format_func=lambda s: clean_state(s, iso=sel_iso, lang=LANG),
-        key=f"sb_opt_state::{sel_country}", 
-        help=H["state"]
-    )
+         L["state"],
+         states,
+         format_func=lambda s: clean_state(s, iso=sel_iso, lang=LANG),
+         key=f"sb_opt_state::{sel_country}",
+         help=H["state"],
+     )
 
     counties = list_counties(country_path, sel_state)
-    if not counties:
-        st.warning(L["no_county"])
-        st.stop()
+     if not counties:
+         st.warning(L["no_county"])
+         st.stop()
 
-    sel_county_file = st.selectbox(
-        L["county"], 
-        list(counties.keys()), 
-        format_func=lambda f: clean_county(counties[f], iso=sel_iso, lang=LANG),
-        key=f"sb_opt_county::{sel_country}::{sel_state}", 
-        help=H["county"],
-    )
-    # Lấy tên hiển thị theo ngôn ngữ được chọn
-    sel_county = clean_county(counties[sel_county_file], iso=sel_iso, lang=LANG)
-    file_path = os.path.join(country_path, sel_state, sel_county_file)
-    st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state, iso=sel_iso, lang=LANG)} / {sel_county}")
-    if st.button("🔄 " + ("Quét lại dữ liệu" if LANG == "vi" else "Rescan data"), key="rescan_data",
-                 help=("Cập nhật danh sách sau khi thêm quốc gia/tỉnh/huyện mới vào thư mục dữ liệu."
-                       if LANG == "vi" else "Refresh the lists after adding a new country/province/district to the data folder.")):
-        discover_countries.clear()
-        list_counties.clear()
-        _name_overrides.clear()
-        st.rerun()
+    county_files_sorted = sorted(
+         counties.keys(),
+         key=lambda f: _natkey(clean_county(counties[f], iso=sel_iso, lang=LANG)),
+     )
+     sel_county_file = st.selectbox(
+         L["county"],
+         county_files_sorted,
+         format_func=lambda f: clean_county(counties[f], iso=sel_iso, lang=LANG),
+         key=f"sb_opt_county::{sel_country}::{sel_state}",
+         help=H["county"],
+     )
+     raw_county_label = counties[sel_county_file]
+     sel_county = clean_county(raw_county_label, iso=sel_iso, lang=LANG)
+     file_path = os.path.join(country_path, sel_state, sel_county_file)
+     st.caption(f"📍 {country_label(sel_country, LANG)} / {clean_state(sel_state, iso=sel_iso, lang=LANG)} / {sel_county}")
+     if st.button("🔄 " + ("Quét lại dữ liệu" if LANG == "vi" else "Rescan data"), key="rescan_data",
+                  help=("Cập nhật danh sách sau khi thêm quốc gia/tỉnh/huyện mới vào thư mục dữ liệu."
+                        if LANG == "vi" else "Refresh the lists after adding a new country/province/district to the data folder.")):
+         discover_countries.clear()
+         list_counties.clear()
+         _name_overrides.clear()
+         load_china_districts.clear()
+         st.rerun()
 
     st.divider()
     st.header(L["sb_analytic"])
@@ -1487,17 +1490,27 @@ def run_pipeline():
 
     return {
         "grid_utm": grid,
-        "boundary_wgs": boundary_wgs,
-        "epsg": epsg,
-        "country_raw": sel_country,
-        "country_names": {"vi": country_label(sel_country, "vi"), "en": country_label(sel_country, "en")},
-        "state_name": clean_state(sel_state, iso=sel_iso, lang=LANG),
-        "district": sel_county,
-        "iso3": sel_iso,
-        "size": cell_size,
-        "year": int(year),
-        "moran": moran,
-        "ts": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+         "boundary_wgs": boundary_wgs,
+         "epsg": epsg,
+         "country_raw": sel_country,
+         "country_names": {"vi": country_label(sel_country, "vi"), "en": country_label(sel_country, "en")},
+         "state_raw": sel_state,
+         "state_names": {
+             "vi": clean_state(sel_state, iso=sel_iso, lang="vi"),
+             "en": clean_state(sel_state, iso=sel_iso, lang="en"),
+         },
+         "state_name": clean_state(sel_state, iso=sel_iso, lang=LANG),
+         "district_raw": raw_county_label,
+         "district_names": {
+             "vi": clean_county(raw_county_label, iso=sel_iso, lang="vi"),
+             "en": clean_county(raw_county_label, iso=sel_iso, lang="en"),
+         },
+         "district": sel_county,
+         "iso3": sel_iso,
+         "size": cell_size,
+         "year": int(year),
+         "moran": moran,
+         "ts": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
     }
 
 
@@ -1516,7 +1529,8 @@ grid_utm = res["grid_utm"].reset_index(drop=True)
 size, yr, epsg = res["size"], res["year"], res["epsg"]
 _cn = res.get("country_names") or {lg: country_label(res["country_raw"], lg) for lg in ("vi", "en")}
 country_disp = _cn[LANG]
-state_disp, district = res["state_name"], res["district"]
+state_disp = res.get("state_names", {}).get(LANG, res["state_name"])
+district = res.get("district_names", {}).get(LANG, res["district"])
 place = f"{country_disp} / {state_disp} / {district}"
 
 n = len(grid_utm)
@@ -1997,7 +2011,9 @@ with tab_lisa:
     
     # Tạo mã định danh vùng duy nhất (Ví dụ: VNM_hoan_kiem)
     _iso_id = res["iso3"] or slugify(str(res["country_raw"]).split("/")[-1]).upper()
-    region_id = f"{_iso_id}_{slugify(res['district'])}"
+    _st_slug = slugify(res.get("state_raw") or res["state_name"])
+    _dt_slug = slugify(res.get("district_raw") or res["district"])
+    region_id = f"{_iso_id}_{_st_slug}_{_dt_slug}"
     
     # Truyền dữ liệu vào lõi LISA
     try:
