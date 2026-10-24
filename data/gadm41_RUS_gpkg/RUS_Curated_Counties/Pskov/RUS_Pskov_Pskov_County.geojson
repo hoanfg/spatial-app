@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Pskov_Pskov_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Pskov", "NAME_2": "Pskov" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 28.356512070000122, 57.791988373000152 ], [ 28.343561173000126, 57.790031434000127 ], [ 28.321088789999976, 57.798244476000036 ], [ 28.317752839000093, 57.809890747000111 ], [ 28.329126357000064, 57.814773560000049 ], [ 28.364437104, 57.806907654000099 ], [ 28.356512070000122, 57.791988373000152 ] ] ] ] } }
+]
+}

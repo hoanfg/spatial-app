@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Gorno-Altay_Gorno-Altaysk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Gorno-Altay", "NAME_2": "Gorno-Altaysk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 85.973731995000037, 51.937873841 ], [ 85.963737487000174, 51.932182312000123 ], [ 85.953117370000143, 51.932655334000174 ], [ 85.946800231000168, 51.932937622000054 ], [ 85.940368652000132, 51.948261260000152 ], [ 85.965042113000095, 51.95290756300011 ], [ 85.967811585000106, 51.951164246000189 ], [ 85.975700378000113, 51.946201324000072 ], [ 85.973731995000037, 51.937873841 ] ] ] ] } }
+]
+}

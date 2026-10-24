@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Karachay-Cherkess_Cherkessk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Karachay-Cherkess", "NAME_2": "Cherkessk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.162902832000043, 44.319461823000154 ], [ 42.039714813000103, 44.220386505000135 ], [ 42.028839110000035, 44.22438049200008 ], [ 42.071395874000132, 44.353263854000147 ], [ 42.108711243000187, 44.350711822 ], [ 42.162902832000043, 44.319461823000154 ] ] ] ] } }
+]
+}

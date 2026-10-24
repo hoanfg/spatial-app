@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Krasnoyarsk_Sosnovoborsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Krasnoyarsk", "NAME_2": "Sosnovoborsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 93.381500243000119, 56.141532899000083 ], [ 93.342689514000085, 56.139411927000083 ], [ 93.306076049000183, 56.153999328000111 ], [ 93.322929383000201, 56.191005707000045 ], [ 93.343292237000128, 56.194286346000126 ], [ 93.394790648000082, 56.169673920000093 ], [ 93.381500243000119, 56.141532899000083 ] ] ] ] } }
+]
+}

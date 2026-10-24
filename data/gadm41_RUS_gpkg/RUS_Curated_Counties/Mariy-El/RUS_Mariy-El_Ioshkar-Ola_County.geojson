@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Mariy-El_Ioshkar-Ola_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Mariy-El", "NAME_2": "Ioshkar-Ola" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 47.967399597000053, 56.620105744000114 ], [ 47.924003600999981, 56.595005036000032 ], [ 47.858276368000134, 56.613182067000082 ], [ 47.891426087000127, 56.639892579000104 ], [ 47.952838897, 56.635433197000111 ], [ 47.967399597000053, 56.620105744000114 ] ] ] ] } }
+]
+}

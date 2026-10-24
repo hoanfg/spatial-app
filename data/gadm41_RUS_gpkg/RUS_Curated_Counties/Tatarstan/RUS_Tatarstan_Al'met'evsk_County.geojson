@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Tatarstan_Al'met'evsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tatarstan", "NAME_2": "Al'met'evsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 52.318347931000176, 54.884780883000133 ], [ 52.298305512000184, 54.881580353000174 ], [ 52.276195526000095, 54.896297455000195 ], [ 52.306201935000104, 54.907211303999986 ], [ 52.32394027600003, 54.899814605000017 ], [ 52.318347931000176, 54.884780883000133 ] ] ] ] } }
+]
+}

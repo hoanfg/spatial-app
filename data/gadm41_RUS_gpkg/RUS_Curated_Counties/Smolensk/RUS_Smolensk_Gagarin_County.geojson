@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Smolensk_Gagarin_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Smolensk", "NAME_2": "Gagarin" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 35.00222778300008, 55.53207779000013 ], [ 34.988315582000155, 55.529632568000125 ], [ 34.956787109000118, 55.541912079000156 ], [ 34.986671447000049, 55.566108705000033 ], [ 35.02175521900017, 55.554183961000149 ], [ 35.00222778300008, 55.53207779000013 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Tver'_Konakovo_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tver'", "NAME_2": "Konakovo" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 36.802413941000054, 56.674697877000085 ], [ 36.792427063000105, 56.673336029000041 ], [ 36.781406402000187, 56.682174683000028 ], [ 36.79473114100017, 56.688434600999983 ], [ 36.808288574000073, 56.683921814000087 ], [ 36.802413941000054, 56.674697877000085 ] ] ] ] } }
+]
+}

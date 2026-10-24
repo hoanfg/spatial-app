@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Voronezh_Rossosh'_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Voronezh", "NAME_2": "Rossosh'" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 39.659576416000107, 50.213890076000098 ], [ 39.682712555000137, 50.177185059000067 ], [ 39.55416107100001, 50.209861755000134 ], [ 39.545696259000067, 50.226131440000074 ], [ 39.618576050000058, 50.224754333000078 ], [ 39.659576416000107, 50.213890076000098 ] ] ] ] } }
+]
+}

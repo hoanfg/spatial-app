@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Vladimir_Murom_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Vladimir", "NAME_2": "Murom" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.08449935900012, 55.533164978000173 ], [ 42.085407256000167, 55.531738282000106 ], [ 42.084442138000043, 55.532089233000079 ], [ 41.972888946000069, 55.572765351000157 ], [ 41.981224059000056, 55.591457367000089 ], [ 42.043968201000098, 55.597202302000142 ], [ 42.08449935900012, 55.533164978000173 ] ] ] ] } }
+]
+}

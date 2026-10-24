@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Tambov_Kotovsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Tambov", "NAME_2": "Kotovsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 41.546890259000065, 52.544261933000143 ], [ 41.477622985999972, 52.539485932000105 ], [ 41.466499329000044, 52.577159882000103 ], [ 41.485458373000029, 52.586280822 ], [ 41.540134430000194, 52.580883027000084 ], [ 41.546890259000065, 52.544261933000143 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Stavropol'_Mineral'nye_Vody_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Stavropol'", "NAME_2": "Mineral'nye Vody" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 43.21335983299997, 44.188423157000102 ], [ 43.167545319, 44.177795409000055 ], [ 43.046527863000165, 44.209194183000079 ], [ 43.043083192000154, 44.242172241000048 ], [ 43.229164124000135, 44.226299287000131 ], [ 43.21335983299997, 44.188423157000102 ] ] ] ] } }
+]
+}

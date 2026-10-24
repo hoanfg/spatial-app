@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Ryazan'_Yermishinsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Ryazan'", "NAME_2": "Yermishinsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 42.341243744000053, 54.71897125300012 ], [ 42.302234649000127, 54.717281342000035 ], [ 42.270725250000112, 54.764381409000066 ], [ 42.285457610000151, 54.767517091000116 ], [ 42.336448670000152, 54.735439300000166 ], [ 42.341243744000053, 54.71897125300012 ] ] ] ] } }
+]
+}

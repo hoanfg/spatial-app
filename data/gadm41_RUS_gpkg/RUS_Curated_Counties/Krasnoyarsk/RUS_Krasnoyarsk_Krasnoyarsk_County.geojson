@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Krasnoyarsk_Krasnoyarsk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Krasnoyarsk", "NAME_2": "Krasnoyarsk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 93.038925170000198, 55.943965913000056 ], [ 92.993682860000149, 55.935558319 ], [ 92.793075562000126, 55.963417053000057 ], [ 92.7839965820001, 56.036544799000069 ], [ 93.016319276000104, 56.091384888999983 ], [ 93.075698853000063, 56.067375184000014 ], [ 93.038925170000198, 55.943965913000056 ] ] ] ] } }
+]
+}

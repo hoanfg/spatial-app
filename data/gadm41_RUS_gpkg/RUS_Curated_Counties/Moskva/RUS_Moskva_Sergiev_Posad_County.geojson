@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Moskva_Sergiev_Posad_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Moskva", "NAME_2": "Sergiev Posad" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 38.155033112000012, 56.299770356000124 ], [ 38.129333497, 56.275333406000073 ], [ 38.111145020000151, 56.281154634000131 ], [ 38.092910766000102, 56.302345277000086 ], [ 38.103599549000137, 56.319534302000079 ], [ 38.155033112000012, 56.299770356000124 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "RUS_Sverdlovsk_Nev'yansk_County",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "COUNTRY": "Russia", "GID_0": "RUS", "NAME_1": "Sverdlovsk", "NAME_2": "Nev'yansk" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 60.196846006999976, 57.476448059000063 ], [ 60.168727875000172, 57.469055175000165 ], [ 60.154022218000136, 57.489749908000135 ], [ 60.171642304000159, 57.495143890000179 ], [ 60.19153976399997, 57.493564606000064 ], [ 60.196846006999976, 57.476448059000063 ] ] ] ] } }
+]
+}
