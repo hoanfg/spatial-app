@@ -1449,36 +1449,23 @@ def run_pipeline():
             stage = "Station 3"
             status.update(label=L["st3"])
             
-            try:
-                # Đọc ảnh thẳng trên RAM, không ghi ổ cứng
-                import tempfile
-                with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
-                    tf.write(tif_bytes)
-                    tmp_path = tf.name
+            with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
+                tf.write(tif_bytes)
+                tmp_path = tf.name
 
-                stats = exact_extract(
-                    tmp_path,
-                    grid_wgs[["grid_id", "geometry"]],
-                    ["mean"],
-                    include_cols=["grid_id"],
-                    output="pandas",
-                )
-                
-                stats = exact_extract(
-                    tmp_path,
-                    grid_wgs[["grid_id", "geometry"]],
-                    ["mean"],
-                    include_cols=["grid_id"],
-                    output="pandas",
-                )
-                if os.path.exists(tmp_path):
-                    os.remove(tmp_path)
+            stats = exact_extract(
+                tmp_path,
+                grid_wgs[["grid_id", "geometry"]],
+                ["mean"],
+                include_cols=["grid_id"],
+                output="pandas",
+            )
             
             mean_col = next(c for c in stats.columns if "mean" in str(c).lower())
             stats = stats[["grid_id", mean_col]].rename(columns={mean_col: "ntl_mean"})
             stats["grid_id"] = pd.to_numeric(stats["grid_id"], errors="coerce").astype("int64")
             stats["ntl_mean"] = pd.to_numeric(stats["ntl_mean"], errors="coerce").fillna(0.0).clip(lower=0.0)
-
+            
             grid = grid.merge(stats, on="grid_id", how="left").reset_index(drop=True)
             grid["ntl_mean"] = grid["ntl_mean"].fillna(0.0).astype(float)
 
