@@ -1076,13 +1076,13 @@ def boundary_stats(path: str, mtime: float):
 
 
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
-def fetch_ntl_raster(bbox: tuple, year: int) -> bytes:
-    """Tải GeoTIFF NTL trung vị năm `year` có lọc mây (cf_cvg > 0) trong bbox (WGS84)."""
+def fetch_ntl_raster(bbox: tuple, year_id: int) -> bytes:
+    """Tải GeoTIFF NTL trung vị năm `year_id` có lọc mây (cf_cvg > 0) trong bbox (WGS84)."""
     minx, miny, maxx, maxy = bbox
     roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
     col = (
         ee.ImageCollection(GEE_DATASET)
-        .filterDate(f"{year}-01-01", f"{year + 1}-01-01")
+        .filterDate(f"{year_id}-01-01", f"{year_id + 1}-01-01")
         .filterBounds(roi)
     )
     if col.size().getInfo() == 0:
