@@ -16,7 +16,7 @@ jobs:
         run: |
           python - <<'EOF'
           from playwright.sync_api import sync_playwright
-          URL = "https://spatial-app-nq6xda5y4y5wek4hygc6wn.streamlit.app/"
+          URL = "https://spatial-app.streamlit.app/"
           with sync_playwright() as p:
               b = p.chromium.launch()
               page = b.new_page()
