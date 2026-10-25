@@ -1076,7 +1076,7 @@ def boundary_stats(path: str, mtime: float):
 
 
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
-def fetch_ntl_raster(bbox: tuple, year_id: int) -> bytes:
+def fetch_ntl_raster(bbox: tuple, year_id: int, _v: int = 2) -> bytes:
     """Tải GeoTIFF NTL trung vị năm `year_id` có lọc mây (cf_cvg > 0) trong bbox (WGS84)."""
     minx, miny, maxx, maxy = bbox
     roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
@@ -1449,9 +1449,27 @@ def run_pipeline():
             stage = "Station 3"
             status.update(label=L["st3"])
             
+            import rasterio
+            from rasterio.io import MemoryFile
+
+            # Đọc raster, ép về float32 chuẩn rồi ghi lại file sạch cho exactextract
+            with MemoryFile(tif_bytes) as mf:
+                with mf.open() as src:
+                    orig_dtype = src.dtypes[0]
+                    arr = src.read(1).astype("float32")
+                    crs, transform = src.crs, src.transform
+                    h, w = src.height, src.width
+            arr = np.nan_to_num(arr, nan=0.0, posinf=0.0, neginf=0.0)
+            arr = np.clip(arr, 0.0, None)
+
             with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
-                tf.write(tif_bytes)
                 tmp_path = tf.name
+            with rasterio.open(
+                tmp_path, "w", driver="GTiff", height=h, width=w, count=1,
+                dtype="float32", crs=crs, transform=transform,
+            ) as dst:
+                dst.write(arr, 1)
+            st.write(f"ℹ️ Raster dtype gốc: {orig_dtype} → float32")
 
             stats = exact_extract(
                 tmp_path,
