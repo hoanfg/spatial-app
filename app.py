@@ -1092,7 +1092,7 @@ def fetch_ntl_raster(bbox: tuple, year_id: int) -> bytes:
         # Loại bỏ các điểm ảnh có số quan sát không mây bằng 0 (cf_cvg == 0)
         return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
 
-    img = col.map(_mask_cloud_free).median().select("avg_rad").unmask(0.0).toDouble().clip(roi)
+    img = col.map(_mask_cloud_free).median().select("avg_rad").unmask(0.0).toFloat().clip(roi)
     url = img.getDownloadUrl(
         {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
     )
@@ -1451,23 +1451,18 @@ def run_pipeline():
             
             try:
                 # Đọc ảnh thẳng trên RAM, không ghi ổ cứng
-                import rasterio
-                from rasterio.io import MemoryFile
-                
-                with MemoryFile(tif_bytes) as memfile:
-                    with memfile.open() as src:
-                        stats = exact_extract(
-                            src,
-                            grid_wgs[["grid_id", "geometry"]],
-                            ["mean"],
-                            include_cols=["grid_id"],
-                            output="pandas",
-                        )
-            except ImportError:
-                # Dự phòng an toàn nếu máy chủ Cloud thiếu thư viện rasterio
-                tmp_path = f"temp_ntl_safe_{int(datetime.now().timestamp())}.tif"
-                with open(tmp_path, "wb") as f:
-                    f.write(tif_bytes)
+                import tempfile
+                with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
+                    tf.write(tif_bytes)
+                    tmp_path = tf.name
+
+                stats = exact_extract(
+                    tmp_path,
+                    grid_wgs[["grid_id", "geometry"]],
+                    ["mean"],
+                    include_cols=["grid_id"],
+                    output="pandas",
+                )
                 
                 stats = exact_extract(
                     tmp_path,
