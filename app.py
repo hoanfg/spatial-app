@@ -1442,7 +1442,7 @@ def run_pipeline():
             gx0, gy0, gx1, gy1 = grid_wgs.total_bounds
             pad = 0.005  # ~500m, đảm bảo raster phủ hết ô biên
             bbox = (round(gx0 - pad, 5), round(gy0 - pad, 5), round(gx1 + pad, 5), round(gy1 + pad, 5))
-            tif_bytes = fetch_ntl_raster(bbox, int(year))
+            tif_bytes = fetch_ntl_raster(bbox, year_id=int(year))
             st.write("✅ " + L["ok2"].format(y=year))
 
             # ---------- Trạm 3 ----------
