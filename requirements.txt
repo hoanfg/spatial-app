@@ -12,3 +12,4 @@ jinja2
 earthengine-api
 exactextract
 pycountry
+rasterio
