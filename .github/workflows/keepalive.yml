@@ -1,7 +1,7 @@
 name: keep-streamlit-awake
 on:
   schedule:
-    - cron: "0 */6 * * *"   # mỗi 6 giờ
+    - cron: "0 */6 * * *" 
   workflow_dispatch:
 
 jobs:
