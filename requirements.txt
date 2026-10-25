@@ -10,5 +10,5 @@ altair
 requests
 jinja2
 earthengine-api
-exactextract==0.2.0
+exactextract
 pycountry
