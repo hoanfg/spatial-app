@@ -1090,7 +1090,7 @@ def fetch_ntl_raster(bbox: tuple, year: int) -> bytes:
         # Loại bỏ các điểm ảnh có số quan sát không mây bằng 0 (cf_cvg == 0)
         return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
 
-    img = col.map(_mask_cloud_free).median().unmask(0).clip(roi)
+    img = col.map(_mask_cloud_free).median().unmask(0).toFloat().clip(roi)
     url = img.getDownloadUrl(
         {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
     )
