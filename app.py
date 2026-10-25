@@ -563,6 +563,7 @@ TEXT = {
         "guide_title": "### 📖 Hướng dẫn đọc dữ liệu",
         "g_tab_cols": ["Nhóm", "Ngưỡng NTL (nW/cm²/sr)", "Diễn giải"],
         "g_code_title": "Ví dụ dùng CSV trong hồi quy và kiểm tra tự tương quan không gian",
+        "err_tiff": "GEE trả về dữ liệu rác không phải GeoTIFF. Vui lòng thử lại.",
     },
     "en": {
         "title": "🌙 Nighttime Lights (NTL) Extraction Engine",
@@ -704,6 +705,7 @@ TEXT = {
         "guide_title": "### 📖 Reading guide (for analysts / investors / researchers)",
         "g_tab_cols": ["Class", "NTL threshold (nW/cm²/sr)", "Interpretation"],
         "g_code_title": "Example: using the CSV in a regression and testing spatial autocorrelation",
+        "err_tiff": "GEE returned invalid non-GeoTIFF data. Please try again.",
     },
 }
 
@@ -1090,20 +1092,26 @@ def fetch_ntl_raster(bbox: tuple, year: int) -> bytes:
         # Loại bỏ các điểm ảnh có số quan sát không mây bằng 0 (cf_cvg == 0)
         return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
 
-    img = col.map(_mask_cloud_free).median().unmask(0).toFloat().clip(roi)
+    img = col.map(_mask_cloud_free).median().select("avg_rad").unmask(0.0).toFloat().clip(roi)
     url = img.getDownloadUrl(
         {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
     )
     resp = requests.get(url, timeout=180)
     if resp.status_code != 200:
         raise ConnectionError(f"HTTP:{resp.status_code}")
+        
     content = resp.content
+    
     if content[:2] == b"PK":
         with zipfile.ZipFile(io.BytesIO(content)) as z:
             tif_names = [n for n in z.namelist() if n.lower().endswith(".tif")]
             if not tif_names:
                 raise ValueError("ZIP without .tif")
             content = z.read(tif_names[0])
+            
+    if content[:2] not in (b"II", b"MM"):
+        raise ValueError(L["err_tiff"])
+        
     return content
 
 
