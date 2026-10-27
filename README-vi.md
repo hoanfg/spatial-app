@@ -25,7 +25,7 @@ Dự án này là một hệ thống thiết kế cho **kinh tế lượng khôn
 
 ## CHƯƠNG 1: TỔNG QUAN KIẾN TRÚC HỆ THỐNG VÀ QUẢN TRỊ TÀI NGUYÊN
 
-Hệ thống được thiết kế không chỉ như một công cụ trích xuất dữ liệu viễn thám, mà là một cỗ máy xử lý không gian hoạt động trên môi trường Web, kết nối trực tiếp quy trình tiền xử lý địa lý (GIS) với các mô hình kinh tế lượng không gian.
+Hệ thống được thiết kế không chỉ như một công cụ trích xuất dữ liệu viễn thám, mà là một công cụ xử lý không gian hoạt động trên môi trường Web, kết nối trực tiếp quy trình tiền xử lý địa lý (GIS) với các mô hình kinh tế lượng không gian.
 
 ### 1.1. Kiến trúc phân tầng 4-tier
 
