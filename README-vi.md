@@ -41,7 +41,7 @@ Hệ thống được thiết kế không chỉ như một công cụ trích xu�
   Máy chủ gửi truy vấn không gian tới Google Earth Engine (GEE) API để lọc mây, tổng hợp trung vị năm và cắt ảnh raster theo ranh giới vùng phân tích. Luồng byte-stream của ảnh GeoTIFF được nạp vào bộ nhớ tạm để **C/C++ engine** (`exactextract`) thực hiện tính toán thống kê vùng theo tỷ lệ phủ diện tích điểm ảnh giữa lưới Vector và Raster.
 
 * **Tier 4:** 
-  Tính toán kinh tế lượng không gian (Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini) và kết xuất bản đồ tương tác đa lớp (Folium/Leaflet). Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu dưới dạng tệp CSV cấp độ ô lưới và cấp độ vùng – năm.
+  Tính toán kinh tế lượng không gian (Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini) và kết xuất bản đồ tương tác đa lớp (Folium/Leaflet). Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu dưới dạng tệp CSV cấp độ ô lưới và cấp độ vùng - năm.
 
 ### 1.2. Giới hạn phần cứng và cơ chế phòng thủ "out-of-memory" (OOM) trên Cloud
 
