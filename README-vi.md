@@ -87,7 +87,7 @@ $$
 \mathrm{EPSG} = \begin{cases} 32600 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} \ge 0 \text{ (Bắc bán cầu)} \\ 32700 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} < 0 \text{ (Nam bán cầu)} \end{cases}
 $$
 
-Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới đều được căn chuẩn theo bội số nguyên của kích thước cạnh ô $\mathrm{size}$ trong không gian phẳng UTM, đảm bảo lưới của các quận/huyện liền kề khớp nhau tuyệt đối khi ghép nối.
+Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới đều được căn chuẩn theo bội số nguyên của kích thước cạnh ô $\mathrm{size}$ trong không gian phẳng UTM, đảm bảo lưới của các quận/huyện liền kề khớp nhau khi ghép nối.
 
 ### 2.2. Lọc mây trên GEE và trích xuất Zonal statistics bằng tỷ lệ phủ (fractional coverage)
 
