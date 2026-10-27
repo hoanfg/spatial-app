@@ -89,7 +89,7 @@ COUNTRY_NAMES = {
     "BGR": ("Bulgaria", "Bulgaria"), "GRC": ("Hy Lạp", "Greece"), "TUR": ("Thổ Nhĩ Kỳ", "Türkiye"),
     "RUS": ("Nga", "Russia"), "UKR": ("Ukraine", "Ukraine"), "SWE": ("Thụy Điển", "Sweden"),
     "NOR": ("Na Uy", "Norway"), "DNK": ("Đan Mạch", "Denmark"), "FIN": ("Phần Lan", "Finland"),
-    "ISL": ("Iceland", "Iceland"),
+    "ISL": ("Iceland", "Iceland"), "HRV": ("Croatia", "Croatia"),
     "SAU": ("Ả Rập Xê Út", "Saudi Arabia"), "ARE": ("Các Tiểu vương quốc Ả Rập Thống nhất", "United Arab Emirates"),
     "QAT": ("Qatar", "Qatar"), "ISR": ("Israel", "Israel"), "IRN": ("Iran", "Iran"), "IRQ": ("Iraq", "Iraq"),
     "EGY": ("Ai Cập", "Egypt"), "ZAF": ("Nam Phi", "South Africa"), "NGA": ("Nigeria", "Nigeria"),
