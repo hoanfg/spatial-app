@@ -36,7 +36,9 @@ except Exception:  # pragma: no cover
 # ==========================================
 st.set_page_config(page_title="NTL Data Extractor", page_icon="🌙", layout="wide")
 
-if str(st.secrets.get("MAINTENANCE_MODE", "false")).lower() in ["true", "1"]:
+MAINTENANCE_MODE = True
+
+if MAINTENANCE_MODE:
     st.markdown(
         """
         <div style="text-align: center; padding: 50px 20px;">
