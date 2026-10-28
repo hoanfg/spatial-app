@@ -42,7 +42,7 @@ if MAINTENANCE_MODE:
     st.markdown(
         """
         <div style="text-align: center; padding: 50px 20px;">
-            <h1 style="font-size: 2.5rem;">🛠️ System Under Maintenance</h1>
+            <h1 style="font-size: 2.5rem;">🛠️ System under maintenance</h1>
             <p style="font-size: 1.2rem; color: #aab0bb; max-width: 600px; margin: 20px auto;">
                 The platform is temporarily offline for spatial methodology and econometric framework upgrades.
             </p>
