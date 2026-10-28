@@ -40,56 +40,43 @@ MAINTENANCE_MODE = True
 
 if MAINTENANCE_MODE:
     st.markdown(
-        """
-        <div style="max-width: 720px; margin: 40px auto; padding: 30px; background: rgba(255,255,255,0.03); 
-                    border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
-                <span style="font-size: 2rem;">🔬</span>
-                <div>
-                    <h2 style="margin: 0; font-size: 1.6rem; color: #fff;">Spatial Econometrics Platform</h2>
-                    <span style="font-size: 0.85rem; color: #aab0bb;">Nighttime Lights (NTL) Analytical Engine</span>
-                </div>
-            </div>
-            
-            <div style="display: inline-block; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.4); 
-                        color: #00e5ff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px;">
-                ● ACTIVE R&D / METHODOLOGY REFACTORING
-            </div>
-
-            <p style="color: #cbd5e1; line-height: 1.6; font-size: 0.95rem;">
-                The interactive extractor is temporarily paused while we restructure the core econometric framework 
-                (upgrading spatial contiguity matrix standards, controlling for MAUP bias, and refining local spatial panel estimators).
-            </p>
-
-            <div style="margin: 25px 0; padding: 16px; background: rgba(0,0,0,0.25); border-radius: 10px; border-left: 3px solid #ffb703;">
-                <div style="font-size: 0.85rem; font-weight: 700; color: #ffd166; margin-bottom: 8px;">CURRENT MILESTONES:</div>
-                <div style="font-size: 0.85rem; color: #94a3b8; line-height: 1.8;">
-                    ✅ <b>Phase 1:</b> VIIRS Nighttime Lights Cloud-to-Local Extraction (~463m)<br>
-                    🔄 <b>Phase 2:</b> Spatial Weights & Econometric Methodology Upgrade (Current focus)<br>
-                    ⏳ <b>Phase 3:</b> Public UI Relaunch & Empirical Documentation (Post-Exam / Late 2026)
-                </div>
-            </div>
-
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 25px;">
-                Hệ thống đang tạm ngừng giao diện để hoàn thiện phương pháp luận kinh tế lượng không gian. 
-                Dự án vẫn được bảo trì và phát triển tích cực trong khuôn khổ nghiên cứu học thuật.
-            </p>
-
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                <a href="https://github.com/hoanfg/spatial-app" target="_blank" 
-                   style="text-decoration: none; background: #238636; color: #fff; padding: 8px 18px; 
-                          border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
-                    ⭐ Follow on GitHub (Get notified)
-                </a>
-                <a href="https://github.com/hoanfg/spatial-app/issues" target="_blank" 
-                   style="text-decoration: none; background: rgba(255,255,255,0.08); color: #cbd5e1; padding: 8px 18px; 
-                          border-radius: 6px; font-size: 0.85rem; font-weight: 500;">
-                    💬 Open an Issue / Inquiry
-                </a>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+"""
+<div style="max-width: 720px; margin: 40px auto; padding: 30px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+<span style="font-size: 2rem;">🔬</span>
+<div>
+<h2 style="margin: 0; font-size: 1.6rem; color: #fff;">Spatial Econometrics Platform</h2>
+<span style="font-size: 0.85rem; color: #aab0bb;">Nighttime Lights (NTL) Analytical Engine</span>
+</div>
+</div>
+<div style="display: inline-block; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.4); color: #00e5ff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px;">
+● ACTIVE R&D / METHODOLOGY REFACTORING
+</div>
+<p style="color: #cbd5e1; line-height: 1.6; font-size: 0.95rem;">
+The interactive extractor is temporarily paused while we restructure the core econometric framework (upgrading spatial contiguity matrix standards, controlling for MAUP bias, and refining local spatial panel estimators).
+</p>
+<div style="margin: 25px 0; padding: 16px; background: rgba(0,0,0,0.25); border-radius: 10px; border-left: 3px solid #ffb703;">
+<div style="font-size: 0.85rem; font-weight: 700; color: #ffd166; margin-bottom: 8px;">CURRENT MILESTONES:</div>
+<div style="font-size: 0.85rem; color: #94a3b8; line-height: 1.8;">
+✅ <b>Phase 1:</b> VIIRS Nighttime Lights Cloud-to-Local Extraction (~463m)<br>
+🔄 <b>Phase 2:</b> Spatial Weights & Econometric Methodology Upgrade (Current focus)<br>
+⏳ <b>Phase 3:</b> Public UI Relaunch & Empirical Documentation (Post-Exam / Late 2026)
+</div>
+</div>
+<p style="font-size: 0.85rem; color: #64748b; margin-bottom: 25px;">
+Hệ thống đang tạm ngừng giao diện để hoàn thiện phương pháp luận kinh tế lượng không gian. Dự án vẫn được bảo trì và phát triển tích cực trong khuôn khổ nghiên cứu học thuật.
+</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+<a href="https://github.com/hoanfg/spatial-app" target="_blank" style="text-decoration: none; background: #238636; color: #fff; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
+⭐ Follow on GitHub (Get Notified)
+</a>
+<a href="https://github.com/hoanfg/spatial-app/issues" target="_blank" style="text-decoration: none; background: rgba(255,255,255,0.08); color: #cbd5e1; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: 500;">
+💬 Open an Issue / Inquiry
+</a>
+</div>
+</div>
+""",
+        unsafe_allow_html=True,
     )
     st.stop()
 
