@@ -36,6 +36,27 @@ except Exception:  # pragma: no cover
 # ==========================================
 st.set_page_config(page_title="NTL Data Extractor", page_icon="🌙", layout="wide")
 
+if st.secrets.get("MAINTENANCE_MODE", False):
+    st.markdown(
+        """
+        <div style="text-align: center; padding: 50px 20px;">
+            <h1 style="font-size: 2.5rem;">🛠️ System Under Maintenance</h1>
+            <p style="font-size: 1.2rem; color: #aab0bb; max-width: 600px; margin: 20px auto;">
+                The platform is temporarily offline for spatial methodology and econometric framework upgrades.
+            </p>
+            <div style="display: inline-block; background: rgba(255, 183, 3, 0.1); border: 1px solid #ffb703; 
+                        padding: 10px 24px; border-radius: 8px; font-weight: 600; color: #ffb703; margin-top: 10px;">
+                ⏳ Estimated completion: After October 31, 2026
+            </div>
+            <p style="font-size: 0.9rem; color: #6c7a89; margin-top: 30px;">
+                Hệ thống đang tạm đóng để nâng cấp lõi phương pháp luận không gian. Dự kiến mở lại sau ngày 31/10/2026.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    st.stop()
+
 DATA_ROOT = os.environ.get("NTL_DATA_ROOT", "data")
 GEE_DATASET = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG"
 GEE_SCALE_M = 463.83          # độ phân giải gốc VIIRS (~15 arc-sec)
