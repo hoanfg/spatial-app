@@ -572,12 +572,13 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
     dz = z1 - z0
     dlag = lag1 - lag0
     vec_mag = np.sqrt(dz ** 2 + dlag ** 2)
+    moved = ok & (vec_mag >= 0.05)
 
     regime = np.full(n, "Excluded_or_Static", dtype=object)
-    regime[ok & (dz >= 0) & (dlag >= 0)] = SPACETIME_REGIMES[0]
-    regime[ok & (dz < 0) & (dlag >= 0)] = SPACETIME_REGIMES[1]
-    regime[ok & (dz >= 0) & (dlag < 0)] = SPACETIME_REGIMES[2]
-    regime[ok & (dz < 0) & (dlag < 0)] = SPACETIME_REGIMES[3]
+    regime[moved & (dz >= 0) & (dlag >= 0)] = SPACETIME_REGIMES[0]
+    regime[moved & (dz < 0) & (dlag >= 0)] = SPACETIME_REGIMES[1]
+    regime[moved & (dz >= 0) & (dlag < 0)] = SPACETIME_REGIMES[2]
+    regime[moved & (dz < 0) & (dlag < 0)] = SPACETIME_REGIMES[3]
 
     # Tính Recentered Market Access cho cả t0 và t1 để xuất biến sai phân chuẩn Borusyak & Hull (2023)
     _, _, rec_ma0 = compute_recentered_market_access(cx, cy, ntl0 * area, core, cell_size_m)
