@@ -987,8 +987,9 @@ section[data-testid="stSidebar"] hr{margin:.6rem 0}
 </style>
 """
 st.markdown(APP_CSS, unsafe_allow_html=True)
-from ui_theme import inject_theme, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
+from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
 inject_theme()
+enable_fx()
 
 # 3. GOOGLE EARTH ENGINE INIT
 @st.cache_resource(show_spinner=False)
@@ -1584,6 +1585,8 @@ def run_pipeline():
 
 if run_btn and not fuse_blocked:   # chốt chặn kép: nút đã bị khóa, điều kiện này phòng trường hợp rerun lệch trạng thái
     st.session_state["result"] = run_pipeline()
+    if st.session_state["result"]:
+        st.toast(L["st4"], icon="🌙")
 
 res = st.session_state.get("result")
 if not res:
