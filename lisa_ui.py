@@ -609,9 +609,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with col_ring:
         with st.container(border=True):
             st.markdown(
-                "**🎯 Vành đai Lan tỏa Nhân quả (Butts, 2024)**"
+                "**🎯 Vành đai lan tỏa nhân quả**"
                 if is_vi else
-                "**🎯 Causal Spillover Rings (Butts, 2024)**"
+                "**🎯 Causal spillover rings**"
             )
             ring_arr = cdf["spillover_ring"].to_numpy()
             ntl_arr = grid_utm["ntl_mean"].to_numpy(float)
@@ -631,9 +631,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with col_rdd:
         with st.container(border=True):
             st.markdown(
-                "**📉 Đường cong Suy giảm & Gián đoạn Ranh giới Đô thị (Spatial RDD)**"
+                "**📉 Đường cong suy giảm & Gián đoạn ranh giới đô thị**"
                 if is_vi else
-                "**📉 Urban Boundary Discontinuity & Spillover Decay (Spatial RDD)**"
+                "**📉 Urban boundary discontinuity & Spillover decay (Spatial RDD)**"
             )
             rdd_df = pd.DataFrame({
                 "signed_d": cdf["signed_dist_hh_km"].to_numpy(float),
