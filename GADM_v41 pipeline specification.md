@@ -27,7 +27,7 @@ When automatically processing GeoPackage files (`gadm41_XXX.gpkg`), there are 5 
    * **Mandatory rule:** Always group (`groupby`) by the unique identifier key `GID_x` (such as `GID_2`, `GID_3`) instead of `NAME_x`. If two different `GID_x` values in the same folder have the same `NAME_x`, automatically append a suffix using `ENGTYPE_x` or the `GID_x` code.
 
 4. **The micro-fragmentation trap:**
-   The native resolution of monthly VIIRS DNB satellite imagery is $$\approx 463.83 \text{ m}$$ (pixel area $\approx 0.215 \text{ km}^2$), and the LISA/Moran's I testing algorithm in the system requires at least $N \ge 30$ grid cells to make statistically meaningful inferences. With standard grids of $$500 \text{ km}^2$$ - $$1000 \text{ km}^2$$, the ideal analysis unit should have a minimum area ranging from $$10 \text{ km}^2$$ to $$5,000 \text{ km}^2$$ (equivalent to the district/county/city level). If the script automatically reads the deepest layer (`ADM_3` or `ADM_4`) for every country, countries such as Vietnam, France, Thailand, and Indonesia will be pushed down to the commune/ward level ($$0.2 - 5 \text{ km}^2$$, crippling LISA testing).
+   The native resolution of monthly VIIRS DNB satellite imagery is $$\approx 463.83 \text{ m}$$ (pixel area $\approx 0.215 \text{ km}^2$), and the LISA/Moran's I testing algorithm in the system requires at least $N \ge 30$ grid cells to make statistically meaningful inferences. With standard grids of $$500 \text{ m}$$ - $$1000 \text{ m}$$, the ideal analysis unit should have a minimum area ranging from $$10 \text{ km}^2$$ to $$5,000 \text{ km}^2$$ (equivalent to the district/county/city level). If the script automatically reads the deepest layer (`ADM_3` or `ADM_4`) for every country, countries such as Vietnam, France, Thailand, and Indonesia will be pushed down to the commune/ward level ($$0.2 - 5 \text{ km}^2$$, crippling LISA testing).
 
 5. **The urban-rural administrative hierarchy asymmetry trap:**
    Some countries have large metropolitan areas directly under the central government or urban counties with a missing intermediate level (such as `GBR`, where Metropolitan counties and Unitary authorities have `NAME_2 == "NA"`; or `CHN`, where the four centrally administered municipalities of Beijing, Shanghai, Tianjin, and Chongqing appear directly in `NAME_1`).
@@ -56,7 +56,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 
 ### Group 1: `STANDARD_ADM2` (Standard Level 2, covering ~85% of countries)
 
-* **Characteristics:** Level 1 (`NAME_1`) is a state/province/centrally administered city; Level 2 (`NAME_2`) is a district/county/county-equivalent/city within a province, covers 100% of the territory, and has an ideal area scale for the NTL grid ($$500 \text{ km}^2$$ - $$2000 \text{ km}^2$$).
+* **Characteristics:** Level 1 (`NAME_1`) is a state/province/centrally administered city; Level 2 (`NAME_2`) is a district/county/county-equivalent/city within a province, covers 100% of the territory, and has an ideal area scale for the NTL grid (grid resolution $$500 \text{ m}$$ - $$2000 \text{ m}$$).
 
 * **Extraction configuration:**
   * `layer`: `ADM_ADM_2`
