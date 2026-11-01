@@ -1,5 +1,5 @@
 import html as html_lib
-import inspect  # noqa: F401  (giữ để tương thích mở rộng)
+import inspect  # noqa: F401
 import gettext
 import io
 import json
@@ -31,10 +31,8 @@ try:
 except Exception:  # pragma: no cover
     pycountry = None
 
-# ==========================================
 # 0. CONFIG
-# ==========================================
-st.set_page_config(page_title="NTL Spatial Econometrics - R&D", page_icon="🌙", layout="wide")
+st.set_page_config(page_title="NTL Spatial econometrics", page_icon="🌙", layout="wide")
 
 MAINTENANCE_MODE = False
 
@@ -103,11 +101,7 @@ CLASS_TEXT_COLORS = ["#111111", "#111111", "#111111", "#ffffff", "#ffffff"]
 LOCAL_COLORS = ["#ffb703", "#6c7a89", "#2b6cb0", "#2a2a33"]
 
 
-# ==========================================
-# 1. TÊN HIỂN THỊ (BEGIN NAMES) — Việt Nam / Hà Nội / Hoàn Kiếm
-# ==========================================
-# ISO3 -> (tên tiếng Việt, tên tiếng Anh). Quốc gia không có ở đây vẫn được xử lý
-# tự động qua `pycountry` (nếu cài) hoặc file data/country_names.json.
+# 1. TÊN HIỂN THỊ (BEGIN NAMES)
 COUNTRY_NAMES = {
     "VNM": ("Việt Nam", "Vietnam"), "THA": ("Thái Lan", "Thailand"), "LAO": ("Lào", "Laos"),
     "KHM": ("Campuchia", "Cambodia"), "MMR": ("Myanmar", "Myanmar"), "MYS": ("Malaysia", "Malaysia"),
@@ -154,7 +148,7 @@ CHINA_PROVINCES = {
 
 @st.cache_data(show_spinner=False)
 def load_china_districts():
-    """Tải từ điển Hán-Việt 2900+ quận huyện Trung Quốc từ file JSON (kèm bảng băm O(1))."""
+    """Tải từ điển Hán-Việt 2900+ quận huyện Trung Quốc từ file JSON (kèm bảng O(1))."""
     dict_path = os.path.join(DATA_ROOT, "china_districts_hanzi.json")
     try:
         with open(dict_path, "r", encoding="utf-8") as f:
@@ -181,7 +175,7 @@ COUNTY_SUFFIXES = {
 
 
 def _nfc(s):
-    """Chuẩn hóa Unicode NFC (tên file Linux/macOS hay ở dạng NFD -> hiển thị lỗi dấu)."""
+    """Chuẩn hóa Unicode NFC"""
     return unicodedata.normalize("NFC", str(s))
 
 
@@ -193,7 +187,6 @@ def _fold(s):
 
 
 def _natkey(s):
-    """Sắp xếp tự nhiên, bỏ dấu: 'Quận 2' < 'Quận 10'."""
     parts = re.split(r"(\d+)", _fold(s))
     return [int(p) if i % 2 else p for i, p in enumerate(parts)]
 
@@ -217,7 +210,6 @@ def _is_valid_iso(iso):
 
 
 def resolve_iso(folder, dataset=None):
-    """Suy ra mã ISO3 từ tên thư mục quốc gia, tên bộ dữ liệu (gadm41_XXX_gpkg) hoặc tên nước. '' nếu không rõ."""
     iso = iso3_of(folder)
     if _is_valid_iso(iso):
         return iso
@@ -239,7 +231,7 @@ def resolve_iso(folder, dataset=None):
 
 @st.cache_data(show_spinner=False, ttl=30)
 def _name_overrides(root):
-    """Đọc data/country_names.json: {"THA": {"vi": "Thái Lan", "en": "Thailand"}}."""
+    """Đọc data/country_names.json: {"THA": {"vi": "Thái Lan", "en": "Thailand"}}"""
     try:
         with open(os.path.join(root, "country_names.json"), encoding="utf-8") as fh:
             raw = json.load(fh)
@@ -254,7 +246,7 @@ def _name_overrides(root):
 
 
 def _pycountry_vi(c):
-    """Tên tiếng Việt từ bản dịch của pycountry (nếu có)."""
+    """Tên tiếng Việt từ bản dịch của pycountry (nếu có)"""
     try:
         t = gettext.translation("iso3166-1", pycountry.LOCALES_DIR, languages=["vi"])
         s = t.gettext(c.name)
@@ -264,7 +256,7 @@ def _pycountry_vi(c):
 
 
 def country_name(info, lang="vi"):
-    """Tên quốc gia theo thứ tự ưu tiên: country_names.json -> bảng tích hợp -> pycountry -> tên thư mục."""
+    """Tên quốc gia theo thứ tự ưu tiên: country_names.json -> bảng tích hợp -> pycountry -> tên thư mục"""
     iso, folder = info.get("iso3", ""), info.get("folder", "")
     ov = _name_overrides(DATA_ROOT)
     for k in (iso, str(folder).upper()):
@@ -284,13 +276,11 @@ def country_name(info, lang="vi"):
 
 
 def country_label(key, lang="vi"):
-    """Khóa quốc gia (vd 'gadm41_VNM_gpkg/VNM_Curated_Provinces') -> 'Việt Nam' / 'Vietnam'."""
     info = COUNTRIES.get(key) or {"folder": str(key).split("/")[-1], "iso3": ""}
     return country_name(info, lang)
 
 
 def _split_camel(s):
-    """'HàNội' -> 'Hà Nội' (GADM hay viết liền tên); nhận biết chữ có dấu."""
     out = []
     for i, ch in enumerate(s):
         if i and ch.isupper() and s[i - 1].islower():
@@ -300,7 +290,7 @@ def _split_camel(s):
 
 
 def clean_county(name, iso="", lang="vi"):
-    """Chuẩn hóa tên quận/huyện sang Hán - Việt với tốc độ tra cứu O(1)."""
+    """Chuẩn hóa tên quận/huyện sang Hán - Việt"""
     if iso != "CHN" or lang != "vi" or not CHINA_DISTRICTS:
         return name
 
@@ -340,7 +330,6 @@ def clean_state(folder, iso="", lang="vi"):
     clean = re.sub(r"\s+", " ", " ".join(tokens)).strip()
 
     if iso == "CHN":
-        # Khớp tiền tố tỉnh dài nhất trong CHINA_PROVINCES (hỗ trợ cả tỉnh 2 từ như 'Nei Mongol', 'Xinjiang Uygur')
         words = clean.split()
         for k in range(min(3, len(words)), 0, -1):
             prov_en = " ".join(words[:k])
@@ -368,7 +357,6 @@ def split_county(stem, state_name):
         tokens = tokens[n:]
     removed = []
     while len(tokens) > 1 and _fold(tokens[-1]) in COUNTY_SUFFIXES:
-        # Không cắt từ "City" nếu trước đó là "of" (vd: "Bristol, City of")
         if _fold(tokens[-1]) == "city" and len(tokens) >= 2 and _fold(tokens[-2]) == "of":
             break
         removed.insert(0, tokens.pop())
@@ -377,7 +365,6 @@ def split_county(stem, state_name):
 
 
 def subdirs(path):
-    """Thư mục con (bỏ thư mục ẩn/rác như .git, __MACOSX), sắp xếp tự nhiên."""
     if not os.path.isdir(path):
         return []
     return sorted(
@@ -401,8 +388,6 @@ def _is_country_dir(p):
 
 @st.cache_data(show_spinner=False, ttl=30)
 def discover_countries(root):
-    """Quét `root` và trả về {khóa: {key, path, folder, dataset, iso3}} cho MỌI quốc gia tìm thấy.
-    Thêm quốc gia mới = chỉ cần thả thư mục vào `root`, không phải sửa code/đường dẫn."""
     out = {}
 
     def add(path, dataset):
@@ -428,7 +413,6 @@ COUNTRIES = discover_countries(DATA_ROOT)
 
 @st.cache_data(show_spinner=False, ttl=30)
 def list_counties(country_path, state):
-    """Trả về {tên_file: tên_hiển_thị} (sắp xếp tự nhiên, không trùng nhãn)."""
     p = os.path.join(country_path, state)
     if not os.path.isdir(p):
         return {}
@@ -459,14 +443,11 @@ def slugify(s):
 # END NAMES
 
 
-# ==========================================
 # 2. SONG NGỮ
-# ==========================================
 TEXT = {
     "vi": {
         "title": "🌙 Công cụ trích xuất ánh sáng ban đêm (NTL)",
-        "subtitle": "Kiến trúc: tải raster từ Cloud về máy chủ + động cơ C/C++ (`exactextract`). "
-                    "Thiết kế cho kinh tế lượng không gian (chống lỗi MAUP, độ phân giải gốc ~463m).",
+        "subtitle": "Thiết kế cho kinh tế lượng không gian",
         "sb_spatial": "1. Tham số không gian",
         "country": "Quốc gia - Hiện vẫn đang cập nhật và bổ sung",
         "state": "Bang / Tỉnh / Thành phố",
@@ -501,7 +482,7 @@ TEXT = {
         "tab_data": "📋 Dữ liệu",
         "tab_guide": "📖 Hướng dẫn đọc",
         "caption": "Cường độ ánh sáng ban đêm ({y}) - nW/cm²/sr",
-        # --- bản đồ ---
+        # bản đồ
         "color_mode": "Chế độ màu",
         "color_names": {"ntl": "Cường độ NTL", "class": "Nhóm kinh tế", "local": "Vị thế nội bộ"},
         "scale": "Thang màu (chế độ NTL)",
@@ -519,13 +500,13 @@ TEXT = {
         "layer_bound": "Ranh giới",
         "layer_top": "Top 10 điểm sáng",
         "layer_mask": "Vùng ngoài ranh giới",
-        "render_cap": "Địa phương có {n:,} ô; bản đồ chỉ vẽ {c:,} ô sáng nhất để trình duyệt chạy mượt (CSV vẫn đầy đủ).",
+        "render_cap": "Địa phương có {n:,} ô; bản đồ chỉ vẽ {c:,} ô sáng nhất để trình duyệt chạy mượt.",
         "legend_class": "Nhóm kinh tế (Global)",
         "legend_local": "Vị thế nội bộ (Local)",
         "p_mean": "TB",
         "p_max": "Cao nhất",
         "p_lit": "Ô sáng",
-        # --- đầu dò ---
+        # đầu dò
         "tt": {"cell": "Ô", "area": "📐 Diện tích đo lường", "ratio": "⚖️ So với TB địa phương",
                "rank": "🏆 Thứ hạng sáng", "pct": "📈 Phân vị", "share": "🔆 Tỷ trọng tổng ánh sáng",
                "z": "📊 Độ lệch chuẩn (z)", "sol": "💠 Tổng ánh sáng ô (SOL)", "xy": "📍 Tâm ô (lat, lon)",
@@ -537,7 +518,7 @@ TEXT = {
         # thứ tự: 0 = Top 25%, 1 = Giữa, 2 = Bottom 25%, 3 = Không sáng
         "rank": ["Top 25% (Tâm điểm kinh tế của địa phương)", "Mức phát triển trung bình của địa phương",
                  "Bottom 25% (Vùng trũng của địa phương)", "Không có ánh sáng đáng kể"],
-        # --- dữ liệu ---
+        # dữ liệu
         "sec_take": "💡 Nhận định nhanh",
         "take": [
             "🔆 **Điểm sáng nhất:** ô **#{gid}** (lat {lat:.4f}, lon {lon:.4f}) có NTL = **{mx:.2f}**, "
@@ -611,8 +592,7 @@ TEXT = {
     },
     "en": {
         "title": "🌙 Nighttime lights (NTL) extraction engine",
-        "subtitle": "Architecture: Cloud-to-Local raster fetch + C/C++ engine (`exactextract`). "
-                    "Built for Spatial econometrics (MAUP-resistant, native ~463m resolution).",
+        "subtitle": "Built for Spatial econometrics",
         "sb_spatial": "1. Spatial parameters",
         "country": "Country - Status: Currently updating",
         "state": "State / Province / City",
@@ -664,7 +644,7 @@ TEXT = {
         "layer_bound": "Boundary",
         "layer_top": "Top 10 hotspots",
         "layer_mask": "Outside boundary",
-        "render_cap": "This area has {n:,} cells; the map draws only the {c:,} brightest to keep the browser smooth (CSV stays complete).",
+        "render_cap": "This area has {n:,} cells; the map draws only the {c:,} brightest to keep the browser smooth",
         "legend_class": "Economic class (Global)",
         "legend_local": "Local standing",
         "p_mean": "Mean",
@@ -922,9 +902,8 @@ print(Moran(res.resid.to_numpy(), w).I)
 *         reg ln_outcome ln_ntl [aweight = area_km2], vce(robust)
 '''
 
-LANG = "vi"  # được cập nhật ngay sau khi người dùng chọn ngôn ngữ
+LANG = "vi"
 
-# Ngôn ngữ phải được chọn trước mọi widget khác
 with st.sidebar:
     lang_choice = st.radio("🌐 Language / Ngôn ngữ", ["Tiếng Việt", "English"], key="lang_choice",
                        help="Đổi ngôn ngữ giao diện / Switch interface language")
@@ -939,7 +918,6 @@ def fill(text, **kw):
 
 
 def sx(fn, *args, **kwargs):
-    """Tương thích Streamlit mới (width='stretch') và cũ (use_container_width=True)."""
     try:
         return fn(*args, width="stretch", **kwargs)
     except Exception:  # noqa: BLE001
@@ -992,9 +970,7 @@ section[data-testid="stSidebar"] hr{margin:.6rem 0}
 """
 st.markdown(APP_CSS, unsafe_allow_html=True)
 
-# ==========================================
 # 3. GOOGLE EARTH ENGINE INIT
-# ==========================================
 @st.cache_resource(show_spinner=False)
 def init_gee():
     """Trả về (ok, message). Chạy 1 lần cho mỗi phiên máy chủ."""
@@ -1018,9 +994,7 @@ if not gee_ok:
     st.error(f"{L['gee_fail']}: {gee_msg}")
 
 
-# ==========================================
 # 4. TIỆN ÍCH TÍNH TOÁN
-# ==========================================
 def get_dynamic_utm_crs(lon: float, lat: float) -> int:
     zone = min(60, max(1, math.floor((lon + 180) / 6) + 1))
     return (32600 if lat >= 0 else 32700) + zone
@@ -1054,9 +1028,7 @@ def build_grid(boundary_utm: gpd.GeoDataFrame, size: int):
     return clipped
 
 
-# ------------------------------------------
-# 4b. CẦU CHÌ TRƯỚC KHI PHÂN TÍCH (chỉ đọc/ước lượng, KHÔNG thay đổi pipeline)
-# ------------------------------------------
+# 4b. CẦU CHÌ
 # Lý do: build_grid chỉ chặn SAU khi bấm "Phân tích". Với địa phương rộng + lưới mịn, bước dựng
 # lưới/cắt (gpd.clip) trên hàng trăm nghìn ô có thể treo máy chủ. Cầu chì này ước lượng số ô ngay
 # khi người dùng chọn quận/huyện + kích thước ô, và khóa nút Phân tích nếu vượt trần.
@@ -1066,7 +1038,7 @@ CELL_SIZE_STEPS = list(range(500, 5001, 500))   # trùng với slider kích thư
 
 
 def estimate_grid_cells(bounds, area_km2: float, perimeter_km: float, size: int) -> dict:
-    """Ước lượng số ô mà build_grid sẽ tạo (hàm thuần, không phụ thuộc geopandas).
+    """Ước lượng số ô mà build_grid sẽ tạo
 
     n_clip: số ô SAU khi cắt theo ranh giới (đại lượng bị so với MAX_CELLS).
     n_bbox: số ô của lưới chữ nhật bao ngoài (đại lượng bị so với MAX_CELLS * 4, giống build_grid).
@@ -1096,7 +1068,7 @@ def suggest_cell_size(bounds, area_km2: float, perimeter_km: float, current: int
 
 @st.cache_data(show_spinner=False, max_entries=64)
 def boundary_stats(path: str, mtime: float):
-    """Đọc ranh giới (chỉ đọc) và trả về bbox UTM, diện tích, chu vi. Lỗi → None (cầu chì bỏ qua, pipeline tự báo lỗi)."""
+    """Đọc ranh giới (chỉ đọc) và trả về bbox UTM, diện tích, chu vi. Lỗi → None"""
     try:
         b = gpd.read_file(path)
         if b.crs is None:
@@ -1234,7 +1206,7 @@ def make_colormap(mode: str, vmax: float, caption: str):
     return cmap
 
 
-# ---- Đầu dò giàu thông tin: dựng bằng JS phía trình duyệt (nhẹ, không phình GeoJSON) ----
+# Đầu dò 
 class RichTooltip(MacroElement):
     _template = Template(
         """
@@ -1330,9 +1302,7 @@ def legend_html(title, items):
     return f'<div class="nt-legend"><div class="t">{html_lib.escape(title)}</div>{rows}</div>'
 
 
-# ==========================================
-# 5. SIDEBAR (CASCADING, TÊN SẠCH: Việt Nam / Hà Nội / Hoàn Kiếm)
-# ==========================================
+# 5. SIDEBAR (CASCADING)
 st.title(L["title"])
 st.markdown(L["subtitle"])
 
@@ -1342,7 +1312,7 @@ with st.sidebar:
         st.error(L["no_data"].format(d=DATA_ROOT))
         st.stop()
 
-    # Danh sách quốc gia tự quét từ DATA_ROOT, hiển thị theo tên chuẩn (Việt Nam / Vietnam, Thái Lan / Thailand...)
+    # Danh sách quốc gia từ DATA_ROOT (Việt Nam / Vietnam, Thái Lan / Thailand...)
     country_keys = sorted(COUNTRIES.keys(), key=lambda k: _natkey(country_label(k, LANG)))
     if st.session_state.get("sb_opt_country") not in country_keys:   # lựa chọn cũ không còn tồn tại
         st.session_state.pop("sb_opt_country", None)
@@ -1354,7 +1324,7 @@ with st.sidebar:
     country_path = c_info["path"]
     sel_iso = c_info["iso3"]
 
-    # Khóa widget gắn với cấp cha: đổi quốc gia/tỉnh thì widget con được tạo mới, không bao giờ giữ giá trị cũ không hợp lệ
+    # Khóa widget gắn với cấp cha: đổi quốc gia/tỉnh thì widget con được tạo mới
     states = sorted(
      (s for s in subdirs(country_path) if _dir_has_geojson(os.path.join(country_path, s))),
      key=lambda s: _natkey(clean_state(s, iso=sel_iso, lang=LANG)),
@@ -1408,7 +1378,7 @@ with st.sidebar:
                            else "Grid < 1000 m: neighbouring cells are not independent."))
     year = st.selectbox(L["year"], YEARS, index=len(YEARS) - 2, help=H["year"])
 
-    # ----- Cầu chì: kiểm tra quy mô TRƯỚC khi cho phép bấm Phân tích -----
+    # Kiểm tra quy mô TRƯỚC khi cho phép bấm Phân tích
     fuse_blocked = False
     try:
         _mt = os.path.getmtime(file_path)
@@ -1449,9 +1419,8 @@ with st.sidebar:
     if not gee_ok:
         st.caption("🔌 " + ("Chưa kết nối Google Earth Engine." if LANG == "vi" else "Google Earth Engine not connected."))
 
-# ==========================================
 # 6. PIPELINE (chỉ chạy khi bấm nút; kết quả lưu session_state)
-# ==========================================
+
 def run_pipeline():
     from exactextract import exact_extract  # lazy import
 
@@ -1459,7 +1428,7 @@ def run_pipeline():
     tmp_path = None
     with st.status(L["st1"].format(s=cell_size), expanded=True) as status:
         try:
-            # ---------- Trạm 1 ----------
+            # Trạm 1 
             boundary = gpd.read_file(file_path)
             if boundary.crs is None:
                 boundary = boundary.set_crs(epsg=4326)
@@ -1479,7 +1448,7 @@ def run_pipeline():
             grid = build_grid(boundary_utm, cell_size)
             st.write("✅ " + L["ok1"].format(n=len(grid), s=cell_size, e=epsg))
 
-            # ---------- Trạm 2 ----------
+            # Trạm 2 
             stage = "Station 2"
             status.update(label=L["st2"])
             grid_wgs = grid.to_crs(epsg=4326)
@@ -1489,7 +1458,7 @@ def run_pipeline():
             tif_bytes = fetch_ntl_raster(bbox, year_id=int(year))
             st.write("✅ " + L["ok2"].format(y=year))
 
-            # ---------- Trạm 3 ----------
+            # Trạm 3 
             stage = "Station 3"
             status.update(label=L["st3"])
             
@@ -1594,9 +1563,7 @@ if not res:
     st.info(L["idle"])
     st.stop()
 
-# ==========================================
 # 7. TÍNH CHỈ SỐ CHO KẾT QUẢ
-# ==========================================
 grid_utm = res["grid_utm"].reset_index(drop=True)
 size, yr, epsg = res["size"], res["year"], res["epsg"]
 _cn = res.get("country_names") or {lg: country_label(res["country_raw"], lg) for lg in ("vi", "en")}
@@ -1659,9 +1626,7 @@ tab_map, tab_data, tab_lisa, tab_guide = st.tabs([
     L["tab_guide"]
 ])
 
-# ==========================================
 # 8. TAB BẢN ĐỒ
-# ==========================================
 with tab_map:
     with st.expander("🎛️ " + ("Tùy chỉnh hiển thị bản đồ" if LANG == "vi" else "Map display options"), expanded=True):
         cA, cB, cC = st.columns([2.4, 2.4, 2])
@@ -1754,7 +1719,7 @@ with tab_map:
         # không viền: nét cùng màu nền để xóa khe hở giữa các ô, nhìn liền mạch như ảnh nhiệt
         return {"fillColor": fill_c, "color": fill_c, "weight": 0.6, "opacity": min(fo, 0.9), "fillOpacity": fo}
 
-    # Lớp làm tối ngoài ranh giới (tập trung mắt vào vùng phân tích)
+    # Lớp làm tối ngoài ranh giới
     bclean = bw[bw.geometry.type.isin(["Polygon", "MultiPolygon"])]
     if mask_on:
         try:
@@ -1790,7 +1755,7 @@ with tab_map:
             style_function=lambda _: {"fill": False, "color": "#00e5ff", "weight": 2.6, "dashArray": "5 4"},
         ).add_to(m)
 
-    # Ranh giới: hào quang mờ + nét trắng sắc (chỉ Polygon, không Marker)
+    # Ranh giới: hào quang mờ + nét trắng sắc
     bgroup = folium.FeatureGroup(name=L["layer_bound"], show=True)
     folium.GeoJson(bclean, interactive=False,
                    style_function=lambda _: {"fill": False, "color": "#ffffff", "weight": 9, "opacity": 0.12}).add_to(bgroup)
@@ -1831,9 +1796,7 @@ with tab_map:
     except TypeError:
         st_folium(m, height=680, returned_objects=[], key=map_key)
 
-# ==========================================
 # 9. TAB DỮ LIỆU
-# ==========================================
 export_df = pd.DataFrame(
     {
         "iso3": res["iso3"],
@@ -1877,7 +1840,7 @@ with tab_data:
     if size < 1000:
         st.warning(L["quality_warn"].format(s=size, px=px_per_cell))
 
-    # --- Nhận định nhanh ---
+    # Nhận định nhanh
     with st.container(border=True):  
         st.subheader(L["sec_take"])
         imax = int(np.argmax(ntl))
@@ -1901,7 +1864,7 @@ with tab_data:
  
         col_l, col_r = st.columns(2)
 
-    # --- Thông tin chung ---
+    # Thông tin chung
     with col_l:
         with st.expander("ℹ️ " + L["sec_overview"], expanded=False):
             bcx, bcy = (bminx + bmaxx) / 2, (bminy + bmaxy) / 2
@@ -1912,7 +1875,7 @@ with tab_data:
             ]
             sx(st.dataframe, pd.DataFrame({L["ov_cols"][0]: L["ov_rows"], L["ov_cols"][1]: ov_vals}), hide_index=True)
 
-    # --- Thống kê ---
+    # Thống kê 
     with col_r:
         st.subheader(L["sec_stats"])
         stat_vals = [
@@ -1926,7 +1889,7 @@ with tab_data:
            pd.DataFrame({L["stat_cols"][0]: L["stat_rows"], L["stat_cols"][1]: stat_vals}),
            hide_index=True, height=320)
 
-    # --- Moran's I ---
+    # Moran's I 
     st.subheader(L["sec_spatial"])
     if moran:
         k1, k2, k3, k4 = st.columns(4)
@@ -1938,7 +1901,7 @@ with tab_data:
     else:
         st.caption(L["mi_na"])
 
-    # --- Cơ cấu nhóm ---
+    # Cơ cấu nhóm 
     st.subheader(L["sec_class"])
     cls = (
         pd.DataFrame({"code": codes, "area": area, "sol": sol_cell})
@@ -1965,7 +1928,7 @@ with tab_data:
         },
     )
 
-    # --- Histogram ---
+    # Histogram 
     st.subheader(L["sec_hist"])
     edges = [-0.001, 0, 1, 2, 5, 10, 15, 25, 40, 80, np.inf]
     binned = pd.cut(ntl, bins=edges, labels=L["hist_bins"]).value_counts()
@@ -1982,7 +1945,7 @@ with tab_data:
     )
     sx(st.altair_chart, chart)
 
-    # --- Top 10 ---
+    # Top 10
     st.subheader(L["sec_top"])
     top_cols = ["grid_id", "centroid_lon", "centroid_lat", "area_km2", "ntl_mean", "ntl_vs_mean",
                 "sol_share_pct", "ntl_rank", "ntl_class"]
@@ -2009,12 +1972,12 @@ with tab_data:
         sx(st.dataframe, export_df.sort_values("ntl_mean", ascending=False).head(5000),
            hide_index=True, column_config=full_cfg)
 
-    # --- Phương pháp ---
+    # Phương pháp
     with st.expander("🔬 " + L["sec_meta"]):
         meta_vals = [fill(v, ds=GEE_DATASET, y=yr, s=size, e=epsg, px=px_per_cell) for v in L["meta_vals"]]
         sx(st.dataframe, pd.DataFrame({L["meta_cols"][0]: L["meta_rows"], L["meta_cols"][1]: meta_vals}), hide_index=True)
 
-    # --- Từ điển dữ liệu ---
+    # Từ điển dữ liệu
     with st.expander(L["sec_dict"]):
         li = 1 if LANG == "vi" else 2
         dd = pd.DataFrame(
@@ -2025,7 +1988,7 @@ with tab_data:
         )
         sx(st.dataframe, dd, hide_index=True)
 
-    # --- Tải dữ liệu ---
+    # Tải dữ liệu 
     st.subheader(L["sec_dl"])
     slug = f"{slugify(district)}_NTL_{yr}_{size}m"
     d1, d2 = st.columns(2)
@@ -2050,9 +2013,7 @@ with tab_data:
                 mime="application/geo+json",
             )
 
-# ==========================================
 # 10. TAB HƯỚNG DẪN
-# ==========================================
 with tab_guide:
     st.markdown(L["guide_title"])
     for i, (title, body) in enumerate(GUIDE[LANG]):
@@ -2075,10 +2036,7 @@ with tab_guide:
                 st.warning(L["quality_warn"].format(s=size, px=px_per_cell))
 
 
-# ==========================================
 # 11. TAB LISA (DATA BRIDGE CHO PANEL REGRESSION)
-# ==========================================
-# Thay thế Mục 11 (dòng 1054 - 1085) trong app_4.py bằng đoạn sau:
 with tab_lisa:
     from lisa_ui import render_lisa_tab
 
