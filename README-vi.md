@@ -223,10 +223,10 @@ $$
 $$
 
 2. **Độ dốc suy giảm mật độ đô thị nội sinh ($\hat{\gamma}$, Duranton & Puga, 2023):**
-   Ước lượng phương trình cấu trúc không gian đô thị bằng bình phương tối thiểu có trọng số diện tích (WLS) trên tập ô lõi $\ln(1 + \mathrm{NTL}_i) = \alpha_0 - \gamma \cdot d_{\mathrm{core}, i} + u_i$, trích xuất tốc độ suy giảm mật độ $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số xác định đơn tâm $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
+   Ước lượng phương trình cấu trúc không gian đô thị bằng bình phương tối thiểu có trọng số diện tích (WLS) trên tập ô lõi $\ln(1 + \mathrm{NTL}\_{i}) = \alpha\_{0} - \gamma \cdot d\_{\mathrm{core}, i} + u\_{i}$, trích xuất tốc độ suy giảm mật độ $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số xác định đơn tâm $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
 3. **Tiếp cận thị trường đã khử thiên lệch vị trí trung tâm ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023):**
-   Tính tiềm năng thị trường trọng lực $\mathrm{MA}_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$ trên cửa sổ lưới đối xứng và trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}_{\pi}[\mathrm{MA}_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ nhằm loại bỏ hoàn toàn thiên lệch vị trí trung tâm địa lý (`recentered_market_access`).
+   Tính tiềm năng thị trường trọng lực $\mathrm{MA}\_{i} = \sum\_{j \ne i} \mathrm{SOL}\_{j} \exp(-\tau d\_{ij})$ trên cửa sổ lưới đối xứng và trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}\_{\pi}[\mathrm{MA}\_{i}] = \overline{\mathrm{SOL}}\_{\mathrm{Core}} \sum\_{j \ne i} \exp(-\tau d\_{ij})$ nhằm loại bỏ hoàn toàn thiên lệch vị trí trung tâm địa lý (`recentered_market_access`).
 
 4. **Vành đai lan tỏa đồng tâm và biến chạy có dấu cho Spatial RDD (Vazquez-Bare, 2023; Butts, 2024):**
    Tính khoảng cách Euclid có dấu tới ranh giới cụm điểm nóng `signed_dist_hh_km` ($d < 0$ bên trong lõi, $d > 0$ bên ngoài lõi) phục vụ thiết kế hồi quy gián đoạn Không gian (Spatial RDD), đồng thời phân tách địa phương thành 5 vành đai tiếp xúc (`0_Treated_HH`, `1_Spillover_0_2km`, `2_Spillover_2_5km`, `3_Spillover_5_10km`, `4_Pure_Control_gt10km`) để cô lập nhóm đối chứng sạch không bị nhiễm hiệu ứng tràn.
