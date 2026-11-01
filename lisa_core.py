@@ -1,7 +1,5 @@
 """
 lisa_core.py
-==========================================================================
-Lõi tính Kinh tế lượng không gian độc lập (NumPy + Pandas, tùy chọn SciPy).
 
 """
 from __future__ import annotations
