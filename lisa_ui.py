@@ -1,3 +1,6 @@
+"""
+lisa_ui.py
+"""
 from __future__ import annotations
 
 import json
@@ -16,15 +19,12 @@ from streamlit_folium import st_folium
 
 from lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
 
-COLORS = {  # quy ước màu GeoDa
+COLORS = {
     "High-High": "#d7191c", "Low-Low": "#2c7bb6", "High-Low": "#fdae61", "Low-High": "#abd9e9",
     NS: "#d9d9d9", EDGE: "#8c8c8c", DARK: "#2a2a33",
 }
 KEY_COLS = ("iso3", "region_id", "year", "cell_size_m")
 
-# =====================================================================
-# VĂN BẢN (song ngữ). Chỉ là chuỗi hiển thị — không ảnh hưởng tính toán.
-# =====================================================================
 T = {
     "vi": {
         "title": "🧭 LISA & Data bridge cho hồi quy panel",
@@ -395,7 +395,7 @@ def _popover(brief, title, body):
     """Nút (?) : rê chuột -> mô tả ngắn; bấm -> hộp chi tiết."""
     try:
         pop = st.popover("❓", help=brief)
-    except TypeError:  # Streamlit cũ không có help cho popover
+    except TypeError:
         pop = st.popover("❓")
     with pop:
         st.markdown(f"**{title}**")
@@ -572,6 +572,8 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         no_wrap=True,
         max_zoom=16,
     )
+    # ===== FIX LỖI ZOOM VĂNG BẢN ĐỒ =====
+    m.fit_bounds([[bminy, bminx], [bmaxy, bmaxx]])
 
     lisa_layer = folium.GeoJson(
         gj, name="LISA",
@@ -590,7 +592,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                    style_function=lambda _: {"fill": False, "color": "#222", "weight": 1.5}).add_to(m)
     m.get_root().header.add_child(folium.Element(LISA_MAP_CSS))
     _LisaIntro(lisa_layer, {
-        "on": True, "fly": False, "ripple": True, "max": 9000, "dur": 1500,
+        "on": True, "fly": bool(just_computed), "ripple": bool(just_computed), "max": 9000, "dur": 1500,
         "cx": float((minx + maxx) / 2), "cy": float((miny + maxy) / 2),
     }).add_to(m)
     m.get_root().html.add_child(folium.Element(_legend(lang)))
@@ -643,22 +645,23 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                 )
                 hline = alt.Chart(pd.DataFrame({'y': [0]})).mark_rule(color='gray', strokeDash=[3, 3], opacity=0.5).encode(y='y:Q')
                 vline = alt.Chart(pd.DataFrame({'x': [0]})).mark_rule(color='gray', strokeDash=[3, 3], opacity=0.5).encode(x='x:Q')
-                trend = scatter.transform_regression('ntl_z_lit', 'lisa_lag_z').mark_line(color='#00e5ff', size=2)
+                trend = scatter.transform_regression('ntl_z_lit', 'lisa_lag_z').mark_line(color='#ffb703', strokeWidth=2)
 
                 chart = (scatter + hline + vline + trend).interactive().properties(height=320)
                 st.altair_chart(chart, use_container_width=True)
             else:
                 st.info(L["no_scat"])
 
+    # ---------- FRONTIER Q1 ECONOMETRICS (2022–2026): PARETO, GRADIENT, SPATIAL RDD & SPILLOVER RINGS ----------
     st.divider()
     is_vi = (lang != "en")
     st.markdown(
-        "#### 🚀 Chỉ số kinh tế lượng Không gian biên"
+        "#### 🚀 Chỉ số Kinh tế lượng Không gian Biên (Frontier Q1 Metrics · 2022–2026)"
         if is_vi else
-        "#### 🚀 Frontier spatial econometric indicators",
+        "#### 🚀 Frontier Spatial Econometric Indicators (2022–2026 Q1 Framework)",
         help=L["h_fq_title"],
     )
-                        
+
     fq1, fq2, fq3, fq4 = st.columns(4)
     _pa = rm.get("pareto_alpha_top10", float("nan"))
     _ug = rm.get("urban_gradient_decay", float("nan"))
@@ -694,9 +697,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with col_ring:
         with st.container(border=True):
             st.markdown(
-                "**🎯 Vành đai lan tỏa nhân quả**"
+                "**🎯 Vành đai Lan tỏa Nhân quả**"
                 if is_vi else
-                "**🎯 Causal spillover rings**",
+                "**🎯 Causal Spillover Rings**",
                 help=L["h_ring_tbl"],
             )
             ring_arr = cdf["spillover_ring"].to_numpy()
@@ -717,9 +720,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with col_rdd:
         with st.container(border=True):
             st.markdown(
-                "**📉 Đường cong suy giảm & Gián đoạn ranh giới đô thị**"
+                "**📉 Đường cong Gián đoạn Ranh giới Đô thị (Spatial RDD)**"
                 if is_vi else
-                "**📉 Urban boundary discontinuity & Spillover decay (Spatial RDD)**",
+                "**📉 Urban Boundary Discontinuity (Spatial RDD)**",
                 help=L["h_rdd_chart"],
             )
             donut_on = st.toggle(L["donut_rdd"], value=False, key="lisa_donut_rdd", help=L["h_donut_rdd"])
