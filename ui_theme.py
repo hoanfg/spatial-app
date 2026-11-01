@@ -1,5 +1,5 @@
 """
-ui_theme.py
+ui_theme.py 
 
 """
 from __future__ import annotations
@@ -143,7 +143,7 @@ h3,h4{letter-spacing:-.2px}
 
 _FX_CSS = """
 <style>
-/* ===== Vòng 2: hiệu ứng ===== */
+/* ===== Vòng 2 ===== */
 @keyframes ntlFade{from{opacity:0}to{opacity:1}}
 @keyframes ntlPop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 @keyframes ntlFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(-22px,16px)}}
@@ -153,7 +153,6 @@ _FX_CSS = """
 @keyframes ntlPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,183,3,.45)}50%{box-shadow:0 0 0 9px rgba(255,183,3,0)}}
 @keyframes ntlRipple{from{transform:scale(0);opacity:.45}to{transform:scale(2.6);opacity:0}}
 
-/* Hero: aurora + chữ ánh kim */
 .ntl-hero:before,.ntl-hero:after{content:"";position:absolute;border-radius:50%;filter:blur(42px);pointer-events:none}
 .ntl-hero:before{width:260px;height:260px;right:-60px;top:-130px;background:#ffb703;opacity:.5;animation:ntlFloat 8s ease-in-out infinite}
 .ntl-hero:after{width:230px;height:230px;left:32%;bottom:-150px;background:#00e5ff;opacity:.26;animation:ntlFloat 10s ease-in-out infinite reverse}
@@ -168,7 +167,6 @@ _FX_CSS = """
 .ntl-tag{animation:ntlPop .3s ease backwards}
 .ntl-place h4{background:linear-gradient(90deg,var(--ntl-accent),#ff8c00);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
-/* Vào cảnh theo thứ tự cho cột / thẻ / bảng / tab */
 div[data-testid="stHorizontalBlock"]>div{animation:ntlUp .38s cubic-bezier(.2,.8,.2,1) backwards}
 div[data-testid="stHorizontalBlock"]>div:nth-child(2){animation-delay:.05s}
 div[data-testid="stHorizontalBlock"]>div:nth-child(3){animation-delay:.10s}
@@ -181,14 +179,11 @@ div[data-testid="stVerticalBlockBorderWrapper"]{animation:ntlUp .35s cubic-bezie
 div[data-testid="stExpander"]{transition:border-color .18s ease}
 div[data-testid="stExpander"]:hover{border-color:rgba(255,183,3,.5)}
 div[data-testid="stPlotlyChart"],div[data-testid="stVegaLiteChart"]{animation:ntlPop .4s ease backwards}
-iframe{animation:ntlFade .5s ease both}
 
-/* Thẻ chỉ số: vạch nhấn chạy ra khi xuất hiện */
 div[data-testid="stMetric"]{position:relative;overflow:hidden}
 div[data-testid="stMetric"]:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;transform-origin:left;
   background:linear-gradient(90deg,var(--ntl-accent),var(--ntl-accent-2));animation:ntlBar .6s cubic-bezier(.2,.8,.2,1) both}
 
-/* Nút: ánh quét + gợn sóng khi bấm */
 div.stButton>button,div[data-testid="stDownloadButton"]>button,div[data-testid="stFormSubmitButton"]>button{position:relative;overflow:hidden}
 div.stButton>button[kind="primary"]:not(:disabled):after,div[data-testid="stDownloadButton"]>button[kind="primary"]:after,
 div[data-testid="stFormSubmitButton"]>button[kind="primary"]:after{content:"";position:absolute;inset:0;pointer-events:none;
@@ -196,7 +191,6 @@ div[data-testid="stFormSubmitButton"]>button[kind="primary"]:after{content:"";po
 section[data-testid="stSidebar"] div.stButton>button[kind="primary"]:not(:disabled){animation:ntlPulse 2.4s ease-out infinite}
 .ntl-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);pointer-events:none;animation:ntlRipple .55s ease-out forwards}
 
-/* Điều khiển nhập liệu theo màu nhấn */
 div[data-baseweb="slider"] div[role="slider"]{background:var(--ntl-accent)!important;box-shadow:0 0 0 4px rgba(255,183,3,.22);transition:box-shadow .15s ease}
 div[data-baseweb="slider"] div[role="slider"]:hover{box-shadow:0 0 0 7px rgba(255,183,3,.25)}
 div[data-baseweb="select"]>div,div[data-baseweb="input"]>div{border-radius:10px;transition:border-color .15s ease,box-shadow .15s ease}
@@ -206,7 +200,6 @@ div[data-testid="stSidebar"] [data-testid="stRadio"] label{transition:color .15s
 div[data-testid="stTooltipContent"]{border-radius:10px}
 div[data-testid="stToast"]{border-radius:12px;border:1px solid rgba(255,183,3,.5);animation:ntlPop .3s ease both}
 
-/* Thanh tiến trình cuộn + nút lên đầu trang */
 .ntl-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:999999;pointer-events:none;
   background:linear-gradient(90deg,var(--ntl-accent),var(--ntl-accent-2));transition:width .1s linear}
 .ntl-top{position:fixed;right:22px;bottom:22px;width:44px;height:44px;border-radius:50%;border:1px solid var(--ntl-border);
@@ -216,7 +209,6 @@ div[data-testid="stToast"]{border-radius:12px;border:1px solid rgba(255,183,3,.5
 .ntl-top.show{opacity:1;transform:none;pointer-events:auto}
 .ntl-top:hover{border-color:var(--ntl-accent);transform:translateY(-3px)}
 
-/* Ẩn khung iframe 0px dùng cho script */
 div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-container:has(iframe[height="0"]){display:none}
 </style>
 """
@@ -317,7 +309,50 @@ def inject_theme() -> None:
     st.markdown(_FX_CSS, unsafe_allow_html=True)
 
 
+def fit_bounds_on_load(m, bounds) -> None:
+
+    import json
+
+    from branca.element import MacroElement
+    from jinja2 import Template
+
+    class _FitOnLoad(MacroElement):
+        _template = Template(
+            """
+            {% macro script(this, kwargs) %}
+            (function () {
+                var map = {{ this._parent.get_name() }};
+                var B = {{ this.b }};
+                var c = map.getContainer();
+                var user = false;
+                ['mousedown', 'touchstart', 'wheel'].forEach(function (ev) {
+                    c.addEventListener(ev, function () { user = true; }, {passive: true});
+                });
+                function fit() {
+                    if (user || c.clientWidth < 50 || c.clientHeight < 50) { return; }
+                    map.invalidateSize({animate: false});
+                    map.fitBounds(B, {animate: false});
+                }
+                fit();
+                if (window.ResizeObserver) { new ResizeObserver(fit).observe(c); }
+                window.addEventListener('load', fit);
+                window.addEventListener('resize', fit);
+                [150, 500, 1200, 2500].forEach(function (t) { setTimeout(fit, t); });
+            })();
+            {% endmacro %}
+            """
+        )
+
+        def __init__(self, b):
+            super().__init__()
+            self._name = "FitOnLoad"
+            self.b = json.dumps(b)
+
+    _FitOnLoad([[float(bounds[0][0]), float(bounds[0][1])], [float(bounds[1][0]), float(bounds[1][1])]]).add_to(m)
+
+
 def enable_fx() -> None:
+    """Bật hiệu ứng JS (đếm số, gợn sóng, tiến trình cuộn, nút lên đầu)"""
     try:
         import streamlit.components.v1 as components
         components.html(_FX_JS, height=0)
