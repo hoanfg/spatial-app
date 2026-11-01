@@ -14,7 +14,7 @@ from branca.element import MacroElement
 from jinja2 import Template
 from streamlit_folium import st_folium
 
-from lisa_core import ALL_LABELS, DARK, EDGE, NS, run_lisa
+from lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
 
 COLORS = {  # quy ước màu GeoDa
     "High-High": "#d7191c", "Low-Low": "#2c7bb6", "High-Low": "#fdae61", "Low-High": "#abd9e9",
@@ -351,7 +351,8 @@ def _pin(cfg_cls, **kw):
 
 
 def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", region_label="",
-                    render_cap=30_000, basemap="CartoDB positron"):
+                    render_cap=30_000, basemap="CartoDB positron",
+                    fetch_year_ntl_fn=None, available_years=None):
     L = T["en" if lang == "en" else "vi"]
     size, yr = int(res["size"]), int(res["year"])
     n = len(grid_utm)
@@ -557,6 +558,192 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             else:
                 st.info(L["no_scat"])
 
+# ---------- FRONTIER Q1 ECONOMETRICS (2022–2026): PARETO, GRADIENT, SPATIAL RDD & SPILLOVER RINGS ----------
+    st.divider()
+    is_vi = (lang != "en")
+    st.markdown(
+        "#### 🚀 Chỉ số Kinh tế lượng Không gian Biên (Frontier Q1 Metrics · 2022–2026)"
+        if is_vi else
+        "#### 🚀 Frontier Spatial Econometric Indicators (2022–2026 Q1 Framework)"
+    )
+    st.caption(
+        "Tích hợp 4 khung lý thuyết mới: Đuôi Pareto Top Lights (Bluhm & Krause, 2022 JDE), Độ dốc mật độ đô thị (Duranton & Puga, 2023 Econometrica), "
+        "Tiếp cận thị trường khử thiên lệch trung tâm (Borusyak & Hull, 2023 Econometrica) và Vành đai lan tỏa DiD / Spatial RDD (Butts, 2024; Müller & Watson, 2024 Econometrica)."
+        if is_vi else
+        "Integrates 4 frontier frameworks: Top-Lights Pareto Tail (Bluhm & Krause, 2022 JDE), Urban Density Gradient (Duranton & Puga, 2023 Econometrica), "
+        "Recentered Market Access (Borusyak & Hull, 2023 Econometrica), and Concentric Spillover Rings / Spatial RDD (Butts, 2024; Müller & Watson, 2024 Econometrica)."
+    )
+
+    fq1, fq2, fq3, fq4 = st.columns(4)
+    _pa = rm.get("pareto_alpha_top10", float("nan"))
+    _ug = rm.get("urban_gradient_decay", float("nan"))
+    _mr2 = rm.get("monocentric_r2", float("nan"))
+    _ar1 = rm.get("spatial_ar1_persistence", float("nan"))
+
+    fq1.metric(
+        "Pareto α (Top 10% Lights)" if is_vi else "Pareto α (Top 10% Tail)",
+        f"{_pa:.2f}" if np.isfinite(_pa) else "N/A",
+        help=("Số mũ Hill trên Top 10% ô sáng (Bluhm & Krause, 2022). Càng gần 1.0 nghĩa là đuôi cực trị càng dày (siêu tập trung ở lõi đỉnh)."
+              if is_vi else "Hill tail exponent on top 10% lit cells (Bluhm & Krause, 2022). Closer to 1.0 indicates extreme upper-tail concentration."),
+    )
+    fq2.metric(
+        "Độ dốc đô thị γ (km⁻¹)" if is_vi else "Urban Decay Gradient γ (km⁻¹)",
+        f"{_ug:.4f}" if np.isfinite(_ug) else "N/A",
+        help=("Hệ số suy giảm mật độ kinh tế WLS ln(1+NTL) theo khoảng cách tới tâm CBD (Duranton & Puga, 2023)."
+              if is_vi else "Area-weighted WLS decay rate of ln(1+NTL) per km from the CBD (Duranton & Puga, 2023)."),
+    )
+    fq3.metric(
+        "Độ khớp đơn tâm (R²)" if is_vi else "Monocentricity Fit (R²)",
+        f"{_mr2 * 100:.1f}%" if np.isfinite(_mr2) else "N/A",
+        help=("Tỷ lệ phương sai ln(1+NTL) giải thích bởi khoảng cách tới 1 tâm CBD duy nhất. R² thấp + nhiều cụm HH = Đô thị đa cực (Polycentric)."
+              if is_vi else "Share of ln(1+NTL) variance explained by distance to a single CBD. Low R² with multiple HH clusters indicates polycentricity."),
+    )
+    fq4.metric(
+        "Độ bền AR(1) không gian" if is_vi else "Spatial AR(1) Persistence",
+        f"{_ar1:.3f}" if np.isfinite(_ar1) else "N/A",
+        help=("Hệ số tự tương quan bậc 1 (Müller & Watson, 2024 Econometrica). Nếu > 0.70, dữ liệu tiệm cận nghiệm đơn vị không gian (cần lấy sai phân hoặc kiểm soát chặt)."
+              if is_vi else "First-order spatial autoregression coefficient (Müller & Watson, 2024 Econometrica). Values > 0.70 warn of near-unit-root spatial persistence."),
+    )
+
+    col_ring, col_rdd = st.columns([1.05, 1.45])
+    with col_ring:
+        with st.container(border=True):
+            st.markdown(
+                "**🎯 Vành đai Lan tỏa Nhân quả (Butts, 2024)**"
+                if is_vi else
+                "**🎯 Causal Spillover Rings (Butts, 2024)**"
+            )
+            ring_arr = cdf["spillover_ring"].to_numpy()
+            ntl_arr = grid_utm["ntl_mean"].to_numpy(float)
+            rec_ma_arr = cdf["recentered_market_access"].to_numpy(float)
+            ring_rows = []
+            for rg_code in SPILLOVER_RINGS:
+                m_r = ring_arr == rg_code
+                ring_rows.append({
+                    ("Vành đai tiếp xúc" if is_vi else "Exposure Ring"): rg_code,
+                    ("Số ô" if is_vi else "Cells"): int(m_r.sum()),
+                    ("% Diện tích" if is_vi else "% Area"): round(float(area[m_r].sum() / max(area.sum(), 1e-12) * 100), 1),
+                    ("NTL TB" if is_vi else "Mean NTL"): round(float(ntl_arr[m_r].mean()), 2) if m_r.any() else 0.0,
+                    ("MA khử lệch" if is_vi else "Recentered MA"): round(float(np.nanmean(rec_ma_arr[m_r])), 2) if m_r.any() and np.isfinite(rec_ma_arr[m_r]).any() else 0.0,
+                })
+            st.dataframe(pd.DataFrame(ring_rows), hide_index=True, use_container_width=True)
+
+    with col_rdd:
+        with st.container(border=True):
+            st.markdown(
+                "**📉 Đường cong Suy giảm & Gián đoạn Ranh giới Đô thị (Spatial RDD)**"
+                if is_vi else
+                "**📉 Urban Boundary Discontinuity & Spillover Decay (Spatial RDD)**"
+            )
+            rdd_df = pd.DataFrame({
+                "signed_d": cdf["signed_dist_hh_km"].to_numpy(float),
+                "ln_ntl": np.log1p(np.maximum(grid_utm["ntl_mean"].to_numpy(float), 0.0)),
+                "ring": cdf["spillover_ring"].to_numpy(),
+            }).dropna()
+            rdd_df = rdd_df[rdd_df["ring"] != "Edge_Masked"]
+            if not rdd_df.empty and len(rdd_df) >= 10:
+                rdd_df["bin_d"] = (np.round(rdd_df["signed_d"] * 2.0) / 2.0)
+                binned_rdd = (
+                    rdd_df.groupby("bin_d", as_index=False)
+                    .agg(mean_ln_ntl=("ln_ntl", "mean"), cells=("ln_ntl", "size"))
+                    .query("cells >= 2 and bin_d >= -10 and bin_d <= 15")
+                )
+                pts_chart = alt.Chart(binned_rdd).mark_line(point=True, color="#ffb703", strokeWidth=2.2).encode(
+                    x=alt.X("bin_d:Q", title=("Khoảng cách có dấu tới biên cụm nóng (km) [ <0: Trong lõi | >0: Ngoài lõi ]"
+                                              if is_vi else "Signed distance to hotspot boundary (km) [ <0: Inside | >0: Outside ]")),
+                    y=alt.Y("mean_ln_ntl:Q", title="Mean ln(1 + NTL)"),
+                    tooltip=[
+                        alt.Tooltip("bin_d:Q", title="Signed Dist (km)", format=".1f"),
+                        alt.Tooltip("mean_ln_ntl:Q", title="Mean ln(1+NTL)", format=".3f"),
+                        alt.Tooltip("cells:Q", title="Cells"),
+                    ],
+                )
+                zero_rule = alt.Chart(pd.DataFrame({"x": [0.0]})).mark_rule(
+                    color="#d7191c", strokeDash=[5, 4], strokeWidth=2
+                ).encode(x="x:Q")
+                st.altair_chart((pts_chart + zero_rule).interactive().properties(height=265), use_container_width=True)
+            else:
+                st.info("Chưa đủ quan sát để vẽ đường cong Spatial RDD." if is_vi else "Not enough observations for Spatial RDD curve.")
+
+    # ---------- MODULE 5: DYNAMIC SPACE-TIME LISA & SPATIAL MARKOV (t0 -> t1) ----------
+    if fetch_year_ntl_fn is not None and available_years:
+        other_years = [int(y) for y in available_years if int(y) != yr]
+        if other_years:
+            with st.expander(
+                f"⚡ Động học Không – Thời gian & Ma trận Spatial Markov (So sánh năm đối chiếu t₀ → {yr})"
+                if is_vi else
+                f"⚡ Dynamic Space-Time LISA & Spatial Markov Matrix (Compare base year t₀ → {yr})",
+                expanded=False,
+            ):
+                st.caption(
+                    "Phân tích vector dịch chuyển (Δz, ΔLag z), phát hiện hiệu ứng 'Bóng tối tích tụ' (Agglomeration Shadow) "
+                    "và tính ma trận xác suất chuyển dịch Markov có điều kiện không gian (Rey, Arribas-Bel, & Wolf, 2023; Borusyak et al., 2024)."
+                    if is_vi else
+                    "Computes directional movement vectors (Δz, ΔLag z), detects 'Agglomeration Shadow' effects, "
+                    "and estimates conditional Spatial Markov transition matrices (Rey, Arribas-Bel, & Wolf, 2023; Borusyak et al., 2024)."
+                )
+                sc1, sc2 = st.columns([2, 1])
+                default_idx = 0
+                year_t0 = sc1.selectbox(
+                    "Chọn năm gốc đối chiếu (t₀)" if is_vi else "Select comparison base year (t₀)",
+                    other_years, index=default_idx, key="st_lisa_year_t0",
+                )
+                run_st_btn = sc2.button(
+                    f"⚡ Chạy Động học ({year_t0} → {yr})" if is_vi else f"⚡ Run Dynamics ({year_t0} → {yr})",
+                    type="primary", use_container_width=True, key="btn_run_spacetime",
+                )
+                st_cache = st.session_state.setdefault("_spacetime_cache", {})
+                st_key = (res["ts"], size, int(year_t0), int(yr))
+                if run_st_btn and st_key not in st_cache:
+                    with st.spinner(f"Đang tải ảnh VIIRS năm {year_t0} và tính Space-Time LISA..." if is_vi
+                                    else f"Fetching {year_t0} VIIRS raster and computing Space-Time LISA..."):
+                        ntl_t0_arr = fetch_year_ntl_fn(int(year_t0))
+                        cent_xy = grid_utm.geometry.centroid
+                        st_cache[st_key] = run_spacetime_lisa(
+                            cent_xy.x.to_numpy(), cent_xy.y.to_numpy(),
+                            ntl_t0_arr, grid_utm["ntl_mean"].to_numpy(float),
+                            grid_utm["area_km2"].to_numpy(float), size,
+                            year_t0=int(year_t0), year_t1=int(yr),
+                        )
+                if st_key in st_cache:
+                    st_out = st_cache[st_key]
+                    sm = st_out.metrics
+                    m1, m2, m3 = st.columns(3)
+                    m1.metric(
+                        "Chỉ số dịch chuyển Shorrocks" if is_vi else "Shorrocks Mobility Index",
+                        f"{sm['shorrocks_mobility']:.3f}" if np.isfinite(sm["shorrocks_mobility"]) else "N/A",
+                        help="0 = cấu trúc đóng băng hoàn toàn; càng cao = mức độ xáo trộn thứ hạng không gian càng mạnh.",
+                    )
+                    m2.metric(
+                        "Tăng trưởng cộng hưởng (Δz+, ΔLag+)" if is_vi else "Synergistic Growth Share",
+                        f"{sm['synergistic_growth_pct']:.1f}%",
+                    )
+                    m3.metric(
+                        "Bóng tối tích tụ (Δz-, ΔLag+)" if is_vi else "Agglomeration Shadow Share",
+                        f"{sm['agglomeration_shadow_pct']:.1f}%",
+                        help="Tỷ lệ diện tích bị suy giảm tương đối khi vùng lân cận tăng trưởng nóng (hiệu ứng hút nguồn lực).",
+                    )
+                    st.dataframe(st_out.regime_summary, hide_index=True, use_container_width=True)
+                    mc1, mc2 = st.columns(2)
+                    with mc1:
+                        st.markdown("**Spatial Markov: Khi láng giềng ban đầu SÁNG CAO (High-Lag Context, %)**"
+                                    if is_vi else "**Spatial Markov: High-Lag Neighbor Context (%)**")
+                        st.dataframe(st_out.markov_high_lag, use_container_width=True)
+                    with mc2:
+                        st.markdown("**Spatial Markov: Khi láng giềng ban đầu SÁNG THẤP (Low-Lag Context, %)**"
+                                    if is_vi else "**Spatial Markov: Low-Lag Neighbor Context (%)**")
+                        st.dataframe(st_out.markov_low_lag, use_container_width=True)
+
+                    st_full_csv = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True), st_out.st_cell_df.reset_index(drop=True)], axis=1)
+                    st.download_button(
+                        f"⬇️ Tải CSV Sai phân Không – Thời gian ({year_t0}_{yr}_spacetime_cells.csv)"
+                        if is_vi else f"⬇️ Download Space-Time First-Difference CSV ({year_t0}_{yr})",
+                        st_full_csv.to_csv(index=False).encode("utf-8-sig"),
+                        file_name=f"{region_id}_{year_t0}_{yr}_{size}m_spacetime_cells.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                    )
+                        
     # ---------- Data Bridge: luôn 100% quan sát ----------
     st.divider()
     st.markdown(f"#### {L['bridge_t']}")
