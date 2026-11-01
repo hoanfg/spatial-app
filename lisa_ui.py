@@ -681,7 +681,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     other_years, index=default_idx, key="st_lisa_year_t0",
                 )
                 run_st_btn = sc2.button(
-                    f"⚡ Chạy Động học ({year_t0} → {yr})" if is_vi else f"⚡ Run Dynamics ({year_t0} → {yr})",
+                    f"⚡ Chạy động học ({year_t0} → {yr})" if is_vi else f"⚡ Run dynamics ({year_t0} → {yr})",
                     type="primary", use_container_width=True, key="btn_run_spacetime",
                 )
                 st_cache = st.session_state.setdefault("_spacetime_cache", {})
