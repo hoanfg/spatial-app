@@ -987,7 +987,7 @@ section[data-testid="stSidebar"] hr{margin:.6rem 0}
 </style>
 """
 st.markdown(APP_CSS, unsafe_allow_html=True)
-from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
+from ui_theme import inject_theme, enable_fx, fit_bounds_on_load, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
 inject_theme()
 enable_fx()
 
@@ -1734,7 +1734,7 @@ with tab_map:
     folium.TileLayer(tiles=TILE_LIGHT, attr="Esri, HERE, Garmin", name=L["tile_light"], show=False).add_to(m)
     folium.TileLayer(tiles=TILE_STREET, attr="Esri, HERE, Garmin, OpenStreetMap contributors",
                      name=L["tile_street"], show=False).add_to(m)
-    m.fit_bounds([[miny, minx], [maxy, maxx]])
+    m.fit_bounds([[bminy, bminx], [bmaxy, bmaxx]])
     m.get_root().header.add_child(folium.Element(MAP_CSS))
 
     colormap = make_colormap(scale_mode, vmax, L["caption"].format(y=yr))
@@ -1765,11 +1765,7 @@ with tab_map:
     bclean = bw[bw.geometry.type.isin(["Polygon", "MultiPolygon"])]
     if mask_on:
         try:
-            # CHỈ TẠO MẶT NẠ RỘNG HƠN ĐỊA PHƯƠNG KHOẢNG 30KM (0.3 độ)
-            pad = 0.3
-            mask_box = shapely.box(bminx - pad, bminy - pad, bmaxx + pad, bmaxy + pad)
-            outside = shapely.make_valid(mask_box.difference(union_geoms(bclean)))
-            
+            outside = shapely.make_valid(shapely.box(-180, -85, 180, 85).difference(union_geoms(bclean)))
             mgroup = folium.FeatureGroup(name=L["layer_mask"], show=True)
             folium.GeoJson(
                 gpd.GeoDataFrame(geometry=[outside], crs=4326), interactive=False,
@@ -1793,6 +1789,7 @@ with tab_map:
         "short": L["short"], "dev": L["dev"], "rank": L["rank"],
     }
     RichTooltip(grid_layer, tooltip_cfg).add_to(m)
+    fit_bounds_on_load(m, [[bminy, bminx], [bmaxy, bmaxx]])
 
     if hl_top and ntl.max() > 0:
         top_geo = disp.nlargest(10, "v")[["geometry"]]
