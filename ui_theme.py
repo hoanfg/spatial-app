@@ -1,8 +1,6 @@
 """
-ui_theme.py — Lớp giao diện (UI/UX) cho NTL Spatial Econometrics.
+ui_theme.py 
 
-Chỉ chứa CSS + các hàm hiển thị. KHÔNG có tính toán, công thức hay tham số phân tích.
-Tương thích cả giao diện sáng và tối của Streamlit.
 """
 from __future__ import annotations
 
