@@ -562,17 +562,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.divider()
     is_vi = (lang != "en")
     st.markdown(
-        "#### 🚀 Chỉ số Kinh tế lượng Không gian Biên (Frontier Q1 Metrics · 2022–2026)"
+        "#### 🚀 Chỉ số kinh tế lượng Không gian biên"
         if is_vi else
-        "#### 🚀 Frontier Spatial Econometric Indicators (2022–2026 Q1 Framework)"
-    )
-    st.caption(
-        "Tích hợp 4 khung lý thuyết mới: Đuôi Pareto Top Lights (Bluhm & Krause, 2022 JDE), Độ dốc mật độ đô thị (Duranton & Puga, 2023 Econometrica), "
-        "Tiếp cận thị trường khử thiên lệch trung tâm (Borusyak & Hull, 2023 Econometrica) và Vành đai lan tỏa DiD / Spatial RDD (Butts, 2024; Müller & Watson, 2024 Econometrica)."
-        if is_vi else
-        "Integrates 4 frontier frameworks: Top-Lights Pareto Tail (Bluhm & Krause, 2022 JDE), Urban Density Gradient (Duranton & Puga, 2023 Econometrica), "
-        "Recentered Market Access (Borusyak & Hull, 2023 Econometrica), and Concentric Spillover Rings / Spatial RDD (Butts, 2024; Müller & Watson, 2024 Econometrica)."
-    )
+        "#### 🚀 Frontier spatial econometric indicators"
 
     fq1, fq2, fq3, fq4 = st.columns(4)
     _pa = rm.get("pareto_alpha_top10", float("nan"))
