@@ -226,7 +226,7 @@ $$
    Estimates the structural spatial decay equation via area-weighted WLS across core cells, $\ln(1 + \mathrm{NTL}_i) = \alpha_0 - \gamma \cdot d_{\mathrm{core}, i} + u_i$, exporting both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
 3. **Recentered market access ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023):**
-   Computes gravity-weighted market potential $\mathrm{MA}_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$ over a symmetric UTM grid stencil and subtracts its exact analytical expectation under spatial permutation $\mathbb{E}_{\pi}[\mathrm{MA}_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ to purge geographic centrality bias (`recentered_market_access`).
+   Computes gravity-weighted market potential $$\mathrm{MA}_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$$ over a symmetric UTM grid stencil and subtracts its exact analytical expectation under spatial permutation $$\mathbb{E}_{\pi}[\mathrm{MA}_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$$ to purge geographic centrality bias (`recentered_market_access`).
 
 4. **Concentric spillover rings and signed boundary distance for Spatial RDD (Vazquez-Bare, 2023; Butts, 2024):**
    Computes the signed Euclidean distance to the nearest hotspot boundary `signed_dist_hh_km` ($d < 0$ inside the core, $d > 0$ outside the core) as a running variable for Spatial Regression Discontinuity Designs (Spatial RDD), and partitions the locality into 5 concentric exposure rings (`0_Treated_HH` through `4_Pure_Control_gt10km`) to isolate uncontaminated control units.
