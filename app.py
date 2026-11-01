@@ -957,6 +957,24 @@ HELP = {
         "mask": "Darken everything outside the boundary to focus on the locality.",
     },
 }
+HELP["vi"].update({
+    "sec_take": "Tóm tắt tự động 5 phát hiện chính về điểm sáng cực đại, độ tập trung Gini, vùng tối và tự tương quan không gian.",
+    "sec_stats": "Bảng thống kê mô tả phân phối bức xạ NTL cấp ô lưới (trung bình trọng số diện tích, phân vị, CV, skewness, Gini).",
+    "sec_spatial": "Kiểm định Moran's I toàn cục với ma trận tiếp xúc Queen (8 hướng) để chẩn đoán sự phụ thuộc không gian.",
+    "sec_class": "Phân rã số lượng ô, diện tích và tổng ánh sáng (SOL) theo 5 ngưỡng phân loại kinh tế toàn cầu.",
+    "sec_hist": "Biểu đồ tần suất số lượng ô lưới theo 10 khoảng cường độ bức xạ NTL.",
+    "sec_top": "Danh sách 10 ô lưới có cường độ bức xạ cao nhất địa phương kèm tọa độ tâm.",
+    "sec_dl": "Xuất tệp CSV cấp ô lưới chuẩn hóa cho Stata/R/Python hoặc tệp hình học GeoJSON cho QGIS.",
+})
+HELP["en"].update({
+    "sec_take": "Automated summary of 5 key findings on peak brightness, Gini concentration, unlit area, and spatial autocorrelation.",
+    "sec_stats": "Descriptive statistics of cell-level NTL distribution (area-weighted mean, percentiles, CV, skewness, Gini).",
+    "sec_spatial": "Global Moran's I test using Queen contiguity (8 directions) to diagnose spatial dependence.",
+    "sec_class": "Breakdown of cell count, area, and Sum of Lights (SOL) across 5 global economic radiance thresholds.",
+    "sec_hist": "Frequency distribution of grid cells across 10 NTL radiance intervals.",
+    "sec_top": "Top 10 brightest grid cells in the locality with centroid coordinates.",
+    "sec_dl": "Export regression-ready cell-level CSV for Stata/R/Python or GeoJSON geometry for QGIS.",
+})
 H = HELP[LANG]
 
 APP_CSS = """
@@ -1291,6 +1309,10 @@ MAP_CSS = """
 .nt-legend div.i{margin-top:3px;white-space:nowrap}
 .nt-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-2px;
   border:1px solid rgba(255,255,255,.35)}
+.leaflet-control .legend{background:rgba(10,10,14,.86)!important;padding:6px 10px 4px!important;
+  border-radius:10px!important;border:1px solid rgba(255,255,255,.18)!important}
+.leaflet-control .legend svg text,.leaflet-control .legend text{fill:#f1f5f9!important;font:11px Inter,Arial,sans-serif!important}
+.leaflet-control .legend svg .tick line,.leaflet-control .legend svg .domain{stroke:rgba(255,255,255,.45)!important}
 </style>
 """
 
@@ -1842,7 +1864,7 @@ with tab_data:
 
     # Nhận định nhanh
     with st.container(border=True):  
-        st.subheader(L["sec_take"])
+        st.subheader(L["sec_take"], help=H["sec_take"])
         imax = int(np.argmax(ntl))
         gdesc = L["gdesc"][0 if gini_v < 0.4 else (1 if gini_v < 0.6 else 2)]
         take_lines = [
@@ -1877,7 +1899,7 @@ with tab_data:
 
     # Thống kê 
     with col_r:
-        st.subheader(L["sec_stats"])
+        st.subheader(L["sec_stats"], help=H["sec_stats"])
         stat_vals = [
             f"{w_mean:.3f}", f"{ntl.mean():.3f}", f"{np.median(ntl):.3f}", f"{std_ntl:.3f}",
             f"{cv:.2f}", f"{skew:.2f}",
@@ -1890,7 +1912,7 @@ with tab_data:
            hide_index=True, height=320)
 
     # Moran's I 
-    st.subheader(L["sec_spatial"])
+    st.subheader(L["sec_spatial"], help=H["sec_spatial"])
     if moran:
         k1, k2, k3, k4 = st.columns(4)
         k1.metric(L["mi_I"], f"{moran['I']:.3f}", help="Moran's I toàn cục: >0 tụ cụm, ≈0 ngẫu nhiên, <0 xen kẽ." if LANG == "vi" else "Global Moran's I: >0 clustered, ≈0 random, <0 alternating.")
@@ -1902,7 +1924,7 @@ with tab_data:
         st.caption(L["mi_na"])
 
     # Cơ cấu nhóm 
-    st.subheader(L["sec_class"])
+    st.subheader(L["sec_class"], help=H["sec_class"])
     cls = (
         pd.DataFrame({"code": codes, "area": area, "sol": sol_cell})
         .groupby("code").agg(cells=("area", "size"), area=("area", "sum"), sol=("sol", "sum"))
@@ -1929,7 +1951,7 @@ with tab_data:
     )
 
     # Histogram 
-    st.subheader(L["sec_hist"])
+    st.subheader(L["sec_hist"], help=H["sec_hist"])
     edges = [-0.001, 0, 1, 2, 5, 10, 15, 25, 40, 80, np.inf]
     binned = pd.cut(ntl, bins=edges, labels=L["hist_bins"]).value_counts()
     hist_df = pd.DataFrame({"bin": list(L["hist_bins"]), "cells": [int(binned.get(b, 0)) for b in L["hist_bins"]]})
@@ -1946,7 +1968,7 @@ with tab_data:
     sx(st.altair_chart, chart)
 
     # Top 10
-    st.subheader(L["sec_top"])
+    st.subheader(L["sec_top"], help=H["sec_top"])
     top_cols = ["grid_id", "centroid_lon", "centroid_lat", "area_km2", "ntl_mean", "ntl_vs_mean",
                 "sol_share_pct", "ntl_rank", "ntl_class"]
     top_cfg = {
@@ -1989,7 +2011,7 @@ with tab_data:
         sx(st.dataframe, dd, hide_index=True)
 
     # Tải dữ liệu 
-    st.subheader(L["sec_dl"])
+    st.subheader(L["sec_dl"], help=H["sec_dl"])
     slug = f"{slugify(district)}_NTL_{yr}_{size}m"
     d1, d2 = st.columns(2)
     with d1:
