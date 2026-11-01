@@ -987,6 +987,8 @@ section[data-testid="stSidebar"] hr{margin:.6rem 0}
 </style>
 """
 st.markdown(APP_CSS, unsafe_allow_html=True)
+from ui_theme import inject_theme, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
+inject_theme()
 
 # 3. GOOGLE EARTH ENGINE INIT
 @st.cache_resource(show_spinner=False)
@@ -1325,10 +1327,13 @@ def legend_html(title, items):
 
 
 # 5. SIDEBAR (CASCADING)
-st.title(L["title"])
-st.markdown(L["subtitle"])
+hero(
+    L["title"], L["subtitle"],
+    chips=[("VIIRS", "~463 m"), ("Moran's I", "Queen"), ("LISA", "FDR · BH"), ("GADM", "4.1")],
+)
 
 with st.sidebar:
+    sidebar_brand("NTL Spatial", "Spatial econometrics" if LANG == "en" else "Kinh tế lượng không gian")
     st.header(L["sb_spatial"])
     if not COUNTRIES:
         st.error(L["no_data"].format(d=DATA_ROOT))
@@ -1582,7 +1587,20 @@ if run_btn and not fuse_blocked:   # chốt chặn kép: nút đã bị khóa, �
 
 res = st.session_state.get("result")
 if not res:
-    st.info(L["idle"])
+    empty_state(
+        "Bắt đầu phân tích" if LANG == "vi" else "Get started",
+        L["idle"].replace("**", "").replace("👈 ", ""),
+        [
+            ("Chọn địa phương", "Quốc gia → Tỉnh → Quận/Huyện ở thanh bên") if LANG == "vi"
+            else ("Pick a locality", "Country → Province → District in the sidebar"),
+            ("Đặt tham số", "Độ phân giải lưới và năm phân tích") if LANG == "vi"
+            else ("Set parameters", "Grid resolution and analysis year"),
+            ("Chạy phân tích", f"Bấm “{L['run']}” và theo dõi 3 trạm xử lý") if LANG == "vi"
+            else (f"Run the pipeline", f"Press “{L['run']}” and follow the 3 stations"),
+            ("Khám phá & xuất", "Bản đồ, thống kê, LISA, tải CSV/GeoJSON") if LANG == "vi"
+            else ("Explore & export", "Map, statistics, LISA, CSV/GeoJSON download"),
+        ],
+    )
     st.stop()
 
 # 7. TÍNH CHỈ SỐ CHO KẾT QUẢ
@@ -1630,8 +1648,7 @@ lon_c, lat_c = cent_wgs.x.to_numpy(), cent_wgs.y.to_numpy()
 
 st.divider()
 with st.container(border=True):
-    st.markdown(f"#### 📍 {place}")
-    st.caption(f"{yr} · {size} m · EPSG:{epsg}")
+    place_banner(place, [str(yr), f"{size} m", f"EPSG:{epsg}", f"~{px_per_cell} px/{'ô' if LANG == 'vi' else 'cell'}"])
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     c1.metric(L["m_cells"], f"{n:,}", help="Tổng số ô lưới sau khi cắt theo ranh giới." if LANG == "vi" else "Total grid cells after clipping.")
     c2.metric(L["m_mean"], f"{w_mean:.2f}", help="NTL trung bình có trọng số diện tích (nW/cm²/sr)." if LANG == "vi" else "Area-weighted mean NTL (nW/cm²/sr).")
@@ -1883,8 +1900,8 @@ with tab_data:
             take_lines.append(L["take"][3].format(mi=moran["I"], mp=moran["p"], mdesc=mdesc))
         take_lines.append(L["take"][4].format(border=int(is_border.sum()), n=n))
         st.info("\n\n".join(take_lines))
- 
-        col_l, col_r = st.columns(2)
+
+    col_l, col_r = st.columns(2)
 
     # Thông tin chung
     with col_l:
