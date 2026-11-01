@@ -223,7 +223,7 @@ $$
 $$
 
 2. **Endogenous urban density decay gradient ($\hat{\gamma}$, Duranton & Puga, 2023):**
-   Estimates the structural spatial decay equation via area-weighted WLS across core cells, $\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}$, exporting both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
+   Estimates the structural spatial decay equation via area-weighted WLS across core cells, $\ln(1 + \mathrm{NTL}\_{i}) = \alpha\_{0} - \gamma \cdot d\_{\mathrm{core}, i} + u\_{i}$, exporting both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
 4. **Recentered market access ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023):**
    Computes gravity-weighted market potential $$\mathrm{MA}_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$$ over a symmetric UTM grid stencil and subtracts its exact analytical expectation under spatial permutation $$\mathbb{E}_{\pi}[\mathrm{MA}_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$$ to purge geographic centrality bias (`recentered_market_access`).
