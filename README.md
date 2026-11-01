@@ -91,9 +91,9 @@ All grid origin coordinates $(x_0, y_0)$ are snapped to integer multiples of the
 
 ### 2.2. Cloud masking on GEE and zonal statistics extraction via fractional coverage
 
-The system retrieves monthly composites from the `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` satellite dataset (native resolution $\_approx 15\_text{ arc-seconds} \_approx 463.83\_text{ m}$ at the equator). In monsoon tropical regions, heavy cloud cover during rainy months can leave pixels with zero valid observations (`cf_cvg` $= 0$), producing artificial zero radiance values. To eliminate this downward bias, the system applies a cloud-free mask `cf_cvg` $> 0$ to each monthly image prior to computing the **annual median composite** (Elvidge et al., 2017, 2021).
+The system retrieves monthly composites from the `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` satellite dataset (native resolution $\approx 15\text{ arc-seconds} \approx 463.83\text{ m}$ at the equator). In monsoon tropical regions, heavy cloud cover during rainy months can leave pixels with zero valid observations (`cf_cvg` $= 0$), producing artificial zero radiance values. To eliminate this downward bias, the system applies a cloud-free mask `cf_cvg` $> 0$ to each monthly image prior to computing the **annual median composite** (Elvidge et al., 2017, 2021).
 
-Next, rather than using traditional center-of-pixel raster stats that introduce substantial error when grid cell size approaches the native VIIRS pixel size, the system integrates the C/C++ library `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}_i$ of grid cell $i$ is computed as the weighted average weighted by the fractional pixel area $w_{ip} \in [0, 1]$ falling inside polygon cell $i$:
+Next, rather than using traditional center-of-pixel raster stats that introduce substantial error when grid cell size approaches the native VIIRS pixel size, the system integrates the C/C++ library `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}\_{i}$ of grid cell $i$ is computed as the weighted average weighted by the fractional pixel area $w\_{ip} \in [0, 1]$ falling inside polygon cell $i$:
 
 $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
