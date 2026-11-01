@@ -564,7 +564,6 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     m = folium.Map(
         location=[(miny + maxy) / 2, (minx + maxx) / 2],
-        zoom_start=13,
         tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
         attr="Esri",
         control_scale=True,
@@ -572,6 +571,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         no_wrap=True,
         max_zoom=16,
     )
+    m.fit_bounds([[miny, minx], [maxy, maxx]])
 
     lisa_layer = folium.GeoJson(
         gj, name="LISA",
