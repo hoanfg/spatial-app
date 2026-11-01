@@ -23,7 +23,7 @@ The application addresses the workflow from standardizing irregular administrati
 
 ---
 
-## CHAPTER 1: SYSTEM ARCHITECTURE OVERVIEW AND RESOURCE MANAGEMENT
+## I. SYSTEM ARCHITECTURE OVERVIEW AND RESOURCE MANAGEMENT
 
 The system is designed not merely as a remote sensing data extractor, but as a web-based spatial processing engine that directly connects geographic preprocessing (GIS) workflows with spatial econometric models.
 
@@ -67,7 +67,7 @@ Streamlit operates on a **stateless** execution model: every user interaction wi
 
 ---
 
-## CHAPTER 2: SPATIAL GEOPROCESSING METHODOLOGY
+## II. SPATIAL GEOPROCESSING METHODOLOGY
 
 ### 2.1. Addressing the modifiable areal unit problem (MAUP)
 
@@ -103,7 +103,7 @@ Missing or negative values arising from sensor stray-light correction are clampe
 
 ---
 
-## CHAPTER 3: SPATIAL ECONOMETRICS CORE (LISA CORE ALGORITHM)
+## III. SPATIAL ECONOMETRICS CORE (LISA CORE ALGORITHM)
 
 The `lisa_core.py` module is built entirely with array algebra on `numpy` and `pandas`, removing dependencies on heavy GIS packages such as `libpysal` or `esda` while reducing contiguity graph construction complexity to $\mathcal{O}(N \log N)$.
 
@@ -211,9 +211,32 @@ $$
 d_{\mathrm{core}, i} = \frac{1}{1000}\sqrt{(c_{x,i} - \mathrm{CBD}_x)^2 + (c_{y,i} - \mathrm{CBD}_y)^2}
 $$
 
+### 3.6. Frontier spatial econometric modules
+
+To move beyond static exploratory spatial data analysis (ESDA) and support modern causal and structural identification, `lisa_core.py` automatically computes 5 frontier econometric modules:
+
+1. **Top-lights Pareto tail exponent ($\hat{\zeta}_{\mathrm{Hill}}$, Bluhm & Krause, 2022; Bluhm et al., 2025):**
+   Applies the Hill extreme-value estimator to the brightest $k = \lfloor 0.10 \lvert S_{\mathrm{lit}} \rvert \rfloor$ core cells to quantify upper-tail agglomeration intensity:
+
+$$
+\hat{\zeta}_{\mathrm{Hill}} = \left[ \frac{1}{k} \sum_{j=1}^{k} \ln\left(\frac{\mathrm{NTL}_{(j)}}{\mathrm{NTL}_{(k+1)}}\right) \right]^{-1}
+$$
+
+2. **Endogenous urban density decay gradient ($\hat{\gamma}$, Duranton & Puga, 2023):**
+   Estimates the structural spatial decay equation via area-weighted WLS across core cells, $\ln(1 + \mathrm{NTL}_i) = \alpha_0 - \gamma \cdot d_{\mathrm{core}, i} + u_i$, exporting both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
+
+3. **Recentered market access ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023):**
+   Computes gravity-weighted market potential $\mathrm{MA}_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$ over a symmetric UTM grid stencil and subtracts its exact analytical expectation under spatial permutation $\mathbb{E}_{\pi}[\mathrm{MA}_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ to purge geographic centrality bias (`recentered_market_access`).
+
+4. **Concentric spillover rings and signed boundary distance for Spatial RDD (Vazquez-Bare, 2023; Butts, 2024):**
+   Computes the signed Euclidean distance to the nearest hotspot boundary `signed_dist_hh_km` ($d < 0$ inside the core, $d > 0$ outside the core) as a running variable for Spatial Regression Discontinuity Designs (Spatial RDD), and partitions the locality into 5 concentric exposure rings (`0_Treated_HH` through `4_Pure_Control_gt10km`) to isolate uncontaminated control units.
+
+5. **Spatial unit-root diagnostics and two-period Spatial Markov dynamics (Müller & Watson, 2022, 2024; Rey, Arribas-Bel, & Wolf, 2023; Borusyak, Jaravel, & Spiess, 2024):**
+   Diagnoses first-order spatial autoregression persistence (`spatial_ar1_persistence`) and enables two-period ($t_0 \rightarrow t_1$) directional LISA analysis to quantify *Agglomeration Shadow* effects and conditional Spatial Markov transition matrices.
+
 ---
 
-## CHAPTER 4: MEMORY SAFEGUARD ALGORITHMS
+## IV. MEMORY SAFEGUARD ALGORITHMS
 
 ### 4.1. Grid size estimation fuse
 
@@ -237,7 +260,7 @@ $$
 
 ---
 
-## CHAPTER 5: PANEL DATA STRUCTURE AND ECONOMETRIC DATA BRIDGE
+## V. PANEL DATA STRUCTURE AND ECONOMETRIC DATA BRIDGE
 
 The primary goal of the system is to provide quantitative variables ready for statistical packages (Python, R, Stata) across two levels of analysis: **cell-level micro regressions (cross-sectional / spatial panel)** and **region–year macro panel regressions**.
 
@@ -323,7 +346,7 @@ The table below defines all variables in the exported `ntl_lisa_panel.csv` file:
 
 ---
 
-## CHAPTER 6: SYSTEM LIMITATIONS AND FUTURE EXTENSIONS
+## VI. SYSTEM LIMITATIONS AND FUTURE EXTENSIONS
 
 ### 6.1. Input data limitations
 
@@ -353,42 +376,43 @@ The table below defines all variables in the exported `ntl_lisa_panel.csv` file:
 
 3. Benjamini, Y., & Hochberg, Y. (1995). Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing. *Journal of the Royal Statistical Society: Series B (Methodological)*, 57(1), 289–300. https://doi.org/10.1111/j.2517-6161.1995.tb02031.x
 
-4. Caldas de Castro, M., & Singer, B. H. (2006). Controlling the False Discovery Rate: A New Application to Account for Multiple and Dependent Tests in Local Statistics of Spatial Association. *Geographical Analysis*, 38(2), 180–208. https://doi.org/10.1111/j.0016-7363.2006.00682.x
+4. Bluhm, R., & Krause, M. (2022). Top lights: Bright cities and their contribution to economic development. *Journal of Development Economics*, 157, 102880. https://doi.org/10.1016/j.jdeveco.2022.102880
 
-5. Chen, J., & Roth, J. (2024). Logs with Zeros? Some Problems and Solutions. *The Quarterly Journal of Economics*, 139(2), 891–936. https://doi.org/10.1093/qje/qjad054
+5. Bluhm, R., Dreher, A., Fuchs, A., Parks, B. C., Strange, A. M., & Tierney, M. J. (2025). Connective financing: Chinese infrastructure projects and the diffusion of economic activity in developing countries. *Journal of Urban Economics*, 145, 103730. https://doi.org/10.1016/j.jue.2024.103730
 
-6. Chen, X., & Nordhaus, W. D. (2011). Using luminosity data as a proxy for economic statistics. *Proceedings of the National Academy of Sciences*, 108(21), 8589–8594. https://doi.org/10.1073/pnas.1017031108
+6. Borusyak, K., & Hull, P. (2023). Nonrandom Exposure to Exogenous Shocks. *Econometrica*, 91(6), 2155–2185. https://doi.org/10.3982/ECTA19367
 
-7. Conley, T. G. (1999). GMM estimation with cross sectional dependence. *Journal of Econometrics*, 92(1), 1–45. https://doi.org/10.1016/S0304-4076(98)00084-0
+7. Borusyak, K., Jaravel, X., & Spiess, J. (2024). Revisiting Event-Study Designs: Robust and Efficient Estimation. *The Review of Economic Studies*, 91(6), 3253–3285. https://doi.org/10.1093/restud/rdae007
 
-8. Donaldson, D., & Storeygard, A. (2016). The View from Above: Applications of Satellite Data in Economics. *Journal of Economic Perspectives*, 30(4), 171–198. https://doi.org/10.1257/jep.30.4.171
+8. Butts, K. (2024). Difference-in-Differences with Spatial Spillovers. *Working Paper / arXiv*. https://doi.org/10.48550/arXiv.2105.03737
 
-9. Elvidge, C. D., Baugh, K. E., Anderson, S. J., Sutton, P. C., & Ghosh, T. (2012). The Night Light Development Index (NLDI): a spatially explicit measure of human development from satellite data. *Social Geography*, 7(1), 23–35. https://doi.org/10.5194/sg-7-23-2012
+9. Caldas de Castro, M., & Singer, B. H. (2006). Controlling the False Discovery Rate: A New Application to Account for Multiple and Dependent Tests in Local Statistics of Spatial Association. *Geographical Analysis*, 38(2), 180–208. https://doi.org/10.1111/j.0016-7363.2006.00682.x
 
-10. Elvidge, C. D., Baugh, K., Zhizhin, M., Hsu, F. C., & Ghosh, T. (2017). VIIRS night-time lights. *International Journal of Remote Sensing*, 38(21), 5860–5879. https://doi.org/10.1080/01431161.2017.1342050
+10. Chen, J., & Roth, J. (2024). Logs with Zeros? Some Problems and Solutions. *The Quarterly Journal of Economics*, 139(2), 891–936. https://doi.org/10.1093/qje/qjad054
 
-11. Elvidge, C. D., Zhizhin, M., Ghosh, T., Hsu, F. C., & Taneja, J. (2021). Annual Time Series of Global VIIRS Nighttime Lights Derived from Monthly Averages: 2012 to 2019. *Remote Sensing*, 13(5), 922. https://doi.org/10.3390/rs13050922
+11. Donaldson, D., & Storeygard, A. (2016). The View from Above: Applications of Satellite Data in Economics. *Journal of Economic Perspectives*, 30(4), 171–198. https://doi.org/10.1257/jep.30.4.171
 
-12. Fotheringham, A. S., & Wong, D. W. S. (1991). The modifiable areal unit problem in multivariate statistical analysis. *Environment and Planning A: Economy and Space*, 23(7), 1025–1044. https://doi.org/10.1068/a231025
+12. Duranton, G., & Puga, D. (2023). Urban Growth and Its Aggregate Implications. *Econometrica*, 91(6), 2219–2259. https://doi.org/10.3982/ECTA17936
 
-13. Gibson, J., Olivia, S., Boe-Gibson, G., & Li, C. (2021). Which night lights data should we use in economics, and where? *Journal of Development Economics*, 149, 102602. https://doi.org/10.1016/j.jdeveco.2020.102602
+13. Elvidge, C. D., Baugh, K., Zhizhin, M., Hsu, F. C., & Ghosh, T. (2017). VIIRS night-time lights. *International Journal of Remote Sensing*, 38(21), 5860–5879. https://doi.org/10.1080/01431161.2017.1342050
 
-14. Heckman, J. J. (1979). Sample Selection Bias as a Specification Error. *Econometrica*, 47(1), 153–161. https://doi.org/10.2307/1912352
+14. Elvidge, C. D., Zhizhin, M., Ghosh, T., Hsu, F. C., & Taneja, J. (2021). Annual Time Series of Global VIIRS Nighttime Lights Derived from Monthly Averages: 2012 to 2019. *Remote Sensing*, 13(5), 922. https://doi.org/10.3390/rs13050922
 
-15. Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growth from Outer Space. *American Economic Review*, 102(2), 994–1028. https://doi.org/10.1257/aer.102.2.994
+15. Gibson, J., Olivia, S., Boe-Gibson, G., & Li, C. (2021). Which night lights data should we use in economics, and where? *Journal of Development Economics*, 149, 102602. https://doi.org/10.1016/j.jdeveco.2020.102602
 
-16. LeSage, J., & Pace, R. K. (2009). *Introduction to Spatial Econometrics*. Chapman and Hall/CRC. https://doi.org/10.1201/9781420064254
+16. Henderson, J. V., Storeygard, A., & Weil, D. N. (2012). Measuring Economic Growth from Outer Space. *American Economic Review*, 102(2), 994–1028. https://doi.org/10.1257/aer.102.2.994
 
-17. Lessmann, C., & Seidel, A. (2017). Regional inequality, convergence, and its determinants – A view from outer space. *European Economic Review*, 92, 110–132. https://doi.org/10.1016/j.euroecorev.2016.11.009
+17. Mirza, M. U., Xu, C., van Bavel, B., van Nes, E. H., & Scheffer, M. (2021). Global inequality remotely sensed. *Proceedings of the National Academy of Sciences*, 118(18), e1919913118. https://doi.org/10.1073/pnas.1919913118
 
-18. Mirza, M. U., Xu, C., van Bavel, B., van Nes, E. H., & Scheffer, M. (2021). Global inequality remotely sensed. *Proceedings of the National Academy of Sciences*, 118(18), e1919913118. https://doi.org/10.1073/pnas.1919913118
+18. Moran, P. A. P. (1950). Notes on Continuous Stochastic Phenomena. *Biometrika*, 37(1/2), 17–23. https://doi.org/10.1093/biomet/37.1-2.17
 
-19. Moran, P. A. P. (1950). Notes on Continuous Stochastic Phenomena. *Biometrika*, 37(1/2), 17–23. https://doi.org/10.1093/biomet/37.1-2.17
+19. Müller, U. K., & Watson, M. W. (2022). Spatial Correlation Robust Inference. *Econometrica*, 90(6), 2901–2935. https://doi.org/10.3982/ECTA19465
 
-20. Openshaw, S. (1984). *The Modifiable Areal Unit Problem*. Concepts and Techniques in Modern Geography (CATMOG), No. 38. Geo Books.
+20. Müller, U. K., & Watson, M. W. (2024). Spatial Unit Roots and Spurious Regression. *Econometrica*, 92(5), 1661–1695. https://doi.org/10.3982/ECTA21654
 
-21. Rey, S. J., & Anselin, L. (2007). PySAL: A Python Library of Spatial Analytical Methods. *The Review of Regional Studies*, 37(1), 5–27. https://doi.org/10.52324/001c.8285
+21. Openshaw, S. (1984). *The Modifiable Areal Unit Problem*. Concepts and Techniques in Modern Geography (CATMOG), No. 38. Geo Books.
 
-22. Rey, S. J., Murray, A. T., & Anselin, L. (2011). Visualizing regional income distribution dynamics. *Letters in Spatial and Resource Sciences*, 4(1), 81–90. https://doi.org/10.1007/s12076-010-0048-2
+22. Rey, S. J., Arribas-Bel, D., & Wolf, L. J. (2023). *Geographic Data Science with Python*. Chapman and Hall/CRC. https://doi.org/10.1201/9780429292507
 
-23. Ye, X., & Rey, S. J. (2013). A framework for exploratory space-time analysis of economic data. *The Annals of Regional Science*, 50(1), 315–339. https://doi.org/10.1007/s00168-011-0470-4
+23. Vazquez-Bare, G. (2023). Identification and estimation of spillover effects in randomized experiments. *Journal of Econometrics*, 237(1), 105237. https://doi.org/10.1016/j.jeconom.2021.10.014
+
