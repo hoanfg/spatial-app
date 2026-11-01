@@ -36,7 +36,7 @@ except Exception:  # pragma: no cover
 # ==========================================
 st.set_page_config(page_title="NTL Spatial Econometrics - R&D", page_icon="🌙", layout="wide")
 
-MAINTENANCE_MODE = True
+MAINTENANCE_MODE = False
 
 if MAINTENANCE_MODE:
     st.markdown(
