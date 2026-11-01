@@ -364,7 +364,7 @@ The table below defines all variables in the exported `ntl_lisa_panel.csv` file:
 
 1. **Multi-year calibrated VIIRS annual composites (Annual VNL V2):** Integrate the background-zeroed and gas-flare-filtered annual composites from the Earth Observation Group (`NOAA/VIIRS/DNB/ANNUAL_V21` / `V22`) (Elvidge et al., 2021) alongside the monthly median composite pipeline, combined with year fixed effects for long-horizon panel regressions.
 
-2. **Spatio-temporal dynamics (Spatio-Temporal LISA – LISTA):** Upgrade `lisa_core.py` to compute spatial Markov transition matrices and local indicators of spatio-temporal association (LISTA) (Rey, Murray, & Anselin, 2011; Ye & Rey, 2013), enabling direct tracking of hotspot expansion trajectories across development stages.
+2. **Multi-period spatial Markov chains and space-time cointegration:** Extend the current two-period ($t_0 \rightarrow t_1$) dynamic module into a continuous multi-period panel time-series model (2014–2025) incorporating spatial unit root tests.
 
 ---
 
