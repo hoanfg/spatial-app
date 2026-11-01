@@ -2078,16 +2078,49 @@ with tab_guide:
 # ==========================================
 # 11. TAB LISA (DATA BRIDGE CHO PANEL REGRESSION)
 # ==========================================
+# Thay thế Mục 11 (dòng 1054 - 1085) trong app_4.py bằng đoạn sau:
 with tab_lisa:
     from lisa_ui import render_lisa_tab
-    
-    # Tạo mã định danh vùng duy nhất (Ví dụ: VNM_hoan_kiem)
+
     _iso_id = res["iso3"] or slugify(str(res["country_raw"]).split("/")[-1]).upper()
     _st_slug = slugify(res.get("state_raw") or res["state_name"])
     _dt_slug = slugify(res.get("district_raw") or res["district"])
     region_id = f"{_iso_id}_{_st_slug}_{_dt_slug}"
-    
-    # Truyền dữ liệu vào lõi LISA
+
+    def _fetch_other_year_ntl(target_year: int) -> np.ndarray:
+        """Tải và trích xuất NTL của năm đối chiếu t0 trên đúng lưới grid_utm hiện tại."""
+        from exactextract import exact_extract
+        import rasterio
+        from rasterio.io import MemoryFile
+
+        grid_wgs = grid_utm.to_crs(epsg=4326)
+        gx0, gy0, gx1, gy1 = grid_wgs.total_bounds
+        pad = 0.005
+        bbox = (round(gx0 - pad, 5), round(gy0 - pad, 5), round(gx1 + pad, 5), round(gy1 + pad, 5))
+        tif_bytes = fetch_ntl_raster(bbox, year_id=int(target_year))
+        tmp_p = None
+        try:
+            with MemoryFile(tif_bytes) as mf:
+                with mf.open() as src:
+                    arr = np.clip(np.nan_to_num(src.read(1).astype("float32"), nan=0.0, posinf=0.0, neginf=0.0), 0.0, None)
+                    crs, transform, h, w = src.crs, src.transform, src.height, src.width
+            with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
+                tmp_p = tf.name
+            with rasterio.open(tmp_p, "w", driver="GTiff", height=h, width=w, count=1, dtype="float32", crs=crs, transform=transform) as dst:
+                dst.write(arr, 1)
+            st_df = exact_extract(tmp_p, grid_wgs[["grid_id", "geometry"]], ["mean"], include_cols=["grid_id"], output="pandas")
+            mcol = next(c for c in st_df.columns if "mean" in str(c).lower())
+            st_df["grid_id"] = pd.to_numeric(st_df["grid_id"], errors="coerce").astype("int64")
+            st_df[mcol] = pd.to_numeric(st_df[mcol], errors="coerce").fillna(0.0).clip(lower=0.0)
+            merged = grid_utm[["grid_id"]].merge(st_df[["grid_id", mcol]], on="grid_id", how="left")
+            return merged[mcol].fillna(0.0).to_numpy(dtype=float)
+        finally:
+            if tmp_p and os.path.exists(tmp_p):
+                try:
+                    os.remove(tmp_p)
+                except OSError:
+                    pass
+
     try:
         render_lisa_tab(
             res=res,
@@ -2097,7 +2130,9 @@ with tab_lisa:
             region_id=region_id,
             region_label=place,
             render_cap=RENDER_CAP,
-            basemap="CartoDB dark_matter" 
+            basemap="CartoDB dark_matter",
+            fetch_year_ntl_fn=_fetch_other_year_ntl,
+            available_years=YEARS,
         )
     except Exception as e:
         st.error(f"Không chạy được mô-đun LISA: {e}")
