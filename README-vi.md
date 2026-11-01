@@ -93,7 +93,7 @@ Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới đều được căn chu
 
 Hệ thống khai thác chuỗi ảnh tháng từ bộ dữ liệu vệ tinh `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` (độ phân giải gốc $\approx 15\text{ arc-giây} \approx 463.83\text{ m}$ tại xích đạo). Tại các vùng nhiệt đới gió mùa, mây che phủ dày đặc trong các tháng mùa mưa có thể khiến điểm ảnh không có quan sát hợp lệ (`cf_cvg` $= 0$), dẫn đến giá trị bức xạ bằng $0$ giả tạo. Để loại bỏ thiên lệch âm này, hệ thống áp dụng mặt nạ lọc mây `cf_cvg` $> 0$ cho từng ảnh tháng trước khi lấy **trung vị năm (annual median composite)** (Elvidge et al., 2017, 2021).
 
-Tiếp theo, thay vì sử dụng phương pháp tâm điểm ảnh (center-of-pixel) truyền thống vốn gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS, hệ thống tích hợp thư viện C/C++ `exactextract` (Baston, 2023). Cường độ bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ được tính bằng trung bình có trọng số theo tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
+Tiếp theo, thay vì sử dụng phương pháp tâm điểm ảnh (center-of-pixel) truyền thống vốn gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS, hệ thống tích hợp thư viện C/C++ `exactextract` (Baston, 2023). Cường độ bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ được tính bằng trung bình có trọng số theo tỷ lệ diện tích điểm ảnh $w\_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
 
 $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
