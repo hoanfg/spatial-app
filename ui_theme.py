@@ -1,5 +1,5 @@
 """
-ui_theme.py 
+ui_theme.py
 
 """
 from __future__ import annotations
@@ -141,8 +141,188 @@ h3,h4{letter-spacing:-.2px}
 """
 
 
+_FX_CSS = """
+<style>
+/* ===== Vòng 2: hiệu ứng ===== */
+@keyframes ntlFade{from{opacity:0}to{opacity:1}}
+@keyframes ntlPop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@keyframes ntlFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(-22px,16px)}}
+@keyframes ntlShine{to{background-position:200% 0}}
+@keyframes ntlBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ntlSweep{0%{transform:translateX(-120%)}60%,100%{transform:translateX(120%)}}
+@keyframes ntlPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,183,3,.45)}50%{box-shadow:0 0 0 9px rgba(255,183,3,0)}}
+@keyframes ntlRipple{from{transform:scale(0);opacity:.45}to{transform:scale(2.6);opacity:0}}
+
+/* Hero: aurora + chữ ánh kim */
+.ntl-hero:before,.ntl-hero:after{content:"";position:absolute;border-radius:50%;filter:blur(42px);pointer-events:none}
+.ntl-hero:before{width:260px;height:260px;right:-60px;top:-130px;background:#ffb703;opacity:.5;animation:ntlFloat 8s ease-in-out infinite}
+.ntl-hero:after{width:230px;height:230px;left:32%;bottom:-150px;background:#00e5ff;opacity:.26;animation:ntlFloat 10s ease-in-out infinite reverse}
+.ntl-hero>*{position:relative;z-index:1}
+.ntl-hero h1{background:linear-gradient(90deg,#fff,#ffe29a,#9ff3ff,#ffe29a,#fff);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:ntlShine 7s linear infinite}
+.ntl-chip{animation:ntlPop .35s cubic-bezier(.2,.8,.2,1) backwards}
+.ntl-chip:nth-child(2){animation-delay:.06s}.ntl-chip:nth-child(3){animation-delay:.12s}.ntl-chip:nth-child(4){animation-delay:.18s}
+.ntl-step{animation:ntlUp .38s cubic-bezier(.2,.8,.2,1) backwards}
+.ntl-step:nth-child(2){animation-delay:.07s}.ntl-step:nth-child(3){animation-delay:.14s}.ntl-step:nth-child(4){animation-delay:.21s}
+.ntl-step .n{transition:transform .25s ease}.ntl-step:hover .n{transform:scale(1.15) rotate(-6deg)}
+.ntl-tag{animation:ntlPop .3s ease backwards}
+.ntl-place h4{background:linear-gradient(90deg,var(--ntl-accent),#ff8c00);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* Vào cảnh theo thứ tự cho cột / thẻ / bảng / tab */
+div[data-testid="stHorizontalBlock"]>div{animation:ntlUp .38s cubic-bezier(.2,.8,.2,1) backwards}
+div[data-testid="stHorizontalBlock"]>div:nth-child(2){animation-delay:.05s}
+div[data-testid="stHorizontalBlock"]>div:nth-child(3){animation-delay:.10s}
+div[data-testid="stHorizontalBlock"]>div:nth-child(4){animation-delay:.15s}
+div[data-testid="stHorizontalBlock"]>div:nth-child(5){animation-delay:.20s}
+div[data-testid="stHorizontalBlock"]>div:nth-child(6){animation-delay:.25s}
+div[data-baseweb="tab-panel"]{animation:ntlFade .3s ease both}
+div[data-testid="stExpander"],div[data-testid="stDataFrame"],div[data-testid="stAlert"],
+div[data-testid="stVerticalBlockBorderWrapper"]{animation:ntlUp .35s cubic-bezier(.2,.8,.2,1) backwards}
+div[data-testid="stExpander"]{transition:border-color .18s ease}
+div[data-testid="stExpander"]:hover{border-color:rgba(255,183,3,.5)}
+div[data-testid="stPlotlyChart"],div[data-testid="stVegaLiteChart"]{animation:ntlPop .4s ease backwards}
+iframe{animation:ntlFade .5s ease both}
+
+/* Thẻ chỉ số: vạch nhấn chạy ra khi xuất hiện */
+div[data-testid="stMetric"]{position:relative;overflow:hidden}
+div[data-testid="stMetric"]:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;transform-origin:left;
+  background:linear-gradient(90deg,var(--ntl-accent),var(--ntl-accent-2));animation:ntlBar .6s cubic-bezier(.2,.8,.2,1) both}
+
+/* Nút: ánh quét + gợn sóng khi bấm */
+div.stButton>button,div[data-testid="stDownloadButton"]>button,div[data-testid="stFormSubmitButton"]>button{position:relative;overflow:hidden}
+div.stButton>button[kind="primary"]:not(:disabled):after,div[data-testid="stDownloadButton"]>button[kind="primary"]:after,
+div[data-testid="stFormSubmitButton"]>button[kind="primary"]:after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.38) 50%,transparent 65%);animation:ntlSweep 3.6s ease-in-out infinite}
+section[data-testid="stSidebar"] div.stButton>button[kind="primary"]:not(:disabled){animation:ntlPulse 2.4s ease-out infinite}
+.ntl-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);pointer-events:none;animation:ntlRipple .55s ease-out forwards}
+
+/* Điều khiển nhập liệu theo màu nhấn */
+div[data-baseweb="slider"] div[role="slider"]{background:var(--ntl-accent)!important;box-shadow:0 0 0 4px rgba(255,183,3,.22);transition:box-shadow .15s ease}
+div[data-baseweb="slider"] div[role="slider"]:hover{box-shadow:0 0 0 7px rgba(255,183,3,.25)}
+div[data-baseweb="select"]>div,div[data-baseweb="input"]>div{border-radius:10px;transition:border-color .15s ease,box-shadow .15s ease}
+div[data-baseweb="select"]>div:hover,div[data-baseweb="input"]>div:hover{border-color:rgba(255,183,3,.7)}
+hr{border:none!important;height:1px!important;background:linear-gradient(90deg,transparent,rgba(127,127,140,.5),transparent)!important}
+div[data-testid="stSidebar"] [data-testid="stRadio"] label{transition:color .15s ease}
+div[data-testid="stTooltipContent"]{border-radius:10px}
+div[data-testid="stToast"]{border-radius:12px;border:1px solid rgba(255,183,3,.5);animation:ntlPop .3s ease both}
+
+/* Thanh tiến trình cuộn + nút lên đầu trang */
+.ntl-progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:999999;pointer-events:none;
+  background:linear-gradient(90deg,var(--ntl-accent),var(--ntl-accent-2));transition:width .1s linear}
+.ntl-top{position:fixed;right:22px;bottom:22px;width:44px;height:44px;border-radius:50%;border:1px solid var(--ntl-border);
+  background:rgba(20,22,30,.88);color:#ffb703;font-size:1.15rem;cursor:pointer;z-index:999998;display:grid;place-items:center;
+  opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .2s ease,transform .2s ease,border-color .2s ease;
+  backdrop-filter:blur(6px)}
+.ntl-top.show{opacity:1;transform:none;pointer-events:auto}
+.ntl-top:hover{border-color:var(--ntl-accent);transform:translateY(-3px)}
+
+/* Ẩn khung iframe 0px dùng cho script */
+div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-container:has(iframe[height="0"]){display:none}
+</style>
+"""
+
+_FX_JS = """
+<script>
+(function () {
+  var P = window.parent, D;
+  try { D = P.document; } catch (e) { return; }
+  if (P.__ntlFx) { return; }
+  P.__ntlFx = true;
+  var reduce = P.matchMedia && P.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 1) Đếm số cho thẻ chỉ số (~0.7s) */
+  function textNode(el) {
+    var w = D.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) { if (/\\d/.test(n.nodeValue)) { return n; } }
+    return null;
+  }
+  function animate(el) {
+    if (el.__ntlBusy) { return; }
+    var tn = textNode(el);
+    if (!tn) { return; }
+    var full = tn.nodeValue;
+    if (el.__ntlLast === full) { return; }
+    el.__ntlLast = full;
+    var m = full.match(/^([^\\d\\-+]*)([\\-+]?[\\d,]*\\.?\\d+)(.*)$/);
+    if (!m || reduce) { return; }
+    var raw = m[2], target = parseFloat(raw.replace(/,/g, ''));
+    if (!isFinite(target) || target === 0) { return; }
+    var dec = raw.indexOf('.') >= 0 ? raw.split('.')[1].length : 0;
+    var commas = raw.indexOf(',') >= 0;
+    function fmt(v) {
+      var s = v.toFixed(dec);
+      if (commas) { var a = s.split('.'); a[0] = a[0].replace(/\\B(?=(\\d{3})+(?!\\d))/g, ','); s = a.join('.'); }
+      return m[1] + s + m[3];
+    }
+    var t0 = null, dur = 700, last = null;
+    el.__ntlBusy = true;
+    function step(ts) {
+      if (t0 === null) { t0 = ts; }
+      var t = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - t, 3);
+      if (tn.nodeValue !== full && tn.nodeValue !== last) { el.__ntlBusy = false; return; }
+      last = t < 1 ? fmt(target * e) : full;
+      tn.nodeValue = last;
+      if (t < 1) { P.requestAnimationFrame(step); } else { el.__ntlBusy = false; }
+    }
+    P.requestAnimationFrame(step);
+  }
+  var pending = false;
+  function scan() {
+    pending = false;
+    D.querySelectorAll('[data-testid="stMetricValue"]').forEach(animate);
+  }
+  new P.MutationObserver(function () {
+    if (!pending) { pending = true; P.requestAnimationFrame(scan); }
+  }).observe(D.body, {childList: true, subtree: true});
+  scan();
+
+  /* 2) Gợn sóng khi bấm nút */
+  D.addEventListener('click', function (e) {
+    if (reduce || !e.target.closest) { return; }
+    var b = e.target.closest('.stButton button, [data-testid="stDownloadButton"] button, [data-testid="stFormSubmitButton"] button');
+    if (!b) { return; }
+    var r = b.getBoundingClientRect(), d = Math.max(r.width, r.height), s = D.createElement('span');
+    s.className = 'ntl-ripple';
+    s.style.cssText = 'width:' + d + 'px;height:' + d + 'px;left:' + (e.clientX - r.left - d / 2) + 'px;top:' + (e.clientY - r.top - d / 2) + 'px';
+    b.appendChild(s);
+    setTimeout(function () { if (s.parentNode) { s.parentNode.removeChild(s); } }, 600);
+  }, true);
+
+  /* 3) Thanh tiến trình cuộn + nút lên đầu trang */
+  var bar = D.createElement('div'); bar.className = 'ntl-progress';
+  var top = D.createElement('button'); top.className = 'ntl-top'; top.type = 'button';
+  top.setAttribute('aria-label', 'Back to top'); top.textContent = '\\u2191';
+  D.body.appendChild(bar); D.body.appendChild(top);
+  var tries = 0;
+  function bind() {
+    var sc = D.querySelector('[data-testid="stMain"]') || D.querySelector('section.main');
+    if (!sc) { if (tries++ < 20) { setTimeout(bind, 400); } return; }
+    function upd() {
+      var max = sc.scrollHeight - sc.clientHeight;
+      bar.style.width = (max > 0 ? Math.min(100, sc.scrollTop / max * 100) : 0) + '%';
+      top.classList.toggle('show', sc.scrollTop > 500);
+    }
+    sc.addEventListener('scroll', upd, {passive: true});
+    top.addEventListener('click', function () { sc.scrollTo({top: 0, behavior: reduce ? 'auto' : 'smooth'}); });
+    upd();
+  }
+  bind();
+})();
+</script>
+"""
+
+
 def inject_theme() -> None:
     st.markdown(_THEME_CSS, unsafe_allow_html=True)
+    st.markdown(_FX_CSS, unsafe_allow_html=True)
+
+
+def enable_fx() -> None:
+    try:
+        import streamlit.components.v1 as components
+        components.html(_FX_JS, height=0)
+    except Exception:  # noqa: BLE001
+        pass
 
 
 def sidebar_brand(title: str, subtitle: str) -> None:
