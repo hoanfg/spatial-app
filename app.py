@@ -1734,7 +1734,7 @@ with tab_map:
     folium.TileLayer(tiles=TILE_LIGHT, attr="Esri, HERE, Garmin", name=L["tile_light"], show=False).add_to(m)
     folium.TileLayer(tiles=TILE_STREET, attr="Esri, HERE, Garmin, OpenStreetMap contributors",
                      name=L["tile_street"], show=False).add_to(m)
-    m.fit_bounds([[bminy, bminx], [bmaxy, bmaxx]])
+    m.fit_bounds([[miny, minx], [maxy, maxx]])
     m.get_root().header.add_child(folium.Element(MAP_CSS))
 
     colormap = make_colormap(scale_mode, vmax, L["caption"].format(y=yr))
