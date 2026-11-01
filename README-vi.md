@@ -364,7 +364,7 @@ Bảng dưới đây định nghĩa đầy đủ các biến số trong tệp xu
 
 1. **Tích hợp bộ dữ liệu VIIRS chuẩn hóa đa năm (Annual VNL V2):** Tích hợp thêm nguồn ảnh năm đã khử nhiễu nền và pháo sáng khí đốt của Earth Observation Group (`NOAA/VIIRS/DNB/ANNUAL_V21` / `V22`) (Elvidge et al., 2021) song song với bộ tổng hợp trung vị tháng hiện tại, kết hợp hiệu ứng cố định theo năm (Year Fixed Effects) cho hồi quy chuỗi thời gian dài.
 
-2. **Động học không gian – thời gian (Spatio-Temporal LISA – LISTA):** Nâng cấp mô-đun `lisa_core.py` để tính toán ma trận dịch chuyển Markov không gian (Spatial Markov Transitions) và thống kê tự tương quan không – thời gian cục bộ (LISTA) (Rey, Murray, & Anselin, 2011; Ye & Rey, 2013), cho phép theo dõi trực tiếp quỹ đạo lan tỏa của các cụm điểm nóng qua từng giai đoạn phát triển.
+2. **Chuỗi Markov không gian đa kỳ và đồng tích hợp không gian – thời gian:** Mở rộng mô-đun động học 2 kỳ ($t_0 \rightarrow t_1$) hiện tại sang mô hình chuỗi thời gian bảng đa kỳ liên tục (2014–2025) có kiểm soát nghiệm đơn vị không gian.
 
 ---
 
