@@ -558,14 +558,14 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             else:
                 st.info(L["no_scat"])
 
-# ---------- FRONTIER Q1 ECONOMETRICS (2022–2026): PARETO, GRADIENT, SPATIAL RDD & SPILLOVER RINGS ----------
     st.divider()
     is_vi = (lang != "en")
     st.markdown(
         "#### 🚀 Chỉ số kinh tế lượng Không gian biên"
         if is_vi else
         "#### 🚀 Frontier spatial econometric indicators"
-
+    )
+        
     fq1, fq2, fq3, fq4 = st.columns(4)
     _pa = rm.get("pareto_alpha_top10", float("nan"))
     _ug = rm.get("urban_gradient_decay", float("nan"))
