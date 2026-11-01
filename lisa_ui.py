@@ -590,7 +590,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                    style_function=lambda _: {"fill": False, "color": "#222", "weight": 1.5}).add_to(m)
     m.get_root().header.add_child(folium.Element(LISA_MAP_CSS))
     _LisaIntro(lisa_layer, {
-        "on": True, "fly": bool(just_computed), "ripple": bool(just_computed), "max": 9000, "dur": 1500,
+        "on": True, "fly": False, "ripple": True, "max": 9000, "dur": 1500,
         "cx": float((minx + maxx) / 2), "cy": float((miny + maxy) / 2),
     }).add_to(m)
     m.get_root().html.add_child(folium.Element(_legend(lang)))
