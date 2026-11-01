@@ -1765,7 +1765,11 @@ with tab_map:
     bclean = bw[bw.geometry.type.isin(["Polygon", "MultiPolygon"])]
     if mask_on:
         try:
-            outside = shapely.make_valid(shapely.box(-180, -85, 180, 85).difference(union_geoms(bclean)))
+            # CHỈ TẠO MẶT NẠ RỘNG HƠN ĐỊA PHƯƠNG KHOẢNG 30KM (0.3 độ)
+            pad = 0.3
+            mask_box = shapely.box(bminx - pad, bminy - pad, bmaxx + pad, bmaxy + pad)
+            outside = shapely.make_valid(mask_box.difference(union_geoms(bclean)))
+            
             mgroup = folium.FeatureGroup(name=L["layer_mask"], show=True)
             folium.GeoJson(
                 gpd.GeoDataFrame(geometry=[outside], crs=4326), interactive=False,
