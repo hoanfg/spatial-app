@@ -215,6 +215,66 @@ T["en"].update({
     },
 })
 
+RING_COLORS = {
+    "0_Treated_HH": "#d7191c",
+    "1_Spillover_0_2km": "#fdae61",
+    "2_Spillover_2_5km": "#fee08b",
+    "3_Spillover_5_10km": "#abdda4",
+    "4_Pure_Control_gt10km": "#2b83ba",
+    "Edge_Masked": "#8c8c8c",
+    "No_HH_Cluster": "#4a4a55",
+}
+
+T["vi"].update({
+    "h_kpi_title": "4 chỉ số tổng hợp cấp vùng–năm được trích xuất tự động từ kiểm định LISA để đưa vào bảng hồi quy Panel.",
+    "h_map_t": "Bản đồ tương tác cấp ô lưới. Cho phép chuyển đổi trực tiếp giữa Cụm LISA, Vành đai lan tỏa (Spillover Rings) và Tiếp cận thị trường (Recentered MA).",
+    "h_comp_t": "Phân bố tỷ trọng diện tích các trạng thái không gian và đồ thị phân tán Moran kiểm tra cấu trúc tự tương quan.",
+    "h_comp": "Số lượng ô và tỷ lệ % diện tích của từng trạng thái LISA trên tổng diện tích tự nhiên của địa phương.",
+    "h_fq_title": "4 nhóm chỉ số kinh tế lượng không gian biên (2022–2026) đo lường cấu trúc đô thị và nhận diện nhân quả.",
+    "h_ring_tbl": "Phân tách địa phương thành 5 vành đai đồng tâm từ biên cụm điểm nóng (Butts, 2024) để bóc tách hiệu ứng tràn và cô lập nhóm đối chứng sạch (>10km).",
+    "h_rdd_chart": "Đồ thị gián đoạn không gian (Spatial RDD) theo khoảng cách có dấu tới biên cụm nóng (d < 0: trong lõi, d > 0: ngoài lõi).",
+    "donut_rdd": "Khuyết biên Donut RDD (bỏ |d| < 0.5 km chống nhiễu tràn sáng VIIRS)",
+    "h_donut_rdd": "Loại bỏ các ô nằm trong bán kính 500m quanh ranh giới cụm nóng để khử tự tương quan cơ học do độ phân giải gốc ~463m của vệ tinh VIIRS (Barreca et al., 2011; Gibson et al., 2021).",
+    "h_st_year_t0": "Chọn năm gốc đối chiếu (t₀) để tính sai phân không–thời gian Δz và ma trận chuyển dịch Markov tới năm hiện tại.",
+    "h_st_run_btn": "Tải ảnh vệ tinh VIIRS năm t₀ trên đúng lưới UTM hiện tại và tính vector dịch chuyển không gian 2 kỳ.",
+    "h_st_shorrocks": "Chỉ số dịch chuyển Shorrocks (0 = thứ hạng không gian đóng băng hoàn toàn; càng cao = mức độ xáo trộn giữa các phân vị càng mạnh).",
+    "h_st_synergy": "Tỷ lệ diện tích vùng lõi có cả ô tâm và các ô láng giềng cùng tăng trưởng bức xạ tương đối (Δz ≥ 0, ΔLag z ≥ 0).",
+    "h_st_shadow": "Tỷ lệ diện tích vùng lõi bị suy giảm tương đối khi vùng lân cận tăng trưởng nóng (Δz < 0, ΔLag z ≥ 0: hiệu ứng hút nguồn lực).",
+    "h_markov_hi": "Xác suất chuyển dịch giữa 4 phân vị ánh sáng (Q1→Q4) khi ô nằm cạnh các láng giềng ban đầu có độ sáng CAO (trên trung vị Lag z năm t₀).",
+    "h_markov_lo": "Xác suất chuyển dịch giữa 4 phân vị ánh sáng (Q1→Q4) khi ô nằm cạnh các láng giềng ban đầu có độ sáng THẤP (dưới trung vị Lag z năm t₀).",
+    "h_bridge_t": "Xuất dữ liệu vi mô (100% quan sát cấp ô) và dữ liệu vĩ mô (1 dòng/vùng-năm) phục vụ hồi quy trên Stata, R, Python.",
+    "h_panel_tbl": "Bảng dữ liệu Panel tích lũy qua các lần bấm 'Thêm vùng-năm'. Khóa chính: (iso3, region_id, year, cell_size_m).",
+    "map_mode_lbl": "Lớp hiển thị bản đồ",
+    "map_modes": {"lisa": "Cụm LISA", "ring": "Vành đai lan tỏa (Spillover)", "ma": "Recentered MA"},
+    "h_map_mode": "Đổi lớp tô màu trên bản đồ để kiểm tra trực quan các biến kinh tế lượng Q1.",
+    "tt_full": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái LISA", "Cách tâm CBD (km)", "Cách biên HH (km)", "Vành đai lan tỏa", "Recentered MA"],
+})
+
+T["en"].update({
+    "h_kpi_title": "4 region-year summary indicators extracted from LISA for macro panel regressions.",
+    "h_map_t": "Interactive grid map. Switch between LISA Clusters, Causal Spillover Rings, and Recentered Market Access.",
+    "h_comp_t": "Area share breakdown across spatial classes and Moran scatterplot diagnosing spatial autocorrelation.",
+    "h_comp": "Cell count and area share (%) of each LISA class relative to total locality area.",
+    "h_fq_title": "4 frontier spatial econometric indicator groups (2022–2026) for urban structure and causal inference.",
+    "h_ring_tbl": "Partitions the locality into 5 concentric exposure rings from the hotspot boundary (Butts, 2024) to isolate pure controls (>10km).",
+    "h_rdd_chart": "Spatial Regression Discontinuity (Spatial RDD) curve along signed distance to the hotspot boundary (d < 0: inside, d > 0: outside).",
+    "donut_rdd": "Donut RDD (drop |d| < 0.5 km to purge VIIRS blooming)",
+    "h_donut_rdd": "Excludes cells within 500m of the hotspot boundary to remove mechanical autocorrelation from native ~463m VIIRS pixels (Barreca et al., 2011; Gibson et al., 2021).",
+    "h_st_year_t0": "Select comparison base year (t₀) to compute space-time first differences Δz and Spatial Markov transitions.",
+    "h_st_run_btn": "Fetch base-year t₀ VIIRS raster on the current UTM grid and compute two-period spatial dynamics.",
+    "h_st_shorrocks": "Shorrocks Mobility Index (0 = completely static spatial hierarchy; higher values indicate stronger rank mobility).",
+    "h_st_synergy": "Share of core area where both the focal cell and its neighbors experienced positive relative growth (Δz ≥ 0, ΔLag z ≥ 0).",
+    "h_st_shadow": "Share of core area experiencing relative decline while surrounding neighbors grow (Δz < 0, ΔLag z ≥ 0: resource siphoning effect).",
+    "h_markov_hi": "Transition probability matrix across 4 light quartiles (Q1→Q4) conditioned on HIGH initial neighbor brightness (above median Lag z at t₀).",
+    "h_markov_lo": "Transition probability matrix across 4 light quartiles (Q1→Q4) conditioned on LOW initial neighbor brightness (below median Lag z at t₀).",
+    "h_bridge_t": "Export micro cell-level CSVs (100% observations) and macro region-year panel rows for Stata, R, and Python.",
+    "h_panel_tbl": "Accumulated panel table across 'Add region-year' clicks. Primary key: (iso3, region_id, year, cell_size_m).",
+    "map_mode_lbl": "Map display layer",
+    "map_modes": {"lisa": "LISA Clusters", "ring": "Spillover Rings", "ma": "Recentered MA"},
+    "h_map_mode": "Switch the active choropleth layer to visually inspect frontier Q1 spatial variables.",
+    "tt_full": ["Cell", "NTL", "z (lit)", "pseudo p", "LISA Class", "Dist to CBD (km)", "Signed dist HH (km)", "Spillover Ring", "Recentered MA"],
+})
+
 _CSS = """
 <style>
 @keyframes lisaUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -407,7 +467,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                         
     # ---------- KPI ----------
     st.divider()
-    st.markdown(f"#### {L['kpi_title']}")
+    st.markdown(f"#### {L['kpi_title']}", help=L["h_kpi_title"])
     k1, k2, k3, k4 = st.columns(4)
     k1.metric(L["k_hh"], f"{rm['hh_area_share'] * 100:.2f}%", help=L["h_k_hh"])
     k2.metric(L["k_gini"], f"{rm['gini_ntl_core_all']:.3f}", help=L["h_k_gini"])
@@ -435,9 +495,13 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     # ---------- Bản đồ ----------
     st.divider()
-    st.markdown(f"#### {L['map_t']}")
+    st.markdown(f"#### {L['map_t']}", help=L["h_map_t"])
     forced = n > render_cap
-    h1, h2 = st.columns(2)
+    h0, h1, h2 = st.columns([2.2, 1.1, 1.1])
+    map_mode = h0.radio(
+        L["map_mode_lbl"], ["lisa", "ring", "ma"], horizontal=True,
+        format_func=lambda k: L["map_modes"][k], key="lisa_map_mode", help=L["h_map_mode"],
+    )
     hide0 = h1.toggle(L["hide0"], value=False, key="lisa_hide0", disabled=forced, help=L["h_hide0"]) or forced
     hide_edge = h2.toggle(L["hide_edge"], value=False, key="lisa_hide_edge", help=L["h_hide_edge"])
     if forced:
@@ -461,8 +525,27 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     except Exception:  # noqa: BLE001
         pass
     lab = cdf["lisa_class"].to_numpy()[idx]
-
     dist_arr = cdf.get("dist_to_core_km", pd.Series(np.zeros(len(cdf)))).to_numpy()
+    sdist_arr = cdf.get("signed_dist_hh_km", pd.Series(np.zeros(len(cdf)))).to_numpy(float)
+    ring_arr_map = cdf.get("spillover_ring", pd.Series(["N/A"] * len(cdf))).to_numpy()
+    rma_arr_map = cdf.get("recentered_market_access", pd.Series(np.zeros(len(cdf)))).to_numpy(float)
+
+    if map_mode == "ring":
+        col_list = [RING_COLORS.get(str(x), "#8c8c8c") for x in ring_arr_map[idx]]
+    elif map_mode == "ma":
+        sub_ma = rma_arr_map[idx]
+        lim = float(np.nanpercentile(np.abs(sub_ma), 95)) if np.isfinite(sub_ma).any() else 1.0
+        lim = max(lim, 1e-6)
+        col_list = [
+            "#8c8c8c" if not np.isfinite(v) else (
+                "#d7191c" if v > 0.35 * lim else ("#fdae61" if v > 0.05 * lim else (
+                    "#f7f7f7" if v >= -0.05 * lim else ("#abd9e9" if v >= -0.35 * lim else "#2c7bb6")
+                ))
+            )
+            for v in sub_ma
+        ]
+    else:
+        col_list = [COLORS[x] for x in lab]
 
     gj = gpd.GeoDataFrame({
         "c": [f"#{int(i)}" for i in grid_utm["grid_id"].to_numpy()[idx]],
@@ -471,7 +554,10 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         "p": np.round(cdf["lisa_p_sim"].to_numpy()[idx], 4),
         "k": lab,
         "d": np.round(dist_arr[idx], 2),
-        "col": [COLORS[x] for x in lab],
+        "sd": np.round(sdist_arr[idx], 2),
+        "rg": ring_arr_map[idx],
+        "ma": np.round(rma_arr_map[idx], 2),
+        "col": col_list,
     }, geometry=sub.values, crs=4326)
 
     minx, miny, maxx, maxy = res["boundary_wgs"].total_bounds
@@ -489,9 +575,15 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     lisa_layer = folium.GeoJson(
         gj, name="LISA",
-        style_function=lambda f: {"fillColor": f["properties"]["col"], "color": f["properties"]["col"],
-                                  "weight": 0.4, "fillOpacity": 0.15 if f["properties"]["k"] in (NS, DARK) else 0.8},
-        tooltip=folium.GeoJsonTooltip(fields=["c", "v", "z", "p", "k", "d"], aliases=L["tt"], sticky=False),
+        style_function=lambda f: {
+            "fillColor": f["properties"]["col"], "color": f["properties"]["col"],
+            "weight": 0.4, "fillOpacity": 0.15 if (map_mode == "lisa" and f["properties"]["k"] in (NS, DARK)) else 0.82
+        },
+        tooltip=folium.GeoJsonTooltip(
+            fields=["c", "v", "z", "p", "k", "d", "sd", "rg", "ma"],
+            aliases=L["tt_full"],
+            sticky=False,
+        ),
     )
     lisa_layer.add_to(m)
     folium.GeoJson(res["boundary_wgs"], interactive=False,
@@ -509,7 +601,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     # ---------- Cơ cấu trạng thái & Moran Scatterplot ----------
     st.divider()
-    st.markdown(f"#### {L['comp_t']}")
+    st.markdown(f"#### {L['comp_t']}", help=L["h_comp_t"])
     area = grid_utm["area_km2"].to_numpy(float)
     labs = cdf["lisa_class"].to_numpy()
     comp = pd.DataFrame({
@@ -522,7 +614,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     with col_tab:
         with st.container(border=True):
-            st.markdown(f"**{L['comp']}**")
+            st.markdown(f"**{L['comp']}**", help=L["h_comp"])
             st.dataframe(
                 comp, hide_index=True, use_container_width=True,
                 column_config={
@@ -563,7 +655,8 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.markdown(
         "#### 🚀 Chỉ số kinh tế lượng Không gian biên"
         if is_vi else
-        "#### 🚀 Frontier spatial econometric indicators"
+        "#### 🚀 Frontier spatial econometric indicators",
+        help=L["h_fq_title"],
     )
                         
     fq1, fq2, fq3, fq4 = st.columns(4)
@@ -603,7 +696,8 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             st.markdown(
                 "**🎯 Vành đai lan tỏa nhân quả**"
                 if is_vi else
-                "**🎯 Causal spillover rings**"
+                "**🎯 Causal spillover rings**",
+                help=L["h_ring_tbl"],
             )
             ring_arr = cdf["spillover_ring"].to_numpy()
             ntl_arr = grid_utm["ntl_mean"].to_numpy(float)
@@ -625,14 +719,18 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             st.markdown(
                 "**📉 Đường cong suy giảm & Gián đoạn ranh giới đô thị**"
                 if is_vi else
-                "**📉 Urban boundary discontinuity & Spillover decay (Spatial RDD)**"
+                "**📉 Urban boundary discontinuity & Spillover decay (Spatial RDD)**",
+                help=L["h_rdd_chart"],
             )
+            donut_on = st.toggle(L["donut_rdd"], value=False, key="lisa_donut_rdd", help=L["h_donut_rdd"])
             rdd_df = pd.DataFrame({
                 "signed_d": cdf["signed_dist_hh_km"].to_numpy(float),
                 "ln_ntl": np.log1p(np.maximum(grid_utm["ntl_mean"].to_numpy(float), 0.0)),
                 "ring": cdf["spillover_ring"].to_numpy(),
             }).dropna()
             rdd_df = rdd_df[rdd_df["ring"] != "Edge_Masked"]
+            if donut_on:
+                rdd_df = rdd_df[rdd_df["signed_d"].abs() >= 0.5]
             if not rdd_df.empty and len(rdd_df) >= 10:
                 rdd_df["bin_d"] = (np.round(rdd_df["signed_d"] * 2.0) / 2.0)
                 binned_rdd = (
@@ -678,11 +776,11 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                 default_idx = 0
                 year_t0 = sc1.selectbox(
                     "Chọn năm gốc đối chiếu (t₀)" if is_vi else "Select comparison base year (t₀)",
-                    other_years, index=default_idx, key="st_lisa_year_t0",
+                    other_years, index=default_idx, key="st_lisa_year_t0", help=L["h_st_year_t0"],
                 )
                 run_st_btn = sc2.button(
-                    f"⚡ Chạy động học ({year_t0} → {yr})" if is_vi else f"⚡ Run dynamics ({year_t0} → {yr})",
-                    type="primary", use_container_width=True, key="btn_run_spacetime",
+                    f"⚡ Chạy Động học ({year_t0} → {yr})" if is_vi else f"⚡ Run Dynamics ({year_t0} → {yr})",
+                    type="primary", use_container_width=True, key="btn_run_spacetime", help=L["h_st_run_btn"],
                 )
                 st_cache = st.session_state.setdefault("_spacetime_cache", {})
                 st_key = (res["ts"], size, int(year_t0), int(yr))
@@ -704,26 +802,33 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     m1.metric(
                         "Chỉ số dịch chuyển Shorrocks" if is_vi else "Shorrocks Mobility Index",
                         f"{sm['shorrocks_mobility']:.3f}" if np.isfinite(sm["shorrocks_mobility"]) else "N/A",
-                        help="0 = cấu trúc đóng băng hoàn toàn; càng cao = mức độ xáo trộn thứ hạng không gian càng mạnh.",
+                        help=L["h_st_shorrocks"],
                     )
                     m2.metric(
                         "Tăng trưởng cộng hưởng (Δz+, ΔLag+)" if is_vi else "Synergistic Growth Share",
                         f"{sm['synergistic_growth_pct']:.1f}%",
+                        help=L["h_st_synergy"],
                     )
                     m3.metric(
                         "Bóng tối tích tụ (Δz-, ΔLag+)" if is_vi else "Agglomeration Shadow Share",
                         f"{sm['agglomeration_shadow_pct']:.1f}%",
-                        help="Tỷ lệ diện tích bị suy giảm tương đối khi vùng lân cận tăng trưởng nóng (hiệu ứng hút nguồn lực).",
+                        help=L["h_st_shadow"],
                     )
                     st.dataframe(st_out.regime_summary, hide_index=True, use_container_width=True)
                     mc1, mc2 = st.columns(2)
                     with mc1:
-                        st.markdown("**Spatial Markov: Khi láng giềng ban đầu SÁNG CAO (High-Lag Context, %)**"
-                                    if is_vi else "**Spatial Markov: High-Lag Neighbor Context (%)**")
+                        st.markdown(
+                            "**Spatial Markov: Khi láng giềng ban đầu SÁNG CAO (High-Lag Context, %)**"
+                            if is_vi else "**Spatial Markov: High-Lag Neighbor Context (%)**",
+                            help=L["h_markov_hi"],
+                        )
                         st.dataframe(st_out.markov_high_lag, use_container_width=True)
                     with mc2:
-                        st.markdown("**Spatial Markov: Khi láng giềng ban đầu SÁNG THẤP (Low-Lag Context, %)**"
-                                    if is_vi else "**Spatial Markov: Low-Lag Neighbor Context (%)**")
+                        st.markdown(
+                            "**Spatial Markov: Khi láng giềng ban đầu SÁNG THẤP (Low-Lag Context, %)**"
+                            if is_vi else "**Spatial Markov: Low-Lag Neighbor Context (%)**",
+                            help=L["h_markov_lo"],
+                        )
                         st.dataframe(st_out.markov_low_lag, use_container_width=True)
 
                     st_full_csv = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True), st_out.st_cell_df.reset_index(drop=True)], axis=1)
@@ -736,9 +841,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                         use_container_width=True,
                     )
                         
-    # ---------- Data Bridge: luôn 100% quan sát ----------
+    # ---------- Data Bridge ----------
     st.divider()
-    st.markdown(f"#### {L['bridge_t']}")
+    st.markdown(f"#### {L['bridge_t']}", help=L["h_bridge_t"])
     st.caption(L["bridge_cap"])
     full = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True)], axis=1)
     panel_row = pd.DataFrame([rm])
@@ -760,7 +865,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with st.container(border=True):
         if rows:
             pdf = pd.DataFrame(rows).sort_values(["iso3", "region_id", "year", "cell_size_m"])
-            st.markdown(f"**{L['panel']}** ({len(pdf)})")
+            st.markdown(f"**{L['panel']}** ({len(pdf)})", help=L["h_panel_tbl"])
             st.dataframe(
                 pdf, hide_index=True, use_container_width=True,
                 column_config={
@@ -774,6 +879,6 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                                file_name="ntl_lisa_panel.csv", mime="text/csv", key="lisa_dl_all",
                                help=L["h_dl_panel"])
         else:
-            st.markdown(f"**{L['panel']}**")
+            st.markdown(f"**{L['panel']}**", help=L["h_panel_tbl"])
             st.caption(L["panel_empty"])
     return out
