@@ -987,7 +987,7 @@ section[data-testid="stSidebar"] hr{margin:.6rem 0}
 </style>
 """
 st.markdown(APP_CSS, unsafe_allow_html=True)
-from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
+from ui_theme import inject_theme, enable_fx, fit_bounds_on_load, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
 inject_theme()
 enable_fx()
 
