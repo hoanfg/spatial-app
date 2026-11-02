@@ -10,8 +10,8 @@ import re
 
 import streamlit as st
 
-SODIUM = "#F2A93B"   
-LED = "#9FD8FF"     
+SODIUM = "#F2A93B"   # đèn natri áp suất thấp
+LED = "#9FD8FF"      # đèn LED trắng xanh
 NIGHT = "#0A1024"
 
 _FONTS = """
@@ -142,8 +142,7 @@ div[data-baseweb="select"]>div,div[data-baseweb="input"]>div,div[data-baseweb="b
   border-color:var(--ntl-line)!important;transition:border-color .15s ease}
 div[data-baseweb="select"]:hover>div,div[data-baseweb="input"]:hover>div{border-color:rgba(242,169,59,.7)!important}
 div[data-baseweb="select"]:focus-within>div,div[data-baseweb="input"]:focus-within>div{border-color:var(--ntl-sodium)!important}
-[data-testid="stSlider"] [role="slider"]{background:var(--ntl-sodium)!important;box-shadow:0 0 0 4px rgba(242,169,59,.25)}
-[data-testid="stSliderThumbValue"]{color:var(--ntl-sodium)!important;font-weight:700;font-variant-numeric:tabular-nums}
+[data-testid="stSliderThumbValue"]{font-weight:700;font-variant-numeric:tabular-nums}
 label[data-testid="stWidgetLabel"] p{font-size:.88rem;font-weight:500}
 
 /* ================= KHUNG / BẢNG / THÔNG BÁO ================= */
@@ -194,6 +193,44 @@ div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-contai
 </style>
 """
 
+_UX_CSS = """
+<style>
+:root{--ntl-glass:rgba(17,25,54,.88)}
+@media (prefers-color-scheme: light){:root{--ntl-glass:rgba(255,255,255,.9)}}
+
+/* ===== Sidebar ===== */
+[data-testid="stSidebar"] div[data-testid="stElementContainer"]:has(.ntl-brand),
+[data-testid="stSidebar"] div.element-container:has(.ntl-brand){order:-2}
+[data-testid="stSidebar"] div[data-testid="stElementContainer"]:has(button[data-testid="stBaseButton-primary"]){
+  position:sticky;bottom:0;z-index:6;margin-top:.4rem;padding:14px 0 10px;
+  background:linear-gradient(to top,var(--ntl-glass) 78%,transparent);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* ===== Lựa chọn radio -> nút chọn (segmented) ===== */
+[data-testid="stRadio"] [role="radiogroup"]{gap:6px;flex-wrap:wrap}
+[data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"]{flex-direction:row}
+[data-testid="stRadio"] label[data-baseweb="radio"]{margin:0;padding:5px 13px;border:1px solid var(--ntl-line);
+  border-radius:999px;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+[data-testid="stRadio"] label[data-baseweb="radio"]>div:first-of-type{display:none}
+[data-testid="stRadio"] label[data-baseweb="radio"]:hover{border-color:rgba(242,169,59,.65)}
+[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked){border-color:var(--ntl-sodium);background:rgba(242,169,59,.15)}
+[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p{font-weight:700}
+[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:focus-visible){outline:2px solid var(--ntl-led);outline-offset:2px}
+
+/* ===== Tab dính đầu trang khi cuộn ===== */
+div[data-baseweb="tab-list"]{position:sticky;top:3.4rem;z-index:20;background:var(--ntl-glass);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* ===== Tiêu đề từng mục trong tab ===== */
+[data-testid="stMain"] h3{font-size:1.28rem;font-weight:700;display:flex;align-items:center;gap:10px;margin-top:1.2rem}
+[data-testid="stMain"] h3:before{content:"";flex:none;width:9px;height:9px;border-radius:2px;background:var(--ntl-sodium)}
+
+/* ===== Dự phòng: nếu config.toml chưa có hiệu lực, đổi màu đỏ mặc định sang hổ phách ===== */
+.ntl-redfix [data-testid="stSlider"],.ntl-redfix [data-testid="stCheckbox"],.ntl-redfix [data-testid="stToggle"]{filter:hue-rotate(38deg)}
+</style>
+"""
+
+
 _FX_JS = r"""
 <script>
 (function () {
@@ -240,9 +277,17 @@ _FX_JS = r"""
     P.requestAnimationFrame(step);
   }
   var pending = false;
+  function checkPrimary() {
+    var th = D.querySelector('[data-testid="stSlider"] [role="slider"]');
+    if (!th) { return; }
+    var m = P.getComputedStyle(th).backgroundColor.match(/\d+/g);
+    if (!m) { return; }
+    D.documentElement.classList.toggle('ntl-redfix', +m[0] > 200 && +m[1] < 130 && +m[2] < 130);
+  }
   function scan() {
     pending = false;
     D.querySelectorAll('[data-testid="stMetricValue"]').forEach(animate);
+    checkPrimary();
   }
   new P.MutationObserver(function () {
     if (!pending) { pending = true; P.requestAnimationFrame(scan); }
@@ -271,6 +316,7 @@ _FX_JS = r"""
 def inject_theme() -> None:
     st.markdown(_FONTS, unsafe_allow_html=True)
     st.markdown(_THEME_CSS, unsafe_allow_html=True)
+    st.markdown(_UX_CSS, unsafe_allow_html=True)
 
 
 def enable_fx() -> None:
