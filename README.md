@@ -2,7 +2,7 @@
 
 <div align="center">
 
-# 🌃 Technical manual and methodological framework
+# Technical manual and methodological framework
 
 **Nighttime lights (NTL) data extractor & spatial econometrics engine**
 
