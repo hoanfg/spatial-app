@@ -533,7 +533,7 @@ The tables below define all variables in the exported `ntl_lisa_panel.csv` file,
 | :--- | :--- |
 | `iso3`, `region_id`, `region_label`, `year` | Administrative unit and time identifiers for the panel dataset. |
 | `cell_size_m` | Square grid cell side length (meters): spatial scale control variable (MAUP). |
-| `n_cells`, `n_cells_edge_masked` | Total grid cells in the locality and number of clipped border cells ($A_i < 0.99 \times \mathrm{size}^2$). |
+| `n_cells`, `n_cells_edge_masked` | Total grid cells in the locality and number of clipped border cells ($A_i < 0.99 \times (\mathrm{size}/1000)^2 \, \mathrm{km}^2$). |
 | `n_cells_lit`, `n_cells_tested` | Number of lit cells ($\mathrm{NTL} > \mathrm{threshold}$) and core cells with sufficient neighbors tested in LISA. |
 | `area_total_km2` | Total area of the locality summed across clipped grid cells ($\mathrm{km}^2$). |
 
