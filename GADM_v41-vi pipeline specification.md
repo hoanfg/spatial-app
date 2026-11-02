@@ -1,4 +1,4 @@
-# ĐẶC TẢ KỸ THUẬT: KIẾN TRÚC TRÍCH XUẤT DỮ LIỆU GADM v4.1 & PHÂN LOẠI QUỐC GIA CHO KINH TẾ LƯỢNG KHÔNG GIAN
+# ĐẶC TẢ KỸ THUẬT: TRÍCH XUẤT DỮ LIỆU GADM v4.1 & PHÂN LOẠI QUỐC GIA CHO KINH TẾ LƯỢNG KHÔNG GIAN
 
 **Dự án:** Nighttime lights (NTL) data extractor & Spatial econometrics engine  
 
