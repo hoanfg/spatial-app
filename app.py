@@ -1017,7 +1017,7 @@ except Exception:  # noqa: BLE001
 
 def fit_bounds_on_load(m, bounds):
     """Ép bản đồ Folium khớp lại vùng `bounds` [[S, W], [N, E]] khi khung iframe đã có kích thước thật.
-    Dừng tự khớp ngay khi người dùng kéo/cuộn/chạm. Chỉ là hiển thị, không ảnh hưởng tính toán."""
+    Dừng tự khớp ngay khi người dùng kéo/cuộn/chạm"""
     class _FitOnLoad(MacroElement):
         _template = Template(
             """
@@ -1643,7 +1643,7 @@ def run_pipeline():
             status.update(label="Trạm 3/3 · Đang tính Moran's I toàn cục (hoán vị)..." if LANG == "vi"
                           else "Station 3/3 · Computing global Moran's I (permutations)...")
       
-            try:  # Moran's I (không làm hỏng pipeline nếu lỗi)
+            try:  # Moran's I 
                 moran = morans_i(grid, grid["ntl_mean"].to_numpy(dtype=float), cell_size)
             except Exception:  # noqa: BLE001
                 moran = None
@@ -1695,7 +1695,7 @@ def run_pipeline():
     }
 
 
-if run_btn and not fuse_blocked:   # chốt chặn kép: nút đã bị khóa, điều kiện này phòng trường hợp rerun lệch trạng thái
+if run_btn and not fuse_blocked:   # điều kiện này phòng trường hợp rerun lệch trạng thái
     st.session_state["result"] = run_pipeline()
     if st.session_state["result"]:
         st.toast(L["st4"], icon="🌙")
