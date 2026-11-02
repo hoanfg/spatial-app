@@ -17,43 +17,6 @@
 
 --------------------------------------------------
 
-### Sơ đồ luồng dữ liệu toàn hệ thống (End-to-End Pipeline)
-
-```mermaid
-graph TD
-    subgraph Tier 1 & 2: Local GIS Processing
-        A[GADM GeoJSON] -->|Parse & Clean| B(Dynamic UTM Reprojection)
-        B -->|shapely & numpy| C[Uniform Spatial Grid]
-        C --> D{Memory Fuse Check}
-        D -->|Over 150k cells| E[Block Execution]
-        D -->|Safe| F[Vector Geometry]
-    end
-
-    subgraph Tier 3: GEE Cloud Extraction
-        G((Google Earth Engine)) -->|Median Filter & Cloud Mask| H[VIIRS DNB Raster]
-        H -->|In-memory zip stream| I[Ephemeral GeoTIFF]
-        F --> J(exactextract C++ Engine)
-        I --> J
-        J --> K[Fractional Zonal Statistics]
-    end
-
-    subgraph Tier 4: Spatial Econometrics & UI
-        K --> L[LISA Core]
-        L -->|NumPy/Pandas| M[Global & Local Moran's I]
-        L --> N[Hotspot Clustering & CBD]
-        L --> O[Gini & Panel Metrics]
-        M --> P[(Cell-level CSV)]
-        O --> Q[(Region-Year Panel CSV)]
-        M --> R[Folium Interactive Map]
-    end
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style G fill:#f96,stroke:#333,stroke-width:2px
-    style J fill:#bbf,stroke:#f66,stroke-width:2px,stroke-dasharray: 5 5
-    style P fill:#cfc,stroke:#333,stroke-width:2px
-    style Q fill:#cfc,stroke:#333,stroke-width:2px
-```
-
 Dự án này là một hệ thống thiết kế cho **kinh tế lượng không gian**, kết hợp giữa hạ tầng lưới không gian và luồng trích xuất dữ liệu ánh sáng ban đêm (nighttime lights - NTL).
 
 Ứng dụng giải quyết bài toán từ việc chuẩn hóa ranh giới hành chính bất quy tắc thành ma trận lưới vuông, kết nối trực tiếp với Google Earth Engine (GEE) để tải dữ liệu Raster (SNPP-VIIRS), cho đến việc tự động tính toán các chỉ số thống kê không gian vi mô (LISA) để xuất ra dữ liệu bảng phục vụ các mô hình vĩ mô.
