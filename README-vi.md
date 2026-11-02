@@ -95,7 +95,7 @@ Môi trường triển khai mục tiêu là Streamlit Community Cloud (hoặc c�
 Xử lý hình học không gian tốn bộ nhớ tăng rất nhanh theo độ phân giải lưới.
 
 > [!WARNING]
-> **Kịch bản điển hình dẫn tới sập server.** Khi chạy phép cắt `geopandas.clip()` trên lưới **500m** cho một đơn vị hành chính rộng $30,000 \, \mathrm{km}^2$, số đa giác sinh ra có thể vượt ngưỡng $150,000$. Giữ đồng thời cấu trúc hình học (topology) của ngần ấy đa giác trên RAM sẽ kích hoạt cơ chế Linux OOM Killer và làm sập tiến trình máy chủ.
+> **Kịch bản điển hình dẫn tới sập server.** Khi thực hiện phép cắt `geopandas.clip()` trên lưới 500m cho một đơn vị hành chính rộng $38,000 \, \mathrm{km}^2$ (tương đương diện tích một tỉnh lớn hoặc vùng địa lý), số lượng đa giác sau khi cắt ($N_{\mathrm{clip}} > 152,000$) sẽ vượt ngưỡng trần $150,000$ ô (và lưới hộp bao chữ nhật trước khi cắt $N_{\mathrm{bbox}}$ có thể vượt $250,000$ ô). Giữ đồng thời cấu trúc hình học (topology) của ngần ấy đa giác trên RAM sẽ kích hoạt cơ chế Linux OOM Killer và làm sập tiến trình máy chủ.
 
 Để tránh kịch bản trên, hệ thống dựng ba lớp phòng thủ:
 
