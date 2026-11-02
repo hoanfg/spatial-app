@@ -992,6 +992,9 @@ st.markdown(APP_CSS, unsafe_allow_html=True)
 try:
     import sys as _sys
     _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ui_theme as _ui_theme  # noqa: E402
+    if not hasattr(_ui_theme, "_field_html"):   # ui_theme.py trên máy là bản cũ -> dùng giao diện cơ bản
+        raise ImportError("ui_theme.py outdated")
     from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand  # noqa: E402
 except Exception:  # noqa: BLE001
     def inject_theme(): pass
