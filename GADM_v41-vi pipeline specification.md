@@ -118,14 +118,15 @@ Bảng dưới đây so sánh 3 phương án kiến trúc cho đường ống d�
 | **Khả năng bảo trì** | 🔴 Khó kiểm soát lỗi ngầm khi thêm quốc gia mới. | 🟡 Phải sửa cả script trích xuất lẫn file JSON ở front-end. | 🟢 Chỉ cần thêm 1 dòng khai báo quy tắc (5 thuộc tính) vào từ điển `COUNTRY_RULES` trong script ETL. |
 
 > [!IMPORTANT]
-> **Kết luận kiến trúc.** Không đặt logic chữa lỗi hình học ở front-end, và không để trình trích xuất tự đoán lớp sâu nhất một cách mù quáng. Hãy dùng **trình trích xuất điều khiển bằng quy tắc khai báo**, trong đó mỗi nhóm quốc gia được quy định rõ:
+> **Kết luận kiến trúc.** Không đặt logic chữa lỗi hình học ở front-end, và không để trình trích xuất tự đoán lớp sâu nhất một cách mù quáng. Hãy dùng **trình trích xuất điều khiển bằng quy tắc khai báo** với đủ 5 thuộc tính cho mỗi nhóm quốc gia:
 >
 > | Thuộc tính | Quy định |
 > | :--- | :--- |
 > | `layer` | Đọc lớp nào |
 > | `folder_expr` | Cột nào làm thư mục |
 > | `file_expr` | Cột nào làm tệp |
-> | `gid_col` | Khóa nhóm duy nhất |
+> | `gid_col` | Khóa định danh nhóm duy nhất |
+> | `type_col` / `ENGTYPE_x` | Cột loại hình đơn vị (để lọc đa giác mặt nước và gắn hậu tố phân biệt khi trùng tên) |
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
