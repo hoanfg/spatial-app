@@ -95,7 +95,7 @@ The target deployment environment is Streamlit Community Cloud (or low-cost dock
 The memory footprint of spatial geometry processing grows rapidly with grid resolution.
 
 > [!WARNING]
-> **A typical way to crash the server.** Run `geopandas.clip()` on a **500m** grid for an administrative unit covering $30,000 \, \mathrm{km}^2$ and the number of polygons generated can exceed $150,000$. Holding the topology of that many polygons in RAM at once triggers the Linux OOM Killer and takes down the server process.
+> **A typical way to crash the server.** When executing `geopandas.clip()` on a 500m grid for an administrative unit covering $38,000 \, \mathrm{km}^2$, the number of clipped polygons ($N_{\mathrm{clip}} > 152,000$) exceeds the $150,000$ cap (while the pre-clip bounding-box grid $N_{\mathrm{bbox}}$ can exceed $250,000$ polygons). Holding the topology of that many polygons in RAM at once triggers the Linux OOM Killer and takes down the server process.
 
 Three layers of defense prevent this:
 
