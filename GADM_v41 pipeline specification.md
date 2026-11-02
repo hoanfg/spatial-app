@@ -118,7 +118,7 @@ The table below compares 3 architectural approaches for the data pipeline (🔴 
 | **Maintainability** | 🔴 Hard to control hidden errors when adding new countries. | 🟡 Both the extraction script and the JSON file in the front end must be modified. | 🟢 Only one rule declaration (5 attributes) needs to be added to the `COUNTRY_RULES` dictionary in the ETL script. |
 
 > [!IMPORTANT]
-> **Architectural conclusion.** Do not place geometry-fixing logic in the front end, and do not let the extractor blindly guess the deepest layer. Use a **declarative rule-driven extractor** that states explicitly, for each country group:
+> **Architectural conclusion.** Do not place geometry-fixing logic in the front end, and do not let the extractor blindly guess the deepest layer. Use a **declarative rule-driven extractor** specifying 5 attributes for each country group:
 >
 > | Attribute | What it specifies |
 > | :--- | :--- |
@@ -126,6 +126,7 @@ The table below compares 3 architectural approaches for the data pipeline (🔴 
 > | `folder_expr` | Which column is used for the folder |
 > | `file_expr` | Which column is used for the file |
 > | `gid_col` | The unique grouping key |
+> | `type_col` / `ENGTYPE_x` | Administrative type column (for hydrological filtering and duplicate-name disambiguation) |
 
 <sub>[↑ Back to top](#top)</sub>
 
