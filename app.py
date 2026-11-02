@@ -1381,11 +1381,49 @@ MAP_CSS = """
 .nt-legend div.i{margin-top:3px;white-space:nowrap}
 .nt-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-2px;
   border:1px solid rgba(255,255,255,.35)}
-.leaflet-control .legend{background:rgba(10,10,14,.86)!important;padding:6px 10px 4px!important;
-  border-radius:10px!important;border:1px solid rgba(255,255,255,.18)!important}
-.leaflet-control .legend svg text,.leaflet-control .legend text{fill:#f1f5f9!important;font:11px Inter,Arial,sans-serif!important}
-.leaflet-control .legend svg .tick line,.leaflet-control .legend svg .domain{stroke:rgba(255,255,255,.45)!important}
+/* Chú thích thang màu (branca đặt cả hai class trên cùng một phần tử) */
+.legend.leaflet-control{background:rgba(10,10,14,.88)!important;padding:9px 16px 2px!important;border-radius:12px!important;
+  border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 6px 20px rgba(0,0,0,.5);margin:10px!important}
+.legend.leaflet-control text{fill:#e9eef8!important;font:11px Inter,Arial,sans-serif!important}
+.legend.leaflet-control text.caption{display:none}
+.legend.leaflet-control .tick line,.legend.leaflet-control .domain{stroke:rgba(255,255,255,.5)!important}
+.legend.leaflet-control:after{display:block;color:#fff;font:600 11.5px Inter,Arial,sans-serif;padding:0 0 9px}
+/* Các nút điều khiển Leaflet theo tông tối */
+.leaflet-bar{border:1px solid rgba(255,255,255,.16)!important;border-radius:10px!important;
+  box-shadow:0 4px 14px rgba(0,0,0,.5)!important;overflow:hidden}
+.leaflet-bar a,.leaflet-bar a.leaflet-disabled{background-color:rgba(10,10,14,.9)!important;color:#e9eef8!important;
+  border-bottom:1px solid rgba(255,255,255,.12)!important}
+.leaflet-bar a:hover{background-color:rgba(242,169,59,.22)!important;color:#F2A93B!important}
+.leaflet-bar a.leaflet-disabled{color:#5b6475!important}
+.leaflet-control-fullscreen a{background-color:#f3f4f8!important;filter:invert(1)}
+.leaflet-control-layers{background:rgba(10,10,14,.9)!important;color:#e9eef8!important;border-radius:10px!important;
+  border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 4px 14px rgba(0,0,0,.5)!important}
+.leaflet-control-layers-toggle{filter:invert(1)}
+.leaflet-control-layers-expanded{padding:8px 12px!important;font:12px Inter,Arial,sans-serif}
+.leaflet-control-mouseposition{background:rgba(10,10,14,.88)!important;color:#cfd6e6!important;
+  border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:3px 9px!important;font:11px Inter,Arial,sans-serif;
+  box-shadow:none!important}
+.leaflet-control-scale-line{background:rgba(10,10,14,.8)!important;color:#cfd6e6!important;
+  border-color:rgba(255,255,255,.55)!important;text-shadow:none!important;font:10.5px Inter,Arial,sans-serif}
+.leaflet-control-attribution{background:rgba(10,10,14,.8)!important;color:#9aa6bf!important}
+.leaflet-control-attribution a{color:#F2A93B!important}
 </style>
+"""
+
+
+CLIP_SCRIPT = """
+<script>
+(function () {
+  function mark() {
+    var t = document.querySelectorAll('.legend.leaflet-control .tick text');
+    if (!t.length) { return false; }
+    var last = t[t.length - 1];
+    if (last.textContent.indexOf('\u2265') !== 0) { last.textContent = '\u2265 ' + last.textContent; }
+    return true;
+  }
+  var n = 0, iv = setInterval(function () { if (mark() || ++n > 40) { clearInterval(iv); } }, 150);
+})();
+</script>
 """
 
 
@@ -1817,6 +1855,8 @@ with tab_map:
     m.get_root().header.add_child(folium.Element(MAP_CSS))
 
     colormap = make_colormap(scale_mode, vmax, L["caption"].format(y=yr))
+    m.get_root().header.add_child(folium.Element(
+        "<style>.legend.leaflet-control:after{content:" + json.dumps(L["caption"].format(y=yr), ensure_ascii=False) + "}</style>"))
 
     def style_fn(feature):
         p = feature["properties"]
@@ -1888,6 +1928,8 @@ with tab_map:
     # Chú giải
     if color_mode == "ntl":
         colormap.add_to(m)
+        if float(ntl.max()) > vmax + 1e-9:   # thang bị cắt ở phân vị 99 -> ghi rõ "≥" ở đầu trên
+            m.get_root().html.add_child(folium.Element(CLIP_SCRIPT))
     elif color_mode == "class":
         items = [(CLASS_COLORS[i], f"{THRESH_TEXT[i]} · {L['short'][i]}") for i in range(5)]
         m.get_root().html.add_child(folium.Element(legend_html(L["legend_class"], items)))
