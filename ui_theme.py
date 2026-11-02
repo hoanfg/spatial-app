@@ -172,7 +172,7 @@ div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-contai
 /* ================= RESPONSIVE ================= */
 @media (max-width:900px){
   .ntl-hero-body{max-width:100%;padding:24px 22px}
-  .ntl-field{width:100%;bottom:auto;height:140px;opacity:.28}
+  .ntl-field{display: none !important;}
   .ntl-title{font-size:1.6rem}
   .ntl-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
   .ntl-facts div,.ntl-facts div:first-child{padding:0;border-left:0}
