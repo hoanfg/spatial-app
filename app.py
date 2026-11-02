@@ -987,7 +987,73 @@ section[data-testid="stSidebar"] hr{margin:.6rem 0}
 </style>
 """
 st.markdown(APP_CSS, unsafe_allow_html=True)
-from ui_theme import inject_theme, enable_fx, fit_bounds_on_load, hero, empty_state, place_banner, sidebar_brand, section  # noqa: E402
+
+# ---- Lớp giao diện (tùy chọn): nếu ui_theme.py thiếu/lỗi thì app vẫn chạy bằng giao diện cơ bản ----
+try:
+    import sys as _sys
+    _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand  # noqa: E402
+except Exception:  # noqa: BLE001
+    def inject_theme(): pass
+
+    def enable_fx(): pass
+
+    def hero(title, subtitle, chips=None):
+        st.title(title)
+        st.markdown(subtitle)
+
+    def empty_state(title, hint, steps):
+        st.info(hint)
+
+    def place_banner(place, tags):
+        st.markdown(f"#### 📍 {place}")
+        st.caption(" · ".join(tags))
+
+    def sidebar_brand(title, subtitle): pass
+
+
+def fit_bounds_on_load(m, bounds):
+    """Ép bản đồ Folium khớp lại vùng `bounds` [[S, W], [N, E]] khi khung iframe đã có kích thước thật.
+    Dừng tự khớp ngay khi người dùng kéo/cuộn/chạm. Chỉ là hiển thị, không ảnh hưởng tính toán."""
+    class _FitOnLoad(MacroElement):
+        _template = Template(
+            """
+            {% macro script(this, kwargs) %}
+            (function () {
+                var map = {{ this._parent.get_name() }};
+                var B = {{ this.b }};
+                var c = map.getContainer();
+                var user = false;
+                ['mousedown', 'touchstart', 'wheel'].forEach(function (ev) {
+                    c.addEventListener(ev, function () { user = true; }, {passive: true});
+                });
+                function fit() {
+                    if (user || c.clientWidth < 50 || c.clientHeight < 50) { return; }
+                    map.invalidateSize({animate: false});
+                    map.fitBounds(B, {animate: false});
+                }
+                fit();
+                if (window.ResizeObserver) { new ResizeObserver(fit).observe(c); }
+                window.addEventListener('load', fit);
+                window.addEventListener('resize', fit);
+                [150, 500, 1200, 2500].forEach(function (t) { setTimeout(fit, t); });
+            })();
+            {% endmacro %}
+            """
+        )
+
+        def __init__(self, b):
+            super().__init__()
+            self._name = "FitOnLoad"
+            self.b = json.dumps(b)
+
+    try:
+        _FitOnLoad([[float(bounds[0][0]), float(bounds[0][1])],
+                    [float(bounds[1][0]), float(bounds[1][1])]]).add_to(m)
+    except Exception:  # noqa: BLE001
+        pass
+
+
 inject_theme()
 enable_fx()
 
