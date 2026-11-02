@@ -2,7 +2,7 @@
 
 <div align="center">
 
-# 🌃 Sổ tay kỹ thuật và khung phương pháp luận
+# Sổ tay kỹ thuật và khung phương pháp luận
 
 **Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) & công cụ kinh tế lượng không gian**
 
