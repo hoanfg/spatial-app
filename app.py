@@ -998,16 +998,16 @@ except Exception:  # noqa: BLE001
 
     def enable_fx(): pass
 
-    def hero(title, subtitle, chips=None):
+    def hero(title, subtitle, facts=None, chips=None):
         st.title(title)
         st.markdown(subtitle)
 
     def empty_state(title, hint, steps):
         st.info(hint)
 
-    def place_banner(place, tags):
+    def place_banner(place, facts):
         st.markdown(f"#### 📍 {place}")
-        st.caption(" · ".join(tags))
+        st.caption(" · ".join(f"{f[0]} {f[1]}" if isinstance(f, (tuple, list)) else str(f) for f in facts))
 
     def sidebar_brand(title, subtitle): pass
 
@@ -1396,7 +1396,12 @@ def legend_html(title, items):
 # 5. SIDEBAR (CASCADING)
 hero(
     L["title"], L["subtitle"],
-    chips=[("VIIRS", "~463 m"), ("Moran's I", "Queen"), ("LISA", "FDR · BH"), ("GADM", "4.1")],
+    facts=[
+        ("Ảnh vệ tinh" if LANG == "vi" else "Satellite imagery", f"VIIRS, {GEE_SCALE_M:g} m"),
+        ("Kiểm định" if LANG == "vi" else "Tests", "Moran's I, LISA"),
+        ("Hiệu chỉnh" if LANG == "vi" else "Correction", "FDR Benjamini-Hochberg"),
+        ("Ranh giới" if LANG == "vi" else "Boundaries", "GADM 4.1"),
+    ],
 )
 
 with st.sidebar:
@@ -1717,7 +1722,12 @@ lon_c, lat_c = cent_wgs.x.to_numpy(), cent_wgs.y.to_numpy()
 
 st.divider()
 with st.container(border=True):
-    place_banner(place, [str(yr), f"{size} m", f"EPSG:{epsg}", f"~{px_per_cell} px/{'ô' if LANG == 'vi' else 'cell'}"])
+    place_banner(place, [
+        ("Năm" if LANG == "vi" else "Year", str(yr)),
+        ("Ô lưới" if LANG == "vi" else "Cell size", f"{size} m"),
+        ("Hệ tọa độ" if LANG == "vi" else "CRS", f"EPSG:{epsg}"),
+        ("Điểm ảnh mỗi ô" if LANG == "vi" else "Pixels per cell", f"{px_per_cell}"),
+    ])
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     c1.metric(L["m_cells"], f"{n:,}", help="Tổng số ô lưới sau khi cắt theo ranh giới." if LANG == "vi" else "Total grid cells after clipping.")
     c2.metric(L["m_mean"], f"{w_mean:.2f}", help="NTL trung bình có trọng số diện tích (nW/cm²/sr)." if LANG == "vi" else "Area-weighted mean NTL (nW/cm²/sr).")
