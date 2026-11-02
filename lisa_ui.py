@@ -23,7 +23,7 @@ COLORS = {  # quy ước màu GeoDa
 KEY_COLS = ("iso3", "region_id", "year", "cell_size_m")
 
 # =====================================================================
-# VĂN BẢN (song ngữ). Chỉ là chuỗi hiển thị — không ảnh hưởng tính toán.
+# VĂN BẢN
 # =====================================================================
 T = {
     "vi": {
@@ -316,7 +316,7 @@ def _legend(lang):
 
 
 def _legend_guide_html(L):
-    def _b(t):  # khối này là HTML thô nên đổi **đậm** của Markdown sang <b>
+    def _b(t):  
         return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
     cards = "".join(
         f'<div class="lisa-li" style="animation-delay:{0.05 * i:.2f}s"><i style="background:{COLORS[k]}"></i>'
@@ -326,7 +326,6 @@ def _legend_guide_html(L):
 
 
 class _LisaIntro(MacroElement):
-    """Hoạt cảnh mở đầu cho bản đồ LISA (chỉ đổi style hiển thị, không đụng dữ liệu)."""
     _template = Template(
         """
         {% macro script(this, kwargs) %}
@@ -392,10 +391,9 @@ class _LisaIntro(MacroElement):
 
 
 def _popover(brief, title, body):
-    """Nút (?) : rê chuột -> mô tả ngắn; bấm -> hộp chi tiết."""
     try:
         pop = st.popover("❓", help=brief)
-    except TypeError:  # Streamlit cũ không có help cho popover
+    except TypeError:  
         pop = st.popover("❓")
     with pop:
         st.markdown(f"**{title}**")
@@ -403,7 +401,6 @@ def _popover(brief, title, body):
 
 
 def _pin(cfg_cls, **kw):
-    """Khóa cột nếu phiên bản Streamlit hỗ trợ."""
     try:
         return cfg_cls(pinned=True, **kw)
     except TypeError:
