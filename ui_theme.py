@@ -251,6 +251,47 @@ div[data-baseweb="tab-list"]{position:sticky;top:3.4rem;z-index:20;background:va
 """
 
 
+_LAYOUT_CSS = """
+<style>
+/* ===== Bố cục ===== */
+[data-testid="stMain"]{
+  background:
+    radial-gradient(900px 420px at 85% -8%,rgba(159,216,255,.075),transparent 62%),
+    radial-gradient(700px 380px at 0% 105%,rgba(242,169,59,.055),transparent 60%),
+    radial-gradient(rgba(142,153,184,.13) 1px,transparent 1.3px) 0 0/26px 26px,
+    var(--ntl-night,#0A1024)}
+@media (min-width:1000px){
+  [data-testid="stSidebar"]{border-right:0;background:transparent}
+  [data-testid="stSidebar"] [data-testid="stSidebarContent"]{
+    margin:12px 0 12px 12px;height:calc(100% - 24px);border-radius:20px;
+    background:linear-gradient(180deg,#131C3E 0%,#0F1733 46%,#0D1430 100%);
+    border:1px solid #243063;
+    box-shadow:0 18px 44px rgba(2,5,18,.55),inset 0 1px 0 rgba(159,216,255,.09)}
+  [data-testid="stSidebar"] [data-testid="stSidebarContent"]:before{
+    content:"";position:absolute;left:22px;right:22px;top:0;height:2px;border-radius:0 0 3px 3px;
+    background:linear-gradient(90deg,transparent,var(--ntl-sodium,#F2A93B),var(--ntl-led,#9FD8FF),transparent);opacity:.8}
+}
+/* ===== Trạng thái trống ===== */
+.ntl-empty{container-type:inline-size;display:block;margin:34px 0 8px;text-align:center}
+.ntl-empty-h{font-size:2rem}
+.ntl-empty-p{margin:12px auto 0;max-width:56ch;opacity:.75}
+.ntl-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:30px;text-align:left}
+.ntl-steps:before{display:none}
+.ntl-steps li{flex-direction:column;gap:12px;padding:18px 18px 20px;border:1px solid var(--ntl-line);border-radius:16px;
+  background:linear-gradient(180deg,rgba(26,36,76,.55),rgba(14,21,48,.55));
+  opacity:0;animation:ntlRise .5s cubic-bezier(.2,.7,.2,1) forwards;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.ntl-steps li:nth-child(1){animation-delay:.05s}.ntl-steps li:nth-child(2){animation-delay:.13s}
+.ntl-steps li:nth-child(3){animation-delay:.21s}.ntl-steps li:nth-child(4){animation-delay:.29s}
+.ntl-steps li:hover{transform:translateY(-3px);border-color:#3B4C8F;box-shadow:0 12px 28px rgba(2,5,18,.45)}
+.ntl-steps li:first-child{border-color:rgba(242,169,59,.55)}
+@keyframes ntlRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@container (max-width:880px){.ntl-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container (max-width:460px){.ntl-steps{grid-template-columns:1fr}.ntl-empty-h{font-size:1.6rem}}
+@media (prefers-reduced-motion:reduce){.ntl-steps li{animation:none;opacity:1}}
+</style>
+"""
+
+
 _FX_JS = r"""
 <script>
 (function () {
@@ -359,6 +400,7 @@ def inject_theme() -> None:
     st.markdown(_FONTS, unsafe_allow_html=True)
     st.markdown(_THEME_CSS, unsafe_allow_html=True)
     st.markdown(_UX_CSS, unsafe_allow_html=True)
+    st.markdown(_LAYOUT_CSS, unsafe_allow_html=True)
 
 
 def enable_fx() -> None:
