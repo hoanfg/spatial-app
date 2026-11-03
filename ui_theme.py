@@ -51,6 +51,18 @@ hr{border:0!important;border-top:1px solid var(--ntl-line)!important;background:
 .ntl-field i.s{background:var(--ntl-sodium)}
 .ntl-field i.l{background:var(--ntl-led);box-shadow:0 0 12px rgba(159,216,255,.55)}
 @keyframes ntlLit{from{opacity:0;transform:scale(.6)}to{opacity:var(--o);transform:none}}
+/* Chuyển động liên tục: chỉ đổi opacity / transform (GPU lo, không tính lại bố cục) */
+.ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards,
+  ntlTwinkle var(--t) ease-in-out calc(var(--d) + 1.4s + var(--p)) infinite}
+@keyframes ntlTwinkle{0%,100%{opacity:var(--o)}50%{opacity:calc(var(--o) * .42)}}
+.ntl-field::after{content:"";position:absolute;top:0;bottom:0;left:0;width:100%;pointer-events:none;
+  background:linear-gradient(100deg,transparent 42%,rgba(159,216,255,.16) 50%,transparent 58%);
+  transform:translate3d(-110%,0,0);animation:ntlSweep 12s linear 3s infinite}
+@keyframes ntlSweep{0%{transform:translate3d(-110%,0,0)}45%,100%{transform:translate3d(110%,0,0)}}
+/* tắt khi: banner ngoài màn hình, máy yếu (JS gắn class lên <html>) */
+html.ntl-offscreen .ntl-field i.t,html.ntl-offscreen .ntl-field::after{animation-play-state:paused}
+html.ntl-calm .ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
+html.ntl-calm .ntl-field::after{display:none}
 .ntl-hero-body{position:relative;z-index:1;padding:30px 34px;max-width:60%}
 .ntl-title{font-family:var(--ntl-display);font-size:1.95rem;font-weight:700;line-height:1.1;letter-spacing:-.025em;color:#F3F6FD}
 .ntl-sub{margin-top:8px;color:#A5B1D1;font-size:1.02rem;max-width:40ch;line-height:1.45}
@@ -187,13 +199,16 @@ div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-contai
 }
 @container (max-width:760px){
   .ntl-field{width:100%;opacity:.24;-webkit-mask-image:none;mask-image:none}
+  .ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
+  .ntl-field::after{display:none}
   .ntl-hero-body{max-width:100%;padding:24px 24px}
   .ntl-title{font-size:1.6rem}
   .ntl-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
   .ntl-facts div,.ntl-facts div:first-child{padding:0;border-left:0}
 }
 @media (prefers-reduced-motion:reduce){
-  .ntl-field i{animation:none;opacity:var(--o)}
+  .ntl-field i,.ntl-field i.t{animation:none;opacity:var(--o)}
+  .ntl-field::after{display:none}
   div[data-baseweb="tab-panel"]{animation:none}
   *{transition:none!important}
 }
@@ -213,7 +228,7 @@ _UX_CSS = """
   background:linear-gradient(to top,var(--ntl-glass) 78%,transparent);
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 
-/* ===== Lựa chọn radio -> nút chọn (segmented) ===== */
+/* ===== Lựa chọn radio ===== */
 [data-testid="stRadio"] [role="radiogroup"]{gap:6px;flex-wrap:wrap}
 [data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"]{flex-direction:row}
 [data-testid="stRadio"] label[data-baseweb="radio"]{margin:0;padding:5px 13px;border:1px solid var(--ntl-line);
@@ -232,7 +247,7 @@ div[data-baseweb="tab-list"]{position:sticky;top:3.4rem;z-index:20;background:va
 [data-testid="stMain"] h3{font-size:1.28rem;font-weight:700;display:flex;align-items:center;gap:10px;margin-top:1.2rem}
 [data-testid="stMain"] h3:before{content:"";flex:none;width:9px;height:9px;border-radius:2px;background:var(--ntl-sodium)}
 
-/* ===== Dự phòng: nếu config.toml chưa có hiệu lực, đổi màu đỏ mặc định sang hổ phách ===== */
+/* ===== Dự phòng ===== */
 .ntl-redfix [data-testid="stSlider"],.ntl-redfix [data-testid="stCheckbox"],.ntl-redfix [data-testid="stToggle"]{filter:hue-rotate(38deg)}
 </style>
 """
@@ -246,6 +261,28 @@ _FX_JS = r"""
   if (P.__ntlFx3) { return; }
   P.__ntlFx3 = true;
   var reduce = P.matchMedia && P.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Tắt chuyển động liên tục của banner */
+  var root = D.documentElement;
+  var nav = P.navigator || {};
+  var weak = reduce || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 2) ||
+             (nav.deviceMemory && nav.deviceMemory <= 2) || (nav.connection && nav.connection.saveData);
+  if (weak) { root.classList.add('ntl-calm'); }
+  else if (P.requestAnimationFrame) {
+    /* đo nhanh ~40 khung hình: dưới ~30 fps thì chuyển sang chế độ "calm" */
+    var n = 0, t0 = 0;
+    (function probe(ts) {
+      if (!t0) { t0 = ts; }
+      if (++n < 40) { P.requestAnimationFrame(probe); return; }
+      if ((ts - t0) / (n - 1) > 34) { root.classList.add('ntl-calm'); }
+    })(0);
+  }
+  /* Tạm dừng khi banner đã cuộn khỏi màn hình hoặc tab bị ẩn */
+  setInterval(function () {
+    var h = D.querySelector('.ntl-hero');
+    var out = D.hidden || !h || h.getBoundingClientRect().bottom < 0;
+    root.classList.toggle('ntl-offscreen', !!out);
+  }, 800);
 
   /* Đếm số khi có kết quả mới (~0.6s) */
   function textNode(el) {
@@ -366,7 +403,13 @@ def _field_html(cols: int = 26, rows: int = 7) -> str:
             else:
                 cls, o = "l", 1
             d = math.hypot(c - cx0, r - cy0) * .034
-            out.append(f'<i class="{cls}" style="--d:{d:.2f}s;--o:{o}"></i>')
+            idx = r * cols + c
+            if o >= .28 and (idx * 37 + 5) % 11 < 3:
+                cls = (cls + " t").strip()
+                tw = f";--t:{5 + (idx % 5) * 1.1:.1f}s;--p:{(idx % 7) * .6:.1f}s"
+            else:
+                tw = ""
+            out.append(f'<i class="{cls}" style="--d:{d:.2f}s;--o:{o}{tw}"></i>')
     return "".join(out)
 
 
