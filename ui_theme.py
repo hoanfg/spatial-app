@@ -42,12 +42,12 @@ header[data-testid="stHeader"]{background:transparent}
 hr{border:0!important;border-top:1px solid var(--ntl-line)!important;background:none!important;height:0!important}
 
 /* ================= HERO ================= */
-.ntl-hero{position:relative;overflow:hidden;min-height:176px;display:flex;align-items:center;
+.ntl-hero{position:relative;overflow:hidden;min-height:176px;display:flex;align-items:center;container-type:inline-size;
   background:var(--ntl-night);border:1px solid #1E2A55;border-radius:20px;color:#EEF2FB}
-.ntl-field{position:absolute;top:0;right:0;bottom:0;width:52%;padding:16px 18px;display:grid;
-  grid-template-columns:repeat(26,1fr);grid-template-rows:repeat(7,1fr);gap:5px;pointer-events:none;
+.ntl-field{position:absolute;top:0;right:0;bottom:0;width:min(52%,640px);padding:16px 18px;display:grid;
+  grid-template-columns:repeat(26,1fr);align-content:center;gap:5px;pointer-events:none;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 62%);mask-image:linear-gradient(90deg,transparent 0,#000 62%)}
-.ntl-field i{display:block;border-radius:3px;background:#8E99B8;opacity:0;animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
+.ntl-field i{display:block;aspect-ratio:1/1;border-radius:3px;background:#8E99B8;opacity:0;animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
 .ntl-field i.s{background:var(--ntl-sodium)}
 .ntl-field i.l{background:var(--ntl-led);box-shadow:0 0 12px rgba(159,216,255,.55)}
 @keyframes ntlLit{from{opacity:0;transform:scale(.6)}to{opacity:var(--o);transform:none}}
@@ -184,6 +184,13 @@ div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-contai
   .ntl-where .name{font-size:1.5rem}
   div[data-testid="stMetricValue"]{font-size:1.6rem}
   div[data-baseweb="tab-list"]{gap:18px}
+}
+@container (max-width:760px){
+  .ntl-field{width:100%;opacity:.24;-webkit-mask-image:none;mask-image:none}
+  .ntl-hero-body{max-width:100%;padding:24px 24px}
+  .ntl-title{font-size:1.6rem}
+  .ntl-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+  .ntl-facts div,.ntl-facts div:first-child{padding:0;border-left:0}
 }
 @media (prefers-reduced-motion:reduce){
   .ntl-field i{animation:none;opacity:var(--o)}
