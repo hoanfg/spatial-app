@@ -288,6 +288,33 @@ _LAYOUT_CSS = """
 @container (max-width:880px){.ntl-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @container (max-width:460px){.ntl-steps{grid-template-columns:1fr}.ntl-empty-h{font-size:1.6rem}}
 @media (prefers-reduced-motion:reduce){.ntl-steps li{animation:none;opacity:1}}
+
+/* ===== Không dùng thanh bên ===== */
+[data-testid="stSidebar"],[data-testid="stSidebarCollapsedControl"],[data-testid="collapsedControl"],
+[data-testid="stSidebarCollapseButton"]{display:none!important}
+.block-container{max-width:1320px}
+/* thanh trên */
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand){align-items:center;margin:0 0 .6rem}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) .ntl-brand{margin:0}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand)>div[data-testid="stColumn"]:last-child{
+  display:flex;flex-direction:column;align-items:flex-end}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] [role="radiogroup"]{
+  flex-wrap:nowrap;gap:0;padding:3px;border:1px solid var(--ntl-line);border-radius:999px;background:rgba(14,21,48,.6)}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] label[data-baseweb="radio"]{
+  border-color:transparent;padding:4px 14px}
+/* bảng điều khiển */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl){position:relative;border:1px solid #243063;border-radius:20px;
+  background:linear-gradient(180deg,rgba(24,34,72,.82),rgba(13,20,46,.82));padding:.6rem .9rem .5rem;margin:.4rem 0 1.2rem;
+  box-shadow:0 18px 44px rgba(2,5,18,.45),inset 0 1px 0 rgba(159,216,255,.09)}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):before{content:"";position:absolute;left:26px;right:26px;top:0;height:2px;
+  border-radius:0 0 3px 3px;background:linear-gradient(90deg,transparent,var(--ntl-sodium,#F2A93B),var(--ntl-led,#9FD8FF),transparent);opacity:.85}
+.ntl-dl{display:flex;align-items:center;gap:10px;margin:0 0 .5rem;font-family:var(--ntl-display);font-weight:700;font-size:.98rem;letter-spacing:-.01em}
+.ntl-dl span{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:.78rem;
+  border:1px solid var(--ntl-sodium,#F2A93B);color:var(--ntl-sodium,#F2A93B);background:rgba(242,169,59,.1)}
+/* cột "Khởi chạy" */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]{
+  min-height:3.6rem;font-size:1.05rem;border-radius:14px;box-shadow:0 8px 24px rgba(242,169,59,.28)}
+@media (max-width:760px){.block-container{max-width:100%}}
 </style>
 """
 
@@ -417,7 +444,7 @@ def _esc(x) -> str:
 
 
 def _field_html(cols: int = 26, rows: int = 7) -> str:
-    """Cánh đồng ô lưới"""
+    """Cánh đồng ô lưới trang trí)"""
     seed = 11
 
     def rnd() -> float:
@@ -485,6 +512,13 @@ def sidebar_brand(title: str, subtitle: str) -> None:
         f'<div><b>{_esc(title)}</b><span>{_esc(subtitle)}</span></div></div>',
         unsafe_allow_html=True,
     )
+
+
+def deck_label(n, text: str) -> None:
+    """Nhãn đánh số cho từng cụm trong bảng điều khiển"""
+    import re
+    t = re.sub(r"^\s*\d+\.\s*", "", str(text))
+    st.markdown(f'<div class="ntl-dl"><span>{_esc(str(n))}</span>{_esc(t)}</div>', unsafe_allow_html=True)
 
 
 def empty_state(title: str, hint: str, steps) -> None:
