@@ -49,20 +49,20 @@ hr{border:0!important;border-top:1px solid var(--ntl-line)!important;background:
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 62%);mask-image:linear-gradient(90deg,transparent 0,#000 62%)}
 .ntl-field i{display:block;aspect-ratio:1/1;border-radius:3px;background:#8E99B8;opacity:0;animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
 .ntl-field i.s{background:var(--ntl-sodium)}
-.ntl-field i.l{background:var(--ntl-led);box-shadow:0 0 12px rgba(159,216,255,.55)}
+.ntl-field i.g{box-shadow:0 0 9px rgba(242,169,59,.55)}
+.ntl-field i.l{background:var(--ntl-led);box-shadow:0 0 14px rgba(159,216,255,.75)}
 @keyframes ntlLit{from{opacity:0;transform:scale(.6)}to{opacity:var(--o);transform:none}}
-/* Chuyển động liên tục: chỉ đổi opacity / transform (GPU lo, không tính lại bố cục) */
+/* Chuyển động liên tục: chỉ đổi opacity (GPU lo, không tính lại bố cục)
+   .t = nhấp nháy như đèn thành phố;  .r = gợn sáng lan từ lõi đô thị ra ngoài (như cụm "điểm nóng" lan toả) */
 .ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards,
-  ntlTwinkle var(--t) ease-in-out calc(var(--d) + 1.4s + var(--p)) infinite}
-@keyframes ntlTwinkle{0%,100%{opacity:var(--o)}50%{opacity:calc(var(--o) * .42)}}
-.ntl-field::after{content:"";position:absolute;top:0;bottom:0;left:0;width:100%;pointer-events:none;
-  background:linear-gradient(100deg,transparent 42%,rgba(159,216,255,.16) 50%,transparent 58%);
-  transform:translate3d(-110%,0,0);animation:ntlSweep 12s linear 3s infinite}
-@keyframes ntlSweep{0%{transform:translate3d(-110%,0,0)}45%,100%{transform:translate3d(110%,0,0)}}
+  ntlTwinkle var(--t) ease-in-out calc(var(--d) + 1s + var(--p)) infinite}
+@keyframes ntlTwinkle{0%,100%{opacity:var(--o)}50%{opacity:calc(var(--o) * .35)}}
+.ntl-field i.r{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards,
+  ntlRipple 6s ease-out calc(var(--d) + 1.6s + var(--r)) infinite}
+@keyframes ntlRipple{0%,38%,100%{opacity:var(--o)}10%{opacity:1}}
 /* tắt khi: banner ngoài màn hình, máy yếu (JS gắn class lên <html>) */
-html.ntl-offscreen .ntl-field i.t,html.ntl-offscreen .ntl-field::after{animation-play-state:paused}
-html.ntl-calm .ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
-html.ntl-calm .ntl-field::after{display:none}
+html.ntl-offscreen .ntl-field i.t,html.ntl-offscreen .ntl-field i.r{animation-play-state:paused}
+html.ntl-calm .ntl-field i.t,html.ntl-calm .ntl-field i.r{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
 .ntl-hero-body{position:relative;z-index:1;padding:30px 34px;max-width:60%}
 .ntl-title{font-family:var(--ntl-display);font-size:1.95rem;font-weight:700;line-height:1.1;letter-spacing:-.025em;color:#F3F6FD}
 .ntl-sub{margin-top:8px;color:#A5B1D1;font-size:1.02rem;max-width:40ch;line-height:1.45}
@@ -199,16 +199,14 @@ div[data-testid="stElementContainer"]:has(iframe[height="0"]),div.element-contai
 }
 @container (max-width:760px){
   .ntl-field{width:100%;opacity:.24;-webkit-mask-image:none;mask-image:none}
-  .ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
-  .ntl-field::after{display:none}
+  .ntl-field i.t,.ntl-field i.r{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
   .ntl-hero-body{max-width:100%;padding:24px 24px}
   .ntl-title{font-size:1.6rem}
   .ntl-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
   .ntl-facts div,.ntl-facts div:first-child{padding:0;border-left:0}
 }
 @media (prefers-reduced-motion:reduce){
-  .ntl-field i,.ntl-field i.t{animation:none;opacity:var(--o)}
-  .ntl-field::after{display:none}
+  .ntl-field i,.ntl-field i.t,.ntl-field i.r{animation:none;opacity:var(--o)}
   div[data-baseweb="tab-panel"]{animation:none}
   *{transition:none!important}
 }
@@ -228,7 +226,7 @@ _UX_CSS = """
   background:linear-gradient(to top,var(--ntl-glass) 78%,transparent);
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 
-/* ===== Lựa chọn radio ===== */
+/* ===== Lựa chọn radio -> nút chọn (segmented) ===== */
 [data-testid="stRadio"] [role="radiogroup"]{gap:6px;flex-wrap:wrap}
 [data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"]{flex-direction:row}
 [data-testid="stRadio"] label[data-baseweb="radio"]{margin:0;padding:5px 13px;border:1px solid var(--ntl-line);
@@ -377,7 +375,7 @@ def _esc(x) -> str:
 
 
 def _field_html(cols: int = 26, rows: int = 7) -> str:
-    """Cánh đồng ô lưới trang trí (giả lập vùng đô thị)"""
+    """Cánh đồng ô lưới"""
     seed = 11
 
     def rnd() -> float:
@@ -393,22 +391,24 @@ def _field_html(cols: int = 26, rows: int = 7) -> str:
             v = sum(a * math.exp(-((c - bx) ** 2 + (r - by) ** 2) / (2 * s * s)) for bx, by, a, s in blobs)
             v += (rnd() - .5) * .3
             if v < .16:
-                cls, o = "", .09
+                cls, o = "", .12
             elif v < .36:
-                cls, o = "s", .28
+                cls, o = "s", .4
             elif v < .6:
-                cls, o = "s", .55
+                cls, o = "s", .72
             elif v < .86:
-                cls, o = "s", .88
+                cls, o = "s g", 1
             else:
                 cls, o = "l", 1
             d = math.hypot(c - cx0, r - cy0) * .034
             idx = r * cols + c
-            if o >= .28 and (idx * 37 + 5) % 11 < 3:
+            tw = ""
+            if o >= .4 and (idx * 37 + 5) % 11 < 4:
                 cls = (cls + " t").strip()
-                tw = f";--t:{5 + (idx % 5) * 1.1:.1f}s;--p:{(idx % 7) * .6:.1f}s"
-            else:
-                tw = ""
+                tw = f";--t:{2.8 + (idx % 5) * .7:.1f}s;--p:{(idx % 7) * .35:.2f}s"
+            elif o >= .4:
+                cls = (cls + " r").strip()
+                tw = f";--r:{math.hypot(c - cx0, r - cy0) * .16:.2f}s"
             out.append(f'<i class="{cls}" style="--d:{d:.2f}s;--o:{o}{tw}"></i>')
     return "".join(out)
 
