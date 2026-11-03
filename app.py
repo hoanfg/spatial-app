@@ -32,7 +32,7 @@ except Exception:  # pragma: no cover
     pycountry = None
 
 # 0. CONFIG
-st.set_page_config(page_title="NTL Spatial econometrics", page_icon="🌙", layout="wide")
+st.set_page_config(page_title="NTL Spatial econometrics", page_icon="🌙", layout="wide", initial_sidebar_state="collapsed")
 
 MAINTENANCE_MODE = False
 
@@ -460,7 +460,7 @@ TEXT = {
         "no_state": "Quốc gia này chưa có thư mục tỉnh/thành.",
         "no_county": "Tỉnh/thành này chưa có file .geojson.",
         "gee_fail": "Khởi tạo Google Earth Engine thất bại",
-        "idle": "👈 Chọn địa phương, độ phân giải, năm ở thanh bên rồi bấm **Chạy phân tích**.",
+        "idle": "👆 Chọn địa phương, độ phân giải, năm ở bảng điều khiển phía trên rồi bấm **Chạy phân tích**.",
         "st1": "Trạm 1/3 · Đang dựng lưới {s} m và cắt theo ranh giới...",
         "st2": "Trạm 2/3 · Đang tải ảnh vệ tinh VIIRS từ Google Earth Engine (có thể mất vài chục giây)...",
         "st3": "Trạm 3/3 · Đang tính NTL trung bình theo tỷ lệ phủ điểm ảnh cho từng ô...",
@@ -605,7 +605,7 @@ TEXT = {
         "no_state": "This country has no province/city folders.",
         "no_county": "This province/city has no .geojson files.",
         "gee_fail": "Google Earth Engine initialization failed",
-        "idle": "👈 Pick a locality, resolution and year in the sidebar, then press **Execute Pipeline**.",
+        "idle": "👆 Pick a locality, resolution and year in the control panel above, then press **Execute Pipeline**.",
         "st1": "Station 1/3 · Building {s} m grid and clipping to boundary...",
         "st2": "Station 2/3 · Downloading VIIRS imagery from Google Earth Engine (may take a while)...",
         "st3": "Station 3/3 · Computing coverage-weighted NTL for every cell...",
@@ -904,9 +904,11 @@ print(Moran(res.resid.to_numpy(), w).I)
 
 LANG = "vi"
 
-with st.sidebar:
+_bar_brand, _bar_lang = st.columns([5, 3])
+with _bar_lang:
     lang_choice = st.radio("🌐 Language / Ngôn ngữ", ["Tiếng Việt", "English"], key="lang_choice",
-                       help="Đổi ngôn ngữ giao diện / Switch interface language")
+                           horizontal=True, label_visibility="collapsed",
+                           help="Đổi ngôn ngữ giao diện / Switch interface language")
 LANG = "vi" if lang_choice == "Tiếng Việt" else "en"
 L = TEXT[LANG]
 
@@ -993,9 +995,9 @@ try:
     import sys as _sys
     _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import ui_theme as _ui_theme  # noqa: E402
-    if not hasattr(_ui_theme, "_field_html"):   # ui_theme.py trên máy là bản cũ -> dùng giao diện cơ bản
+    if not (hasattr(_ui_theme, "_field_html") and hasattr(_ui_theme, "deck_label")):   # ui_theme.py trên máy là bản cũ -> dùng giao diện cơ bản
         raise ImportError("ui_theme.py outdated")
-    from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand  # noqa: E402
+    from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, deck_label  # noqa: E402
 except Exception:  # noqa: BLE001
     def inject_theme(): pass
 
@@ -1013,6 +1015,8 @@ except Exception:  # noqa: BLE001
         st.caption(" · ".join(f"{f[0]} {f[1]}" if isinstance(f, (tuple, list)) else str(f) for f in facts))
 
     def sidebar_brand(title, subtitle): pass
+
+    def deck_label(n, text): st.markdown(f"**{n}. {text}**")
 
 
 def fit_bounds_on_load(m, bounds):
@@ -1445,9 +1449,17 @@ hero(
     ],
 )
 
-with st.sidebar:
+with _bar_brand:
     sidebar_brand("NTL Spatial", "Spatial econometrics" if LANG == "en" else "Kinh tế lượng không gian")
-    st.header(L["sb_spatial"])
+
+# Bảng điều khiển (thay cho thanh bên): 1 Địa phương | 2 Tham số | 3 Khởi chạy. Cùng widget, cùng key, cùng thứ tự tính toán
+_deck = st.container(border=True)
+with _deck:
+    _cL, _cP, _cR = st.columns([5.4, 3.1, 2.5], gap="large")
+    _msgs = st.container()
+
+with _cL:
+    deck_label(1, L["sb_spatial"])
     if not COUNTRIES:
         st.error(L["no_data"].format(d=DATA_ROOT))
         st.stop()
@@ -1456,7 +1468,8 @@ with st.sidebar:
     country_keys = sorted(COUNTRIES.keys(), key=lambda k: _natkey(country_label(k, LANG)))
     if st.session_state.get("sb_opt_country") not in country_keys:   # lựa chọn cũ không còn tồn tại
         st.session_state.pop("sb_opt_country", None)
-    sel_country = st.selectbox(
+    _loc = st.columns(3)
+    sel_country = _loc[0].selectbox(
         L["country"], country_keys, format_func=lambda k: country_label(k, LANG),
         key="sb_opt_country", help=H["country"],
     )
@@ -1473,7 +1486,7 @@ with st.sidebar:
          st.warning(L["no_state"])
          st.stop()
 
-    sel_state = st.selectbox(
+    sel_state = _loc[1].selectbox(
          L["state"],
          states,
          format_func=lambda s: clean_state(s, iso=sel_iso, lang=LANG),
@@ -1490,7 +1503,7 @@ with st.sidebar:
          counties.keys(),
          key=lambda f: _natkey(clean_county(counties[f], iso=sel_iso, lang=LANG)),
      )
-    sel_county_file = st.selectbox(
+    sel_county_file = _loc[2].selectbox(
          L["county"],
          county_files_sorted,
          format_func=lambda f: clean_county(counties[f], iso=sel_iso, lang=LANG),
@@ -1510,8 +1523,9 @@ with st.sidebar:
          load_china_districts.clear()
          st.rerun()
 
-    st.divider()
-    st.header(L["sb_analytic"])
+
+with _cP:
+    deck_label(2, L["sb_analytic"])
     cell_size = st.slider(L["cell"], min_value=500, max_value=5000, value=500, step=500, help=H["cell"])
     if cell_size < 1000:
         st.caption("⚠️ " + ("Lưới < 1000 m: các ô liền kề không độc lập." if LANG == "vi"
@@ -1524,37 +1538,40 @@ with st.sidebar:
         _mt = os.path.getmtime(file_path)
     except OSError:
         _mt = 0.0
-    with st.spinner("Đang kiểm tra quy mô vùng..." if LANG == "vi" else "Checking area size..."):
-        _bs = boundary_stats(file_path, _mt)
-    if _bs:
-        _est = estimate_grid_cells(_bs["bounds"], _bs["area_km2"], _bs["perimeter_km"], cell_size)
-        _a = _bs["area_km2"]
-        if _est["blocked"]:
-            fuse_blocked = True
-            _alt = suggest_cell_size(_bs["bounds"], _a, _bs["perimeter_km"], cell_size)
-            if LANG == "vi":
-                _hint = (f"Hãy tăng kích thước ô lên **≥ {_alt:,} m** (hoặc chọn địa phương nhỏ hơn)."
-                         if _alt else "Ngay cả ô lớn nhất (5.000 m) vẫn vượt trần, hãy chọn địa phương nhỏ hơn.")
-                st.error(
-                    f"⛔ **Vùng quá lớn cho lưới {cell_size:,} m.** Diện tích {_a:,.0f} km² ≈ **{_est['n_clip']:,} ô**, "
-                    f"vượt/chạm trần {MAX_CELLS:,} ô, chạy tiếp có thể treo máy chủ. {_hint}")
+    with _msgs:
+        with st.spinner("Đang kiểm tra quy mô vùng..." if LANG == "vi" else "Checking area size..."):
+            _bs = boundary_stats(file_path, _mt)
+        if _bs:
+            _est = estimate_grid_cells(_bs["bounds"], _bs["area_km2"], _bs["perimeter_km"], cell_size)
+            _a = _bs["area_km2"]
+            if _est["blocked"]:
+                fuse_blocked = True
+                _alt = suggest_cell_size(_bs["bounds"], _a, _bs["perimeter_km"], cell_size)
+                if LANG == "vi":
+                    _hint = (f"Hãy tăng kích thước ô lên **≥ {_alt:,} m** (hoặc chọn địa phương nhỏ hơn)."
+                             if _alt else "Ngay cả ô lớn nhất (5.000 m) vẫn vượt trần, hãy chọn địa phương nhỏ hơn.")
+                    st.error(
+                        f"⛔ **Vùng quá lớn cho lưới {cell_size:,} m.** Diện tích {_a:,.0f} km² ≈ **{_est['n_clip']:,} ô**, "
+                        f"vượt/chạm trần {MAX_CELLS:,} ô, chạy tiếp có thể treo máy chủ. {_hint}")
+                else:
+                    _hint = (f"Raise the cell size to **≥ {_alt:,} m** (or pick a smaller locality)."
+                             if _alt else "Even the largest cell (5,000 m) exceeds the cap, pick a smaller locality.")
+                    st.error(
+                        f"⛔ **Area too large for a {cell_size:,} m grid.** {_a:,.0f} km² ≈ **{_est['n_clip']:,} cells**, "
+                        f"at/above the {MAX_CELLS:,}-cell cap, running could hang the server. {_hint}")
+            elif _est["slow"]:
+                st.warning(
+                    (f"⚠️ Vùng lớn: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} ô ({_a:,.0f} km²). Vẫn chạy được nhưng sẽ chậm; "
+                     "cân nhắc tăng kích thước ô." if LANG == "vi" else
+                     f"⚠️ Large area: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} cells ({_a:,.0f} km²). It will run but slowly; "
+                     "consider a larger cell size."))
             else:
-                _hint = (f"Raise the cell size to **≥ {_alt:,} m** (or pick a smaller locality)."
-                         if _alt else "Even the largest cell (5,000 m) exceeds the cap, pick a smaller locality.")
-                st.error(
-                    f"⛔ **Area too large for a {cell_size:,} m grid.** {_a:,.0f} km² ≈ **{_est['n_clip']:,} cells**, "
-                    f"at/above the {MAX_CELLS:,}-cell cap, running could hang the server. {_hint}")
-        elif _est["slow"]:
-            st.warning(
-                (f"⚠️ Vùng lớn: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} ô ({_a:,.0f} km²). Vẫn chạy được nhưng sẽ chậm; "
-                 "cân nhắc tăng kích thước ô." if LANG == "vi" else
-                 f"⚠️ Large area: ≈ {_est['n_clip']:,}/{MAX_CELLS:,} cells ({_a:,.0f} km²). It will run but slowly; "
-                 "consider a larger cell size."))
-        else:
-            st.caption((f"📐 {_a:,.0f} km² ≈ {_est['n_clip']:,} ô (trần {MAX_CELLS:,})" if LANG == "vi"
-                        else f"📐 {_a:,.0f} km² ≈ {_est['n_clip']:,} cells (cap {MAX_CELLS:,})"))
+                st.caption((f"📐 {_a:,.0f} km² ≈ {_est['n_clip']:,} ô (trần {MAX_CELLS:,})" if LANG == "vi"
+                            else f"📐 {_a:,.0f} km² ≈ {_est['n_clip']:,} cells (cap {MAX_CELLS:,})"))
 
-    st.divider()
+
+with _cR:
+    deck_label(3, "Khởi chạy" if LANG == "vi" else "Launch")
     run_btn = sx(st.button, L["run"], type="primary", disabled=(not gee_ok) or fuse_blocked, help=H["run"])
     if not gee_ok:
         st.caption("🔌 " + ("Chưa kết nối Google Earth Engine." if LANG == "vi" else "Google Earth Engine not connected."))
@@ -1704,10 +1721,10 @@ res = st.session_state.get("result")
 if not res:
     empty_state(
         "Bắt đầu phân tích" if LANG == "vi" else "Get started",
-        L["idle"].replace("**", "").replace("👈 ", ""),
+        L["idle"].replace("**", "").replace("👆 ", ""),
         [
-            ("Chọn địa phương", "Quốc gia → Tỉnh → Quận/Huyện ở thanh bên") if LANG == "vi"
-            else ("Pick a locality", "Country → Province → District in the sidebar"),
+            ("Chọn địa phương", "Quốc gia → Tỉnh → Quận/Huyện ở bảng điều khiển") if LANG == "vi"
+            else ("Pick a locality", "Country → Province → District in the control panel"),
             ("Đặt tham số", "Độ phân giải lưới và năm phân tích") if LANG == "vi"
             else ("Set parameters", "Grid resolution and analysis year"),
             ("Chạy phân tích", f"Bấm “{L['run']}” và theo dõi 3 trạm xử lý") if LANG == "vi"
