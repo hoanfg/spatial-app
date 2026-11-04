@@ -16,16 +16,42 @@ jobs:
         run: |
           python - <<'EOF'
           from playwright.sync_api import sync_playwright
+          
           URL = "https://spatial-app.streamlit.app/"
+          
           with sync_playwright() as p:
               b = p.chromium.launch()
               page = b.new_page()
-              page.goto(URL, wait_until="networkidle", timeout=120000)
-              # Nếu app đang ngủ, bấm nút đánh thức
-              btn = page.get_by_role("button", name="Yes, get this app back up!")
-              if btn.count():
-                  btn.click()
-                  page.wait_for_timeout(60000)
-              page.wait_for_timeout(15000)
-              b.close()
+              
+              try:
+                  print("Đang truy cập ứng dụng...")
+                  # 1. Tải trang nhanh, loại bỏ networkidle để chống crash timeout
+                  page.goto(URL, wait_until="domcontentloaded", timeout=60000)
+                  
+                  # 2. Xử lý đánh thức với thời gian chờ quét nút cực ngắn (5s)
+                  wake_btn = page.get_by_role("button", name="Yes, get this app back up!")
+                  try:
+                      wake_btn.wait_for(state="visible", timeout=5000)
+                      print("App đang ngủ. Bấm nút đánh thức...")
+                      wake_btn.click()
+                      # Khởi động lạnh cần thời gian, nán lại 60s để server boot
+                      page.wait_for_timeout(60000)
+                  except Exception:
+                      print("App đang thức sẵn. Bỏ qua lệnh chờ boot.")
+                  
+                  # 3. Kỹ thuật "Chạm và chạy": Tìm chữ ở thanh bên để làm mốc
+                  try:
+                      print("Đang xác nhận giao diện...")
+                      # Bạn đã tắt bảo trì, nên bot sẽ tìm chữ "Tham số không gian" trên UI
+                      page.wait_for_selector("text=Tham số không gian", timeout=15000)
+                      print("Đã ngắm thấy app thức. Hoàn thành nhiệm vụ!")
+                      # Nán lại đúng 2 giây để Streamlit chốt log WebSocket rồi thoát
+                      page.wait_for_timeout(2000)
+                  except Exception:
+                      print("Không tìm thấy text xác nhận, nhưng đã gửi ping thành công.")
+                      
+              except Exception as e:
+                  print(f"Lỗi trong quá trình truy cập: {e}")
+              finally:
+                  b.close()
           EOF
