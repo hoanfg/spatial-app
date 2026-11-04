@@ -1,51 +1,84 @@
 name: keep-streamlit-awake
 on:
   schedule:
-    - cron: "0 */6 * * *" 
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 jobs:
   visit:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Install Playwright
         run: |
           pip install playwright
           playwright install --with-deps chromium
+
       - name: Visit app
         run: |
           python - <<'EOF'
+          import sys
+          import time
           from playwright.sync_api import sync_playwright
-          
+
           URL = "https://spatial-app.streamlit.app/"
-          
+          DEADLINE = 180  # giây
+
+          def find_app_frame(page):
+              for f in page.frames:
+                  try:
+                      if f.locator('[data-testid="stApp"]').count() > 0:
+                          return f
+                  except Exception:
+                      pass
+              return None
+
+          ok = False
           with sync_playwright() as p:
               b = p.chromium.launch()
               page = b.new_page()
-              
               try:
                   print("Đang truy cập ứng dụng...")
                   page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-                  
-                  wake_btn = page.get_by_role("button", name="Yes, get this app back up!")
-                  try:
-                      wake_btn.wait_for(state="visible", timeout=5000)
-                      print("App đang ngủ. Bấm nút đánh thức...")
-                      wake_btn.click()
-                      page.wait_for_timeout(60000)
-                  except Exception:
-                      print("App đang thức sẵn. Bỏ qua lệnh chờ boot.")
-                  
-                  try:
-                      print("Đang xác nhận giao diện...")
-                      page.wait_for_selector(".ntl-title:has-text('NTL')", timeout=30000)
-                      print("Đã ngắm thấy app thức. Hoàn thành nhiệm vụ!")
-                      page.wait_for_timeout(2000)
-                  except Exception as e:
-                      print(f"Không tìm thấy text xác nhận: {e}")
-                      
+
+                  start = time.time()
+                  woke = False
+                  while time.time() - start < DEADLINE:
+                      btn = page.get_by_role("button", name="Yes, get this app back up!")
+                      if btn.count() > 0 and btn.first.is_visible():
+                          print("App đang ngủ. Bấm nút đánh thức...")
+                          btn.first.click()
+                          woke = True
+                          page.wait_for_timeout(5000)
+                          continue
+
+                      frame = find_app_frame(page)
+                      if frame is not None:
+                          hero = frame.locator(".ntl-title")
+                          fallback = frame.locator("h1:has-text('NTL')")
+                          if hero.count() > 0 or fallback.count() > 0:
+                              print("Đã thấy giao diện app" + (" (sau khi đánh thức)." if woke else "."))
+                              ok = True
+                              page.wait_for_timeout(3000)  # giữ websocket thêm chút
+                              break
+
+                      page.wait_for_timeout(3000)
+
+                  if not ok:
+                      print("Hết thời gian chờ mà không thấy giao diện app.")
+                      page.screenshot(path="debug.png", full_page=True)
               except Exception as e:
                   print(f"Lỗi trong quá trình truy cập: {e}")
               finally:
                   b.close()
+
+          sys.exit(0 if ok else 1)
           EOF
+
+      - name: Upload screenshot on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshot
+          path: debug.png
+          if-no-files-found: ignore
