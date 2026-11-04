@@ -41,7 +41,7 @@ jobs:
                       page.wait_for_selector(".ntl-title:has-text('NTL')", timeout=30000)
                       print("Đã ngắm thấy app thức. Hoàn thành nhiệm vụ!")
                       page.wait_for_timeout(2000)
-                  except Exception:
+                  except Exception as e:
                       print(f"Không tìm thấy text xác nhận: {e}")
                       
               except Exception as e:
