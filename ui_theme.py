@@ -314,6 +314,30 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):before{content:"";p
 /* cột "Khởi chạy" */
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]{
   min-height:3.6rem;font-size:1.05rem;border-radius:14px;box-shadow:0 8px 24px rgba(242,169,59,.28)}
+/* ===== Sửa lỗi bấm: thanh trên cùng nằm dưới thanh header cố định của Streamlit ===== */
+.block-container{padding-top:4.4rem}
+header[data-testid="stHeader"]{pointer-events:none}
+header[data-testid="stHeader"] [data-testid="stToolbar"],header[data-testid="stHeader"] [data-testid="stToolbar"] *{pointer-events:auto}
+/* các khối chỉ chứa <style> (CSS nạp từ ui_theme) không được chiếm chỗ trong bố cục */
+div[data-testid="stElementContainer"]:has(style),div.element-container:has(style){display:none!important}
+/* radio -> nút chọn: ẩn chấm tròn mặc định (phần tử đầu), chỉ để chữ */
+[data-testid="stRadio"] label[data-baseweb="radio"]>*:not(:last-child){position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+[data-testid="stRadio"] label[data-baseweb="radio"]>*:last-child{display:block!important}
+/* nút đổi ngôn ngữ: dài hơn, hai nửa bằng nhau, bấm được cả ô */
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"]{width:100%}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] [role="radiogroup"]{
+  width:100%;max-width:300px;margin-left:auto;flex-wrap:nowrap;gap:0}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] label[data-baseweb="radio"]{
+  flex:1 1 0;justify-content:center;text-align:center;padding:7px 14px;position:relative}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] label[data-baseweb="radio"] p{white-space:nowrap}
+/* ô tra cứu + danh sách kết quả */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) [data-testid="stTextInput"] input{padding:.55rem .8rem}
+[class*="st-key-srch_hit"]{margin-bottom:-.55rem}
+[class*="st-key-srch_hit"] button{justify-content:flex-start;text-align:left;min-height:2.3rem;padding:.3rem .85rem;font-weight:500;
+  font-size:.92rem;border:1px solid var(--ntl-line);background:rgba(26,36,76,.5)}
+[class*="st-key-srch_hit"] button p{text-align:left;font-weight:500}
+[class*="st-key-srch_hit"] button:before{content:"📍";margin-right:.55rem}
+[class*="st-key-srch_hit"] button:hover:not(:disabled){border-color:var(--ntl-sodium);background:rgba(242,169,59,.12)}
 @media (max-width:760px){.block-container{max-width:100%}}
 </style>
 """
