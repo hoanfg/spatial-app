@@ -32,18 +32,17 @@ jobs:
                       wake_btn.wait_for(state="visible", timeout=5000)
                       print("App đang ngủ. Bấm nút đánh thức...")
                       wake_btn.click()
-                      # Khởi động lạnh cần thời gian, nán lại 60s để server boot
                       page.wait_for_timeout(60000)
                   except Exception:
                       print("App đang thức sẵn. Bỏ qua lệnh chờ boot.")
                   
                   try:
                       print("Đang xác nhận giao diện...")
-                      page.wait_for_selector("text=NTL Spatial", timeout=30000)
+                      page.wait_for_selector("text=VIIRS", timeout=30000)
                       print("Đã ngắm thấy app thức. Hoàn thành nhiệm vụ!")
                       page.wait_for_timeout(2000)
-                  except Exception as e:
-                      print(f"Không tìm thấy text xác nhận: {e}")
+                  except Exception:
+                      print("Không tìm thấy text xác nhận, nhưng đã gửi ping thành công.")
                       
               except Exception as e:
                   print(f"Lỗi trong quá trình truy cập: {e}")
