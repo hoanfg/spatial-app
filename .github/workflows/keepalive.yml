@@ -21,8 +21,8 @@ jobs:
           from playwright.sync_api import sync_playwright
 
           URL = "https://spatial-app.streamlit.app/"
-          ATTEMPTS = 4          # số lần thử (mỗi lần reload lại trang)
-          WAIT_PER_TRY = 75     # giây chờ mỗi lần trước khi reload
+          ATTEMPTS = 6          
+          WAIT_PER_TRY = 75    
 
           def find_app_frame(page):
               for f in page.frames:
