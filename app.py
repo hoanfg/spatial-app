@@ -438,6 +438,75 @@ def list_counties(country_path, state):
     return dict(sorted(out.items(), key=lambda kv: _natkey(kv[1])))
 
 
+# ---------------------------------------------------------------------------
+# Tra cứu nhanh địa phương trong thư viện dữ liệu: gõ "Milano" -> Milano thuộc Lombardia, Ý
+# Chỉ đọc cấu trúc thư mục sẵn có (quốc gia / tỉnh / quận-huyện); không đụng tới dữ liệu hay phép tính.
+# ---------------------------------------------------------------------------
+@st.cache_resource(show_spinner=False, ttl=3600)
+def locality_index(root):
+    """Chỉ mục: (khóa quốc gia, thư mục tỉnh, file quận/huyện hoặc None, tên gốc, chuỗi tìm kiếm, tên riêng đã chuẩn hóa)."""
+    recs = []
+    for ckey, info in COUNTRIES.items():
+        iso, cpath = info["iso3"], info["path"]
+        c_fold = _fold(f"{country_name(info, 'vi')} {country_name(info, 'en')} {iso} {info.get('folder', '')}")
+        for sf in subdirs(cpath):
+            if not _dir_has_geojson(os.path.join(cpath, sf)):
+                continue
+            s_fold = _fold(f"{clean_state(sf, iso, 'vi')} {clean_state(sf, iso, 'en')} {sf.replace('_', ' ')}")
+            recs.append((ckey, sf, None, "", f"{s_fold} {c_fold}", s_fold))
+            for cf, lab in list_counties(cpath, sf).items():
+                nm = _fold(f"{lab} {clean_county(lab, iso, 'vi')} {clean_county(lab, iso, 'en')}")
+                recs.append((ckey, sf, cf, lab, f"{nm} {s_fold} {c_fold}", nm))
+    return recs
+
+
+def _md_esc(t):
+    return re.sub(r"([*_`\[\]])", r"\\\1", str(t))
+
+
+def search_localities(query, lang="vi", limit=5):
+    """Trả về (danh sách kết quả hiển thị, tổng số kết quả). Không phân biệt hoa/thường và dấu."""
+    toks = [t for t in _fold(query).split() if t]
+    if not toks:
+        return [], 0
+    joined, first = " ".join(toks), toks[0]
+    hits = []
+    for rec in locality_index(DATA_ROOT):
+        blob = rec[4]
+        if not all(t in blob for t in toks):
+            continue
+        nm = rec[5]
+        outside = sum(1 for t in toks if t not in nm)          # từ khóa chỉ khớp ở tên tỉnh/quốc gia
+        base = 0 if nm == joined else 1 if nm.startswith(first) else 2 if first in nm else 3
+        hits.append((outside * 2 + base + (0.5 if rec[2] is None else 0), len(nm), rec))
+    hits.sort(key=lambda h: (h[0], h[1]))
+    out = []
+    for _, _, (ckey, sf, cf, raw, _b, _n) in hits[:limit]:
+        iso = COUNTRIES[ckey]["iso3"]
+        c_nm, s_nm = country_label(ckey, lang), clean_state(sf, iso=iso, lang=lang)
+        if cf:
+            name = clean_county(raw, iso=iso, lang=lang)
+            label = (f"**{_md_esc(name)}** thuộc {_md_esc(s_nm)}, {_md_esc(c_nm)}" if lang == "vi"
+                     else f"**{_md_esc(name)}** is in {_md_esc(s_nm)}, {_md_esc(c_nm)}")
+        else:
+            label = (f"**{_md_esc(s_nm)}** (tỉnh / vùng) thuộc {_md_esc(c_nm)}" if lang == "vi"
+                     else f"**{_md_esc(s_nm)}** (province / region) in {_md_esc(c_nm)}")
+        out.append({"label": label, "ckey": ckey, "state": sf, "cfile": cf})
+    return out, len(hits)
+
+
+def _pick_locality(ckey, state, cfile):
+    """Gán lại 3 ô chọn Quốc gia / Tỉnh / Quận-huyện theo kết quả tra cứu (chạy trước lần chạy lại của app)."""
+    st.session_state["sb_opt_country"] = ckey
+    st.session_state[f"sb_opt_state::{ckey}"] = state
+    ck = f"sb_opt_county::{ckey}::{state}"
+    if cfile:
+        st.session_state[ck] = cfile
+    else:
+        st.session_state.pop(ck, None)
+    st.session_state["loc_q"] = ""
+
+
 def slugify(s):
     return re.sub(r"[^A-Za-z0-9]+", "_", _fold(s)).strip("_") or "area"
 # END NAMES
@@ -1464,6 +1533,28 @@ with _cL:
         st.error(L["no_data"].format(d=DATA_ROOT))
         st.stop()
 
+    # Tra cứu nhanh: gõ tên thành phố / huyện / tỉnh -> chỉ ra thuộc tỉnh nào, nước nào, bấm để chọn
+    _q = st.text_input(
+        "Tra cứu địa phương" if LANG == "vi" else "Find a place", key="loc_q", label_visibility="collapsed",
+        placeholder=("🔎 Tra cứu nhanh: gõ tên thành phố, huyện hoặc tỉnh (vd: Milano, Paris, Thành Đô) rồi nhấn Enter"
+                     if LANG == "vi" else
+                     "🔎 Quick find: type a city, district or province (e.g. Milano, Paris, Chengdu) and press Enter"),
+    )
+    if _q.strip():
+        with st.spinner("Đang lập chỉ mục địa phương..." if LANG == "vi" else "Indexing places..."):
+            _hits, _n_hits = search_localities(_q, LANG)
+        if not _hits:
+            st.caption(("Không tìm thấy địa phương nào khớp. Thử bỏ dấu hoặc viết tên tiếng Anh."
+                        if LANG == "vi" else "No matching place. Try another spelling or the English name."))
+        else:
+            st.caption((f"Tìm thấy {_n_hits:,} kết quả, bấm vào dòng để chọn" if LANG == "vi"
+                        else f"{_n_hits:,} result(s), click a row to select")
+                       + ((f" (hiện {len(_hits)} dòng đầu, gõ thêm để lọc)" if LANG == "vi"
+                           else f" (showing the first {len(_hits)}, type more to narrow)") if _n_hits > len(_hits) else ""))
+            for _i, _h in enumerate(_hits):
+                sx(st.button, _h["label"], key=f"srch_hit_{_i}", on_click=_pick_locality,
+                   args=(_h["ckey"], _h["state"], _h["cfile"]))
+
     # Danh sách quốc gia từ DATA_ROOT (Việt Nam / Vietnam, Thái Lan / Thailand...)
     country_keys = sorted(COUNTRIES.keys(), key=lambda k: _natkey(country_label(k, LANG)))
     if st.session_state.get("sb_opt_country") not in country_keys:   # lựa chọn cũ không còn tồn tại
@@ -1521,6 +1612,7 @@ with _cL:
          list_counties.clear()
          _name_overrides.clear()
          load_china_districts.clear()
+         locality_index.clear()
          st.rerun()
 
 
