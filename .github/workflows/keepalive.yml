@@ -7,7 +7,7 @@ on:
 jobs:
   visit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Install Playwright
         run: |
@@ -21,7 +21,8 @@ jobs:
           from playwright.sync_api import sync_playwright
 
           URL = "https://spatial-app.streamlit.app/"
-          DEADLINE = 180
+          ATTEMPTS = 4          # số lần thử (mỗi lần reload lại trang)
+          WAIT_PER_TRY = 75     # giây chờ mỗi lần trước khi reload
 
           def find_app_frame(page):
               for f in page.frames:
@@ -32,46 +33,49 @@ jobs:
                       pass
               return None
 
+          def app_ready(page):
+              fr = find_app_frame(page)
+              return fr is not None and (
+                  fr.locator(".ntl-title").count() > 0
+                  or fr.locator("h1:has-text('NTL')").count() > 0
+              )
+
           ok = False
           with sync_playwright() as p:
-              b = p.chromium.launch(args=["--disable-blink-features=AutomationControlled"])
-              ctx = b.new_context(
-                  viewport={"width": 1280, "height": 720},
-                  user_agent=("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                              "(KHTML, like Gecko) Chrome/124.0 Safari/537.36"),
-              )
-              page = ctx.new_page()
-              page.on("console", lambda m: print(f"[console:{m.type}] {m.text[:200]}"))
+              b = p.chromium.launch()
+              page = b.new_page(viewport={"width": 1280, "height": 720})
               page.on("pageerror", lambda e: print(f"[pageerror] {e}"))
-              page.on("requestfailed", lambda r: print(f"[reqfailed] {r.url[:120]} {r.failure}"))
               page.on("websocket", lambda ws: (
-                  print(f"[ws open] {ws.url[:120]}"),
+                  print(f"[ws open] {ws.url[:100]}"),
                   ws.on("close", lambda _: print("[ws close]")),
-                  ws.on("socketerror", lambda e: print(f"[ws error] {e}")),
               ))
               try:
-                  print("Đang truy cập ứng dụng...")
-                  page.goto(URL, wait_until="domcontentloaded", timeout=60000)
-                  start = time.time()
-                  while time.time() - start < DEADLINE:
-                      btn = page.get_by_role("button", name="Yes, get this app back up!")
-                      if btn.count() > 0 and btn.first.is_visible():
-                          print("App đang ngủ. Bấm nút đánh thức...")
-                          btn.first.click()
-                          page.wait_for_timeout(5000)
-                          continue
-                      frame = find_app_frame(page)
-                      if frame is not None and (
-                          frame.locator(".ntl-title").count() > 0
-                          or frame.locator("h1:has-text('NTL')").count() > 0
-                      ):
-                          print("Đã thấy giao diện app.")
-                          ok = True
+                  for attempt in range(1, ATTEMPTS + 1):
+                      print(f"Lần thử {attempt}/{ATTEMPTS}: tải trang...")
+                      if attempt == 1:
+                          page.goto(URL, wait_until="domcontentloaded", timeout=60000)
+                      else:
+                          page.reload(wait_until="domcontentloaded", timeout=60000)
+
+                      start = time.time()
+                      while time.time() - start < WAIT_PER_TRY:
+                          btn = page.get_by_role("button", name="Yes, get this app back up!")
+                          if btn.count() > 0 and btn.first.is_visible():
+                              print("App đang ngủ. Bấm nút đánh thức...")
+                              btn.first.click()
+                              start = time.time() + 60   # cho thêm thời gian boot sau khi đánh thức
+                              page.wait_for_timeout(5000)
+                              continue
+                          if app_ready(page):
+                              print(f"Đã thấy giao diện app (lần thử {attempt}).")
+                              ok = True
+                              page.wait_for_timeout(3000)
+                              break
                           page.wait_for_timeout(3000)
+                      if ok:
                           break
-                      page.wait_for_timeout(3000)
+                      print(f"Lần {attempt} bị kẹt. Frames: {[f.url[:80] for f in page.frames]}")
                   if not ok:
-                      print("Frames:", [f.url for f in page.frames])
                       page.screenshot(path="debug.png", full_page=True)
               except Exception as e:
                   print(f"Lỗi: {e}")
@@ -79,3 +83,11 @@ jobs:
                   b.close()
           sys.exit(0 if ok else 1)
           EOF
+
+      - name: Upload screenshot on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshot
+          path: debug.png
+          if-no-files-found: ignore
