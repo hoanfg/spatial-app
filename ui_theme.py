@@ -336,6 +336,9 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) [data-testid="stTex
 [class*="st-key-srch_hit"] button{justify-content:flex-start;text-align:left;min-height:2.3rem;padding:.3rem .85rem;font-weight:500;
   font-size:.92rem;border:1px solid var(--ntl-line);background:rgba(26,36,76,.5)}
 [class*="st-key-srch_hit"] button p{text-align:left;font-weight:500}
+[class*="st-key-srch_hit"] button{display:flex;justify-content:flex-start}
+[class*="st-key-srch_hit"] button>div,[class*="st-key-srch_hit"] button [data-testid="stMarkdownContainer"]{flex:1;text-align:left;justify-content:flex-start}
+[class*="st-key-srch_nav"] button{min-height:2rem;padding:0;font-size:1.2rem;line-height:1}
 [class*="st-key-srch_hit"] button:before{content:"📍";margin-right:.55rem}
 [class*="st-key-srch_hit"] button:hover:not(:disabled){border-color:var(--ntl-sodium);background:rgba(242,169,59,.12)}
 @media (max-width:760px){.block-container{max-width:100%}}
