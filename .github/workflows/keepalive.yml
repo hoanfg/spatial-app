@@ -20,7 +20,7 @@ jobs:
           import sys, time
           from playwright.sync_api import sync_playwright
 
-          URL = "https://spatial-app.streamlit.app/~/+/"
+          URL = "https://spatial-app.streamlit.app/"
           DEADLINE = 180
 
           def find_app_frame(page):
