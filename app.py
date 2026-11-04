@@ -442,10 +442,147 @@ def list_counties(country_path, state):
 # Tra cứu nhanh địa phương trong thư viện dữ liệu: gõ "Milano" -> Milano thuộc Lombardia, Ý
 # Chỉ đọc cấu trúc thư mục sẵn có (quốc gia / tỉnh / quận-huyện); không đụng tới dữ liệu hay phép tính.
 # ---------------------------------------------------------------------------
+# Tên gọi khác của địa phương (tên quốc tế, tên tiếng Việt): để gõ "Rome" vẫn ra "Roma", "Milan" ra "Milano".
+# Mỗi dòng: tên trong dữ liệu = tên khác 1, tên khác 2, ...  Bạn có thể bổ sung thêm trong data/place_aliases.json
+# (dạng {"Roma": ["Rome", "La Mã"]}) mà không cần sửa code. Chỉ phục vụ tra cứu, không ảnh hưởng dữ liệu hay phép tính.
+_PLACE_ALIASES_TXT = """
+Roma = Rome, Rô-ma, La Mã
+Milano = Milan, Mi-lan
+Torino = Turin
+Firenze = Florence
+Napoli = Naples
+Venezia = Venice
+Genova = Genoa
+Padova = Padua
+Mantova = Mantua
+Lombardia = Lombardy
+Toscana = Tuscany
+Piemonte = Piedmont
+Sicilia = Sicily
+Sardegna = Sardinia
+Puglia = Apulia
+Paris = Pa-ri, Ba Lê
+Bretagne = Brittany
+Normandie = Normandy
+Bourgogne = Burgundy
+Île-de-France = Ile de France, Vùng Paris
+München = Munich, Munchen, Mu-ních
+Köln = Cologne, Koln
+Nürnberg = Nuremberg
+Hannover = Hanover
+Bayern = Bavaria
+Sachsen = Saxony
+Niedersachsen = Lower Saxony
+Nordrhein-Westfalen = North Rhine-Westphalia
+Rheinland-Pfalz = Rhineland-Palatinate
+Hessen = Hesse
+Thüringen = Thuringia
+Berlin = Béc-lin, Bá Linh
+Wien = Vienna, Viên
+Steiermark = Styria
+Kärnten = Carinthia
+Tirol = Tyrol
+Niederösterreich = Lower Austria
+Oberösterreich = Upper Austria
+Sevilla = Seville
+Zaragoza = Saragossa
+Cataluña = Catalonia, Catalunya
+Andalucía = Andalusia
+Lisboa = Lisbon, Lít-bon
+Madrid = Ma-đrít
+Den Haag = The Hague, s-Gravenhage
+Zuid-Holland = South Holland
+Noord-Holland = North Holland
+Amsterdam = Am-xtéc-đam
+Bruxelles = Brussels, Brussel, Bruy-xen
+Antwerpen = Antwerp
+Gent = Ghent
+Brugge = Bruges
+Liège = Liege, Luik
+Genève = Geneva, Geneve
+Zürich = Zurich
+Bern = Berne
+Basel = Basle
+Praha = Prague, Pra-ha
+Plzeň = Pilsen, Plzen
+Warszawa = Warsaw, Vác-sa-va
+Kraków = Krakow, Cracow
+Gdańsk = Danzig, Gdansk
+Wrocław = Breslau, Wroclaw
+Poznań = Posen
+București = Bucharest, Bucuresti
+Athína = Athens, Athina, A-ten
+Thessaloníki = Thessaloniki, Salonica
+Moskva = Moscow, Mát-xcơ-va, Mạc Tư Khoa
+Sankt-Peterburg = Saint Petersburg, St Petersburg
+Kyiv = Kiev
+Odesa = Odessa
+Kharkiv = Kharkov
+Lviv = Lvov
+İstanbul = Istanbul
+København = Copenhagen
+Göteborg = Gothenburg, Goteborg
+London = Luân Đôn
+Hà Nội = Hanoi
+Hồ Chí Minh = Ho Chi Minh City, Saigon, Sài Gòn, TPHCM
+Bangkok = Krung Thep, Băng Cốc
+Beijing = Peking, Bắc Kinh
+Shanghai = Thượng Hải
+Guangzhou = Canton, Quảng Châu
+Shenzhen = Thâm Quyến
+Chengdu = Thành Đô
+Chongqing = Trùng Khánh
+Wuhan = Vũ Hán
+Xi'an = Xian, Tây An
+Nanjing = Nanking, Nam Kinh
+Hangzhou = Hàng Châu
+Tianjin = Thiên Tân
+Hong Kong = Hồng Kông
+Tokyo = Tōkyō, Đông Kinh
+Seoul = Sơ-un
+"""
+
+
+def _load_place_aliases(root):
+    """Từ điển tên gọi khác: {tên trong dữ liệu (đã chuẩn hóa): chuỗi các tên khác (đã chuẩn hóa)}."""
+    pairs = {}
+    for line in _PLACE_ALIASES_TXT.splitlines():
+        if "=" in line:
+            k, v = line.split("=", 1)
+            pairs.setdefault(k.strip(), []).extend(x.strip() for x in v.split(",") if x.strip())
+    try:                                           # tùy chọn: data/place_aliases.json do người dùng tự bổ sung
+        with open(os.path.join(root, "place_aliases.json"), encoding="utf-8") as fh:
+            extra = json.load(fh)
+        if isinstance(extra, dict):
+            for k, v in extra.items():
+                pairs.setdefault(str(k).strip(), []).extend(str(x).strip() for x in (v if isinstance(v, list) else [v]) if str(x).strip())
+    except Exception:  # noqa: BLE001
+        pass
+    out = {}
+    for k, alts in pairs.items():
+        fk = _fold(k).replace("-", " ").strip()
+        txt = " ".join(f"{_fold(a)} {_fold(a).replace('-', ' ')}" for a in alts)
+        out[fk] = (out.get(fk, "") + " " + txt).strip()
+    return out
+
+
+def _alias_text(names_fold, aliases):
+    """Gom tên khác của mọi cụm 1-4 từ trong `names_fold` (so khớp nguyên từ)."""
+    w = names_fold.replace("-", " ").split()
+    found = []
+    for n in range(1, 5):
+        for i in range(len(w) - n + 1):
+            hit = aliases.get(" ".join(w[i:i + n]))
+            if hit:
+                found.append(hit)
+    return " ".join(found)
+
+
 @st.cache_resource(show_spinner=False, ttl=3600)
 def locality_index(root):
     """Chỉ mục: (khóa quốc gia, thư mục tỉnh, file quận/huyện hoặc None, tên gốc, chuỗi tìm kiếm, tên riêng đã chuẩn hóa)."""
     recs = []
+    aliases = _load_place_aliases(root)
     for ckey, info in COUNTRIES.items():
         iso, cpath = info["iso3"], info["path"]
         c_fold = _fold(f"{country_name(info, 'vi')} {country_name(info, 'en')} {iso} {info.get('folder', '')}")
@@ -453,9 +590,11 @@ def locality_index(root):
             if not _dir_has_geojson(os.path.join(cpath, sf)):
                 continue
             s_fold = _fold(f"{clean_state(sf, iso, 'vi')} {clean_state(sf, iso, 'en')} {sf.replace('_', ' ')}")
+            s_fold = f"{s_fold} {_alias_text(s_fold, aliases)}".strip()
             recs.append((ckey, sf, None, "", f"{s_fold} {c_fold}", s_fold))
             for cf, lab in list_counties(cpath, sf).items():
                 nm = _fold(f"{lab} {clean_county(lab, iso, 'vi')} {clean_county(lab, iso, 'en')}")
+                nm = f"{nm} {_alias_text(nm, aliases)}".strip()
                 recs.append((ckey, sf, cf, lab, f"{nm} {s_fold} {c_fold}", nm))
     return recs
 
@@ -464,8 +603,8 @@ def _md_esc(t):
     return re.sub(r"([*_`\[\]])", r"\\\1", str(t))
 
 
-def search_localities(query, lang="vi", limit=5):
-    """Trả về (danh sách kết quả hiển thị, tổng số kết quả). Không phân biệt hoa/thường và dấu."""
+def search_localities(query, lang="vi", limit=6, offset=0):
+    """Trả về (các kết quả của trang hiện tại, tổng số kết quả). Không phân biệt hoa/thường và dấu."""
     toks = [t for t in _fold(query).split() if t]
     if not toks:
         return [], 0
@@ -477,11 +616,11 @@ def search_localities(query, lang="vi", limit=5):
             continue
         nm = rec[5]
         outside = sum(1 for t in toks if t not in nm)          # từ khóa chỉ khớp ở tên tỉnh/quốc gia
-        base = 0 if nm == joined else 1 if nm.startswith(first) else 2 if first in nm else 3
+        base = 0 if f" {joined} " in f" {nm} " else 1 if nm.startswith(first) else 2 if first in nm else 3
         hits.append((outside * 2 + base + (0.5 if rec[2] is None else 0), len(nm), rec))
     hits.sort(key=lambda h: (h[0], h[1]))
     out = []
-    for _, _, (ckey, sf, cf, raw, _b, _n) in hits[:limit]:
+    for _, _, (ckey, sf, cf, raw, _b, _n) in hits[offset:offset + limit]:
         iso = COUNTRIES[ckey]["iso3"]
         c_nm, s_nm = country_label(ckey, lang), clean_state(sf, iso=iso, lang=lang)
         if cf:
@@ -495,6 +634,10 @@ def search_localities(query, lang="vi", limit=5):
     return out, len(hits)
 
 
+def _loc_page_step(delta):
+    st.session_state["loc_page"] = max(0, st.session_state.get("loc_page", 0) + delta)
+
+
 def _pick_locality(ckey, state, cfile):
     """Gán lại 3 ô chọn Quốc gia / Tỉnh / Quận-huyện theo kết quả tra cứu (chạy trước lần chạy lại của app)."""
     st.session_state["sb_opt_country"] = ckey
@@ -505,6 +648,7 @@ def _pick_locality(ckey, state, cfile):
     else:
         st.session_state.pop(ck, None)
     st.session_state["loc_q"] = ""
+    st.session_state["loc_page"] = 0
 
 
 def slugify(s):
@@ -1541,16 +1685,30 @@ with _cL:
                      "🔎 Quick find: type a city, district or province (e.g. Milano, Paris, Chengdu) and press Enter"),
     )
     if _q.strip():
+        _PAGE = 6
+        if st.session_state.get("loc_q_prev") != _q:      # gõ từ khóa mới -> về trang đầu
+            st.session_state["loc_q_prev"] = _q
+            st.session_state["loc_page"] = 0
         with st.spinner("Đang lập chỉ mục địa phương..." if LANG == "vi" else "Indexing places..."):
-            _hits, _n_hits = search_localities(_q, LANG)
+            _, _n_hits = search_localities(_q, LANG, limit=1)
+            _pages = max(1, -(-_n_hits // _PAGE))
+            _page = min(max(0, st.session_state.get("loc_page", 0)), _pages - 1)
+            st.session_state["loc_page"] = _page
+            _hits, _ = search_localities(_q, LANG, limit=_PAGE, offset=_page * _PAGE)
         if not _hits:
             st.caption(("Không tìm thấy địa phương nào khớp. Thử bỏ dấu hoặc viết tên tiếng Anh."
                         if LANG == "vi" else "No matching place. Try another spelling or the English name."))
         else:
-            st.caption((f"Tìm thấy {_n_hits:,} kết quả, bấm vào dòng để chọn" if LANG == "vi"
-                        else f"{_n_hits:,} result(s), click a row to select")
-                       + ((f" (hiện {len(_hits)} dòng đầu, gõ thêm để lọc)" if LANG == "vi"
-                           else f" (showing the first {len(_hits)}, type more to narrow)") if _n_hits > len(_hits) else ""))
+            _nv, _nc, _nn = st.columns([1, 6, 1], vertical_alignment="center") if _pages > 1 else (None, st.container(), None)
+            with _nc:
+                st.caption((f"Tìm thấy {_n_hits:,} kết quả" if LANG == "vi" else f"{_n_hits:,} result(s)")
+                           + (f" · trang {_page + 1}/{_pages}" if LANG == "vi" else f" · page {_page + 1}/{_pages}")
+                           + (" · bấm vào dòng để chọn" if LANG == "vi" else " · click a row to select"))
+            if _pages > 1:
+                _nv.button("‹", key="srch_nav_prev", on_click=_loc_page_step, args=(-1,), disabled=_page == 0,
+                           help="Trang trước" if LANG == "vi" else "Previous page")
+                _nn.button("›", key="srch_nav_next", on_click=_loc_page_step, args=(1,), disabled=_page >= _pages - 1,
+                           help="Trang sau" if LANG == "vi" else "Next page")
             for _i, _h in enumerate(_hits):
                 sx(st.button, _h["label"], key=f"srch_hit_{_i}", on_click=_pick_locality,
                    args=(_h["ckey"], _h["state"], _h["cfile"]))
