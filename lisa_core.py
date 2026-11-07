@@ -270,6 +270,10 @@ def compute_spillover_rings_and_rdd(cx: np.ndarray, cy: np.ndarray, is_hh: np.nd
         if non_hh_idx.size > 0:
             d_in_m = _min_euclidean_dist_m(cx[hh_idx], cy[hh_idx], cx[non_hh_idx], cy[non_hh_idx])
             signed_dist_hh_km[hh_idx] = -d_in_m / 1000.0
+        else:
+            # Không có ô lõi non-HH => không tồn tại ranh giới nội bộ điều trị/đối chứng:
+            # biến chạy có dấu của Spatial RDD không xác định (NaN, không phải 0.0).
+            signed_dist_hh_km = np.full(n, np.nan)
         ring = np.select(
             [edge, is_hh, dist_to_hh_km <= 2.0, dist_to_hh_km <= 5.0, dist_to_hh_km <= 10.0],
             ["Edge_Masked", "0_Treated_HH", "1_Spillover_0_2km", "2_Spillover_2_5km", "3_Spillover_5_10km"],
@@ -284,7 +288,8 @@ def compute_spillover_rings_and_rdd(cx: np.ndarray, cy: np.ndarray, is_hh: np.nd
 
 def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.ndarray,
                                      core: np.ndarray, cell_size_m: float,
-                                     radius_steps: int = 5, tau_km: float = 0.5):
+                                     radius_steps: int = 5, tau_km: float = 0.5,
+                                     dense_limit: int = 1_200_000):
     """Mô-đun 4: Tiếp cận thị trường đã khử thiên lệch vị trí trung tâm (Borusyak & Hull, 2023 Econometrica).
 
     Tính MA_i = Σ_{j != i} exp(-tau * d_ij) * SOL_j trong bán kính `radius_steps` ô lưới,
@@ -306,7 +311,7 @@ def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.nda
     W = int(ix0.max()) + 1 + 2 * R
     H = int(iy0.max()) + 1 + 2 * R
 
-    if W * H <= 1_200_000:
+    if W * H <= dense_limit:
         sol_grid = np.zeros((W, H), dtype=np.float64)
         core_grid = np.zeros((W, H), dtype=np.float64)
         gx = ix0 + R
@@ -333,6 +338,24 @@ def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.nda
         raw_ma[core] = ma_acc[core]
         exp_ma[core] = om_acc[core] * mean_sol_core
         rec_ma[core] = raw_ma[core] - exp_ma[core]
+    elif _cKDTree is not None:
+        # Dự phòng cho hộp bao thưa (đảo xa bờ, địa phương kéo dài): không cấp phát lưới W*H,
+        # dùng cKDTree với cùng bán kính (R + 0.01 bước lưới) và cùng trọng số exp(-tau * d_km).
+        c_idx = np.flatnonzero(core)
+        pts = np.column_stack([cx[c_idx], cy[c_idx]])
+        tree = _cKDTree(pts)
+        max_d = (R + 0.01) * cell_size_m
+        coo = tree.sparse_distance_matrix(tree, max_d, output_type="coo_matrix")
+        keep = coo.row != coo.col
+        rows, cols, d_m = coo.row[keep], coo.col[keep], coo.data[keep]
+        w_d = np.exp(-tau_km * d_m / 1000.0)
+        m = c_idx.size
+        ma_c = np.bincount(rows, weights=w_d * sol[c_idx][cols], minlength=m)
+        om_c = np.bincount(rows, weights=w_d, minlength=m)
+        mean_sol_core = float(np.mean(sol[core]))
+        raw_ma[c_idx] = ma_c
+        exp_ma[c_idx] = om_c * mean_sol_core
+        rec_ma[c_idx] = raw_ma[c_idx] - exp_ma[c_idx]
     return raw_ma, exp_ma, rec_ma
 
 
