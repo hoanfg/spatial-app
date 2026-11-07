@@ -663,6 +663,22 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
         "spacetime_regime": regime,
     })
 
+    # Tách biên độ rộng / sâu (Chen & Roth, 2024): ln(1+NTL) trộn hai kênh này khi dữ liệu nhiều số 0
+    lit0, lit1 = core & (ntl0 > 0), core & (ntl1 > 0)
+    dark0 = core & ~(ntl0 > 0)
+    both = lit0 & lit1
+    entry = dark0 & lit1                      # tối -> sáng (extensive margin)
+    exit_ = lit0 & ~lit1                      # sáng -> tối
+    margin = np.full(n, "excluded", dtype=object)
+    margin[core & ~lit0 & ~lit1] = "dark_both"
+    margin[both] = "intensive"
+    margin[entry] = "extensive_entry"
+    margin[exit_] = "extensive_exit"
+    with np.errstate(divide="ignore", invalid="ignore"):
+        dln_int = np.where(both, np.log(np.where(both, ntl1, 1.0)) - np.log(np.where(both, ntl0, 1.0)), np.nan)
+    st_cell_df["delta_ln_ntl_intensive"] = np.round(dln_int, 5)
+    st_cell_df["margin_type"] = margin
+
     shadow_share = float(area[regime == "2_Agglomeration_Shadow"].sum() / tot_core_area * 100.0)
     synergy_share = float(area[regime == "1_Synergistic_Growth"].sum() / tot_core_area * 100.0)
 
@@ -673,6 +689,10 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
         "synergistic_growth_pct": round(synergy_share, 2),
         "agglomeration_shadow_pct": round(shadow_share, 2),
         "mean_delta_ln_ntl": round(float((v1[core] - v0[core]).mean()), 4) if core.any() else 0.0,
+        "extensive_entry_pct": round(float(entry.sum() / dark0.sum() * 100.0), 2) if dark0.any() else float("nan"),
+        "extensive_exit_pct": round(float(exit_.sum() / lit0.sum() * 100.0), 2) if lit0.any() else float("nan"),
+        "intensive_mean_dln_ntl": round(float(np.nanmean(dln_int[both])), 4) if both.any() else float("nan"),
+        "n_both_lit": int(both.sum()),
     }
     return SpaceTimeResult(
         st_cell_df=st_cell_df,
