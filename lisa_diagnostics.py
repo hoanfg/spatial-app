@@ -1,15 +1,6 @@
 """
 lisa_diagnostics.py
 
-Các phép kiểm định độ tin cậy cho kết quả LISA / chỉ số kinh tế lượng không gian.
-Chỉ chứa hàm tính toán thuần numpy: KHÔNG import streamlit, nên giao diện (lisa_ui.py)
-và bộ test (test_lisa_reliability.py) dùng chung một mã nguồn.
-
-Hai nhóm:
-  * Nhẹ (tự động, O(n) vector hóa): perm_power, hill_diagnostics, cluster_primacy,
-    resid_moran, dark_share  -> gom trong auto_diagnostics().
-  * Nặng (chạy khi bấm nút, chạy lại LISA nhiều lần): seed_stability, method_sensitivity,
-    tail_sensitivity.
 """
 from __future__ import annotations
 
