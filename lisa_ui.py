@@ -15,6 +15,10 @@ from jinja2 import Template
 from streamlit_folium import st_folium
 
 from lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
+from lisa_diagnostics import (
+    HEAVY_WORK_LIMIT, SEED_LIST, auto_diagnostics, estimate_seconds, heavy_work_units,
+    method_sensitivity, perm_power, seed_stability, tail_sensitivity,
+)
 
 COLORS = {  # quy ước màu GeoDa
     "High-High": "#d7191c", "Low-Low": "#2c7bb6", "High-Low": "#fdae61", "Low-High": "#abd9e9",
@@ -407,6 +411,187 @@ def _pin(cfg_cls, **kw):
         return cfg_cls(**kw)
 
 
+_LVL_ICON = {"ok": "✅", "warn": "⚠️", "info": "ℹ️"}
+_DIAG_FIFO = 5
+
+
+def _fifo_put(cache, key, value, cap):
+    if key not in cache and len(cache) >= cap:
+        cache.pop(next(iter(cache)))
+    cache[key] = value
+
+
+def _num(v, fmt="{:.3f}"):
+    try:
+        return fmt.format(v) if np.isfinite(v) else "N/A"
+    except (TypeError, ValueError):
+        return "N/A"
+
+
+def _diag_line(it, vi):
+    """Một dòng kết quả kiểm tra nhẹ (markdown)."""
+    k, v = it["key"], it["vals"]
+    ic = _LVL_ICON[it["level"]]
+    if k == "perm":
+        if not v["applies"]:
+            return f"{ic} " + ("**Số hoán vị / FDR:** FDR đang tắt nên không áp dụng." if vi
+                               else "**Permutations / FDR:** FDR is off, not applicable.")
+        base = (f"**Số hoán vị / FDR:** {v['m']:,} ô kiểm định, p nhỏ nhất = {v['p_floor']:.4f}; FDR cần ≥ "
+                f"{v['min_hits']:,} ô chạm mức sàn ({v['ratio'] * 100:.0f}% số ô kiểm định)." if vi else
+                f"**Permutations / FDR:** {v['m']:,} tested cells, minimum p = {v['p_floor']:.4f}; BH needs ≥ "
+                f"{v['min_hits']:,} cells at the floor ({v['ratio'] * 100:.0f}% of tested cells).")
+        if v["auto_from"] is not None:
+            base += (f" Đã tự nâng số hoán vị từ {v['auto_from']} lên {v['perms']} vì tổ hợp ban đầu bất khả thi."
+                     if vi else f" Permutations auto-raised from {v['auto_from']} to {v['perms']}: the original setting was infeasible.")
+        elif (v["infeasible"] or v["risky"]) and v["suggested_perms"]:
+            base += (f" Hãy tăng số hoán vị lên {v['suggested_perms']} hoặc nới α." if vi
+                     else f" Raise permutations to {v['suggested_perms']} or relax α.")
+        elif v["infeasible"] or v["risky"]:
+            base += (" Hãy nới α hoặc tắt FDR." if vi else " Relax α or turn FDR off.")
+        return f"{ic} {base}"
+    if k == "hill":
+        if not np.isfinite(v["alpha"]):
+            return f"{ic} " + ("**Đuôi Pareto:** không đủ ô sáng (cần ≥ 15) hoặc đuôi không phân tán để ước lượng." if vi
+                               else "**Pareto tail:** not enough lit cells (≥ 15 needed) or no tail dispersion.")
+        t = (f"**Đuôi Pareto:** α = {v['alpha']:.2f} ± {v['se']:.2f} (CI95 {v['ci_lo']:.2f}–{v['ci_hi']:.2f}, k = {v['k']}); "
+             f"KS p = {v['ks_p']:.3f}." if vi else
+             f"**Pareto tail:** α = {v['alpha']:.2f} ± {v['se']:.2f} (95% CI {v['ci_lo']:.2f}–{v['ci_hi']:.2f}, k = {v['k']}); "
+             f"KS p = {v['ks_p']:.3f}.")
+        if v["power_law_ok"] is False:
+            t += " Đuôi không giống luật lũy thừa, hãy diễn giải α thận trọng." if vi else " The tail does not look like a power law; interpret α with care."
+        if v["k"] < 20:
+            t += " Mẫu đuôi nhỏ (k < 20), sai số rất lớn." if vi else " Small tail sample (k < 20), very wide error."
+        return f"{ic} {t}"
+    if k == "primacy":
+        if not np.isfinite(v["primacy"]):
+            return f"{ic} " + ("**Thống trị cụm đầu:** chưa có cụm HH đủ lớn." if vi else "**Cluster primacy:** no sufficiently large HH cluster.")
+        t = (f"**Thống trị cụm đầu:** {v['n_clusters']} cụm HH, tỷ số = {v['primacy']:.2f}." if vi
+             else f"**Cluster primacy:** {v['n_clusters']} HH clusters, ratio = {v['primacy']:.2f}.")
+        if v["multipolar"]:
+            t += (" Địa phương đa cực: tâm CBD có thể nhảy giữa các lần chạy; hãy cố định tâm theo năm gốc t₀ khi phân tích chuỗi thời gian."
+                  if vi else " Multipolar locality: the CBD centre may jump between runs; fix it at base year t₀ for time series.")
+        return f"{ic} {t}"
+    if k == "resid":
+        if not np.isfinite(v["I"]):
+            return f"{ic} " + ("**Phần dư độ dốc đô thị:** không đủ dữ liệu." if vi else "**Urban-gradient residuals:** not enough data.")
+        pt = f"p = {v['p']:.3f}" if v["perm_done"] else ("(không tính p-value vì lưới lớn)" if vi else "(no p-value: large grid)")
+        t = f"**Phần dư độ dốc đô thị:** Moran's I = {v['I']:.3f}, {pt}." if vi else f"**Urban-gradient residuals:** Moran's I = {v['I']:.3f}, {pt}."
+        if v["flag"]:
+            t += (" Phần dư còn tự tương quan không gian: R² của độ dốc có thể bị thổi phồng." if vi
+                  else " Residuals are still spatially autocorrelated: the gradient R² may be inflated.")
+        return f"{ic} {t}"
+    # dark
+    t = (f"**Ô tối:** {v['share'] * 100:.0f}% số ô lõi có NTL = 0." if vi else f"**Dark cells:** {v['share'] * 100:.0f}% of core cells have NTL = 0.")
+    if v["flag"]:
+        t += (" Tỷ lệ cao: ln(1+NTL) nhạy với đơn vị đo; nên chạy thêm PPML (Chen & Roth, 2024)." if vi
+              else " High share: ln(1+NTL) is scale-sensitive; also run PPML (Chen & Roth, 2024).")
+    return f"{ic} {t}"
+
+
+def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use_log, thr,
+                        min_clu, min_nbr, perm_auto_from):
+    """Expander kiểm định độ tin cậy. Trả về dict biến xuất thêm vào dòng panel."""
+    vi = lang != "en"
+    cdf, rm = out.cell_df, out.region_metrics
+
+    acache = st.session_state.setdefault("_diag_cache", {})
+    if ckey not in acache:
+        cent = grid_utm.geometry.centroid
+        _fifo_put(acache, ckey, auto_diagnostics(
+            cent.x.to_numpy(), cent.y.to_numpy(), grid_utm["ntl_mean"].to_numpy(float),
+            grid_utm["area_km2"].to_numpy(float), size, cdf, rm, perms, alpha, fdr, perm_auto_from), _DIAG_FIFO)
+    auto = acache[ckey]
+    n_warn = auto["n_warn"]
+    title = ("🔬 Kiểm định độ tin cậy" if vi else "🔬 Reliability diagnostics") + \
+        (f"  ·  ⚠️ {n_warn}" if n_warn else "  ·  ✅")
+    export = dict(auto["export"])
+
+    with st.expander(title, expanded=bool(n_warn)):
+        st.caption("Các kiểm tra nhẹ chạy tự động theo từng lần cập nhật LISA; kiểm định nặng chỉ chạy khi bạn bấm nút."
+                   if vi else "Light checks run automatically on every LISA update; heavy tests run only when you press a button.")
+        st.markdown("\n\n".join(_diag_line(it, vi) for it in auto["items"]))
+
+        st.markdown("---")
+        st.markdown("**" + ("Kiểm định nặng (chạy khi bấm nút)" if vi else "Heavy tests (on demand)") + "**")
+        m = int(rm["n_cells_tested"])
+        n_seed = len(SEED_LIST)
+        base_kw = dict(
+            cx=grid_utm.geometry.centroid.x.to_numpy(), cy=grid_utm.geometry.centroid.y.to_numpy(),
+            ntl=grid_utm["ntl_mean"].to_numpy(float), area_km2=grid_utm["area_km2"].to_numpy(float),
+            cell_size_m=size, lit_threshold=thr, edge_tol=0.99, perms=perms, alpha=alpha, fdr=fdr,
+            log_transform=use_log, min_neighbors=min_nbr, min_cluster_cells=min_clu,
+        ) if m > 0 else None
+        hcache = st.session_state.setdefault("_diag_heavy", {})
+
+        w_seed, w_meth = heavy_work_units(m, perms, n_seed), heavy_work_units(m, perms, 2)
+        too_big = max(w_seed, w_meth) > HEAVY_WORK_LIMIT
+        st.caption((f"Ước tính thô trên máy yếu: seed ≈ {estimate_seconds(m, perms, n_seed):.0f}s, "
+                    f"so sánh phương pháp ≈ {estimate_seconds(m, perms, 2):.0f}s. Kết quả được lưu đệm."
+                    if vi else f"Rough estimate on a weak machine: seeds ≈ {estimate_seconds(m, perms, n_seed):.0f}s, "
+                    f"method comparison ≈ {estimate_seconds(m, perms, 2):.0f}s. Results are cached."))
+        if too_big:
+            st.warning("Vùng quá lớn cho kiểm định nặng: hãy tăng kích thước ô hoặc giảm số hoán vị." if vi
+                       else "Area too large for heavy tests: use a coarser cell size or fewer permutations.")
+
+        b1, b2, b3 = st.columns(3)
+        run_seed = b1.button((f"▶ Ổn định theo seed ({n_seed} lần)" if vi else f"▶ Seed stability ({n_seed} runs)"),
+                             key="dg_btn_seed", disabled=too_big or base_kw is None, use_container_width=True)
+        run_meth = b2.button("▶ So sánh thô / P99 / ln" if vi else "▶ Raw vs P99 vs ln", key="dg_btn_meth",
+                             disabled=too_big or base_kw is None, use_container_width=True)
+        run_tail = b3.button("▶ Độ nhạy tail_frac" if vi else "▶ tail_frac sensitivity", key="dg_btn_tail",
+                             use_container_width=True)
+
+        def _progress(label):
+            bar = st.progress(0.0, text=label)
+            return lambda f, txt: bar.progress(min(1.0, f), text=f"{label}: {txt}")
+
+        if run_seed and (ckey, "seed") not in hcache:
+            _fifo_put(hcache, (ckey, "seed"), seed_stability(base_kw, progress=_progress("seed")), 12)
+        if run_meth and (ckey, "meth") not in hcache:
+            base_hh = (cdf["lisa_class"] == "High-High").to_numpy()
+            _fifo_put(hcache, (ckey, "meth"), method_sensitivity(base_kw, base_hh, use_log,
+                                                                 progress=_progress("method")), 12)
+        if run_tail and (ckey, "tail") not in hcache:
+            lit = cdf["is_dark"].to_numpy() == 0
+            _fifo_put(hcache, (ckey, "tail"), tail_sensitivity(
+                grid_utm["ntl_mean"].to_numpy(float), ~cdf["is_edge_masked"].to_numpy().astype(bool), lit), 12)
+
+        r = hcache.get((ckey, "seed"))
+        if r:
+            c1, c2 = st.columns(2)
+            c1.metric("sd(hh_area_share) qua các seed" if vi else "sd(hh_area_share) across seeds", f"{r['sd'] * 100:.3f}%",
+                      help="Ngưỡng ổn định: 0,5%." if vi else "Stability threshold: 0.5%.")
+            c2.metric("hh_area_share trung bình" if vi else "Mean hh_area_share", f"{r['mean'] * 100:.2f}%")
+            if r["unstable"]:
+                st.warning("Kết quả đổi nhãn theo seed" + (": hãy tăng số hoán vị lên 999." if r["recommend_999"] else ".")
+                           if vi else "Labels change with the seed" + (": raise permutations to 999." if r["recommend_999"] else "."))
+            else:
+                st.success("Ổn định theo seed (sd ≤ 0,5%)." if vi else "Stable across seeds (sd ≤ 0.5%).")
+            export["hh_share_seed_sd"] = round(r["sd"], 6)
+        r = hcache.get((ckey, "meth"))
+        if r:
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Jaccard thô ↔ P99" if vi else "Jaccard raw ↔ P99", f"{r['jaccard_raw_winsor']:.3f}")
+            c2.metric("Jaccard thô ↔ ln" if vi else "Jaccard raw ↔ ln", f"{r['jaccard_raw_log']:.3f}")
+            c3.metric("Jaccard P99 ↔ ln" if vi else "Jaccard P99 ↔ ln", f"{r['jaccard_winsor_log']:.3f}")
+            st.caption((f"Số ô HH: thô {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
+                        "Jaccard thấp nghĩa là cụm HH nhạy với ô dị thường."
+                        if vi else f"HH cells: raw {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
+                        "Low Jaccard means the HH set is sensitive to outliers."))
+            export["hh_jaccard_raw_winsor"] = round(r["jaccard_raw_winsor"], 4)
+            export["hh_jaccard_raw_log"] = round(r["jaccard_raw_log"], 4)
+        r = hcache.get((ckey, "tail"))
+        if r:
+            rows = [{"tail_frac": f"{x['tail_frac']:.0%}", "k": x["k"], "α": _num(x["alpha"], "{:.2f}"),
+                     "SE": _num(x["se"], "{:.2f}"), "KS p": _num(x["ks_p"], "{:.3f}")} for x in r["rows"]]
+            st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+            st.caption((f"Biên độ α giữa các ngưỡng cắt: {_num(r['spread'], '{:.2f}')} (nhỏ = đuôi ổn định)."
+                        if vi else f"α range across tail fractions: {_num(r['spread'], '{:.2f}')} (small = stable tail)."))
+            export["pareto_alpha_tail_spread"] = round(r["spread"], 4) if np.isfinite(r["spread"]) else float("nan")
+    return export
+
+
+
 def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", region_label="",
                     render_cap=30_000, basemap="CartoDB positron",
                     fetch_year_ntl_fn=None, available_years=None):
@@ -439,6 +624,17 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             submit_lisa = st.form_submit_button(L["submit"], type="primary", help=L["h_submit"])
 
     # ---------- tính (cache trong session theo kết quả + tham số) ----------
+    # Kiểm tra điều kiện đủ của số hoán vị TRƯỚC khi tính: tổ hợp bất khả thi (FDR không thể bác bỏ gì) bị tự nâng lên 999
+    perm_auto_from = None
+    _ar0 = grid_utm["area_km2"].to_numpy(float)
+    _nt0 = grid_utm["ntl_mean"].to_numpy(float)
+    _m_est = int(((_nt0 > thr) & ~(_ar0 < 0.99 * (size / 1000.0) ** 2)).sum())
+    _pw0 = perm_power(_m_est, int(perms), float(alpha), bool(fdr))
+    if _pw0["infeasible"] and perms < 999:
+        perm_auto_from, perms = int(perms), 999
+        st.info((f"Tổ hợp {perm_auto_from} hoán vị với α = {alpha} khiến FDR không thể bác bỏ ô nào; đã tự nâng lên 999 hoán vị."
+                 if lang != "en" else
+                 f"{perm_auto_from} permutations with α = {alpha} make BH unable to reject anything; auto-raised to 999."))
     ckey = (res["ts"], size, perms, alpha, fdr, use_log, thr, min_clu, min_nbr)
     cache = st.session_state.setdefault("_lisa_cache", {})
     just_computed = ckey not in cache
@@ -489,6 +685,11 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         st.markdown("\n\n".join(_lines))
     with st.expander(L["note_t"]):
         st.caption(L["note"])
+
+    _diag_export = _render_diagnostics(
+        lang=lang, ckey=ckey, out=out, grid_utm=grid_utm, size=size, perms=perms, alpha=alpha, fdr=fdr,
+        use_log=use_log, thr=thr, min_clu=min_clu, min_nbr=min_nbr, perm_auto_from=perm_auto_from)
+    rm_full = {**rm, **_diag_export}
 
     # ---------- Bản đồ ----------
     st.divider()
@@ -811,6 +1012,19 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                         f"{sm['agglomeration_shadow_pct']:.1f}%",
                         help=L["h_st_shadow"],
                     )
+                    n1, n2, n3 = st.columns(3)
+                    n1.metric("Extensive: tối → sáng" if is_vi else "Extensive: dark → lit",
+                              _num(sm["extensive_entry_pct"], "{:.1f}%"),
+                              help=("Tỷ lệ ô tối ở t₀ trở nên sáng ở t₁ (biên độ rộng)." if is_vi
+                                    else "Share of cells dark at t₀ that are lit at t₁ (extensive margin)."))
+                    n2.metric("Extensive: sáng → tối" if is_vi else "Extensive: lit → dark",
+                              _num(sm["extensive_exit_pct"], "{:.1f}%"),
+                              help=("Tỷ lệ ô sáng ở t₀ trở nên tối ở t₁." if is_vi
+                                    else "Share of cells lit at t₀ that are dark at t₁."))
+                    n3.metric("Intensive: Δln NTL (sáng cả 2 kỳ)" if is_vi else "Intensive: Δln NTL (lit both periods)",
+                              _num(sm["intensive_mean_dln_ntl"]),
+                              help=(f"Tăng trưởng trung bình của ln(NTL) trên {sm['n_both_lit']:,} ô sáng ở cả hai kỳ (biên độ sâu)." if is_vi
+                                    else f"Mean ln(NTL) growth over {sm['n_both_lit']:,} cells lit in both periods (intensive margin)."))
                     st.dataframe(st_out.regime_summary, hide_index=True, use_container_width=True)
                     mc1, mc2 = st.columns(2)
                     with mc1:
@@ -828,6 +1042,12 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                         )
                         st.dataframe(st_out.markov_low_lag, use_container_width=True)
 
+                    _bad_rows = [nm for nm in ("markov_all", "markov_high_lag", "markov_low_lag")
+                                 if np.any((getattr(st_out, nm).sum(axis=1) > 0) &
+                                           (np.abs(getattr(st_out, nm).sum(axis=1) - 100.0) > 0.2))]
+                    if _bad_rows:
+                        st.warning(("Tổng hàng ma trận Markov lệch 100% quá 0,2%: " if is_vi else
+                                    "Markov matrix row sums deviate from 100% by more than 0.2%: ") + ", ".join(_bad_rows))
                     st_full_csv = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True), st_out.st_cell_df.reset_index(drop=True)], axis=1)
                     st.download_button(
                         f"⬇️ Tải CSV Sai phân Không – Thời gian ({year_t0}_{yr}_spacetime_cells.csv)"
@@ -843,7 +1063,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.markdown(f"#### {L['bridge_t']}", help=L["h_bridge_t"])
     st.caption(L["bridge_cap"])
     full = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True)], axis=1)
-    panel_row = pd.DataFrame([rm])
+    panel_row = pd.DataFrame([rm_full])
     slug = f"{region_id}_{yr}_{size}m"
     d1, d2, d3 = st.columns(3)
     d1.download_button(L["dl_cell"], full.to_csv(index=False).encode("utf-8-sig"),
@@ -855,7 +1075,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     if d3.button(L["add"], key="lisa_add_panel", help=L["h_add"], use_container_width=True):
         rows = st.session_state.setdefault("panel_rows", [])
         key = tuple(rm[c] for c in KEY_COLS)
-        rows[:] = [r for r in rows if tuple(r[c] for c in KEY_COLS) != key] + [dict(rm)]
+        rows[:] = [r for r in rows if tuple(r[c] for c in KEY_COLS) != key] + [dict(rm_full)]
         st.toast(L["added"], icon="✅")
 
     rows = st.session_state.get("panel_rows", [])
