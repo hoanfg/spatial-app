@@ -509,10 +509,19 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
     with st.expander(title, expanded=bool(n_warn)):
         st.caption("Các kiểm tra nhẹ chạy tự động theo từng lần cập nhật LISA; kiểm định nặng chỉ chạy khi bạn bấm nút."
                    if vi else "Light checks run automatically on every LISA update; heavy tests run only when you press a button.")
+        st.subheader("Kiểm tra tự động" if vi else "Automatic checks",
+                     help=("Năm kiểm tra nhẹ: đủ hoán vị cho FDR, độ tin cậy đuôi Pareto (SE Hill, KS), thống trị cụm đầu, "
+                           "tự tương quan phần dư độ dốc, tỷ lệ ô tối. ✅ ổn, ⚠️ cần lưu ý." if vi else
+                           "Five light checks: permutation adequacy for FDR, Pareto tail reliability (Hill SE, KS), cluster primacy, "
+                           "gradient-residual autocorrelation, dark-cell share. ✅ fine, ⚠️ needs attention."))
         st.markdown("\n\n".join(_diag_line(it, vi) for it in auto["items"]))
 
         st.markdown("---")
-        st.markdown("**" + ("Kiểm định nặng (chạy khi bấm nút)" if vi else "Heavy tests (on demand)") + "**")
+        st.subheader("Kiểm định nặng (chạy khi bấm nút)" if vi else "Heavy tests (on demand)",
+                     help=("Các kiểm định này chạy lại LISA nhiều lần nên chỉ chạy khi bạn bấm nút. Kết quả được lưu đệm theo bộ tham số hiện tại: "
+                           "bấm lại sẽ hiện ngay kết quả đã có, đổi tham số rồi Cập nhật LISA thì mới tính lại." if vi else
+                           "These tests re-run LISA several times, so they run only on demand. Results are cached per current parameter set: "
+                           "pressing again shows the stored result; change parameters and update LISA to recompute."))
         m = int(rm["n_cells_tested"])
         n_seed = len(SEED_LIST)
         base_kw = dict(
@@ -533,35 +542,63 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             st.warning("Vùng quá lớn cho kiểm định nặng: hãy tăng kích thước ô hoặc giảm số hoán vị." if vi
                        else "Area too large for heavy tests: use a coarser cell size or fewer permutations.")
 
+        def _done(kind):
+            return (ckey, kind) in hcache
+
+        def _lbl(txt, kind):
+            return ("✅ " if _done(kind) else "▶ ") + txt
+
         b1, b2, b3 = st.columns(3)
-        run_seed = b1.button((f"▶ Ổn định theo seed ({n_seed} lần)" if vi else f"▶ Seed stability ({n_seed} runs)"),
-                             key="dg_btn_seed", disabled=too_big or base_kw is None, use_container_width=True)
-        run_meth = b2.button("▶ So sánh thô / P99 / ln" if vi else "▶ Raw vs P99 vs ln", key="dg_btn_meth",
-                             disabled=too_big or base_kw is None, use_container_width=True)
-        run_tail = b3.button("▶ Độ nhạy tail_frac" if vi else "▶ tail_frac sensitivity", key="dg_btn_tail",
-                             use_container_width=True)
+        run_seed = b1.button(_lbl(f"Ổn định theo seed ({n_seed} lần)" if vi else f"Seed stability ({n_seed} runs)", "seed"),
+                             key="dg_btn_seed", disabled=too_big or base_kw is None, use_container_width=True,
+                             help=(f"Chạy lại LISA với {n_seed} seed khác nhau, đo độ lệch chuẩn của hh_area_share. Nếu sd > 0,5% thì nên dùng 999 hoán vị."
+                                   if vi else f"Re-runs LISA with {n_seed} seeds and reports the sd of hh_area_share. If sd > 0.5%, use 999 permutations."))
+        run_meth = b2.button(_lbl("So sánh thô / P99 / ln" if vi else "Raw vs P99 vs ln", "meth"), key="dg_btn_meth",
+                             disabled=too_big or base_kw is None, use_container_width=True,
+                             help=("Đo hệ số Jaccard của tập ô High-High giữa dữ liệu thô, cắt P99 và ln(1+NTL). Jaccard thấp nghĩa là cụm HH bị ô dị thường chi phối."
+                                   if vi else "Jaccard of the High-High cell set across raw, P99-winsorized and ln(1+NTL). Low values mean outliers drive the HH set."))
+        run_tail = b3.button(_lbl("Độ nhạy tail_frac" if vi else "tail_frac sensitivity", "tail"), key="dg_btn_tail",
+                             use_container_width=True,
+                             help=("Ước lượng Hill α ở 5%, 10%, 15% đuôi trên. Biên độ α nhỏ nghĩa là đuôi ổn định." if vi
+                                   else "Hill α at the top 5%, 10%, 15%. A small α range means a stable tail."))
 
         def _progress(label):
             bar = st.progress(0.0, text=label)
-            return lambda f, txt: bar.progress(min(1.0, f), text=f"{label}: {txt}")
 
-        if run_seed and (ckey, "seed") not in hcache:
-            _fifo_put(hcache, (ckey, "seed"), seed_stability(base_kw, progress=_progress("seed")), 12)
-        if run_meth and (ckey, "meth") not in hcache:
-            base_hh = (cdf["lisa_class"] == "High-High").to_numpy()
-            _fifo_put(hcache, (ckey, "meth"), method_sensitivity(base_kw, base_hh, use_log,
-                                                                 progress=_progress("method")), 12)
-        if run_tail and (ckey, "tail") not in hcache:
-            lit = cdf["is_dark"].to_numpy() == 0
-            _fifo_put(hcache, (ckey, "tail"), tail_sensitivity(
-                grid_utm["ntl_mean"].to_numpy(float), ~cdf["is_edge_masked"].to_numpy().astype(bool), lit), 12)
+            def cb(f, txt):
+                bar.progress(min(1.0, f), text=f"{label}: {txt}")
+            cb.bar = bar
+            return cb
+
+        def _go(kind, label_vi, label_en, fn):
+            """Bấm lần đầu: tính + báo xong. Bấm lại: báo đang dùng kết quả lưu đệm (không tính lại)."""
+            if (ckey, kind) in hcache:
+                st.toast(("Đã có kết quả lưu đệm cho: " if vi else "Cached result already available: ") + (label_vi if vi else label_en), icon="✅")
+                return
+            prog = _progress(label_vi if vi else label_en)
+            _fifo_put(hcache, (ckey, kind), fn(prog), 12)
+            prog.bar.empty()
+            st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en), icon="✅")
+            st.rerun()
+
+        if run_seed:
+            _go("seed", "ổn định theo seed", "seed stability", lambda pg: seed_stability(base_kw, progress=pg))
+        if run_meth:
+            _go("meth", "so sánh thô / P99 / ln", "raw vs P99 vs ln", lambda pg: method_sensitivity(
+                base_kw, (cdf["lisa_class"] == "High-High").to_numpy(), use_log, progress=pg))
+        if run_tail:
+            _go("tail", "độ nhạy tail_frac", "tail_frac sensitivity", lambda pg: tail_sensitivity(
+                grid_utm["ntl_mean"].to_numpy(float), ~cdf["is_edge_masked"].to_numpy().astype(bool),
+                cdf["is_dark"].to_numpy() == 0))
 
         r = hcache.get((ckey, "seed"))
         if r:
+            st.markdown("**" + ("Kết quả: ổn định theo seed" if vi else "Result: seed stability") + "**")
             c1, c2 = st.columns(2)
             c1.metric("sd(hh_area_share) qua các seed" if vi else "sd(hh_area_share) across seeds", f"{r['sd'] * 100:.3f}%",
                       help="Ngưỡng ổn định: 0,5%." if vi else "Stability threshold: 0.5%.")
-            c2.metric("hh_area_share trung bình" if vi else "Mean hh_area_share", f"{r['mean'] * 100:.2f}%")
+            c2.metric("hh_area_share trung bình" if vi else "Mean hh_area_share", f"{r['mean'] * 100:.2f}%",
+                      help="Trung bình tỷ trọng diện tích HH qua các seed." if vi else "Mean HH area share across seeds.")
             if r["unstable"]:
                 st.warning("Kết quả đổi nhãn theo seed" + (": hãy tăng số hoán vị lên 999." if r["recommend_999"] else ".")
                            if vi else "Labels change with the seed" + (": raise permutations to 999." if r["recommend_999"] else "."))
@@ -570,10 +607,13 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             export["hh_share_seed_sd"] = round(r["sd"], 6)
         r = hcache.get((ckey, "meth"))
         if r:
+            st.markdown("**" + ("Kết quả: so sánh thô / P99 / ln" if vi else "Result: raw vs P99 vs ln") + "**")
             c1, c2, c3 = st.columns(3)
-            c1.metric("Jaccard thô ↔ P99" if vi else "Jaccard raw ↔ P99", f"{r['jaccard_raw_winsor']:.3f}")
-            c2.metric("Jaccard thô ↔ ln" if vi else "Jaccard raw ↔ ln", f"{r['jaccard_raw_log']:.3f}")
-            c3.metric("Jaccard P99 ↔ ln" if vi else "Jaccard P99 ↔ ln", f"{r['jaccard_winsor_log']:.3f}")
+            _jh = ("Jaccard = |giao| / |hợp| của hai tập ô HH; 1 = trùng hoàn toàn." if vi
+                   else "Jaccard = |intersection| / |union| of two HH sets; 1 = identical.")
+            c1.metric("Jaccard thô ↔ P99" if vi else "Jaccard raw ↔ P99", f"{r['jaccard_raw_winsor']:.3f}", help=_jh)
+            c2.metric("Jaccard thô ↔ ln" if vi else "Jaccard raw ↔ ln", f"{r['jaccard_raw_log']:.3f}", help=_jh)
+            c3.metric("Jaccard P99 ↔ ln" if vi else "Jaccard P99 ↔ ln", f"{r['jaccard_winsor_log']:.3f}", help=_jh)
             st.caption((f"Số ô HH: thô {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
                         "Jaccard thấp nghĩa là cụm HH nhạy với ô dị thường."
                         if vi else f"HH cells: raw {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
@@ -584,6 +624,7 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
         if r:
             rows = [{"tail_frac": f"{x['tail_frac']:.0%}", "k": x["k"], "α": _num(x["alpha"], "{:.2f}"),
                      "SE": _num(x["se"], "{:.2f}"), "KS p": _num(x["ks_p"], "{:.3f}")} for x in r["rows"]]
+            st.markdown("**" + ("Kết quả: độ nhạy tail_frac" if vi else "Result: tail_frac sensitivity") + "**")
             st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
             st.caption((f"Biên độ α giữa các ngưỡng cắt: {_num(r['spread'], '{:.2f}')} (nhỏ = đuôi ổn định)."
                         if vi else f"α range across tail fractions: {_num(r['spread'], '{:.2f}')} (small = stable tail)."))
