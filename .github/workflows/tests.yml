@@ -1,0 +1,33 @@
+name: tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core:
+    name: Kiểm thử lõi (T01-T20)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install numpy pandas scipy pytest
+      - run: pytest -q tests/test_lisa_reliability.py
+
+  ui-smoke:
+    name: Kiểm thử khói giao diện (AppTest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true   # bỏ dòng này khi test đã xanh ổn định, để lỗi giao diện chặn commit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt pytest
+      - run: pytest -q tests/test_ui_smoke.py
