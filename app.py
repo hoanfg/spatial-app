@@ -1605,6 +1605,15 @@ MAP_CSS = """
   border:1px solid rgba(255,255,255,.16)!important;box-shadow:0 6px 20px rgba(0,0,0,.5);margin:10px!important}
 .legend.leaflet-control text{fill:#e9eef8!important;font:11px Inter,Arial,sans-serif!important}
 .legend.leaflet-control text.caption{display:none}
+/* Bản đồ hẹp (vd. chế độ song song): thu nhỏ thang màu, rút gọn bảng thông tin để không đè lên nhau */
+@media (max-width:620px){
+  .legend.leaflet-control{transform:scale(.72);transform-origin:top right;margin:4px!important}
+  .nt-panel{max-width:42%;padding:6px 9px;font-size:11px;top:8px}
+  .nt-panel .t{font-size:12px}
+  .nt-panel > div:nth-child(n+3){display:none}
+  .nt-legend{font-size:11px;padding:6px 9px;max-width:60%}
+  .nt-legend div.i{white-space:normal}
+}
 .legend.leaflet-control .tick line,.legend.leaflet-control .domain{stroke:rgba(255,255,255,.5)!important}
 .legend.leaflet-control:after{display:block;color:#fff;font:600 11.5px Inter,Arial,sans-serif;padding:0 0 9px}
 /* Các nút điều khiển Leaflet theo tông tối */
@@ -2064,15 +2073,24 @@ if split_view:
     ])
     with tab_split:
         _col_map, _col_data = st.columns(2, gap="medium")
-    try:
-        tab_map = _col_map.container(key="split_map")  # có class CSS riêng để ghim
-    except TypeError:  # Streamlit cũ không hỗ trợ key=
-        tab_map = _col_map
+    tab_map = _col_map
     tab_data = _col_data
+    _col_map.markdown('<span class="split-map-anchor"></span>', unsafe_allow_html=True)
     st.markdown(
         """<style>
-        .st-key-split_map{position:sticky;top:3.8rem;max-height:calc(100vh - 4.6rem);overflow-y:auto;overflow-x:hidden;}
-        @media (max-width: 900px){.st-key-split_map{position:static;max-height:none;overflow:visible;}}
+        /* Mở rộng vùng nội dung để hai cột đủ chỗ (chỉ khi bật chế độ song song) */
+        [data-testid="stMainBlockContainer"], .block-container{max-width:min(97vw,1800px)!important}
+        /* Ghim cột bản đồ: dán lên chính cột (cha cao bằng cột dữ liệu) chứ không dán phần tử bên trong */
+        div[data-testid="stColumn"]:has(.split-map-anchor), div[data-testid="column"]:has(.split-map-anchor){
+          position:sticky!important;top:3.6rem;align-self:flex-start!important;
+          max-height:calc(100vh - 4.2rem);overflow-y:auto;overflow-x:hidden}
+        /* Không cắt chữ "..." trong ô chỉ số khi cột hẹp */
+        [data-testid="stMetricValue"] > div, [data-testid="stMetricLabel"] p, [data-testid="stMetricLabel"] > div{
+          white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+        [data-testid="stMetricValue"]{font-size:clamp(1.1rem,1.9vw,1.9rem)!important}
+        @media (max-width:900px){
+          div[data-testid="stColumn"]:has(.split-map-anchor), div[data-testid="column"]:has(.split-map-anchor){
+            position:static!important;max-height:none;overflow:visible}}
         </style>""",
         unsafe_allow_html=True,
     )
