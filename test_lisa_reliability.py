@@ -115,7 +115,7 @@ def test_T05_remote_island_sparse_bbox():
 
 # ---------------------------------------------------------------- T05b
 def test_T05b_kdtree_fallback_matches_grid_branch():
-    """Nhánh cKDTree phải cho kết quả của nhánh lưới đặc (cùng bán kính, cùng trọng số)."""
+    """Nhánh cKDTree phải cho đúng kết quả của nhánh lưới đặc (cùng bán kính, cùng trọng số)."""
     cx, cy, _ = make_grid(20, 20)
     n = cx.size
     core = np.ones(n, dtype=bool)
@@ -433,6 +433,60 @@ def test_T18_extensive_intensive_margins():
     assert m["n_both_lit"] == int(both.sum())
     assert math.isclose(m["intensive_mean_dln_ntl"], float(np.mean(np.log(t1[both]) - np.log(t0[both]))), abs_tol=1e-3)
     assert set(r.st_cell_df["margin_type"]) >= {"extensive_entry", "extensive_exit", "intensive"}
+
+
+# ---------------------------------------------------------------- T19  (biểu đồ phân phối tab Dữ liệu)
+def test_T19_distribution_charts_data():
+    from ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
+
+    rng = np.random.default_rng(5)
+    n = 900
+    cx, cy, area = make_grid(30, 30)
+    ntl = rng.gamma(1.5, 4.0, n)
+    ntl[:60] = 0.0
+    sol_cell = ntl * area
+
+    # Lorenz: khớp gini() của app, đơn điệu, đi từ (0,0) tới (1,1), nằm dưới đường chéo
+    lz, g = lorenz_df(sol_cell)
+    assert math.isclose(g, gini(sol_cell), abs_tol=1e-9)
+    assert lz["cum_cells"].iloc[0] == 0 and lz["cum_sol"].iloc[0] == 0
+    assert math.isclose(lz["cum_cells"].iloc[-1], 1.0) and math.isclose(lz["cum_sol"].iloc[-1], 1.0)
+    assert (np.diff(lz["cum_sol"]) >= -1e-12).all() and (lz["cum_sol"] <= lz["cum_cells"] + 1e-12).all()
+    lz0, g0 = lorenz_df(np.zeros(10))
+    assert g0 == 0.0 and len(lz0) == 2
+    big, _ = lorenz_df(rng.gamma(2, 3, 200_000))
+    assert len(big) <= 410  # thưa hóa: nhẹ cho lưới lớn
+
+    # Rank-size: chuỗi Pareto thuần phải cho alpha gần đúng và đường fit đi qua đầu bảng
+    core = np.ones(n, bool)
+    pareto = (1.0 - rng.random(n)) ** (-1.0 / 2.5) * 3.0
+    pts, fit, info = ranksize_df(pareto, core)
+    assert info is not None and 1.5 < info["alpha"] < 4.0
+    assert pts["rank"].iloc[0] == 1 and pts["ntl"].iloc[0] == pareto.max()
+    assert len(fit) == info["k"] and fit["fit"].is_monotonic_decreasing
+    _, _, none_info = ranksize_df(np.array([1.0] * 10), np.ones(10, bool))
+    assert none_info is None  # < 15 ô sáng
+    _, _, tied = ranksize_df(np.full(100, 7.0), np.ones(100, bool))
+    assert tied is None  # đuôi đồng hạng: không ước lượng
+    e, _, _ = ranksize_df(np.zeros(50), np.ones(50, bool))
+    assert len(e) == 0
+
+    # Radial: tâm = ô sáng nhất; vòng đầu chứa ô đó; suy giảm khi cách xa tâm
+    d = np.hypot(cx - cx[435], cy - cy[435]) / 1000.0
+    syn = 50.0 * np.exp(-d)
+    rd = radial_df(cx, cy, syn, area, width_km=1.0)
+    assert rd["cells"].sum() == syn.size
+    assert rd["mean_ntl"].iloc[0] > rd["mean_ntl"].iloc[1] > rd["mean_ntl"].iloc[2]
+    assert len(radial_df(np.array([]), np.array([]), np.array([]), np.array([]))) == 0
+
+    # Histogram % ô và % SOL: mỗi chuỗi cộng đúng 100
+    edges = [-0.001, 0, 1, 2, 5, 10, 15, 25, 40, 80, np.inf]
+    labels = ["0", "0-1", "1-2", "2-5", "5-10", "10-15", "15-25", "25-40", "40-80", "80+"]
+    h = hist_share_df(ntl, area, edges, labels)
+    for ser in ("cells", "sol"):
+        assert math.isclose(h.loc[h.series == ser, "pct"].sum(), 100.0, abs_tol=1e-6)
+    assert h.loc[(h.series == "cells") & (h.bin == "0"), "pct"].iloc[0] == 60 / n * 100
+    assert h.loc[(h.series == "sol") & (h.bin == "0"), "pct"].iloc[0] == 0.0
 
 
 if __name__ == "__main__":
