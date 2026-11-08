@@ -45,7 +45,9 @@ def _app():
         geometry=polys, crs=32633,
     )
     export_df = pd.DataFrame({"grid_id": grid["grid_id"], "ntl_mean": grid["ntl_mean"]})
-    boundary = gpd.GeoDataFrame(geometry=[grid.unary_union.convex_hull], crs=32633).to_crs(4326)
+    geom = grid.geometry
+    merged = geom.union_all() if hasattr(geom, "union_all") else geom.unary_union  # union_all: geopandas >= 1.0
+    boundary = gpd.GeoDataFrame(geometry=[merged.convex_hull], crs=32633).to_crs(4326)
     res = {"size": 500, "year": 2025, "ts": "test", "iso3": "AUT", "boundary_wgs": boundary}
     render_lisa_tab(res=res, grid_utm=grid, export_df=export_df, lang="vi", region_id="AUT_test",
                     region_label="Test", render_cap=30_000, basemap="CartoDB dark_matter",
