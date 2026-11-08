@@ -1,8 +1,6 @@
 """
 test_lisa_reliability.py
 
-Chạy:  python test_lisa_reliability.py   hoặc   pytest -q test_lisa_reliability.py
-
 """
 from __future__ import annotations
 
