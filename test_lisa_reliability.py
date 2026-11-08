@@ -1,10 +1,8 @@
 """
 test_lisa_reliability.py
 
-Bộ kiểm thử độ tin cậy cho lisa_core.py (T01-T08).
 Chạy:  python test_lisa_reliability.py   hoặc   pytest -q test_lisa_reliability.py
 
-Các test phản ánh hành vi MONG MUỐN. T04/T05 từng lộ lỗi thật của lisa_core.py (mục 2.3, 2.5) và đã được sửa.
 """
 from __future__ import annotations
 
@@ -37,7 +35,6 @@ def make_grid(nx: int, ny: int, size: float = CELL, x0: float = 500_000.0, y0: f
 
 
 def _pad_area(area):
-    """Thêm viền: ô biên (diện tích nhỏ) để không phải mọi ô đều là ô lõi bị loại."""
     return area
 
 
@@ -120,7 +117,7 @@ def test_T05_remote_island_sparse_bbox():
 
 # ---------------------------------------------------------------- T05b
 def test_T05b_kdtree_fallback_matches_grid_branch():
-    """Nhánh cKDTree phải cho đúng kết quả của nhánh lưới đặc (cùng bán kính, cùng trọng số)."""
+    """Nhánh cKDTree phải cho kết quả của nhánh lưới đặc (cùng bán kính, cùng trọng số)."""
     cx, cy, _ = make_grid(20, 20)
     n = cx.size
     core = np.ones(n, dtype=bool)
