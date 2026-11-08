@@ -26,6 +26,8 @@ from folium.plugins import Fullscreen, MiniMap, MousePosition
 from jinja2 import Template
 from streamlit_folium import st_folium
 
+from ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
+
 try:
     import pycountry
 except Exception:  # pragma: no cover
@@ -2045,12 +2047,42 @@ with st.container(border=True):
     c6.metric(L["m_lit"], f"{(ntl > 0).mean() * 100:.0f}%", help="Tỷ lệ ô có NTL > 0." if LANG == "vi" else "Share of cells with NTL > 0.")
 st.write("")
 
-tab_map, tab_data, tab_lisa, tab_guide = st.tabs([
-    L["tab_map"], 
-    L["tab_data"], 
-    "🧭 LISA · Panel", 
-    L["tab_guide"]
-])
+split_view = st.toggle(
+    "⫼ " + ("Xem song song Bản đồ | Dữ liệu" if LANG == "vi" else "Side-by-side Map | Data"),
+    value=False, key="split_view",
+    help=("Hiện bản đồ và dữ liệu cạnh nhau trong cùng một tab; bản đồ được ghim khi cuộn phần dữ liệu. "
+          "Không tốn thêm tài nguyên vì Streamlit vốn đã dựng cả hai tab. Trên màn hình hẹp hai cột sẽ tự xếp chồng."
+          if LANG == "vi" else
+          "Shows the map and the data next to each other in one tab; the map stays pinned while you scroll the data. "
+          "No extra cost: Streamlit already builds both tabs. On narrow screens the columns stack automatically."),
+)
+if split_view:
+    tab_split, tab_lisa, tab_guide = st.tabs([
+        "⫼ " + L["tab_map"] + " | " + L["tab_data"],
+        "🧭 LISA · Panel",
+        L["tab_guide"],
+    ])
+    with tab_split:
+        _col_map, _col_data = st.columns(2, gap="medium")
+    try:
+        tab_map = _col_map.container(key="split_map")  # có class CSS riêng để ghim
+    except TypeError:  # Streamlit cũ không hỗ trợ key=
+        tab_map = _col_map
+    tab_data = _col_data
+    st.markdown(
+        """<style>
+        .st-key-split_map{position:sticky;top:3.8rem;max-height:calc(100vh - 4.6rem);overflow-y:auto;overflow-x:hidden;}
+        @media (max-width: 900px){.st-key-split_map{position:static;max-height:none;overflow:visible;}}
+        </style>""",
+        unsafe_allow_html=True,
+    )
+else:
+    tab_map, tab_data, tab_lisa, tab_guide = st.tabs([
+        L["tab_map"],
+        L["tab_data"],
+        "🧭 LISA · Panel",
+        L["tab_guide"],
+    ])
 
 # 8. TAB BẢN ĐỒ
 with tab_map:
@@ -2364,17 +2396,109 @@ with tab_data:
     edges = [-0.001, 0, 1, 2, 5, 10, 15, 25, 40, 80, np.inf]
     binned = pd.cut(ntl, bins=edges, labels=L["hist_bins"]).value_counts()
     hist_df = pd.DataFrame({"bin": list(L["hist_bins"]), "cells": [int(binned.get(b, 0)) for b in L["hist_bins"]]})
-    chart = (
-        alt.Chart(hist_df)
-        .mark_bar(color="#ffaa00", cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
-        .encode(
-            x=alt.X("bin:N", sort=list(L["hist_bins"]), title=L["hist_x"], axis=alt.Axis(labelAngle=0)),
-            y=alt.Y("cells:Q", title=L["hist_y"]),
-            tooltip=[alt.Tooltip("bin:N", title=L["hist_x"]), alt.Tooltip("cells:Q", title=L["hist_y"], format=",")],
+    _vi = LANG == "vi"
+    _lbl_cells = "% số ô" if _vi else "% of cells"
+    _lbl_sol = "% tổng ánh sáng" if _vi else "% of total light"
+    try:
+        _hs = hist_share_df(ntl, area, edges, list(L["hist_bins"]))
+        _hs["series"] = _hs["series"].map({"cells": _lbl_cells, "sol": _lbl_sol})
+        chart = (
+            alt.Chart(_hs)
+            .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+            .encode(
+                x=alt.X("bin:N", sort=list(L["hist_bins"]), title=L["hist_x"], axis=alt.Axis(labelAngle=0)),
+                xOffset=alt.XOffset("series:N"),
+                y=alt.Y("pct:Q", title="%"),
+                color=alt.Color("series:N", title=None, scale=alt.Scale(domain=[_lbl_cells, _lbl_sol], range=["#ffaa00", "#4cc9f0"])),
+                tooltip=[alt.Tooltip("bin:N", title=L["hist_x"]), alt.Tooltip("series:N", title=""),
+                         alt.Tooltip("pct:Q", title="%", format=".1f")],
+            )
+            .properties(height=280)
         )
-        .properties(height=280)
-    )
+    except Exception:  # noqa: BLE001  (Altair cũ không có xOffset: về biểu đồ số ô như cũ)
+        chart = (
+            alt.Chart(hist_df)
+            .mark_bar(color="#ffaa00", cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+            .encode(
+                x=alt.X("bin:N", sort=list(L["hist_bins"]), title=L["hist_x"], axis=alt.Axis(labelAngle=0)),
+                y=alt.Y("cells:Q", title=L["hist_y"]),
+                tooltip=[alt.Tooltip("bin:N", title=L["hist_x"]), alt.Tooltip("cells:Q", title=L["hist_y"], format=",")],
+            )
+            .properties(height=280)
+        )
     sx(st.altair_chart, chart)
+    st.caption("Cột cam: tỷ lệ số ô; cột xanh: tỷ lệ tổng ánh sáng. Khi cột xanh cao hơn cột cam ở khoảng NTL cao, ánh sáng tập trung vào ít ô."
+               if _vi else "Orange: share of cells; blue: share of total light. Where blue exceeds orange at high NTL, light is concentrated in few cells.")
+
+    # Phân tích phân phối (đóng sẵn: chỉ dựng khi mở, tính từ dữ liệu có sẵn)
+    with st.expander("📈 " + ("Phân tích phân phối: Lorenz, rank–size, hồ sơ khoảng cách" if _vi
+                              else "Distribution analysis: Lorenz, rank–size, distance profile"), expanded=False):
+        _cent = grid_utm.geometry.centroid
+        _tabs_d = st.tabs(["Lorenz", "Rank–size", "Hồ sơ khoảng cách" if _vi else "Distance profile"])
+
+        with _tabs_d[0]:
+            _lz, _g = lorenz_df(sol_cell)
+            _diag = pd.DataFrame({"cum_cells": [0.0, 1.0], "cum_sol": [0.0, 1.0]})
+            _ch = (
+                alt.Chart(_lz).mark_line(color="#ffaa00", strokeWidth=2.5).encode(
+                    x=alt.X("cum_cells:Q", title="Tỷ lệ ô tích lũy (từ tối đến sáng)" if _vi else "Cumulative share of cells (dark to bright)",
+                            scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format="%")),
+                    y=alt.Y("cum_sol:Q", title="Tỷ lệ tổng ánh sáng tích lũy" if _vi else "Cumulative share of total light",
+                            scale=alt.Scale(domain=[0, 1]), axis=alt.Axis(format="%")),
+                    tooltip=[alt.Tooltip("cum_cells:Q", format=".1%"), alt.Tooltip("cum_sol:Q", format=".1%")],
+                )
+                + alt.Chart(_diag).mark_line(color="#8892a6", strokeDash=[5, 4]).encode(x="cum_cells:Q", y="cum_sol:Q")
+            ).properties(height=300)
+            sx(st.altair_chart, _ch)
+            st.caption((f"Gini = {_g:.3f}. Đường đứt là bình đẳng tuyệt đối; đường cong càng lõm sâu thì ánh sáng càng tập trung. "
+                        f"10% ô sáng nhất giữ {top10_share:.1f}% tổng ánh sáng."
+                        if _vi else f"Gini = {_g:.3f}. The dashed line is perfect equality; the deeper the curve, the more concentrated the light. "
+                        f"The brightest 10% of cells hold {top10_share:.1f}% of total light."))
+
+        with _tabs_d[1]:
+            _pts, _fit, _info = ranksize_df(ntl, ~is_border)
+            if len(_pts) == 0:
+                st.caption("Không có ô sáng vùng lõi." if _vi else "No lit core cells.")
+            else:
+                _base = alt.Chart(_pts).mark_circle(color="#ffaa00", size=34, opacity=0.8).encode(
+                    x=alt.X("rank:Q", title="Hạng (1 = sáng nhất)" if _vi else "Rank (1 = brightest)", scale=alt.Scale(type="log")),
+                    y=alt.Y("ntl:Q", title="NTL (nW/cm²/sr)", scale=alt.Scale(type="log")),
+                    tooltip=[alt.Tooltip("rank:Q", title="rank"), alt.Tooltip("ntl:Q", title="NTL", format=".2f")],
+                )
+                if _info is not None and len(_fit):
+                    _ln = alt.Chart(_fit).mark_line(color="#4cc9f0", strokeWidth=2).encode(x="rank:Q", y="fit:Q")
+                    _ch = (_base + _ln).properties(height=300)
+                else:
+                    _ch = _base.properties(height=300)
+                sx(st.altair_chart, _ch)
+                if _info is not None:
+                    st.caption((f"Đường xanh là đuôi Pareto của {_info['k']} ô sáng nhất: α = {_info['alpha']:.2f}. "
+                                "Điểm cam nằm sát đường xanh nghĩa là đuôi giống luật lũy thừa; đuôi cong xuống thì α kém tin cậy "
+                                "(kiểm định KS và SE nằm ở tab LISA)."
+                                if _vi else f"The blue line is the Pareto tail of the {_info['k']} brightest cells: α = {_info['alpha']:.2f}. "
+                                "Points hugging the line mean a power-law-like tail; a bending tail means α is unreliable "
+                                "(KS test and SE are in the LISA tab)."))
+                else:
+                    st.caption("Cần ít nhất 15 ô sáng vùng lõi và đuôi không đồng hạng để ước lượng α." if _vi
+                               else "At least 15 lit core cells and a non-tied tail are needed to estimate α.")
+
+        with _tabs_d[2]:
+            _w = max(0.5, size / 1000.0)
+            _rd = radial_df(_cent.x.to_numpy(), _cent.y.to_numpy(), ntl, area, width_km=_w)
+            if len(_rd) < 2:
+                st.caption("Không đủ ô để vẽ hồ sơ." if _vi else "Not enough cells for a profile.")
+            else:
+                _ch = alt.Chart(_rd).mark_line(color="#ffaa00", strokeWidth=2.5, point=alt.OverlayMarkDef(color="#ffaa00", size=45)).encode(
+                    x=alt.X("dist_km:Q", title="Khoảng cách tới ô sáng nhất (km)" if _vi else "Distance from brightest cell (km)"),
+                    y=alt.Y("mean_ntl:Q", title="NTL trung bình (trọng số diện tích)" if _vi else "Area-weighted mean NTL"),
+                    tooltip=[alt.Tooltip("dist_km:Q", format=".1f", title="km"), alt.Tooltip("mean_ntl:Q", format=".2f", title="NTL"),
+                             alt.Tooltip("cells:Q", title="cells")],
+                ).properties(height=300)
+                sx(st.altair_chart, _ch)
+                st.caption((f"Vòng rộng {_w:g} km quanh ô sáng nhất. Đường giảm đều là mẫu đơn tâm; nhiều đỉnh phụ gợi ý nhiều cực "
+                            "(xem Thống trị cụm đầu ở tab LISA)."
+                            if _vi else f"Rings of {_w:g} km around the brightest cell. A steady decline suggests a monocentric pattern; "
+                            "secondary peaks suggest several poles (see cluster primacy in the LISA tab)."))
 
     # Top 10
     st.subheader(L["sec_top"], help=H["sec_top"])
