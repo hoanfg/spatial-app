@@ -8,7 +8,7 @@ import math
 
 import numpy as np
 
-from lisa_core import build_queen_neighbors, run_lisa
+from .lisa_core import build_queen_neighbors, run_lisa
 
 PERM_CHOICES = (199, 499, 999)
 SEED_LIST = (42, 101, 202, 303, 404)
@@ -182,7 +182,7 @@ def resid_moran(cx, cy, ntl, area, dist_core_km, edge, cell_size_m: float,
         return float((vec[hi] * lag).sum() / den) if den > 1e-12 else float("nan")
 
     I = _I(uf)
-    out = {"I": I, "p": float("nan"), "n": int(core.sum()), "flag": False, "perm_done": False}
+    out = {"I": I, "p": float("nan"), "n": int(core.sum()), "flag": False, "perm_done": False, "perms": int(perms)}
     if np.isfinite(I) and ci.size <= max_n_perm:
         rng = np.random.default_rng(seed)
         E = -1.0 / (hi.size - 1)

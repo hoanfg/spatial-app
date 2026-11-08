@@ -1,14 +1,20 @@
 """
 test_lisa_reliability.py
 
+Bộ kiểm thử độ tin cậy cho ntl/lisa_core.py, ntl/lisa_diagnostics.py, ntl/ntl_distribution.py (T01-T19).
+Chạy từ thư mục gốc repo:   pytest -q        hoặc     python tests/test_lisa_reliability.py
 """
 from __future__ import annotations
 
 import math
+import sys
+from pathlib import Path
 
 import numpy as np
 
-from lisa_core import (
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # để `import ntl` khi chạy trực tiếp
+
+from ntl.lisa_core import (
     DARK,
     build_queen_neighbors,
     compute_pareto_top_lights,
@@ -302,7 +308,7 @@ def test_T08_spatial_markov_invariants():
 
 
 # ================================================================ lisa_diagnostics
-from lisa_diagnostics import (  # noqa: E402
+from ntl.lisa_diagnostics import (  # noqa: E402
     auto_diagnostics, cluster_primacy, dark_share, hill_diagnostics, jaccard,
     method_sensitivity, perm_power, resid_moran, seed_stability, tail_sensitivity,
     winsorize_p99,
@@ -437,7 +443,7 @@ def test_T18_extensive_intensive_margins():
 
 # ---------------------------------------------------------------- T19  (biểu đồ phân phối tab Dữ liệu)
 def test_T19_distribution_charts_data():
-    from ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
+    from ntl.ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
 
     rng = np.random.default_rng(5)
     n = 900
@@ -487,6 +493,22 @@ def test_T19_distribution_charts_data():
         assert math.isclose(h.loc[h.series == ser, "pct"].sum(), 100.0, abs_tol=1e-6)
     assert h.loc[(h.series == "cells") & (h.bin == "0"), "pct"].iloc[0] == 60 / n * 100
     assert h.loc[(h.series == "sol") & (h.bin == "0"), "pct"].iloc[0] == 0.0
+
+
+# ---------------------------------------------------------------- T20  (hiển thị p-value chạm mức sàn)
+def test_T20_fmt_p_floor():
+    from ntl.formatting import fmt_p
+
+    assert fmt_p(0.005, 199) == "≤ 0.005"            # 1/(199+1): chạm sàn, không phải p chính xác
+    assert fmt_p(0.005, 199, prefix=True) == "p ≤ 0.005"
+    assert fmt_p(0.012, 199, prefix=True) == "p = 0.012"
+    assert fmt_p(0.01, 99) == "≤ 0.010"
+    assert fmt_p(0.2, None) == "0.200"
+    assert fmt_p(float("nan"), 99) == "N/A"
+    # p đo từ run thật phải khớp quy tắc: p >= 1/(R+1)
+    rng = np.random.default_rng(0)
+    assert fmt_p(1.0 / 500, 499) == "≤ 0.002"
+    assert fmt_p(2.0 / 500, 499).startswith("0.004")
 
 
 if __name__ == "__main__":
