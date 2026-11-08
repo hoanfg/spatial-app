@@ -1,9 +1,6 @@
 """
 ntl_distribution.py
 
-Các hàm dựng DataFrame cho biểu đồ phân phối ở tab Dữ liệu. Chỉ dùng numpy/pandas
-(không import streamlit/altair) nên test được độc lập và rất nhẹ.
-
   lorenz_df      Đường cong Lorenz của SOL theo ô (khớp với gini() của app).
   ranksize_df    Rank-size log-log của ô sáng + đường Pareto theo Hill (cùng định nghĩa đuôi với lisa_core).
   radial_df      NTL trung bình (theo diện tích) theo vòng cách ô sáng nhất.
@@ -16,8 +13,7 @@ import math
 import numpy as np
 import pandas as pd
 
-MAX_POINTS = 400  # giới hạn số điểm vẽ để nhẹ trên máy yếu
-
+MAX_POINTS = 400  
 
 def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
     """Chọn tối đa max_points chỉ số trải đều theo log, luôn giữ đầu và cuối."""
