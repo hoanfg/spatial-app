@@ -2060,10 +2060,8 @@ split_view = st.toggle(
     "⫼ " + ("Xem song song Bản đồ | Dữ liệu" if LANG == "vi" else "Side-by-side Map | Data"),
     value=False, key="split_view",
     help=("Hiện bản đồ và dữ liệu cạnh nhau trong cùng một tab; bản đồ được ghim khi cuộn phần dữ liệu. "
-          "Không tốn thêm tài nguyên vì Streamlit vốn đã dựng cả hai tab. Trên màn hình hẹp hai cột sẽ tự xếp chồng."
           if LANG == "vi" else
-          "Shows the map and the data next to each other in one tab; the map stays pinned while you scroll the data. "
-          "No extra cost: Streamlit already builds both tabs. On narrow screens the columns stack automatically."),
+          "Shows the map and the data next to each other in one tab; the map stays pinned while you scroll the data. "),
 )
 if split_view:
     tab_split, tab_lisa, tab_guide = st.tabs([
