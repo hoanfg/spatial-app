@@ -86,7 +86,7 @@ Bài toán ở đây là phải trộn ba loại dữ liệu khác bản chất:
 | **Tier 4**<br>📊 Kinh tế lượng & kết xuất | Tính Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini; kết xuất bản đồ tương tác đa lớp. Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu thành các tệp CSV cấp độ ô lưới và cấp độ vùng – năm. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 Cách hệ thống nhận diện, phân loại quốc gia và xử lý các lỗi của dữ liệu GADM nằm ở tài liệu riêng: [đọc mô tả kỹ thuật phân loại quốc gia tại đây](https://github.com/hoanfg/spatial-app/blob/main/GADM_v41-vi%20pipeline%20specification.md).
+> 📎 Cách hệ thống nhận diện, phân loại quốc gia và xử lý các lỗi của dữ liệu GADM nằm ở tài liệu riêng: [đọc mô tả kỹ thuật phân loại quốc gia tại đây](https://github.com/hoanfg/spatial-app/blob/main/docs/GADM_v41-vi%20pipeline%20specification.md).
 
 ### 1.2. Giới hạn phần cứng và cơ chế phòng thủ "out-of-memory" (OOM) trên Cloud
 
@@ -183,7 +183,7 @@ $$\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$$
 
 ## 📍 III. Lõi kinh tế lượng không gian (LISA core algorithm)
 
-Mô-đun `lisa_core.py` được viết hoàn toàn bằng đại số mảng trên `numpy` và `pandas`. Nó không cần đến các thư viện nặng như `libpysal` hay `esda`, và đưa độ phức tạp tính toán của đồ thị láng giềng xuống $\mathcal{O}(N \log N)$.
+Mô-đun `ntl/lisa_core.py` được viết hoàn toàn bằng đại số mảng trên `numpy` và `pandas`. Nó không cần đến các thư viện nặng như `libpysal` hay `esda`, và đưa độ phức tạp tính toán của đồ thị láng giềng xuống $\mathcal{O}(N \log N)$.
 
 > 💡 **LISA trong một câu:** thay vì một con số duy nhất cho cả vùng, LISA gắn cho *từng ô lưới* một nhãn cho biết ô đó và các ô xung quanh có cùng sáng, cùng tối, hay trái chiều nhau.
 
@@ -354,7 +354,7 @@ $$
 
 ### 3.6. Các mô-đun kinh tế lượng không gian biên
 
-Mô-đun `lisa_core.py` không dừng ở thống kê mô tả không gian tĩnh (ESDA). Để đáp ứng tiêu chuẩn nhận diện nhân quả của các tạp chí kinh tế học hàng đầu, nó tính thêm 5 nhóm chỉ số hiện đại:
+Mô-đun `ntl/lisa_core.py` không dừng ở thống kê mô tả không gian tĩnh (ESDA). Để đáp ứng tiêu chuẩn nhận diện nhân quả của các tạp chí kinh tế học hàng đầu, nó tính thêm 5 nhóm chỉ số hiện đại:
 
 | # | Mô-đun | Trả lời câu hỏi | Biến xuất ra |
 | :---: | :--- | :--- | :--- |
@@ -523,7 +523,7 @@ $$
 
 #### 4️⃣ Mức kết tụ nội tại của vùng sáng: `moran_I_lit`
 
-Chỉ số này được xuất trong bảng Panel CSV từ `lisa_core.py`. Nó là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
+Chỉ số này được xuất trong bảng Panel CSV từ `ntl/lisa_core.py`. Nó là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
 
 $$
 \bar{I}_{\mathrm{lit}} = \frac{1}{\lvert \mathrm{Focal} \rvert} \sum_{i \in \mathrm{Focal}} I_i
