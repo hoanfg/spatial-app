@@ -1,8 +1,6 @@
-"""
-test_lisa_reliability.py
+"""Kiểm thử độ tin cậy cho lisa_core, lisa_diagnostics, ntl_distribution (T01-T20).
 
-Bộ kiểm thử độ tin cậy cho ntl/lisa_core.py, ntl/lisa_diagnostics.py, ntl/ntl_distribution.py (T01-T19).
-Chạy từ thư mục gốc repo:   pytest -q        hoặc     python tests/test_lisa_reliability.py
+Chạy từ thư mục gốc repo: `pytest -q`, hoặc `python tests/test_lisa_reliability.py`.
 """
 from __future__ import annotations
 
@@ -42,9 +40,9 @@ def _pad_area(area):
     return area
 
 
-# ---------------------------------------------------------------- T01
+# T01
 def test_T01_fdr_impossible_combo():
-    """p_floor >= alpha thì BH không thể bác bỏ gì: fdr_min_hits_needed phải == m_tests (hoặc lớn hơn)."""
+    """Khi p_floor >= alpha, BH không bác bỏ được gì nên fdr_min_hits_needed phải >= m_tests."""
     cx, cy, area = make_grid(40, 40)  # 1600 ô
     rng = np.random.default_rng(0)
     ntl = rng.gamma(2.0, 5.0, size=cx.size) + 1.0
@@ -62,7 +60,7 @@ def test_T01_fdr_impossible_combo():
     assert rm["hh_area_share"] == 0.0
 
 
-# ---------------------------------------------------------------- T02
+# T02
 def test_T02_all_dark():
     cx, cy, area = make_grid(25, 20)
     ntl = np.zeros(cx.size)
@@ -74,7 +72,7 @@ def test_T02_all_dark():
     assert (cdf["lisa_class"] == DARK).all()
 
 
-# ---------------------------------------------------------------- T03
+# T03
 def test_T03_constant_ntl():
     cx, cy, area = make_grid(25, 20)
     ntl = np.full(cx.size, 10.0)
@@ -86,7 +84,7 @@ def test_T03_constant_ntl():
     assert out.region_metrics["gini_ntl_core_all"] == 0.0
 
 
-# ---------------------------------------------------------------- T04  (đã sửa, mục 2.3)
+# T04  (đã sửa, mục 2.3)
 def test_T04_all_core_cells_are_hh_signed_dist_nan():
     cx, cy, area = make_grid(10, 10)
     n = cx.size
@@ -99,7 +97,7 @@ def test_T04_all_core_cells_are_hh_signed_dist_nan():
     )
 
 
-# ---------------------------------------------------------------- T05  (đã sửa, mục 2.5)
+# T05  (đã sửa, mục 2.5)
 def test_T05_remote_island_sparse_bbox():
     """2 cụm 100 ô cách nhau 800 km: bbox 500 m -> W*H >> 1.2e6."""
     ax, ay, _ = make_grid(10, 10)
@@ -119,9 +117,9 @@ def test_T05_remote_island_sparse_bbox():
     )
 
 
-# ---------------------------------------------------------------- T05b
+# T05b
 def test_T05b_kdtree_fallback_matches_grid_branch():
-    """Nhánh cKDTree phải cho đúng kết quả của nhánh lưới đặc (cùng bán kính, cùng trọng số)."""
+    """Nhánh cKDTree phải ra cùng kết quả với nhánh lưới đặc (cùng bán kính, cùng trọng số)."""
     cx, cy, _ = make_grid(20, 20)
     n = cx.size
     core = np.ones(n, dtype=bool)
@@ -134,9 +132,9 @@ def test_T05b_kdtree_fallback_matches_grid_branch():
         assert np.allclose(a, b, equal_nan=True, atol=1e-9), np.nanmax(np.abs(a - b))
 
 
-# ---------------------------------------------------------------- helpers cho T09
+# helpers cho T09
 def _ks_pareto(top_k, u_thr, alpha):
-    """KS của top_k/u_thr so với F(x) = 1 - x^-alpha (x >= 1). Trả (D, p xấp xỉ tiệm cận)."""
+    """KS của top_k/u_thr so với F(x) = 1 - x^-alpha (x >= 1), trả (D, p tiệm cận xấp xỉ)."""
     x = np.sort(np.asarray(top_k, float) / u_thr)
     k = x.size
     F = 1.0 - x ** (-alpha)
@@ -154,9 +152,9 @@ def _tail(ntl, frac=0.10):
     return v[:k], float(v[min(k, v.size - 1)])
 
 
-# ---------------------------------------------------------------- T09
+# T09
 def test_T09_pareto_tail_goodness_of_fit_and_se():
-    """Hill: SE = alpha/sqrt(k). Đuôi Pareto thật -> KS không bác bỏ; đuôi bị chặn trên -> KS bác bỏ."""
+    """SE của Hill = alpha/sqrt(k). Đuôi Pareto thật thì KS không bác bỏ, đuôi bị chặn trên thì KS bác bỏ."""
     rng = np.random.default_rng(11)
     n, true_alpha = 4000, 2.0
     area = np.full(n, 0.25)
@@ -188,9 +186,9 @@ def test_T09b_pareto_tail_fraction_sensitivity():
     assert max(alphas) - min(alphas) < 0.5, alphas
 
 
-# ---------------------------------------------------------------- T10
+# T10
 def test_T10_monte_carlo_seed_stability():
-    """5 seed khác nhau: sd(hh_area_share) <= 0.5% (nếu vượt, khuyến nghị tăng perms lên 999)."""
+    """Qua 5 seed, sd(hh_area_share) phải <= 0.5% (nếu vượt thì nên tăng perms lên 999)."""
     nx = ny = 30
     cx, cy, area = make_grid(nx, ny)
     rng = np.random.default_rng(21)
@@ -207,7 +205,7 @@ def test_T10_monte_carlo_seed_stability():
     assert float(np.std(shares)) <= 0.005, shares
 
 
-# ---------------------------------------------------------------- T11
+# T11
 def _winsorize_p99(ntl):
     lit = ntl[ntl > 0]
     cap = float(np.quantile(lit, 0.99))
@@ -221,7 +219,7 @@ def _jaccard(a, b):
 
 
 def test_T11_winsorized_vs_raw_jaccard():
-    """Cắt P99 trước z-score phải phục hồi cụm HH bị ô đốt khí che khuất; đo Jaccard raw vs winsorized."""
+    """Cắt P99 trước khi tính z-score phải khôi phục cụm HH bị ô đốt khí che; đo Jaccard giữa bản thô và bản cắt."""
     nx = ny = 30
     cx, cy, area = make_grid(nx, ny)
     rng = np.random.default_rng(1)
@@ -244,7 +242,7 @@ def test_T11_winsorized_vs_raw_jaccard():
     assert _jaccard(h_win, h_win) == 1.0
 
 
-# ---------------------------------------------------------------- T06
+# T06
 def test_T06_outlier_masking():
     """Một ô cực trị 5000 làm sd phình to; log_transform phải phát hiện >= số ô HH so với bản thô."""
     nx = ny = 30
@@ -266,7 +264,7 @@ def test_T06_outlier_masking():
     assert n_log >= n_raw
 
 
-# ---------------------------------------------------------------- T07
+# T07
 def test_T07_recentered_ma_permutation_theorem():
     """Dưới hoán vị ngẫu nhiên SOL, E[MA_i] = expected_ma_perm  =>  E[recentered] ~ 0."""
     nx = ny = 15
@@ -291,7 +289,7 @@ def test_T07_recentered_ma_permutation_theorem():
     assert abs(np.mean(mean_raw - exp0)) < 0.05 * np.mean(exp0)
 
 
-# ---------------------------------------------------------------- T08
+# T08
 def test_T08_spatial_markov_invariants():
     cx, cy, area = make_grid(30, 30)
     rng = np.random.default_rng(3)
@@ -307,7 +305,7 @@ def test_T08_spatial_markov_invariants():
     assert 0.0 <= sh <= 4.0 / 3.0 + 1e-9
 
 
-# ================================================================ lisa_diagnostics
+# lisa_diagnostics
 from ntl.lisa_diagnostics import (  # noqa: E402
     auto_diagnostics, cluster_primacy, dark_share, hill_diagnostics, jaccard,
     method_sensitivity, perm_power, resid_moran, seed_stability, tail_sensitivity,
@@ -325,7 +323,7 @@ def _hot_grid(seed=21, nx=30, hot_r=3, hot_mu=45.0):
     return cx, cy, area, ntl, hot
 
 
-# ---------------------------------------------------------------- T12
+# T12
 def test_T12_perm_power_flags():
     bad = perm_power(1000, 199, 0.01, fdr=True)
     assert bad["infeasible"] and bad["min_hits"] == 1000 and bad["suggested_perms"] == 999
@@ -337,7 +335,7 @@ def test_T12_perm_power_flags():
     assert not off["applies"] and not off["infeasible"]
 
 
-# ---------------------------------------------------------------- T13
+# T13
 def test_T13_hill_diagnostics_se_ks_and_edge_cases():
     rng = np.random.default_rng(31)
     n = 4000
@@ -355,7 +353,7 @@ def test_T13_hill_diagnostics_se_ks_and_edge_cases():
     assert len(ts["rows"]) == 3 and np.isfinite(ts["spread"])
 
 
-# ---------------------------------------------------------------- T14
+# T14
 def test_T14_cluster_primacy():
     rm = {"n_hh_clusters": 2, "largest_hh_cluster_km2": 12.2, "hh_cluster_area_share": 0.5, "area_total_km2": 48.4}
     pr = cluster_primacy(rm)
@@ -368,7 +366,7 @@ def test_T14_cluster_primacy():
     assert np.isnan(none["primacy"]) and not none["multipolar"]
 
 
-# ---------------------------------------------------------------- T15
+# T15
 def test_T15_resid_moran_detects_spatial_structure():
     nx = 30
     cx, cy, area = make_grid(nx, nx)
@@ -386,7 +384,7 @@ def test_T15_resid_moran_detects_spatial_structure():
     assert np.isnan(resid_moran(cx[:10], cy[:10], white[:10], area[:10], dist[:10], edge[:10], CELL)["I"])
 
 
-# ---------------------------------------------------------------- T16
+# T16
 def test_T16_auto_diagnostics_end_to_end_and_degenerate():
     cx, cy, area, ntl, _ = _hot_grid()
     out = run_lisa(cx, cy, ntl, area, CELL, perms=199, alpha=0.05, fdr=True)
@@ -401,7 +399,7 @@ def test_T16_auto_diagnostics_end_to_end_and_degenerate():
     assert dark_share(z, np.zeros(z.size, bool))["share"] == 1.0
 
 
-# ---------------------------------------------------------------- T17
+# T17
 def test_T17_seed_stability_and_method_sensitivity_helpers():
     cx, cy, area, ntl, hot = _hot_grid(hot_r=2, hot_mu=40.0)
     ntl = ntl.copy()
@@ -420,7 +418,7 @@ def test_T17_seed_stability_and_method_sensitivity_helpers():
     assert jaccard(base_hh, base_hh) == 1.0 and jaccard(np.zeros(3, bool), np.zeros(3, bool)) == 1.0
 
 
-# ---------------------------------------------------------------- T18
+# T18
 def test_T18_extensive_intensive_margins():
     cx, cy, area = make_grid(20, 20)
     n = cx.size
@@ -441,7 +439,7 @@ def test_T18_extensive_intensive_margins():
     assert set(r.st_cell_df["margin_type"]) >= {"extensive_entry", "extensive_exit", "intensive"}
 
 
-# ---------------------------------------------------------------- T19  (biểu đồ phân phối tab Dữ liệu)
+# T19  (biểu đồ phân phối tab Dữ liệu)
 def test_T19_distribution_charts_data():
     from ntl.ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
 
@@ -495,7 +493,7 @@ def test_T19_distribution_charts_data():
     assert h.loc[(h.series == "sol") & (h.bin == "0"), "pct"].iloc[0] == 0.0
 
 
-# ---------------------------------------------------------------- T20  (hiển thị p-value chạm mức sàn)
+# T20  (hiển thị p-value chạm mức sàn)
 def test_T20_fmt_p_floor():
     from ntl.formatting import fmt_p
 

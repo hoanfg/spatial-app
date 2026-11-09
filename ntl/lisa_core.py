@@ -271,8 +271,8 @@ def compute_spillover_rings_and_rdd(cx: np.ndarray, cy: np.ndarray, is_hh: np.nd
             d_in_m = _min_euclidean_dist_m(cx[hh_idx], cy[hh_idx], cx[non_hh_idx], cy[non_hh_idx])
             signed_dist_hh_km[hh_idx] = -d_in_m / 1000.0
         else:
-            # Không có ô lõi non-HH => không tồn tại ranh giới nội bộ điều trị/đối chứng:
-            # biến chạy có dấu của Spatial RDD không xác định (NaN, không phải 0.0).
+            # Hết ô lõi non-HH thì không có ranh giới điều trị/đối chứng, nên khoảng cách có dấu
+            # của Spatial RDD là NaN chứ không phải 0.0.
             signed_dist_hh_km = np.full(n, np.nan)
         ring = np.select(
             [edge, is_hh, dist_to_hh_km <= 2.0, dist_to_hh_km <= 5.0, dist_to_hh_km <= 10.0],
@@ -339,8 +339,8 @@ def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.nda
         exp_ma[core] = om_acc[core] * mean_sol_core
         rec_ma[core] = raw_ma[core] - exp_ma[core]
     elif _cKDTree is not None:
-        # Dự phòng cho hộp bao thưa (đảo xa bờ, địa phương kéo dài): không cấp phát lưới W*H,
-        # dùng cKDTree với cùng bán kính (R + 0.01 bước lưới) và cùng trọng số exp(-tau * d_km).
+        # Hộp bao thưa (đảo xa bờ, địa phương kéo dài): không cấp phát lưới W*H mà dùng cKDTree,
+        # cùng bán kính (R + 0.01 bước lưới) và cùng trọng số exp(-tau * d_km).
         c_idx = np.flatnonzero(core)
         pts = np.column_stack([cx[c_idx], cy[c_idx]])
         tree = _cKDTree(pts)
@@ -663,7 +663,7 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
         "spacetime_regime": regime,
     })
 
-    # Tách biên độ rộng / sâu (Chen & Roth, 2024): ln(1+NTL) trộn hai kênh này khi dữ liệu nhiều số 0
+    # Tách biên độ rộng và sâu (Chen & Roth, 2024): ln(1+NTL) trộn hai kênh này khi có nhiều ô bằng 0
     lit0, lit1 = core & (ntl0 > 0), core & (ntl1 > 0)
     dark0 = core & ~(ntl0 > 0)
     both = lit0 & lit1

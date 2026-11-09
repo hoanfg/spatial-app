@@ -430,7 +430,7 @@ def _num(v, fmt="{:.3f}"):
 
 
 def _diag_line(it, vi):
-    """Một dòng kết quả kiểm tra nhẹ (markdown)."""
+    """Một dòng markdown cho một kiểm tra nhẹ."""
     k, v = it["key"], it["vals"]
     ic = _LVL_ICON[it["level"]]
     if k == "perm":
@@ -489,13 +489,13 @@ def _diag_line(it, vi):
     return f"{ic} {t}"
 
 
-# st.fragment: bấm nút trong khối này chỉ chạy lại khối này, không dựng lại bản đồ và cả trang.
-# (Streamlit cũ chưa có st.fragment thì chạy như hàm thường.)
+# Bấm nút trong khối này chỉ chạy lại khối này (st.fragment), không dựng lại bản đồ.
+# Streamlit cũ chưa có st.fragment thì dùng như hàm thường.
 _fragment = getattr(st, "fragment", None) or (lambda f: f)
 
 
 def _collect_export(ckey):
-    """Các cột kiểm định đưa vào dòng panel, đọc từ cache theo ckey (fragment không trả giá trị về trang chính)."""
+    """Cột kiểm định đưa vào dòng panel, đọc từ cache theo ckey (fragment không trả giá trị về trang chính)."""
     ss = st.session_state
     a = ss.get("_diag_cache", {}).get(ckey)
     export = dict(a["export"]) if a else {}
@@ -516,7 +516,7 @@ def _collect_export(ckey):
 @_fragment
 def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use_log, thr,
                         min_clu, min_nbr, perm_auto_from):
-    """Expander kiểm định độ tin cậy (fragment). Cột xuất thêm vào dòng panel lấy qua _collect_export()."""
+    """Expander kiểm định độ tin cậy. Cột xuất thêm vào panel lấy bằng _collect_export()."""
     vi = lang != "en"
     cdf, rm = out.cell_df, out.region_metrics
 
@@ -596,7 +596,7 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             return cb
 
         def _go(kind, label_vi, label_en, fn):
-            """Bấm lần đầu: tính + báo xong. Bấm lại: báo đang dùng kết quả lưu đệm (không tính lại)."""
+            """Bấm lần đầu thì tính rồi báo xong; bấm lại chỉ báo là đã có kết quả lưu đệm."""
             if (ckey, kind) in hcache:
                 st.toast(("Đã có kết quả lưu đệm cho: " if vi else "Cached result already available: ") + (label_vi if vi else label_en), icon="✅")
                 return
@@ -604,7 +604,7 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             _fifo_put(hcache, (ckey, kind), fn(prog), 12)
             prog.bar.empty()
             st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en), icon="✅")
-            st.rerun()  # chạy xong lần đầu: chạy lại cả trang một lần để dòng panel/CSV nhận cột mới (bấm lại chỉ chạy fragment)
+            st.rerun()  # chạy lại cả trang một lần để CSV panel nhận cột mới
 
         if run_seed:
             _go("seed", "ổn định theo seed", "seed stability", lambda pg: seed_stability(base_kw, progress=pg))
