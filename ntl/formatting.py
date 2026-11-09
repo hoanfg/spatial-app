@@ -1,4 +1,3 @@
-"""Định dạng hiển thị dùng chung (chỉ thư viện chuẩn)."""
 from __future__ import annotations
 
 import math
