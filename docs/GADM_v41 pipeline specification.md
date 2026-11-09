@@ -6,7 +6,7 @@
 | :--- | :--- |
 | **Project** | Nighttime lights (NTL) data extractor & Spatial econometrics engine |
 | **Objective** | Standardize global administrative boundaries from the GADM v4.1 database (`.gpkg`) into a consistent 3-level structure, for VIIRS nighttime radiance extraction and LISA/Moran's I testing. |
-| **Related document** | [📘 Read the technical manual here](README.md) |
+| **Related document** | [📘 Read the technical manual here](https://github.com/hoanfg/spatial-app/blob/main/README.md) |
 
 The output structure that the whole pipeline is built to produce:
 
