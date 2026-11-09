@@ -26,7 +26,8 @@ from folium.plugins import Fullscreen, MiniMap, MousePosition
 from jinja2 import Template
 from streamlit_folium import st_folium
 
-from ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
+from ntl.formatting import fmt_p
+from ntl.ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
 
 try:
     import pycountry
@@ -740,7 +741,7 @@ TEXT = {
             "gấp **{ratio:.1f}×** mức trung bình (theo diện tích) của địa phương.",
             "🏙️ **Độ tập trung:** 10% ô sáng nhất chứa **{top10:.1f}%** tổng ánh sáng; Gini = **{gini:.2f}**, {gdesc}.",
             "🌑 **Không gian tối:** {lit:.0f}% số ô có ánh sáng; {dark:.1f}% diện tích không có tín hiệu NTL.",
-            "🧭 **Tự tương quan không gian:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}), {mdesc}.",
+            "🧭 **Tự tương quan không gian:** Moran's I = **{mi:.3f}** ({mp}), {mdesc}.",
             "🧩 **Chất lượng mẫu:** {border:,}/{n:,} ô là ô biên (bị cắt theo ranh giới), nên dùng `area_km2` làm "
             "trọng số hoặc lọc bằng `is_border_cell`.",
         ],
@@ -881,7 +882,7 @@ TEXT = {
             "**{ratio:.1f}×** the (area-weighted) locality average.",
             "🏙️ **Concentration:** the brightest 10% of cells hold **{top10:.1f}%** of all light; Gini = **{gini:.2f}**, {gdesc}.",
             "🌑 **Dark space:** {lit:.0f}% of cells are lit; {dark:.1f}% of the area has no NTL signal.",
-            "🧭 **Spatial autocorrelation:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}), {mdesc}.",
+            "🧭 **Spatial autocorrelation:** Moran's I = **{mi:.3f}** ({mp}), {mdesc}.",
             "🧩 **Sample quality:** {border:,}/{n:,} cells are border cells (clipped by the boundary), use `area_km2` "
             "as a weight or filter with `is_border_cell`.",
         ],
@@ -1209,10 +1210,10 @@ st.markdown(APP_CSS, unsafe_allow_html=True)
 try:
     import sys as _sys
     _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    import ui_theme as _ui_theme  # noqa: E402
+    from ntl import ui_theme as _ui_theme  # noqa: E402
     if not (hasattr(_ui_theme, "_field_html") and hasattr(_ui_theme, "deck_label")):   # ui_theme.py trên máy là bản cũ -> dùng giao diện cơ bản
         raise ImportError("ui_theme.py outdated")
-    from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, deck_label  # noqa: E402
+    from ntl.ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, deck_label  # noqa: E402
 except Exception:  # noqa: BLE001
     def inject_theme(): pass
 
@@ -2337,7 +2338,7 @@ with tab_data:
                 mdesc = L["mdesc"][2]
             else:
                 mdesc = L["mdesc"][1]
-            take_lines.append(L["take"][3].format(mi=moran["I"], mp=moran["p"], mdesc=mdesc))
+            take_lines.append(L["take"][3].format(mi=moran["I"], mp=fmt_p(moran["p"], moran.get("perms"), prefix=True), mdesc=mdesc))
         take_lines.append(L["take"][4].format(border=int(is_border.sum()), n=n))
         st.info("\n\n".join(take_lines))
 
@@ -2374,7 +2375,11 @@ with tab_data:
         k1, k2, k3, k4 = st.columns(4)
         k1.metric(L["mi_I"], f"{moran['I']:.3f}", help="Moran's I toàn cục: >0 tụ cụm, ≈0 ngẫu nhiên, <0 xen kẽ." if LANG == "vi" else "Global Moran's I: >0 clustered, ≈0 random, <0 alternating.")
         k2.metric(L["mi_E"], f"{moran['E']:.4f}", help="Giá trị kỳ vọng khi ngẫu nhiên hoàn toàn = −1/(n−1)." if LANG == "vi" else "Expected value under randomness = −1/(n−1).")
-        k3.metric(L["mi_p"], f"{moran['p']:.3f}", help="p-value giả từ hoán vị; < 0,05 là có ý nghĩa." if LANG == "vi" else "Permutation pseudo p-value; < 0.05 is significant.")
+        k3.metric(L["mi_p"], fmt_p(moran["p"], moran.get("perms")),
+                  help=("p-value giả từ hoán vị; < 0,05 là có ý nghĩa. Dấu ≤ nghĩa là chạm mức sàn 1/(số hoán vị+1): "
+                        "tăng số hoán vị nếu cần p chính xác hơn." if LANG == "vi" else
+                        "Permutation pseudo p-value; < 0.05 is significant. '≤' means it hit the floor 1/(permutations+1): "
+                        "raise the permutations for a finer p."))
         k4.metric(L["mi_k"], f"{moran['k']:.2f}", help="Số láng giềng Queen trung bình mỗi ô (tối đa 8)." if LANG == "vi" else "Average Queen neighbours per cell (max 8).")
         st.caption(L["mi_note"].format(k=moran["perms"]))
     else:
@@ -2609,7 +2614,7 @@ with tab_guide:
 
 # 11. TAB LISA (DATA BRIDGE CHO PANEL REGRESSION)
 with tab_lisa:
-    from lisa_ui import render_lisa_tab
+    from ntl.lisa_ui import render_lisa_tab
 
     _iso_id = res["iso3"] or slugify(str(res["country_raw"]).split("/")[-1]).upper()
     _st_slug = slugify(res.get("state_raw") or res["state_name"])

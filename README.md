@@ -86,7 +86,7 @@ The job mixes three very different kinds of data: **vector** (administrative bou
 | **Tier 4**<br>📊 Econometrics & rendering | Runs the spatial econometrics core (Global Moran's I, Local Moran's I / LISA, connected hotspot cluster detection, distance to the economic core, Gini inequality coefficient) and renders the multi-layer interactive map. Output is packaged through the data bridge as cell-level and region–year panel CSV files. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 How the system recognizes and classifies countries, and how it handles the quirks of GADM data, is covered in a separate document: [read the technical specification for country classification here](https://github.com/hoanfg/spatial-app/blob/main/GADM_v41%20pipeline%20specification.md).
+> 📎 How the system recognizes and classifies countries, and how it handles the quirks of GADM data, is covered in a separate document: [read the technical specification for country classification here](https://github.com/hoanfg/spatial-app/blob/main/docs/GADM_v41%20pipeline%20specification.md).
 
 ### 1.2. Hardware constraints and out-of-memory (OOM) safeguards on Cloud
 
@@ -183,7 +183,7 @@ $$\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$$
 
 ## 📍 III. Spatial econometrics core (LISA core algorithm)
 
-The `lisa_core.py` module is built entirely with array algebra on `numpy` and `pandas`. It needs no heavy GIS packages such as `libpysal` or `esda`, and it brings the complexity of contiguity graph construction down to $\mathcal{O}(N \log N)$.
+The `ntl/lisa_core.py` module is built entirely with array algebra on `numpy` and `pandas`. It needs no heavy GIS packages such as `libpysal` or `esda`, and it brings the complexity of contiguity graph construction down to $\mathcal{O}(N \log N)$.
 
 > 💡 **LISA in one sentence:** instead of a single number for the whole region, LISA gives *each grid cell* a label saying whether that cell and its surroundings are bright together, dim together, or at odds with each other.
 
@@ -354,7 +354,7 @@ $$
 
 ### 3.6. Frontier spatial econometric modules
 
-`lisa_core.py` goes beyond static exploratory spatial data analysis (ESDA). To support modern causal and structural identification, it automatically computes 5 frontier econometric modules:
+`ntl/lisa_core.py` goes beyond static exploratory spatial data analysis (ESDA). To support modern causal and structural identification, it automatically computes 5 frontier econometric modules:
 
 | # | Module | Question it answers | Output variable |
 | :---: | :--- | :--- | :--- |
@@ -515,7 +515,7 @@ $$
 
 #### 4️⃣ Internal clustering of illuminated areas: `moran_I_lit`
 
-This indicator is exported in the panel CSV from `lisa_core.py`. It is the mean of Local Moran's I across tested lit cells:
+This indicator is exported in the panel CSV from `ntl/lisa_core.py`. It is the mean of Local Moran's I across tested lit cells:
 
 $$
 \bar{I}_{\mathrm{lit}} = \frac{1}{\lvert \mathrm{Focal} \rvert} \sum_{i \in \mathrm{Focal}} I_i
