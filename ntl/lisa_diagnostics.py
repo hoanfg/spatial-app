@@ -1,4 +1,3 @@
-"""Kiểm định độ tin cậy cho kết quả LISA. Chỉ dùng numpy, không import streamlit."""
 from __future__ import annotations
 
 import math
