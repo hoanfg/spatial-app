@@ -1,10 +1,6 @@
-"""
-ntl_distribution.py
+"""Dữ liệu cho các biểu đồ phân phối ở tab Dữ liệu: Lorenz, rank-size, hồ sơ khoảng cách, histogram.
 
-  lorenz_df      Đường cong Lorenz của SOL theo ô (khớp với gini() của app).
-  ranksize_df    Rank-size log-log của ô sáng + đường Pareto theo Hill (cùng định nghĩa đuôi với lisa_core).
-  radial_df      NTL trung bình (theo diện tích) theo vòng cách ô sáng nhất.
-  hist_share_df  % số ô và % tổng ánh sáng theo từng khoảng NTL.
+Chỉ dùng numpy và pandas, vẽ biểu đồ nằm ở app.py.
 """
 from __future__ import annotations
 
@@ -16,7 +12,7 @@ import pandas as pd
 MAX_POINTS = 400  
 
 def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
-    """Chọn tối đa max_points chỉ số trải đều theo log, luôn giữ đầu và cuối."""
+    """Lấy tối đa max_points chỉ số cách đều theo log, luôn giữ điểm đầu và cuối."""
     if n <= max_points:
         return np.arange(n)
     idx = np.unique(np.round(np.geomspace(1, n, max_points)).astype(int) - 1)
@@ -24,7 +20,7 @@ def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
 
 
 def lorenz_df(sol_cell) -> tuple[pd.DataFrame, float]:
-    """Trả (df[cum_cells, cum_sol], gini). Điểm (0,0) và (1,1) luôn có mặt."""
+    """Trả (df[cum_cells, cum_sol], gini). Luôn có điểm (0,0) và (1,1)."""
     x = np.sort(np.asarray(sol_cell, float))
     n, total = x.size, float(x.sum())
     if n == 0 or total <= 0:
@@ -39,8 +35,8 @@ def lorenz_df(sol_cell) -> tuple[pd.DataFrame, float]:
 def ranksize_df(ntl, core, tail_frac: float = 0.10):
     """Trả (points, fit, info).
 
-    points: rank, ntl của ô sáng vùng lõi (đã thưa hóa). fit: đường Pareto cho k ô đầu.
-    info: dict(alpha, k, u, n_lit) hoặc None nếu < 15 ô sáng (như compute_pareto_top_lights)."""
+    points là rank và ntl của ô sáng vùng lõi (đã thưa bớt), fit là đường Pareto cho k ô đầu.
+    info = dict(alpha, k, u, n_lit), hoặc None nếu dưới 15 ô sáng (giống compute_pareto_top_lights)."""
     ntl = np.asarray(ntl, float)
     vals = np.sort(ntl[np.asarray(core, bool) & (ntl > 0)])[::-1]
     if vals.size == 0:
@@ -61,7 +57,7 @@ def ranksize_df(ntl, core, tail_frac: float = 0.10):
 
 
 def radial_df(cx, cy, ntl, area, width_km: float = 1.0) -> pd.DataFrame:
-    """NTL trung bình theo diện tích trong từng vòng cách ô sáng nhất (km). Cột: dist_km, mean_ntl, cells."""
+    """NTL trung bình (trọng số diện tích) theo vòng cách ô sáng nhất. Cột: dist_km, mean_ntl, cells."""
     cx, cy = np.asarray(cx, float), np.asarray(cy, float)
     ntl, area = np.asarray(ntl, float), np.asarray(area, float)
     if ntl.size == 0 or not np.isfinite(ntl).any():
@@ -80,7 +76,7 @@ def radial_df(cx, cy, ntl, area, width_km: float = 1.0) -> pd.DataFrame:
 
 
 def hist_share_df(ntl, area, edges, labels) -> pd.DataFrame:
-    """Long format: bin, series ('cells' | 'sol'), pct. Tổng mỗi series = 100% (nếu có dữ liệu)."""
+    """Dạng dài: bin, series ('cells' hoặc 'sol'), pct. Mỗi series cộng lại 100% nếu có dữ liệu."""
     ntl, area = np.asarray(ntl, float), np.asarray(area, float)
     cats = pd.cut(ntl, bins=edges, labels=list(labels))
     sol_cell = ntl * area

@@ -2436,7 +2436,7 @@ with tab_data:
             )
             .properties(height=280)
         )
-    except Exception:  # noqa: BLE001  (Altair cũ không có xOffset: về biểu đồ số ô như cũ)
+    except Exception:  # noqa: BLE001  (Altair cũ không có xOffset thì quay về biểu đồ số ô)
         chart = (
             alt.Chart(hist_df)
             .mark_bar(color="#ffaa00", cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
@@ -2451,7 +2451,7 @@ with tab_data:
     st.caption("Cột cam: tỷ lệ số ô; cột xanh: tỷ lệ tổng ánh sáng. Khi cột xanh cao hơn cột cam ở khoảng NTL cao, ánh sáng tập trung vào ít ô."
                if _vi else "Orange: share of cells; blue: share of total light. Where blue exceeds orange at high NTL, light is concentrated in few cells.")
 
-    # Phân tích phân phối (đóng sẵn: chỉ dựng khi mở, tính từ dữ liệu có sẵn)
+    # Phân tích phân phối: expander đóng sẵn, dữ liệu lấy từ các biến đã tính ở trên
     with st.expander("📈 " + ("Phân tích phân phối: Lorenz, rank–size, hồ sơ khoảng cách" if _vi
                               else "Distribution analysis: Lorenz, rank–size, distance profile"), expanded=False):
         _cent = grid_utm.geometry.centroid

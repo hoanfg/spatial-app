@@ -1,8 +1,7 @@
-"""
-Kiểm thử khói giao diện LISA bằng streamlit.testing.v1.AppTest, với dữ liệu tổng hợp (không cần Earth Engine).
+"""Kiểm thử khói cho tab LISA bằng streamlit.testing.v1.AppTest, dùng dữ liệu tổng hợp (không cần Earth Engine).
 
-Mục đích: bắt lỗi giao diện (KeyError, import, sai khóa dữ liệu) ngay trên CI trước khi lên Streamlit Cloud.
-Test tự bỏ qua nếu thiếu streamlit/geopandas. Lần đầu có thể cần chỉnh cho khớp phiên bản Streamlit của bạn.
+Bắt lỗi giao diện (KeyError, import, sai tên khóa) trên CI trước khi lên Streamlit Cloud.
+Tự bỏ qua nếu thiếu streamlit hoặc geopandas.
 """
 from __future__ import annotations
 
@@ -23,7 +22,7 @@ from streamlit.testing.v1 import AppTest  # noqa: E402
 
 
 def _app():
-    """Chạy render_lisa_tab trên lưới 20x20 ô 500 m có cụm sáng ở giữa."""
+    """Chạy render_lisa_tab trên lưới 20x20 ô 500 m, cụm sáng ở giữa."""
     import geopandas as gpd
     import numpy as np
     import pandas as pd
