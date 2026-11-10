@@ -33,7 +33,7 @@ def test_clip_vs_unclipped_mean():
     clipped = zonal_stat(_tif(arr), g, "mean", clip_negative=True)
     raw = zonal_stat(_tif(arr), g, "mean", clip_negative=False)
     assert clipped.tolist() == pytest.approx([1.0, 2.0])
-    assert raw.tolist() == pytest.approx([1.0, 0.0])
+    assert raw.tolist() == pytest.approx([1.0, 1.0])  # (-2-2+4+4)/4
 
 
 def test_sum_and_nan_filled():
