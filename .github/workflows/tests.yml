@@ -6,7 +6,7 @@ on:
 
 jobs:
   core:
-    name: Kiểm thử lõi (T01-T20)
+    name: Kiểm thử lõi (T01-T28)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -16,7 +16,7 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install numpy pandas scipy pytest
-      - run: pytest -q tests/test_lisa_reliability.py
+      - run: pytest -q tests/test_lisa_reliability.py tests/test_robustness.py
 
   ui-smoke:
     name: Kiểm thử khói giao diện (AppTest)
@@ -29,4 +29,4 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt pytest
-      - run: pytest -q tests/test_ui_smoke.py
+      - run: pytest -q tests/test_zonal.py tests/test_ui_smoke.py

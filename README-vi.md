@@ -408,6 +408,16 @@ Hệ thống tính khoảng cách Euclid có dấu tới ranh giới cụm đi�
 
 <a id="s4"></a>
 
+## ✅ Chất lượng dữ liệu, kiểm định độ vững và kiểm chứng ngoài
+
+Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa chọn của pipeline và của người phân tích. Không phần nào đổi giá trị NTL.
+
+- **Báo cáo chất lượng dữ liệu** (tab Dữ liệu): tỷ lệ pixel NaN và pixel âm, số ô không có kết quả trích xuất, tỷ lệ ô bằng 0 và (khi bấm nút) số tháng không mây của mỗi pixel. Các số này cùng nguồn gốc xử lý của pipeline (`ntl_composite`, `ntl_negative_handling`, `ntl_nodata_handling`) được ghi vào CSV panel dưới dạng cột `dq_*`. Một nút trích xuất lại trung bình theo ô không cắt giá trị âm rồi so với bản đã cắt.
+- **Kiểm định độ vững** (tab LISA): chạy lại LISA với trọng số Rook, ngưỡng ô sáng cao hơn, biến đổi P99 / asinh / ln, α khác, bật/tắt FDR, lưới thô hơn 2×2 (MAUP) và các năm kề, rồi báo hệ số Jaccard của tập High-High so với bản gốc và diện tích là HH trong ít nhất 80% số lần chạy. Cột xuất: `rob_*`. Ngưỡng kết luận (Jaccard trung vị 0,70 và 0,50) là quy ước thực hành, không phải ngưỡng thống kê.
+- **Kiểm chứng ngoài** (tab Dữ liệu): Spearman ρ với khoảng tin cậy bootstrap theo khối không gian và AUC giữa NTL và diện tích xây dựng hoặc dân số GHSL trên cùng các ô. GHSL có epoch 5 năm nên epoch dùng có thể lệch so với năm NTL. Cột xuất: `val_*`.
+
+Mã nguồn: `ntl/data_quality.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`; kiểm thử ở `tests/test_robustness.py` và `tests/test_zonal.py`. Phần tải dữ liệu từ Earth Engine (đếm tháng, GHSL) và giao diện chưa được chạy với dữ liệu thật.
+
 ## 🛡️ IV. Thuật toán quản trị tài nguyên bộ nhớ (memory safeguards)
 
 ### 4.1. Cầu chì ước lượng quy mô lưới
