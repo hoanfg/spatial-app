@@ -26,7 +26,9 @@ from folium.plugins import Fullscreen, MiniMap, MousePosition
 from jinja2 import Template
 from streamlit_folium import st_folium
 
-from ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
+from ntl.data_quality import PIPELINE_PROVENANCE, cell_report, raster_report
+from ntl.formatting import fmt_p
+from ntl.ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
 
 try:
     import pycountry
@@ -740,7 +742,7 @@ TEXT = {
             "gấp **{ratio:.1f}×** mức trung bình (theo diện tích) của địa phương.",
             "🏙️ **Độ tập trung:** 10% ô sáng nhất chứa **{top10:.1f}%** tổng ánh sáng; Gini = **{gini:.2f}**, {gdesc}.",
             "🌑 **Không gian tối:** {lit:.0f}% số ô có ánh sáng; {dark:.1f}% diện tích không có tín hiệu NTL.",
-            "🧭 **Tự tương quan không gian:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}), {mdesc}.",
+            "🧭 **Tự tương quan không gian:** Moran's I = **{mi:.3f}** ({mp}), {mdesc}.",
             "🧩 **Chất lượng mẫu:** {border:,}/{n:,} ô là ô biên (bị cắt theo ranh giới), nên dùng `area_km2` làm "
             "trọng số hoặc lọc bằng `is_border_cell`.",
         ],
@@ -881,7 +883,7 @@ TEXT = {
             "**{ratio:.1f}×** the (area-weighted) locality average.",
             "🏙️ **Concentration:** the brightest 10% of cells hold **{top10:.1f}%** of all light; Gini = **{gini:.2f}**, {gdesc}.",
             "🌑 **Dark space:** {lit:.0f}% of cells are lit; {dark:.1f}% of the area has no NTL signal.",
-            "🧭 **Spatial autocorrelation:** Moran's I = **{mi:.3f}** (p ≈ {mp:.3f}), {mdesc}.",
+            "🧭 **Spatial autocorrelation:** Moran's I = **{mi:.3f}** ({mp}), {mdesc}.",
             "🧩 **Sample quality:** {border:,}/{n:,} cells are border cells (clipped by the boundary), use `area_km2` "
             "as a weight or filter with `is_border_cell`.",
         ],
@@ -1209,10 +1211,10 @@ st.markdown(APP_CSS, unsafe_allow_html=True)
 try:
     import sys as _sys
     _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    import ui_theme as _ui_theme  # noqa: E402
+    from ntl import ui_theme as _ui_theme  # noqa: E402
     if not (hasattr(_ui_theme, "_field_html") and hasattr(_ui_theme, "deck_label")):   # ui_theme.py trên máy là bản cũ -> dùng giao diện cơ bản
         raise ImportError("ui_theme.py outdated")
-    from ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, deck_label  # noqa: E402
+    from ntl.ui_theme import inject_theme, enable_fx, hero, empty_state, place_banner, sidebar_brand, deck_label  # noqa: E402
 except Exception:  # noqa: BLE001
     def inject_theme(): pass
 
@@ -1890,6 +1892,7 @@ def run_pipeline():
                     arr = src.read(1).astype("float32")
                     crs, transform = src.crs, src.transform
                     h, w = src.height, src.width
+            raster_q = raster_report(arr)  # đo trước khi thay NaN và cắt giá trị âm
             arr = np.nan_to_num(arr, nan=0.0, posinf=0.0, neginf=0.0)
             arr = np.clip(arr, 0.0, None)
 
@@ -1913,10 +1916,13 @@ def run_pipeline():
             mean_col = next(c for c in stats.columns if "mean" in str(c).lower())
             stats = stats[["grid_id", mean_col]].rename(columns={mean_col: "ntl_mean"})
             stats["grid_id"] = pd.to_numeric(stats["grid_id"], errors="coerce").astype("int64")
+            n_stat_nan = int(pd.to_numeric(stats["ntl_mean"], errors="coerce").isna().sum())
             stats["ntl_mean"] = pd.to_numeric(stats["ntl_mean"], errors="coerce").fillna(0.0).clip(lower=0.0)
             
             grid = grid.merge(stats, on="grid_id", how="left").reset_index(drop=True)
+            n_merge_miss = int(grid["ntl_mean"].isna().sum())
             grid["ntl_mean"] = grid["ntl_mean"].fillna(0.0).astype(float)
+            cell_q = cell_report(len(grid), n_stat_nan, n_merge_miss, grid["ntl_mean"].to_numpy())
 
             status.update(label="Trạm 3/3 · Đang tính Moran's I toàn cục (hoán vị)..." if LANG == "vi"
                           else "Station 3/3 · Computing global Moran's I (permutations)...")
@@ -1969,6 +1975,9 @@ def run_pipeline():
          "size": cell_size,
          "year": int(year),
          "moran": moran,
+         "data_quality": {"raster": raster_q, "cells": cell_q},
+         "provenance": {"ntl_dataset": GEE_DATASET, "ntl_scale_m": GEE_SCALE_M, **PIPELINE_PROVENANCE},
+         "tif_bytes": tif_bytes,
          "ts": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
     }
 
@@ -2060,10 +2069,8 @@ split_view = st.toggle(
     "⫼ " + ("Xem song song Bản đồ | Dữ liệu" if LANG == "vi" else "Side-by-side Map | Data"),
     value=False, key="split_view",
     help=("Hiện bản đồ và dữ liệu cạnh nhau trong cùng một tab; bản đồ được ghim khi cuộn phần dữ liệu. "
-          "Không tốn thêm tài nguyên vì Streamlit vốn đã dựng cả hai tab. Trên màn hình hẹp hai cột sẽ tự xếp chồng."
           if LANG == "vi" else
-          "Shows the map and the data next to each other in one tab; the map stays pinned while you scroll the data. "
-          "No extra cost: Streamlit already builds both tabs. On narrow screens the columns stack automatically."),
+          "Shows the map and the data next to each other in one tab; the map stays pinned while you scroll the data. "),
 )
 if split_view:
     tab_split, tab_lisa, tab_guide = st.tabs([
@@ -2339,9 +2346,15 @@ with tab_data:
                 mdesc = L["mdesc"][2]
             else:
                 mdesc = L["mdesc"][1]
-            take_lines.append(L["take"][3].format(mi=moran["I"], mp=moran["p"], mdesc=mdesc))
+            take_lines.append(L["take"][3].format(mi=moran["I"], mp=fmt_p(moran["p"], moran.get("perms"), prefix=True), mdesc=mdesc))
         take_lines.append(L["take"][4].format(border=int(is_border.sum()), n=n))
         st.info("\n\n".join(take_lines))
+
+    try:
+        from ntl.quality_ui import render_quality_panel
+        render_quality_panel(res=res, grid_utm=grid_utm, lang=LANG, ee=ee, dataset=GEE_DATASET, scale_m=GEE_SCALE_M)
+    except Exception as e:  # noqa: BLE001
+        st.warning(f"Không hiển thị được khối chất lượng dữ liệu: {e}")
 
     col_l, col_r = st.columns(2)
 
@@ -2376,7 +2389,11 @@ with tab_data:
         k1, k2, k3, k4 = st.columns(4)
         k1.metric(L["mi_I"], f"{moran['I']:.3f}", help="Moran's I toàn cục: >0 tụ cụm, ≈0 ngẫu nhiên, <0 xen kẽ." if LANG == "vi" else "Global Moran's I: >0 clustered, ≈0 random, <0 alternating.")
         k2.metric(L["mi_E"], f"{moran['E']:.4f}", help="Giá trị kỳ vọng khi ngẫu nhiên hoàn toàn = −1/(n−1)." if LANG == "vi" else "Expected value under randomness = −1/(n−1).")
-        k3.metric(L["mi_p"], f"{moran['p']:.3f}", help="p-value giả từ hoán vị; < 0,05 là có ý nghĩa." if LANG == "vi" else "Permutation pseudo p-value; < 0.05 is significant.")
+        k3.metric(L["mi_p"], fmt_p(moran["p"], moran.get("perms")),
+                  help=("p-value giả từ hoán vị; < 0,05 là có ý nghĩa. Dấu ≤ nghĩa là chạm mức sàn 1/(số hoán vị+1): "
+                        "tăng số hoán vị nếu cần p chính xác hơn." if LANG == "vi" else
+                        "Permutation pseudo p-value; < 0.05 is significant. '≤' means it hit the floor 1/(permutations+1): "
+                        "raise the permutations for a finer p."))
         k4.metric(L["mi_k"], f"{moran['k']:.2f}", help="Số láng giềng Queen trung bình mỗi ô (tối đa 8)." if LANG == "vi" else "Average Queen neighbours per cell (max 8).")
         st.caption(L["mi_note"].format(k=moran["perms"]))
     else:
@@ -2611,7 +2628,7 @@ with tab_guide:
 
 # 11. TAB LISA (DATA BRIDGE CHO PANEL REGRESSION)
 with tab_lisa:
-    from lisa_ui import render_lisa_tab
+    from ntl.lisa_ui import render_lisa_tab
 
     _iso_id = res["iso3"] or slugify(str(res["country_raw"]).split("/")[-1]).upper()
     _st_slug = slugify(res.get("state_raw") or res["state_name"])

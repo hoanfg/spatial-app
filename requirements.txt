@@ -1,4 +1,4 @@
-streamlit
+streamlit>=1.40
 numpy
 pandas
 geopandas
@@ -6,10 +6,11 @@ shapely
 folium
 streamlit-folium
 branca
-altair
+altair>=5
 requests
 jinja2
 earthengine-api
 exactextract
 pycountry
 rasterio
+

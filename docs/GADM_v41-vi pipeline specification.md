@@ -6,7 +6,7 @@
 | :--- | :--- |
 | **Dự án** | Nighttime lights (NTL) data extractor & Spatial econometrics engine |
 | **Mục tiêu** | Chuẩn hóa ranh giới hành chính toàn cầu từ cơ sở dữ liệu GADM v4.1 (`.gpkg`) sang cấu trúc 3 cấp đồng nhất, phục vụ trích xuất bức xạ đêm VIIRS và kiểm định LISA/Moran's I. |
-| **Tài liệu liên quan** | [📘 Đọc sổ tay kỹ thuật tại đây](README-vi.md) |
+| **Tài liệu liên quan** | [📘 Đọc sổ tay kỹ thuật tại đây](https://github.com/hoanfg/spatial-app/blob/main/README-vi.md) |
 
 Cấu trúc đầu ra mà toàn bộ quy trình hướng tới:
 

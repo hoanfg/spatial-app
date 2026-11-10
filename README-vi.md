@@ -86,7 +86,7 @@ Bài toán ở đây là phải trộn ba loại dữ liệu khác bản chất:
 | **Tier 4**<br>📊 Kinh tế lượng & kết xuất | Tính Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini; kết xuất bản đồ tương tác đa lớp. Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu thành các tệp CSV cấp độ ô lưới và cấp độ vùng – năm. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 Cách hệ thống nhận diện, phân loại quốc gia và xử lý các lỗi của dữ liệu GADM nằm ở tài liệu riêng: [đọc mô tả kỹ thuật phân loại quốc gia tại đây](https://github.com/hoanfg/spatial-app/blob/main/GADM_v41-vi%20pipeline%20specification.md).
+> 📎 Cách hệ thống nhận diện, phân loại quốc gia và xử lý các lỗi của dữ liệu GADM nằm ở tài liệu riêng: [đọc mô tả kỹ thuật phân loại quốc gia tại đây](https://github.com/hoanfg/spatial-app/blob/main/docs/GADM_v41-vi%20pipeline%20specification.md).
 
 ### 1.2. Giới hạn phần cứng và cơ chế phòng thủ "out-of-memory" (OOM) trên Cloud
 
@@ -183,7 +183,7 @@ $$\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$$
 
 ## 📍 III. Lõi kinh tế lượng không gian (LISA core algorithm)
 
-Mô-đun `lisa_core.py` được viết hoàn toàn bằng đại số mảng trên `numpy` và `pandas`. Nó không cần đến các thư viện nặng như `libpysal` hay `esda`, và đưa độ phức tạp tính toán của đồ thị láng giềng xuống $\mathcal{O}(N \log N)$.
+Mô-đun `ntl/lisa_core.py` được viết hoàn toàn bằng đại số mảng trên `numpy` và `pandas`. Nó không cần đến các thư viện nặng như `libpysal` hay `esda`, và đưa độ phức tạp tính toán của đồ thị láng giềng xuống $\mathcal{O}(N \log N)$.
 
 > 💡 **LISA trong một câu:** thay vì một con số duy nhất cho cả vùng, LISA gắn cho *từng ô lưới* một nhãn cho biết ô đó và các ô xung quanh có cùng sáng, cùng tối, hay trái chiều nhau.
 
@@ -354,7 +354,7 @@ $$
 
 ### 3.6. Các mô-đun kinh tế lượng không gian biên
 
-Mô-đun `lisa_core.py` không dừng ở thống kê mô tả không gian tĩnh (ESDA). Để đáp ứng tiêu chuẩn nhận diện nhân quả của các tạp chí kinh tế học hàng đầu, nó tính thêm 5 nhóm chỉ số hiện đại:
+Mô-đun `ntl/lisa_core.py` không dừng ở thống kê mô tả không gian tĩnh (ESDA). Để đáp ứng tiêu chuẩn nhận diện nhân quả của các tạp chí kinh tế học hàng đầu, nó tính thêm 5 nhóm chỉ số hiện đại:
 
 | # | Mô-đun | Trả lời câu hỏi | Biến xuất ra |
 | :---: | :--- | :--- | :--- |
@@ -407,6 +407,16 @@ Hệ thống tính khoảng cách Euclid có dấu tới ranh giới cụm đi�
 ---
 
 <a id="s4"></a>
+
+## ✅ Chất lượng dữ liệu, kiểm định độ vững và kiểm chứng ngoài
+
+Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa chọn của pipeline và của người phân tích. Không phần nào đổi giá trị NTL.
+
+- **Báo cáo chất lượng dữ liệu** (tab Dữ liệu): tỷ lệ pixel NaN và pixel âm, số ô không có kết quả trích xuất, tỷ lệ ô bằng 0 và (khi bấm nút) số tháng không mây của mỗi pixel. Các số này cùng nguồn gốc xử lý của pipeline (`ntl_composite`, `ntl_negative_handling`, `ntl_nodata_handling`) được ghi vào CSV panel dưới dạng cột `dq_*`. Một nút trích xuất lại trung bình theo ô không cắt giá trị âm rồi so với bản đã cắt.
+- **Kiểm định độ vững** (tab LISA): chạy lại LISA với trọng số Rook, ngưỡng ô sáng cao hơn, biến đổi P99 / asinh / ln, α khác, bật/tắt FDR, lưới thô hơn 2×2 (MAUP) và các năm kề, rồi báo hệ số Jaccard của tập High-High so với bản gốc và diện tích là HH trong ít nhất 80% số lần chạy. Cột xuất: `rob_*`. Ngưỡng kết luận (Jaccard trung vị 0,70 và 0,50) là quy ước thực hành, không phải ngưỡng thống kê.
+- **Kiểm chứng ngoài** (tab Dữ liệu): Spearman ρ với khoảng tin cậy bootstrap theo khối không gian và AUC giữa NTL và diện tích xây dựng hoặc dân số GHSL trên cùng các ô. GHSL có epoch 5 năm nên epoch dùng có thể lệch so với năm NTL. Cột xuất: `val_*`.
+
+Mã nguồn: `ntl/data_quality.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`; kiểm thử ở `tests/test_robustness.py` và `tests/test_zonal.py`. Phần tải dữ liệu từ Earth Engine (đếm tháng, GHSL) và giao diện chưa được chạy với dữ liệu thật.
 
 ## 🛡️ IV. Thuật toán quản trị tài nguyên bộ nhớ (memory safeguards)
 
@@ -523,7 +533,7 @@ $$
 
 #### 4️⃣ Mức kết tụ nội tại của vùng sáng: `moran_I_lit`
 
-Chỉ số này được xuất trong bảng Panel CSV từ `lisa_core.py`. Nó là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
+Chỉ số này được xuất trong bảng Panel CSV từ `ntl/lisa_core.py`. Nó là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
 
 $$
 \bar{I}_{\mathrm{lit}} = \frac{1}{\lvert \mathrm{Focal} \rvert} \sum_{i \in \mathrm{Focal}} I_i

@@ -14,8 +14,9 @@ from branca.element import MacroElement
 from jinja2 import Template
 from streamlit_folium import st_folium
 
-from lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
-from lisa_diagnostics import (
+from .formatting import fmt_p
+from .lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
+from .lisa_diagnostics import (
     HEAVY_WORK_LIMIT, SEED_LIST, auto_diagnostics, estimate_seconds, heavy_work_units,
     method_sensitivity, perm_power, seed_stability, tail_sensitivity,
 )
@@ -474,7 +475,7 @@ def _diag_line(it, vi):
     if k == "resid":
         if not np.isfinite(v["I"]):
             return f"{ic} " + ("**Phần dư độ dốc đô thị:** không đủ dữ liệu." if vi else "**Urban-gradient residuals:** not enough data.")
-        pt = f"p = {v['p']:.3f}" if v["perm_done"] else ("(không tính p-value vì lưới lớn)" if vi else "(no p-value: large grid)")
+        pt = fmt_p(v["p"], v.get("perms"), prefix=True) if v["perm_done"] else ("(không tính p-value vì lưới lớn)" if vi else "(no p-value: large grid)")
         t = f"**Phần dư độ dốc đô thị:** Moran's I = {v['I']:.3f}, {pt}." if vi else f"**Urban-gradient residuals:** Moran's I = {v['I']:.3f}, {pt}."
         if v["flag"]:
             t += (" Phần dư còn tự tương quan không gian: R² của độ dốc có thể bị thổi phồng." if vi
@@ -488,9 +489,34 @@ def _diag_line(it, vi):
     return f"{ic} {t}"
 
 
+# st.fragment: bấm nút trong khối này chỉ chạy lại khối này, không dựng lại bản đồ và cả trang.
+# (Streamlit cũ chưa có st.fragment thì chạy như hàm thường.)
+_fragment = getattr(st, "fragment", None) or (lambda f: f)
+
+
+def _collect_export(ckey):
+    """Các cột kiểm định đưa vào dòng panel, đọc từ cache theo ckey (fragment không trả giá trị về trang chính)."""
+    ss = st.session_state
+    a = ss.get("_diag_cache", {}).get(ckey)
+    export = dict(a["export"]) if a else {}
+    h = ss.get("_diag_heavy", {})
+    r = h.get((ckey, "seed"))
+    if r:
+        export["hh_share_seed_sd"] = round(r["sd"], 6)
+    r = h.get((ckey, "meth"))
+    if r:
+        export["hh_jaccard_raw_winsor"] = round(r["jaccard_raw_winsor"], 4)
+        export["hh_jaccard_raw_log"] = round(r["jaccard_raw_log"], 4)
+    r = h.get((ckey, "tail"))
+    if r:
+        export["pareto_alpha_tail_spread"] = round(r["spread"], 4) if np.isfinite(r["spread"]) else float("nan")
+    return export
+
+
+@_fragment
 def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use_log, thr,
                         min_clu, min_nbr, perm_auto_from):
-    """Expander kiểm định độ tin cậy. Trả về dict biến xuất thêm vào dòng panel."""
+    """Expander kiểm định độ tin cậy (fragment). Cột xuất thêm vào dòng panel lấy qua _collect_export()."""
     vi = lang != "en"
     cdf, rm = out.cell_df, out.region_metrics
 
@@ -504,7 +530,6 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
     n_warn = auto["n_warn"]
     title = ("🔬 Kiểm định độ tin cậy" if vi else "🔬 Reliability diagnostics") + \
         (f"  ·  ⚠️ {n_warn}" if n_warn else "  ·  ✅")
-    export = dict(auto["export"])
 
     with st.expander(title, expanded=bool(n_warn)):
         st.caption("Các kiểm tra nhẹ chạy tự động theo từng lần cập nhật LISA; kiểm định nặng chỉ chạy khi bạn bấm nút."
@@ -579,7 +604,7 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             _fifo_put(hcache, (ckey, kind), fn(prog), 12)
             prog.bar.empty()
             st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en), icon="✅")
-            st.rerun()
+            st.rerun()  # chạy xong lần đầu: chạy lại cả trang một lần để dòng panel/CSV nhận cột mới (bấm lại chỉ chạy fragment)
 
         if run_seed:
             _go("seed", "ổn định theo seed", "seed stability", lambda pg: seed_stability(base_kw, progress=pg))
@@ -604,7 +629,6 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
                            if vi else "Labels change with the seed" + (": raise permutations to 999." if r["recommend_999"] else "."))
             else:
                 st.success("Ổn định theo seed (sd ≤ 0,5%)." if vi else "Stable across seeds (sd ≤ 0.5%).")
-            export["hh_share_seed_sd"] = round(r["sd"], 6)
         r = hcache.get((ckey, "meth"))
         if r:
             st.markdown("**" + ("Kết quả: so sánh thô / P99 / ln" if vi else "Result: raw vs P99 vs ln") + "**")
@@ -618,8 +642,6 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
                         "Jaccard thấp nghĩa là cụm HH nhạy với ô dị thường."
                         if vi else f"HH cells: raw {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
                         "Low Jaccard means the HH set is sensitive to outliers."))
-            export["hh_jaccard_raw_winsor"] = round(r["jaccard_raw_winsor"], 4)
-            export["hh_jaccard_raw_log"] = round(r["jaccard_raw_log"], 4)
         r = hcache.get((ckey, "tail"))
         if r:
             rows = [{"tail_frac": f"{x['tail_frac']:.0%}", "k": x["k"], "α": _num(x["alpha"], "{:.2f}"),
@@ -628,8 +650,6 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
             st.caption((f"Biên độ α giữa các ngưỡng cắt: {_num(r['spread'], '{:.2f}')} (nhỏ = đuôi ổn định)."
                         if vi else f"α range across tail fractions: {_num(r['spread'], '{:.2f}')} (small = stable tail)."))
-            export["pareto_alpha_tail_spread"] = round(r["spread"], 4) if np.isfinite(r["spread"]) else float("nan")
-    return export
 
 
 
@@ -727,10 +747,25 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with st.expander(L["note_t"]):
         st.caption(L["note"])
 
-    _diag_export = _render_diagnostics(
+    _render_diagnostics(
         lang=lang, ckey=ckey, out=out, grid_utm=grid_utm, size=size, perms=perms, alpha=alpha, fdr=fdr,
         use_log=use_log, thr=thr, min_clu=min_clu, min_nbr=min_nbr, perm_auto_from=perm_auto_from)
-    rm_full = {**rm, **_diag_export}
+    try:
+        from .robustness_ui import collect_robustness_export, render_robustness
+        render_robustness(
+            lang=lang, ckey=ckey, out=out, grid_utm=grid_utm, size=size, perms=perms, alpha=alpha, fdr=fdr,
+            use_log=use_log, thr=thr, min_clu=min_clu, min_nbr=min_nbr, year=yr,
+            fetch_year_ntl_fn=fetch_year_ntl_fn, available_years=available_years)
+        rob_cols = collect_robustness_export(ckey)
+    except Exception as e:  # noqa: BLE001
+        st.warning(f"Không hiển thị được khối kiểm định độ vững: {e}")
+        rob_cols = {}
+    try:
+        from .quality_ui import collect_quality_export
+        dq_cols = {**res.get("provenance", {}), **collect_quality_export(res["ts"])}
+    except Exception:  # noqa: BLE001
+        dq_cols = {}
+    rm_full = {**rm, **_collect_export(ckey), **rob_cols, **dq_cols}
 
     # ---------- Bản đồ ----------
     st.divider()

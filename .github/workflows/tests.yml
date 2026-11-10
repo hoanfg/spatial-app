@@ -1,0 +1,32 @@
+name: tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  core:
+    name: Kiểm thử lõi (T01-T28)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install numpy pandas scipy pytest
+      - run: pytest -q tests/test_lisa_reliability.py tests/test_robustness.py
+
+  ui-smoke:
+    name: Kiểm thử khói giao diện (AppTest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt pytest
+      - run: pytest -q tests/test_zonal.py tests/test_ui_smoke.py

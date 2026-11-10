@@ -1,0 +1,182 @@
+[33m2b59cdca[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update requirements.txt
+[33mc6b5b3fa[m Update subheader text for deeper checks
+[33mf6636957[m Update robustness.py
+[33md6c7f98b[m Update robustness_ui.py
+[33md32c5154[m Update zonal.py
+[33mdf9f8015[m Update validation.py
+[33m25139b22[m Update ee_extra.py
+[33mfaf24131[m Update data_quality.py
+[33mc23815db[m Merge pull request #4 from hoanfg/robustness-suite
+[33m2f600cda[m[33m ([m[1;31morigin/robustness-suite[m[33m)[m Fix expected unclipped mean in test_zonal
+[33mdf3445a6[m Add data-quality report, robustness suite and external validation
+[33m1d71087e[m Update GADM_v41 pipeline specification.md
+[33m64a3f34b[m Update GADM_v41-vi pipeline specification.md
+[33m064b85bc[m Remove common display format comment
+[33m88e6288a[m Update __init__.py
+[33m3dd92fb8[m CI: để lỗi giao diện chặn merge; thay unary_union (đã lỗi thời) bằng union_all
+[33ma2539a5a[m requirements.txt: giữ kết thúc dòng CRLF để diff chỉ còn hai dòng đổi
+[33m44f14bdf[m Tổ chức lại thư mục và thêm kiểm định độ tin cậy
+[33medc62ae5[m Simplify help text for split view toggle
+[33m6686b1a8[m Enhance layout for narrow screens and sticky columns
+[33m07164bd4[m Update ntl_distribution.py
+[33m02cd522b[m Add files via upload
+[33mb23480bb[m Update test_lisa_reliability.py
+[33mbcf54fe5[m Implement split view for map and data in Streamlit
+[33m8511309e[m Delete run instructions from test_lisa_reliability.py
+[33m5a92e78a[m Update lisa_ui.py
+[33m64ecb12a[m Update test_lisa_reliability.py
+[33mc6e6efab[m Add files via upload
+[33meff6c12a[m Update lisa_diagnostics.py
+[33m11587bb0[m Add files via upload
+[33m004289d8[m Update lisa_ui.py
+[33m9d9a23ba[m Add margin calculations and metrics for extensive entry/exit
+[33mf21d424a[m Delete test_lisa_reliability.py
+[33mac5c1194[m Add files via upload
+[33md2961379[m Introduce dense_limit parameter in market access computation
+[33me9be935f[m Update GADM_v41-vi pipeline specification.md
+[33ma6575f6f[m Update GADM_v41 pipeline specification.md
+[33m064daf29[m Update keepalive.yml
+[33mff2ab529[m Update keepalive.yml
+[33m22ea9750[m Update keepalive.yml
+[33m146ffc26[m Update keepalive.yml
+[33mb26660c0[m Update keepalive.yml
+[33m13d3c8c1[m Update keepalive.yml
+[33me24fe9e1[m Update keepalive.yml
+[33m190625b0[m Modify keepalive workflow for text confirmation
+[33mc230669e[m Update keepalive.yml
+[33m11ef5bd7[m Update keepalive.yml
+[33mbaf27ee5[m Update ui_theme.py
+[33m9ed94818[m Update app.py
+[33m27013d0e[m Update UI theme styles and fix layout issues
+[33m1d923388[m Update app.py
+[33m40aad2d0[m Update app.py
+[33m57d27cf9[m Update app.py
+[33m4d4fb74c[m Update ui_theme.py
+[33m42645029[m Update ui_theme.py
+[33m56298c7c[m Update ui_theme.py
+[33mfc6fbc24[m Update ui_theme.py
+[33mb467a04d[m Refactor CSS styles for responsive design and layout
+[33m278f79f1[m Update app.py
+[33ma62f4ec0[m Update lisa_ui.py
+[33ma52cb06f[m Update ui_theme.py
+[33m260f68fc[m Update README.md
+[33m50972ef6[m Update README-vi.md
+[33m1d99c069[m Update README.md
+[33mc8639241[m Update README-vi.md
+[33mc3488a9b[m Update GADM_v41 pipeline specification.md
+[33m5e9fe4d0[m Update GADM_v41-vi pipeline specification.md
+[33me98e7328[m Update README.md
+[33m1fb31271[m Update cell size calculation in README-vi.md
+[33m104263e8[m Update README.md
+[33m2aa8c6fa[m Update README-vi.md
+[33mcd576b5c[m Update GADM_v41 pipeline specification.md
+[33ma7f23eeb[m Update print statement from 'Hello' to 'Goodbye'
+[33mc096a198[m Update README.md
+[33m2d310c2e[m Update README-vi.md
+[33m3f11916c[m Create config.toml
+[33mca71ce4c[m Update ui_theme.py
+[33ma3975f64[m Update app.py
+[33maf408d4c[m Update app.py
+[33m682b9912[m Update ui_theme.py
+[33md1623a6e[m Refactor hero and place_banner functions to use facts
+[33m2af1307c[m Implement fallback for UI theme imports
+[33m3e32d203[m Update app.py
+[33m524d0081[m Remove data flow diagram from README-vi.md
+[33meb0c788f[m Update README-vi.md
+[33m8daae62a[m Update GADM_v41-vi pipeline specification.md
+[33m90d2c27a[m Update app.py
+[33m74ef44c7[m Update ui_theme.py
+[33m2ede8268[m Update ui_theme.py
+[33m598f1e50[m Update app.py
+[33mf253a6b8[m Update app.py
+[33mba508742[m Update lisa_ui.py
+[33m90550a17[m Update lisa_ui.py
+[33m3ae77644[m Refactor Vietnamese text and fix zoom issue
+[33mf2ea3879[m Update lisa_ui.py
+[33m785ccfb8[m Update app.py
+[33m60204357[m Import enable_fx from ui_theme and update logic
+[33m281353c9[m Update ui_theme.py
+[33m52d38d20[m Refactor sidebar and theme injection in app.py
+[33m71a1b204[m Update ui_theme.py
+[33m98c3d3f8[m Add files via upload
+[33m2cbd3087[m Update README.md
+[33m190661a3[m Update README-vi.md
+[33m26dc3871[m Update GADM_v41 pipeline specification.md
+[33mfa9fd415[m Update GADM_v41-vi pipeline specification.md
+[33m040a5db7[m Update README.md
+[33md5e00805[m Update README.md
+[33m4e877c11[m Update README.md
+[33m5ea0f07a[m Update lisa_core.py
+[33mc2f22aac[m Update lisa_ui.py
+[33m065014d9[m Update app.py
+[33m34614eb5[m Remove help text from subheaders in app.py
+[33m9a4f0edf[m Add help text to subheaders in app.py
+[33mf1599b33[m Update lisa_ui.py
+[33m02b31a15[m Update README-vi.md
+[33mb19dea4a[m Update README.md
+[33m66104a1e[m Update README.md
+[33m99d027f1[m Update GADM_v41 pipeline specification.md
+[33mc462b218[m Update lisa_ui.py
+[33m4d04e7b6[m Update lisa_ui.py
+[33m905c1030[m Update lisa_ui.py
+[33m878ec4f0[m Update lisa_ui.py
+[33m1172985a[m Update lisa_ui.py
+[33m54aade95[m Update app.py
+[33mcd56db93[m Disable maintenance mode in app.py
+[33m96764eec[m Update lisa_ui.py
+[33mb8e63362[m Update app.py
+[33m7a70e2a3[m Clean up comments in lisa_core.py
+[33mbb33dd74[m Update lisa_core.py
+[33m99405bf9[m Update README-vi.md
+[33m05912572[m Update README.md
+[33m1220f547[m Update README.md
+[33m49801779[m Update README.md
+[33m9d316b83[m Update README.md
+[33mc737d4da[m Improve LaTeX formatting in README for market access
+[33m5ad8f3c6[m Improve LaTeX formatting in README for market access
+[33m64de5438[m Update README.md
+[33ma5b12e0e[m Update README.md
+[33m9227d10c[m Update README-vi.md
+[33mbc705beb[m Update maintenance mode HTML content
+[33ma9fa315e[m Revise maintenance mode message and layout
+[33m45c96bde[m Fix typo in maintenance mode header
+[33m64e2cc45[m Implement maintenance mode functionality
+[33mdd76d4d0[m Update app.py
+[33mdfd2bad5[m Implement maintenance mode notification
+[33m5c39bcc8[m Update README-vi.md
+[33m4a70fc62[m Fix formatting in README-vi.md
+[33m55fae48f[m Update README-vi.md
+[33m368febf9[m Update app.py
+[33m52faf550[m Merge branch 'main' of https://github.com/hoanfg/spatial-app
+[33m6af9c372[m upload files
+[33m30d6417c[m Update app.py
+[33m5f0339c2[m Delete data/gadm41_CZE_gpkg/gadm41_CZE.gpkg
+[33ma7e43ac7[m upload files
+[33me4393cc5[m upload files
+[33mdf45e695[m Update README-vi.md
+[33meb0a3d74[m Update README-vi.md
+[33m0289d558[m Update README.md
+[33m23b393c0[m Update keepalive.yml
+[33m79975662[m Update README.md
+[33me4af9fda[m Update README-vi.md
+[33m9c40cf8d[m Update app.py
+[33m8bd7ce5a[m Update keepalive.yml
+[33m2fbdd729[m Add keepalive workflow for Streamlit app
+[33m0fc7c73d[m Rename GADM_v41-en pipeline specification.md to GADM_v41 pipeline specification.md
+[33m6da708b4[m Rename README-en.md to README.md
+[33m8a441216[m Update app.py
+[33mf6e62a1b[m Update requirements.txt
+[33m7e3912ee[m Update app.py
+[33m213b081c[m Update requirements.txt
+[33me943c5a0[m Update requirements.txt
+[33mc60ecb7e[m Update app.py
+[33m0077bb67[m Update app.py
+[33m49429184[m Update app.py
+[33m46b9a167[m Update app.py
+[33m1569d224[m Update app.py
+[33md87c8081[m Update app.py
+[33m347b9550[m upload files
+[33mede56c2a[m Merge branch 'main' of https://github.com/hoanfg/spatial-app
+[33mceddfc60[m delete files
+[33m44f39523[m Update lisa_ui.py
+[33m
