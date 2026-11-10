@@ -750,7 +750,22 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     _render_diagnostics(
         lang=lang, ckey=ckey, out=out, grid_utm=grid_utm, size=size, perms=perms, alpha=alpha, fdr=fdr,
         use_log=use_log, thr=thr, min_clu=min_clu, min_nbr=min_nbr, perm_auto_from=perm_auto_from)
-    rm_full = {**rm, **_collect_export(ckey)}
+    try:
+        from .robustness_ui import collect_robustness_export, render_robustness
+        render_robustness(
+            lang=lang, ckey=ckey, out=out, grid_utm=grid_utm, size=size, perms=perms, alpha=alpha, fdr=fdr,
+            use_log=use_log, thr=thr, min_clu=min_clu, min_nbr=min_nbr, year=yr,
+            fetch_year_ntl_fn=fetch_year_ntl_fn, available_years=available_years)
+        rob_cols = collect_robustness_export(ckey)
+    except Exception as e:  # noqa: BLE001
+        st.warning(f"Không hiển thị được khối kiểm định độ vững: {e}")
+        rob_cols = {}
+    try:
+        from .quality_ui import collect_quality_export
+        dq_cols = {**res.get("provenance", {}), **collect_quality_export(res["ts"])}
+    except Exception:  # noqa: BLE001
+        dq_cols = {}
+    rm_full = {**rm, **_collect_export(ckey), **rob_cols, **dq_cols}
 
     # ---------- Bản đồ ----------
     st.divider()

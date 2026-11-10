@@ -26,6 +26,7 @@ from folium.plugins import Fullscreen, MiniMap, MousePosition
 from jinja2 import Template
 from streamlit_folium import st_folium
 
+from ntl.data_quality import PIPELINE_PROVENANCE, cell_report, raster_report
 from ntl.formatting import fmt_p
 from ntl.ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
 
@@ -1891,6 +1892,7 @@ def run_pipeline():
                     arr = src.read(1).astype("float32")
                     crs, transform = src.crs, src.transform
                     h, w = src.height, src.width
+            raster_q = raster_report(arr)  # đo trước khi thay NaN và cắt giá trị âm
             arr = np.nan_to_num(arr, nan=0.0, posinf=0.0, neginf=0.0)
             arr = np.clip(arr, 0.0, None)
 
@@ -1914,10 +1916,13 @@ def run_pipeline():
             mean_col = next(c for c in stats.columns if "mean" in str(c).lower())
             stats = stats[["grid_id", mean_col]].rename(columns={mean_col: "ntl_mean"})
             stats["grid_id"] = pd.to_numeric(stats["grid_id"], errors="coerce").astype("int64")
+            n_stat_nan = int(pd.to_numeric(stats["ntl_mean"], errors="coerce").isna().sum())
             stats["ntl_mean"] = pd.to_numeric(stats["ntl_mean"], errors="coerce").fillna(0.0).clip(lower=0.0)
             
             grid = grid.merge(stats, on="grid_id", how="left").reset_index(drop=True)
+            n_merge_miss = int(grid["ntl_mean"].isna().sum())
             grid["ntl_mean"] = grid["ntl_mean"].fillna(0.0).astype(float)
+            cell_q = cell_report(len(grid), n_stat_nan, n_merge_miss, grid["ntl_mean"].to_numpy())
 
             status.update(label="Trạm 3/3 · Đang tính Moran's I toàn cục (hoán vị)..." if LANG == "vi"
                           else "Station 3/3 · Computing global Moran's I (permutations)...")
@@ -1970,6 +1975,9 @@ def run_pipeline():
          "size": cell_size,
          "year": int(year),
          "moran": moran,
+         "data_quality": {"raster": raster_q, "cells": cell_q},
+         "provenance": {"ntl_dataset": GEE_DATASET, "ntl_scale_m": GEE_SCALE_M, **PIPELINE_PROVENANCE},
+         "tif_bytes": tif_bytes,
          "ts": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
     }
 
@@ -2341,6 +2349,12 @@ with tab_data:
             take_lines.append(L["take"][3].format(mi=moran["I"], mp=fmt_p(moran["p"], moran.get("perms"), prefix=True), mdesc=mdesc))
         take_lines.append(L["take"][4].format(border=int(is_border.sum()), n=n))
         st.info("\n\n".join(take_lines))
+
+    try:
+        from ntl.quality_ui import render_quality_panel
+        render_quality_panel(res=res, grid_utm=grid_utm, lang=LANG, ee=ee, dataset=GEE_DATASET, scale_m=GEE_SCALE_M)
+    except Exception as e:  # noqa: BLE001
+        st.warning(f"Không hiển thị được khối chất lượng dữ liệu: {e}")
 
     col_l, col_r = st.columns(2)
 

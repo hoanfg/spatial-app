@@ -16,6 +16,7 @@ except Exception:  # pragma: no cover
     _cKDTree = None
 
 QUADRANTS = ("High-High", "Low-Low", "High-Low", "Low-High")   # mã 0..3
+ROOK_DROP_COLS = (0, 2, 5, 7)   # các cột láng giềng chéo trong ma trận Queen (n, 8)
 NS = "Not Significant"
 DARK = "Dark (NTL=0)"
 EDGE = "Edge-Masked"
@@ -370,7 +371,8 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
              lit_threshold: float = 0.0, edge_tol: float = 0.99, perms: int = 499,
              alpha: float = 0.05, fdr: bool = True, log_transform: bool = False,
              min_neighbors: int = 1, min_cluster_cells: int = 4, seed: int = 42,
-             include_zeros: bool = False, meta: dict | None = None) -> LisaResult:
+             include_zeros: bool = False, meta: dict | None = None,
+             weights: str = "queen") -> LisaResult:
     cx, cy = np.asarray(cx, dtype=float), np.asarray(cy, dtype=float)
     ntl = np.asarray(ntl, dtype=float)
     area = np.asarray(area_km2, dtype=float)
@@ -384,6 +386,12 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     )
     members = (~edge) & np.isfinite(z) & (np.isfinite(ntl) if include_zeros else lit)
     nbr = build_queen_neighbors(cx, cy, cell_size_m, members)
+    if weights == "rook":
+        # chỉ giữ 4 láng giềng chung cạnh (cột 1, 3, 4, 6 trong thứ tự dx, dy của build_queen_neighbors)
+        nbr = nbr.copy()
+        nbr[:, ROOK_DROP_COLS] = -1
+    elif weights != "queen":
+        raise ValueError(f"weights phải là 'queen' hoặc 'rook', nhận {weights!r}")
     k = (nbr >= 0).sum(axis=1)
     focal = members & (k >= max(1, min_neighbors))
 

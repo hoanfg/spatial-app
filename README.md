@@ -400,6 +400,16 @@ Diagnoses first-order spatial autoregression persistence (`spatial_ar1_persisten
 
 <a id="s4"></a>
 
+## ✅ Data quality, robustness and external validation
+
+Three additions that report how much the result depends on pipeline and analytic choices. None of them changes NTL values.
+
+- **Data-quality report** (Data tab): share of NaN and negative pixels, cells with no extracted value, share of zero cells, and (on demand) the number of cloud-free months per pixel. The same figures and the pipeline provenance (`ntl_composite`, `ntl_negative_handling`, `ntl_nodata_handling`) are written to the panel CSV as `dq_*` columns. An on-demand button re-extracts cell means without clipping negatives and compares them with the clipped version.
+- **Robustness checks** (LISA tab): re-runs LISA under Rook weights, higher lit thresholds, P99 / asinh / ln transforms, other α, with and without FDR, a 2×2 coarser grid (MAUP) and adjacent years, then reports the Jaccard overlap of the High-High set with the baseline and the area that is HH in at least 80% of runs. Output columns: `rob_*`. The verdict cut-offs (median Jaccard 0.70 and 0.50) are rules of thumb, not statistical thresholds.
+- **External validation** (Data tab): Spearman ρ with a spatial block-bootstrap CI and AUC between NTL and GHSL built-up surface or population on the same cells. GHSL epochs are 5-yearly, so the epoch used can differ from the NTL year. Output columns: `val_*`.
+
+Code: `ntl/data_quality.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`; tests in `tests/test_robustness.py` and `tests/test_zonal.py`. The Earth Engine fetch code (valid-month count, GHSL) and the UI panels have not been run against live data.
+
 ## 🛡️ IV. Memory safeguard algorithms
 
 ### 4.1. Grid size estimation fuse
