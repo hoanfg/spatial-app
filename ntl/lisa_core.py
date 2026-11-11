@@ -107,7 +107,13 @@ def build_queen_neighbors(cx, cy, cell_size_m: float, active,
 
 def local_moran(z, nbr, focal, members, perms: int = 499, seed: int = 42,
                 two_sided: bool = True):
-    """Tính Local Moran's I (row-standardized) và pseudo p-value qua hoán vị có điều kiện."""
+    """ESDA-scaled Local I with conditional sampling without replacement.
+
+    Keep the focal value fixed and draw distinct non-focal members per replicate.
+    Tails are inclusive (absolute tie tolerance 1e-12), with a +1 Monte Carlo
+    correction and optional doubled smaller-tail p, capped at one. ESDA's raw
+    one-tail p_sim and its tie convention are not interchangeable with this p.
+    """
     z = np.asarray(z, float)
     n = len(z)
     I = np.full(n, np.nan)
@@ -125,7 +131,8 @@ def local_moran(z, nbr, focal, members, perms: int = 499, seed: int = 42,
     zn = np.where(valid, z[np.maximum(nbr, 0)], 0.0)
     lag = zn.sum(axis=1) / np.maximum(k, 1)
 
-    m2 = float(np.mean(z[pool] ** 2))
+    # ESDA Local I: (m - 1) * z_i * lag(z)_i / sum(z**2).
+    m2 = float(np.sum(z[pool] ** 2) / (m - 1))
     zf, kf = z[f_idx], k[f_idx]
     I_obs = zf * lag[f_idx] / m2
     I[f_idx], lagz[f_idx] = I_obs, lag[f_idx]
@@ -137,9 +144,17 @@ def local_moran(z, nbr, focal, members, perms: int = 499, seed: int = 42,
     le = np.zeros(f_idx.size, dtype=np.int32)
 
     for _ in range(perms):
-        r = rng.integers(0, m - 1, size=(f_idx.size, 8))
+        # Sequential rejection sampling gives an ordered uniform sample without
+        # replacement in each row, using O(n * max_degree) memory.
+        r = np.empty((f_idx.size, int(kf.max())), dtype=np.int64)
+        for slot in range(r.shape[1]):
+            r[:, slot] = rng.integers(0, m - 1, size=f_idx.size)
+            duplicate = (r[:, :slot] == r[:, slot, None]).any(axis=1)
+            while duplicate.any():
+                r[duplicate, slot] = rng.integers(0, m - 1, size=int(duplicate.sum()))
+                duplicate = (r[:, :slot] == r[:, slot, None]).any(axis=1)
         r += (r >= pos_self[:, None])
-        lp = (z[pool[r]] * cmask).sum(axis=1) / kf
+        lp = (z[pool[r]] * cmask[:, :r.shape[1]]).sum(axis=1) / kf
         I_sim = zf * lp / m2
         ge += (I_sim >= I_obs - 1e-12)
         le += (I_sim <= I_obs + 1e-12)
@@ -520,6 +535,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
         "mean_ntl_spillover_0_2km": round(float(ntl[sp02_mask].mean()), 3) if sp02_mask.any() else float("nan"),
         "mean_ntl_pure_control": round(float(ntl[ctrl_mask].mean()), 3) if ctrl_mask.any() else float("nan"),
         # --- Hyperparameters ---
+        "lisa_method_version": "conditional-wor-esda-v2",
         "p_cfg_perms": perms, "p_cfg_alpha": alpha, "p_cfg_fdr": int(fdr),
         "p_cfg_log": int(log_transform), "p_cfg_lit_thr": lit_threshold,
         "p_cfg_edge_tol": edge_tol, "p_cfg_min_nbr": min_neighbors,

@@ -696,7 +696,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         st.info((f"Tổ hợp {perm_auto_from} hoán vị với α = {alpha} khiến FDR không thể bác bỏ ô nào; đã tự nâng lên 999 hoán vị."
                  if lang != "en" else
                  f"{perm_auto_from} permutations with α = {alpha} make BH unable to reject anything; auto-raised to 999."))
-    ckey = (res["ts"], size, perms, alpha, fdr, use_log, thr, min_clu, min_nbr)
+    ckey = ("conditional-wor-esda-v2", res["ts"], size, perms, alpha, fdr, use_log, thr, min_clu, min_nbr)
     cache = st.session_state.setdefault("_lisa_cache", {})
     just_computed = ckey not in cache
     if ckey not in cache:

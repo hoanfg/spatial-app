@@ -18,7 +18,7 @@
 > Bạn thấy ngợp trước đống công thức bên dưới? Đây là bản "nói tiếng người" về việc hệ thống này làm được gì.
 >
 > - **Bài toán.** Muốn biết một vùng giàu hay nghèo khi không có số liệu GDP, người ta nhìn ảnh vệ tinh chụp ánh sáng ban đêm. **Nhưng** đống dữ liệu này rất nặng: chạy trên máy tính thường là tràn RAM, làm thủ công thì mất cả tuần.
-> - **App làm gì.** Bạn chọn một khu vực $\rightarrow$ app tự kết nối *Google Earth Engine* để tải ảnh $\rightarrow$ engine C/C++ gom hàng triệu điểm ảnh vào từng ô lưới $\rightarrow$ **vượt qua giới hạn 1GB RAM của server web mà không bị sập.**
+> - **App làm gì.** Bạn chọn một khu vực $\rightarrow$ app tự kết nối *Google Earth Engine* để tải ảnh $\rightarrow$ engine C/C++ gom hàng triệu điểm ảnh vào từng ô lưới $\rightarrow$ **các giới hạn an toàn kiểm soát khối lượng xử lý; khả năng chạy ổn định trong 1GB vẫn cần kiểm thử toàn bộ hệ thống triển khai.**
 > - **Bạn nhận lại gì.** Một nút bấm, một file CSV đã dọn sẵn các chỉ số kinh tế: đâu là lõi đô thị? chỗ nào là "điểm nóng" (LISA)? mức bất bình đẳng (Gini) cao hay thấp? Việc của bạn chỉ còn là tải về và đưa thẳng vào mô hình hồi quy.
 > - 👉 **[BẤM VÀO ĐÂY ĐỂ DÙNG THỬ TRỰC TIẾP (LIVE DEMO)](https://spatial-app.streamlit.app/?)**
 
@@ -264,12 +264,14 @@ $$
 
 với $k_i = \lvert N(i) \cap S \rvert$ là số láng giềng hợp lệ của ô $i$. Chỉ các ô $i \in S$ có $k_i \ge k_{\min}$ (mặc định $k_{\min} = 1$) mới vào tập kiểm định $\mathrm{Focal}$.
 
+> Cập nhật phương pháp (11/11/2026): Local I dùng chuẩn hóa ESDA và hoán vị có điều kiện không hoàn lại. Cần tính lại các kết quả LISA/panel cũ; xem [chi tiết thay đổi và chuyển đổi](docs/audit-fixes-2026-11-11.md).
+
 ### 3.3. Kiểm định Local Moran's I (LISA) và hoán vị có điều kiện
 
 Thống kê Local Moran's I (Anselin, 1995) và biến trễ không gian chuẩn hóa ($\mathrm{Spatial\ Lag}\ z$) của mỗi ô $i \in \mathrm{Focal}$ được xác định như sau:
 
 $$
-I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert} \sum_{r \in S} z_r^2
+I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert - 1} \sum_{r \in S} z_r^2
 $$
 
 > 💡 **Hiểu nôm na:** biến trễ không gian $\mathrm{Lag}(z_i)$ là mức sáng "trung bình" của các ô láng giềng. $I_i$ dương lớn nghĩa là ô đang xét và hàng xóm cùng xu hướng (cùng sáng hoặc cùng tối). $I_i$ âm nghĩa là chúng trái chiều nhau.
@@ -283,7 +285,7 @@ Bức xạ ánh sáng ban đêm không tuân theo phân phối chuẩn, nên ý 
 | Số lần hoán vị $R$ | Mặc định $R = 499$, tối đa $R = 999$ |
 | Dung sai khi xét đồng hạng | $10^{-12}$ |
 
-Ở mỗi lần lặp $r \in \{1, \dots, R\}$, giá trị $z_i$ của ô tâm được giữ cố định, trong khi $k_i$ giá trị láng giềng được rút ngẫu nhiên đồng thời bằng mảng chỉ số `rng.integers` từ quần thể $S \setminus \{i\}$, tạo ra giá trị thống kê mô phỏng $I_i^{(r)}$.
+Ở mỗi lần lặp $r \in \{1, \dots, R\}$, giá trị $z_i$ của ô tâm được giữ cố định, trong khi $k_i$ giá trị láng giềng được rút ngẫu nhiên đều **không hoàn lại trong mỗi lần lặp**, bằng lấy mẫu tuần tự và loại chỉ số trùng từ quần thể $S \setminus \{i\}$, tạo ra giá trị thống kê mô phỏng $I_i^{(r)}$.
 
 Gọi $M_i$ là số lần mô phỏng rơi vào miền cực trị ở đuôi gần hơn (đồng hạng được xử lý với dung sai số học $10^{-12}$):
 
@@ -291,7 +293,7 @@ $$
 M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right); \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
 $$
 
-Pseudo p-value hai phía (two-sided) được tính theo quy chuẩn của Anselin (1995) và Rey & Anselin (2007):
+App giữ quy ước pseudo p-value hai phía: nhân đôi đuôi nhỏ hơn, tính cả đồng hạng và hiệu chỉnh +1 (khác `p_sim` một phía nguyên bản của ESDA):
 
 $$
 p_i = \min\left(1.0; 2 \times \frac{M_i + 1}{R + 1}\right)
