@@ -1,4 +1,4 @@
-# Bằng chứng kiểm định Yanqing: gói tài liệu tái lập (reproducibility package)
+# Bằng chứng kiểm định cho Diên Khánh, gói tài liệu tái lập
 
 Thư mục này chứa các dữ liệu xuất nguồn và các sản phẩm so sánh độc lập cho quá trình kiểm định **Quận Yanqing (Diên Khánh), Bắc Kinh, Trung Quốc** của `spatial-app`. Đây là bằng chứng, không phải lời khẳng định rằng mọi tuyên bố về thống kê hay kinh tế đều đã được xác minh.
 
@@ -14,7 +14,7 @@ Thư mục này chứa các dữ liệu xuất nguồn và các sản phẩm so 
 | [Mã nguồn và kết quả LISA độc lập](archives/yanqing_validation_evidence.zip) | ZIP | Gói kiểm định LISA độc lập gốc gồm script Python, CSV và các chỉ số |
 | [Ảnh tham chiếu VIIRS 2014](rasters/yanqing_viirs_2014_reference.tif) | GeoTIFF, 217 × 142 | Ảnh raster tham chiếu chưa qua chỉnh sửa từ Earth Engine |
 
-Các dữ liệu xuất CSV nguồn trong kho lưu trữ này đã được chuẩn hóa về định dạng UTF-8 không có BOM khi truyền tải, đồng thời giữ nguyên các giá trị số. Định danh Git blob và kích thước tệp được ghi lại dưới đây để so sánh minh bạch ở cấp độ byte. Tệp CSV so sánh 2020 được sao chép dưới dạng xuất văn bản và có thể khác biệt ở cấp độ byte so với tệp gốc; không được đại diện tệp này là trùng khớp hoàn toàn từng bit (bit-for-bit).
+Các dữ liệu xuất CSV nguồn trong kho lưu trữ này đã được chuẩn hóa về định dạng UTF-8 không có BOM khi truyền tải, đồng thời giữ nguyên các giá trị số. Định danh Git blob và kích thước tệp được ghi lại dưới đây để so sánh minh bạch ở cấp độ byte. Tệp CSV so sánh 2020 được sao chép dưới dạng xuất văn bản và có thể khác biệt ở cấp độ byte so với tệp gốc; không được đại diện tệp này là trùng khớp hoàn toàn từng bit.
 
 | Tệp | Git blob SHA-1 | Số byte trong kho lưu trữ |
 |---|---|---:|
