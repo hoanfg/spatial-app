@@ -1,0 +1,5 @@
+-r requirements.txt
+pytest
+scipy
+esda==2.10.0
+libpysal==4.15.1

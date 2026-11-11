@@ -17,6 +17,7 @@ import ee
 import folium
 import geopandas as gpd
 import numpy as np
+from ntl.zonal import read_valid_band
 import pandas as pd
 import requests
 import shapely
@@ -1889,18 +1890,18 @@ def run_pipeline():
             with MemoryFile(tif_bytes) as mf:
                 with mf.open() as src:
                     orig_dtype = src.dtypes[0]
-                    arr = src.read(1).astype("float32")
+                    arr = read_valid_band(src, clip_negative=False)
                     crs, transform = src.crs, src.transform
                     h, w = src.height, src.width
-            raster_q = raster_report(arr)  # đo trước khi thay NaN và cắt giá trị âm
-            arr = np.nan_to_num(arr, nan=0.0, posinf=0.0, neginf=0.0)
+            raster_q = raster_report(arr)  # report missing pixels before clipping valid negatives
+            # Missing raster pixels remain excluded during extraction.
             arr = np.clip(arr, 0.0, None)
 
             with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
                 tmp_path = tf.name
             with rasterio.open(
                 tmp_path, "w", driver="GTiff", height=h, width=w, count=1,
-                dtype="float32", crs=crs, transform=transform,
+                dtype="float32", crs=crs, transform=transform, nodata=np.nan,
             ) as dst:
                 dst.write(arr, 1)
             st.write(f"ℹ️ Raster dtype gốc: {orig_dtype} → float32")
@@ -2650,11 +2651,11 @@ with tab_lisa:
         try:
             with MemoryFile(tif_bytes) as mf:
                 with mf.open() as src:
-                    arr = np.clip(np.nan_to_num(src.read(1).astype("float32"), nan=0.0, posinf=0.0, neginf=0.0), 0.0, None)
+                    arr = read_valid_band(src)
                     crs, transform, h, w = src.crs, src.transform, src.height, src.width
             with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tf:
                 tmp_p = tf.name
-            with rasterio.open(tmp_p, "w", driver="GTiff", height=h, width=w, count=1, dtype="float32", crs=crs, transform=transform) as dst:
+            with rasterio.open(tmp_p, "w", driver="GTiff", height=h, width=w, count=1, dtype="float32", crs=crs, transform=transform, nodata=np.nan) as dst:
                 dst.write(arr, 1)
             st_df = exact_extract(tmp_p, grid_wgs[["grid_id", "geometry"]], ["mean"], include_cols=["grid_id"], output="pandas")
             mcol = next(c for c in st_df.columns if "mean" in str(c).lower())

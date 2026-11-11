@@ -18,7 +18,7 @@
 > No time for a 10-page academic manual? Here is what this engine does, in plain words.
 >
 > - **The problem.** Satellite nighttime lights (NTL) are a standard stand-in for GDP in economics. **But** the data is huge. Processing it usually crashes an ordinary computer (RAM runs out), and doing it by hand takes weeks.
-> - **What the app does.** You pick a region $\rightarrow$ the app fetches the data from *Google Earth Engine* $\rightarrow$ a C/C++ backend crushes millions of pixels into grid cells $\rightarrow$ **it all runs within the strict 1GB RAM limit of a cloud server, without crashing.**
+> - **What the app does.** You pick a region $\rightarrow$ the app fetches the data from *Google Earth Engine* $\rightarrow$ a C/C++ backend crushes millions of pixels into grid cells $\rightarrow$ **resource guards limit the workload; reliable operation within 1GB still requires a full deployment benchmark.**
 > - **What you get.** One click gives you a CSV of ready-to-use economic indicators: where is the true urban core? where are the economic hotspots (LISA)? how unequal is the distribution (Gini)? Download it and drop it straight into your regression models.
 > - 👉 **[TRY THE LIVE DEMO](https://spatial-app.streamlit.app/?)**
 
@@ -264,12 +264,14 @@ $$
 
 where $k_i = \lvert N(i) \cap S \rvert$ is the number of valid neighbors of cell $i$. Only cells $i \in S$ with $k_i \ge k_{\min}$ (default $k_{\min} = 1$) enter the tested set $\mathrm{Focal}$.
 
+> Method update (11 November 2026): Local I now uses ESDA normalization and conditional sampling without replacement. Recompute earlier LISA/panel exports; see [audit corrections and migration](docs/audit-fixes-2026-11-11.md).
+
 ### 3.3. Local Moran's I (LISA) test and conditional permutation
 
 The Local Moran's I statistic (Anselin, 1995) and the standardized spatial lag ($\mathrm{Spatial\ Lag}\ z$) for each cell $i \in \mathrm{Focal}$ are defined as:
 
 $$
-I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert} \sum_{r \in S} z_r^2
+I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert - 1} \sum_{r \in S} z_r^2
 $$
 
 > 💡 **In plain words:** the spatial lag $\mathrm{Lag}(z_i)$ is the "average" brightness of the neighboring cells. A large positive $I_i$ means the cell and its neighbors move together (both bright or both dim). A negative $I_i$ means they pull in opposite directions.
@@ -283,7 +285,7 @@ Nighttime light radiance does not follow a normal distribution, so the statistic
 | Number of permutations $R$ | Default $R = 499$, up to $R = 999$ |
 | Tie tolerance | $10^{-12}$ |
 
-In each permutation $r \in \{1, \dots, R\}$, the focal value $z_i$ is held fixed while $k_i$ neighbor values are drawn at random, all at once, using `rng.integers` from the pool $S \setminus \{i\}$. This produces the simulated statistic $I_i^{(r)}$.
+In each permutation $r \in \{1, \dots, R\}$, the focal value $z_i$ is held fixed while $k_i$ neighbor values are drawn uniformly **without replacement within each replicate**, using sequential rejection sampling from the pool $S \setminus \{i\}$. This produces the simulated statistic $I_i^{(r)}$.
 
 Let $M_i$ denote the number of simulations falling into the nearer extreme tail (numerical ties are handled within $10^{-12}$):
 
@@ -291,7 +293,7 @@ $$
 M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right); \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
 $$
 
-The two-sided pseudo p-value follows the convention of Anselin (1995) and Rey & Anselin (2007):
+The app retains its doubled smaller-tail pseudo p-value with inclusive ties and a +1 correction (distinct from ESDA's raw one-tail `p_sim`):
 
 $$
 p_i = \min\left(1.0; 2 \times \frac{M_i + 1}{R + 1}\right)
