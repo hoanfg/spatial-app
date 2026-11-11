@@ -1,15 +1,15 @@
 <a id="top"></a>
 
-# Spatial-app — Đặc tả kiểm chứng và hồ sơ bằng chứng
+# Spatial-app: Kiểm chứng và hồ sơ bằng chứng
 
 | Mục | Nội dung |
 |:---|:---|
 | Dự án | Trích xuất ánh sáng ban đêm VIIRS và kinh tế lượng không gian |
 | Repository | `hoanfg/spatial-app` |
-| Tài liệu | Đặc tả kiểm chứng — bản tiếng Việt |
-| Phiên bản | 1.0 — 11/11/2026 |
+| Tài liệu | Đặc tả kiểm chứng |
+| Phiên bản | 1.0: 11/11/2026 |
 | Phiên bản mã nguồn tham chiếu | Nhánh `main`, sau các PR #10, #11, #12 và #13 |
-| Trường hợp thực nghiệm chuẩn | Diên Khánh (Yanqing), Bắc Kinh, Trung Quốc; 2014–2020 |
+| Trường hợp thực nghiệm | Diên Khánh (Yanqing), Bắc Kinh, Trung Quốc; 2014–2020 |
 | Phạm vi | Phương pháp, kết quả số, tiêu chí chấp nhận, giới hạn và kế hoạch kiểm chứng tiếp |
 | Bảo trì | Các đợt kiểm chứng bổ sung được cập nhật vào chính tài liệu này bằng PR |
 
@@ -51,7 +51,7 @@ Kiểm chứng phải phân biệt bốn loại khẳng định:
 
 | Trạng thái | Ý nghĩa | Không hàm ý |
 |---|---|---|
-| **ĐẠT — trong phạm vi thử** | Tính toán độc lập khớp trong dung sai hoặc tiêu chí đã công bố | Tất cả địa phương và năm đều đạt |
+| **ĐẠT: trong phạm vi thử** | Tính toán độc lập khớp trong dung sai hoặc tiêu chí đã công bố | Tất cả địa phương và năm đều đạt |
 | **ĐÃ ĐÁNH GIÁ ĐỘ NHẠY** | Ảnh hưởng của giả định thay thế được định lượng | Mọi cấu hình đều có thể thay cho nhau |
 | **MỘT PHẦN** | Có bằng chứng sơ bộ nhưng thiếu kiểm chứng độc lập của một khâu | Toàn bộ pipeline đã đạt |
 | **CHƯA THỰC HIỆN** | Chưa có đủ bằng chứng kiểm thử | Khâu đó nhất thiết bị lỗi |
@@ -70,7 +70,7 @@ Mỗi kết quả phải gắn với phiên bản mã, dữ liệu đầu vào, 
 
 | Tham số | Giá trị |
 |---|---|
-| Địa bàn | Trung Quốc — Bắc Kinh — Diên Khánh (Yanqing) |
+| Địa bàn | Trung Quốc - Bắc Kinh - Diên Khánh (Yanqing) |
 | Mã địa giới | `GID_2 = CHN.2.1.11_1` |
 | Nguồn ranh giới | `data/gadm41_CHN_gpkg/CHN_Curated_Boundaries/Beijing/CHN_Beijing_Yanqing_District.geojson` |
 | Bộ dữ liệu vệ tinh | `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` |
@@ -78,7 +78,7 @@ Mỗi kết quả phải gắn với phiên bản mã, dữ liệu đầu vào, 
 | Năm | 2014, 2020 |
 | Phép tổng hợp năm | Trung vị của các ảnh tháng sau khi loại pixel có `cf_cvg == 0` |
 | Raster từ ứng dụng | `EPSG:4326`, scale danh nghĩa **463,83 mét** |
-| Hệ tọa độ lưới | UTM 50N — `EPSG:32650` |
+| Hệ tọa độ lưới | UTM 50N `EPSG:32650` |
 | Lưới phân tích chính | 500 m × 500 m, cắt theo ranh giới |
 | Tổng số ô | **8.333** |
 | Diện tích | Khoảng **2.003,51 km²** |
@@ -128,7 +128,7 @@ Tập dữ liệu Trung Quốc đã biên tập chứa **2.420 file GeoJSON**. T
 
 ### 3.3. Lựa chọn đơn vị hành chính phù hợp tài nguyên
 
-Các đô thị trực thuộc trung ương hoặc địa bàn rất lớn được phân chia thành các district để bảo đảm ứng dụng hoạt động trong giới hạn RAM của Streamlit Community Cloud. Đây là biện pháp bảo vệ có chủ đích, **không phải lỗi thiếu tính năng phân tích toàn đô thị**. Khi cần số liệu cấp thành phố, nghiên cứu phải định nghĩa riêng cách tổng hợp từ các district.
+Các đô thị trực thuộc trung ương hoặc địa bàn rất lớn được phân chia thành các district để bảo đảm ứng dụng hoạt động trong giới hạn RAM của Streamlit Community Cloud. Đây là biện pháp bảo vệ có chủ đích, **không phải lỗi thiếu tính năng phân tích toàn đô thị**. Khi cần số liệu cấp thành phố, nghiên cứu phải định nghĩa riêng cách tổng hợp từ các quận.
 
 ### 3.4. Kết luận
 
@@ -470,9 +470,9 @@ Fixture tĩnh không khẳng định hiệu năng trên mọi đầu vào. Hai c
 |---|---|---|---|
 | V01 | Hình học/GID GADM Trung Quốc | **ĐẠT trong tập được audit** | Mở rộng khi thêm quốc gia |
 | V02 | Kiểm thử tự động và sửa hồi quy | **ĐẠT theo CI đã xem** | Kiểm thử liên tục ở commit mới |
-| V03 | LISA và BH-FDR độc lập | **ĐẠT — Diên Khánh 2020** | Thử thêm địa lý, seed |
-| V04 | VIIRS raster 2020 → ô | **ĐẠT — 8.333/8.333** | Khả năng khái quát |
-| V05 | VIIRS raster 2014 → ô | **ĐẠT — 8.333/8.333** | Nhiều năm, độ phủ thay đổi |
+| V03 | LISA và BH-FDR độc lập | **ĐẠT: Diên Khánh 2020** | Thử thêm địa lý, seed |
+| V04 | VIIRS raster 2020 → ô | **ĐẠT: 8.333/8.333** | Khả năng khái quát |
+| V05 | VIIRS raster 2014 → ô | **ĐẠT: 8.333/8.333** | Nhiều năm, độ phủ thay đổi |
 | V06 | Mean/median, missing | **ĐÃ ĐÁNH GIÁ ĐỘ NHẠY** | Địa bàn/năm có missing thực |
 | V07 | Raw/P99/log | **ĐÃ ĐÁNH GIÁ ĐỘ NHẠY** | Kết quả ở vùng khác |
 | V08 | Queen/Rook, kích thước ô | **ĐÃ ĐÁNH GIÁ ĐỘ NHẠY** | Địa hình, cấu trúc khác |
@@ -542,7 +542,7 @@ Cập nhật bảng trạng thái ở Mục 13, bổ sung kết quả chi tiết
 ### 15.2. Mẫu cập nhật
 
 ```markdown
-### YYYY-MM-DD — Vxx: Tên đợt kiểm chứng
+### YYYY-MM-DD - Vxx: Tên đợt kiểm chứng
 - Commit / Pull Request:
 - Địa bàn (GID), năm, sản phẩm vệ tinh:
 - Raster nguồn, mặt nạ, lưới, hệ tọa độ:
