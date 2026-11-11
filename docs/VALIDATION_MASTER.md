@@ -22,26 +22,26 @@
 | Thuộc tính | Thiết lập |
 |---|---|
 | Địa phương | **Yanqing (Diên Khánh), Beijing, China** |
-| Ranh giới | GADM v4.1, \`GID_2 = CHN.2.1.11_1\`; \`data/gadm41_CHN_gpkg/CHN_Curated_Boundaries/Beijing/CHN_Beijing_Yanqing_District.geojson\` |
+| Ranh giới | GADM v4.1, `GID_2 = CHN.2.1.11_1`; `data/gadm41_CHN_gpkg/CHN_Curated_Boundaries/Beijing/CHN_Beijing_Yanqing_District.geojson` |
 | Thời gian | 2020 (NTL, LISA, GHSL); 2014 → 2020 (Space-Time) |
-| Lưới | UTM \`EPSG:32650\`, 500 m, cắt theo ranh giới |
+| Lưới | UTM `EPSG:32650`, 500 m, cắt theo ranh giới |
 | Số ô | **8.333**, diện tích tổng **~2.003,51 km²** |
 | Ô biên loại khỏi kiểm định LISA | **600** (diện tích < 99% diện tích ô chuẩn) |
 | Ô đủ điều kiện LISA | **7.733** |
-| VIIRS collection | \`NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG\`; band \`avg_rad\`, lọc \`cf_cvg > 0\` từng tháng |
-| Annual aggregation của app | median ảnh tháng hợp lệ → \`unmask(0)\` → GeoTIFF \`EPSG:4326\`, nominal scale 463,83 m → clip âm về 0 → exactextract coverage-weighted mean |
+| VIIRS collection | `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG`; band `avg_rad`, lọc `cf_cvg > 0` từng tháng |
+| Annual aggregation của app | median ảnh tháng hợp lệ → `unmask(0)` → GeoTIFF `EPSG:4326`, nominal scale 463,83 m → clip âm về 0 → exactextract coverage-weighted mean |
 | Local LISA baseline | raw NTL, Queen row-standardized lag, 999 conditional permutations **without replacement**, seed 42, two-sided pseudo-p, Benjamini–Hochberg FDR 5% |
-| Điểm lưu ý | \`EPSG:4326\` và nominal scale **463,83 m**, không phải 463,83 km; pixel raster và ô UTM 500 m là hai lưới khác nhau |
+| Điểm lưu ý | `EPSG:4326` và nominal scale **463,83 m**, không phải 463,83 km; pixel raster và ô UTM 500 m là hai lưới khác nhau |
 
 **Input thực nghiệm đã dùng (tên file ở phiên validation):**
-- \`dien_khanh_NTL_2020_500m.csv\`;
-- \`CHN_beijing_yanqing_2020_500m_lisa_cells.csv\`;
-- \`CHN_beijing_yanqing_2014_2020_500m_spacetime_cells.csv\`;
-- \`yanqing_viirs_2020_reference.tif\`, \`yanqing_valid_months_2020.tif\`;
-- \`yanqing_viirs_2020_annual_mean.tif\`, \`yanqing_viirs_2020_masked_median.tif\`;
-- \`yanqing_viirs_2014_reference.tif\`, \`yanqing_valid_months_2014.tif\`, \`yanqing_viirs_2014_masked_median.tif\`.
+- `dien_khanh_NTL_2020_500m.csv`;
+- `CHN_beijing_yanqing_2020_500m_lisa_cells.csv`;
+- `CHN_beijing_yanqing_2014_2020_500m_spacetime_cells.csv`;
+- `yanqing_viirs_2020_reference.tif`, `yanqing_valid_months_2020.tif`;
+- `yanqing_viirs_2020_annual_mean.tif`, `yanqing_viirs_2020_masked_median.tif`;
+- `yanqing_viirs_2014_reference.tif`, `yanqing_valid_months_2014.tif`, `yanqing_viirs_2014_masked_median.tif`.
 
-Tên file là **định danh provenance**, không khẳng định file đang được lưu trong GitHub. CSV xuất \`ntl_mean\` làm tròn **4 chữ số thập phân**: dùng dung sai \`0.00005 nW/cm²/sr\` khi so với phép tính raster có độ chính xác cao hơn.
+Tên file là **định danh provenance**, không khẳng định file đang được lưu trong GitHub. CSV xuất `ntl_mean` làm tròn **4 chữ số thập phân**: dùng dung sai `0.00005 nW/cm²/sr` khi so với phép tính raster có độ chính xác cao hơn.
 
 ## 2. Ma trận trạng thái toàn dự án
 
@@ -55,7 +55,7 @@ Tên file là **định danh provenance**, không khẳng định file đang đ�
 | V06 | Mean/median, zero/NoData sensitivity | **SENSITIVITY CHARACTERIZED** | Mean làm tăng NTL trung bình ~4,37%; 2020 masked median trùng zero-filled tại phạm vi pilot |
 | V07 | Raw/P99/log LISA sensitivity | **SENSITIVITY CHARACTERIZED** | Raw–log HH Jaccard ~0,352: độ nhạy phương pháp đáng kể, không phải lỗi tính toán |
 | V08 | Queen/Rook; 500 m/1.000 m | **SENSITIVITY CHARACTERIZED** | Queen/Rook tạo độ khác lớn; trùng lặp không gian giữa hai scale ở mức trung bình–khá |
-| V09 | Space-Time regimes / Spatial Markov 2014→2020 | **PASS phép tính; interpretation FIXED** | Công thức/nhãn gốc tái lập; \`Synchronized Decline\` là **giảm vị thế tương đối**, không nhất thiết giảm NTL tuyệt đối; PR #11 làm rõ nhãn hiển thị |
+| V09 | Space-Time regimes / Spatial Markov 2014→2020 | **PASS phép tính; interpretation FIXED** | Công thức/nhãn gốc tái lập; `Synchronized Decline` là **giảm vị thế tương đối**, không nhất thiết giảm NTL tuyệt đối; PR #11 làm rõ nhãn hiển thị |
 | V10 | GHSL built-up / population | **PARTIAL** | App cho tương quan và bootstrap đáng khích lệ, nhưng pipeline ghép GHSL và AUC/bootstrap chưa được tái tạo độc lập từ raster/ô nguồn |
 | V11 | Cross-location representativeness | **PENDING** | Chưa kiểm thử hệ thống ở nhiều loại địa phương |
 | V12 | Multi-year temporal consistency | **PARTIAL** | Đã xác minh hai mốc 2014, 2020 và Space-Time; chưa xác minh đầy đủ từng năm chuỗi dài |
@@ -67,22 +67,22 @@ Tên file là **định danh provenance**, không khẳng định file đang đ�
 ### 3.1 Audit địa giới GADM v4.1
 
 - Đã kiểm tra **2.420** curated China GeoJSON bằng GADM China GPKG đủ độ phân giải: đối chiếu hình học và GID; không thấy invalid geometry, duplicated GID, hay diện tích chồng lấn ngoài dung sai >1 m² trong tập đã thử.
-- **2.419/2.420** bản ghi có tên phù hợp nguồn; bản ghi ngoại lệ thuộc một tên vùng do dữ liệu nguồn; một tên \`Nan\` từng bị gán nhầm \`Yiyang\` ở \`GID_2 = CHN.14.10.2_1\`, được sửa theo nguồn trong PR #10. Một đơn vị GADM nguồn có tên NA không có trong tập curated — cần lưu ý phạm vi curated khác tổng hợp nguồn.
+- **2.419/2.420** bản ghi có tên phù hợp nguồn; bản ghi ngoại lệ thuộc một tên vùng do dữ liệu nguồn; một tên `Nan` từng bị gán nhầm `Yiyang` ở `GID_2 = CHN.14.10.2_1`, được sửa theo nguồn trong PR #10. Một đơn vị GADM nguồn có tên NA không có trong tập curated — cần lưu ý phạm vi curated khác tổng hợp nguồn.
 - Một số thành phố lớn đã cố ý được chia thành district nhằm giảm tải RAM Streamlit. Không được diễn giải việc chia nhỏ này là “lỗi thiếu city-wide analysis”.
 
 ### 3.2 Vấn đề mã nguồn được sửa — [PR #10](https://github.com/hoanfg/spatial-app/pull/10)
 
 - Conditional Local Moran permutations từng lấy mẫu **with replacement**; đã chuyển sang sampling **without replacement** và chuẩn hóa Local I theo quy ước ESDA.
-- Giữ nguyên **quy tắc pseudo-p hai phía có tie tolerance và FDR riêng của app**: không đồng nhất trực tiếp với \`esda.Moran_Local.p_sim\` mặc định khi phương pháp đếm tail/tie khác nhau.
-- Bảo toàn NoData sentinel/mask khi đọc raster bằng đường đi \`ntl/zonal.py\`, tránh biến giá trị missing hữu hạn thành số đo thật trước khi trích xuất.
+- Giữ nguyên **quy tắc pseudo-p hai phía có tie tolerance và FDR riêng của app**: không đồng nhất trực tiếp với `esda.Moran_Local.p_sim` mặc định khi phương pháp đếm tail/tie khác nhau.
+- Bảo toàn NoData sentinel/mask khi đọc raster bằng đường đi `ntl/zonal.py`, tránh biến giá trị missing hữu hạn thành số đo thật trước khi trích xuất.
 - Chỉnh metadata GADM và thêm regression tests.
 - CI sau merge PR #10 đã ghi nhận **54 passed** qua hai nhóm chạy. Chưa chứng minh hiệu năng Earth Engine thật hoặc Streamlit Cloud nhờ CI này.
 
 ### 3.3 Cách diễn giải Space-Time — [PR #11](https://github.com/hoanfg/spatial-app/pull/11)
 
-- PR #11 **đã merge** (merge SHA \`4554e8feea683ffd56f585693a89f1f6b5f14aec\`), Actions có trạng thái **success**.
+- PR #11 **đã merge** (merge SHA `4554e8feea683ffd56f585693a89f1f6b5f14aec`), Actions có trạng thái **success**.
 - UI hiển thị **Synchronized Relative Decline**, giải thích z-score chuẩn hóa **riêng mỗi năm**, và ngưỡng chuyển động 0,05 là **ngưỡng mô tả**, không phải kiểm định ý nghĩa thống kê.
-- **Không đổi** giá trị \`spacetime_regime\` trong CSV (vẫn là \`4_Synchronized_Decline\`), công thức hay schema export. Chi tiết: \`docs/spacetime-relative-regime-interpretation.md\`.
+- **Không đổi** giá trị `spacetime_regime` trong CSV (vẫn là `4_Synchronized_Decline`), công thức hay schema export. Chi tiết: `docs/spacetime-relative-regime-interpretation.md`.
 
 ## 4. Independent Local Moran — V03
 
@@ -99,7 +99,7 @@ Tên file là **định danh provenance**, không khẳng định file đang đ�
 
 ### 5.1 Quy trình benchmark
 
-Tạo độc lập annual median VIIRS bằng Earth Engine theo đúng collection, cửa sổ năm, filter \`cf_cvg > 0\`, phép median và \`unmask(0)\` của app; tải GeoTIFF tham chiếu. Dựng lại polygon lưới 500 m bằng **đúng GADM Yanqing đầy đủ precision**, trích xuất trung bình theo coverage intersection pixel–ô; clamp giá trị âm trước khi tổng hợp theo quy tắc app. So sánh bằng \`grid_id\`.
+Tạo độc lập annual median VIIRS bằng Earth Engine theo đúng collection, cửa sổ năm, filter `cf_cvg > 0`, phép median và `unmask(0)` của app; tải GeoTIFF tham chiếu. Dựng lại polygon lưới 500 m bằng **đúng GADM Yanqing đầy đủ precision**, trích xuất trung bình theo coverage intersection pixel–ô; clamp giá trị âm trước khi tổng hợp theo quy tắc app. So sánh bằng `grid_id`.
 
 **Không** đánh giá “PASS” từ phép lấy pixel gần tâm ô: bước đầu center-sampling cho tương quan thấp hơn và không tương đương zonal mean. Phép kiểm tra chính dùng giao diện tích.
 
@@ -113,7 +113,7 @@ Tạo độc lập annual median VIIRS bằng Earth Engine theo đúng collectio
 | Sai số tuyệt đối lớn nhất (nW/cm²/sr) | ~0,00004999 | ~0,000050 |
 | Pearson (NTL app vs benchmark) | ~0,9999999998 | ~0,99999999997 |
 | Số pixel GeoTIFF | 217 × 142 = 30.814 | 217 × 142 = 30.814 |
-| Số tháng hợp lệ (\`cf_cvg > 0\`) | 12 tại mọi pixel xuất | 12 tại mọi pixel xuất |
+| Số tháng hợp lệ (`cf_cvg > 0`) | 12 tại mọi pixel xuất | 12 tại mọi pixel xuất |
 | Missing trong ảnh median giữ mask | Không quan sát thấy | Không quan sát thấy |
 
 2014 có **một pixel radiance âm nhẹ**, đóng góp vào **hai** ô lưới; đối chiếu chỉ khớp sau khi áp dụng cùng quy tắc đưa âm về 0 như app.
@@ -136,12 +136,12 @@ Cố định Yanqing 2020 và lưới 500 m; thay **annual median** bằng **ann
 \* Global Moran I trong lần đối chiếu này được tính với **binary Queen weights trên 8.333 ô**; không được thay cho định nghĩa Moran I vùng khác khi chưa đồng nhất mẫu/weights.
 
 - Mean NTL cao hơn median khoảng **4,37%**; **Jaccard HH ~0,961**, **Jaccard LL ~0,962**.
-- Masked median và zero-filled median trùng nhau toàn bộ pixel năm 2020, do không quan sát thấy missing trong raster của pilot. Thực tế này **không** chứng minh \`unmask(0)\` an toàn trên mọi vùng/năm.
-- **Annual mean** ở đây là mean các composite tháng, **không** phải bình quân pixel theo tổng số quan sát \`cf_cvg\` và không đương nhiên tốt hơn median.
+- Masked median và zero-filled median trùng nhau toàn bộ pixel năm 2020, do không quan sát thấy missing trong raster của pilot. Thực tế này **không** chứng minh `unmask(0)` an toàn trên mọi vùng/năm.
+- **Annual mean** ở đây là mean các composite tháng, **không** phải bình quân pixel theo tổng số quan sát `cf_cvg` và không đương nhiên tốt hơn median.
 
 ## 7. Transformation sensitivity — V07
 
-Giữ raw annual median, Queen 500 m, **999 permutations / seed 42 / FDR 5%**. P99 nghĩa là cắt ngưỡng phân vị 99 **của các ô có NTL dương**, rồi mới chuẩn hóa; log là **log NTL trên ô sáng** trong \`run_lisa\`, không đánh đồng với \`log1p(NTL)\` được dùng trong Space-Time.
+Giữ raw annual median, Queen 500 m, **999 permutations / seed 42 / FDR 5%**. P99 nghĩa là cắt ngưỡng phân vị 99 **của các ô có NTL dương**, rồi mới chuẩn hóa; log là **log NTL trên ô sáng** trong `run_lisa`, không đánh đồng với `log1p(NTL)` được dùng trong Space-Time.
 
 | Chỉ tiêu | Raw | P99 winsorized | Log |
 |---|---:|---:|---:|
@@ -184,28 +184,28 @@ Trên cùng 8.333 ô: NTL mean không trọng số tăng từ ~**0,4452 (2014)**
 
 ### 9.2 Công thức phân loại Space-Time
 
-Đặt \`v_t = log1p(max(NTL_t,0))\`; chuẩn hóa \`z_t\` **riêng cho mỗi năm** trên ô không bị edge-mask; dùng Queen-neighbor lag \`W z_t\`. Sau đó:
+Đặt `v_t = log1p(max(NTL_t,0))`; chuẩn hóa `z_t` **riêng cho mỗi năm** trên ô không bị edge-mask; dùng Queen-neighbor lag `W z_t`. Sau đó:
 
-- \`Δz = z_2020 - z_2014\`;
-- \`ΔLag z = W z_2020 - W z_2014\`;
-- \`movement_magnitude = sqrt(Δz² + ΔLag z²)\`;
-- chỉ phân nhóm nếu đủ điều kiện và \`movement_magnitude >= 0.05\`.
+- `Δz = z_2020 - z_2014`;
+- `ΔLag z = W z_2020 - W z_2014`;
+- `movement_magnitude = sqrt(Δz² + ΔLag z²)`;
+- chỉ phân nhóm nếu đủ điều kiện và `movement_magnitude >= 0.05`.
 
 **Đây là phân loại hướng thay đổi theo ngưỡng mô tả, không có permutation p-value hay FDR cho regime.**
 
 | Raw CSV identifier | Số ô | Tăng NTL tuyệt đối | Giảm NTL tuyệt đối |
 |---|---:|---:|---:|
-| \`1_Synergistic_Growth\` | 1.456 | 1.456 | 0 |
-| \`2_Agglomeration_Shadow\` | 75 | 75 | 0 |
-| \`3_Emergent_Pioneer\` | 194 | 194 | 0 |
-| \`4_Synchronized_Decline\` | **4.711** | **4.624** | **87** |
-| \`Excluded_or_Static\` | 1.897 | 1.872 | 25 |
+| `1_Synergistic_Growth` | 1.456 | 1.456 | 0 |
+| `2_Agglomeration_Shadow` | 75 | 75 | 0 |
+| `3_Emergent_Pioneer` | 194 | 194 | 0 |
+| `4_Synchronized_Decline` | **4.711** | **4.624** | **87** |
+| `Excluded_or_Static` | 1.897 | 1.872 | 25 |
 
-**4.624/4.711 (~98,15%)** ô gắn nhãn máy \`Synchronized_Decline\` vẫn **tăng radiance tuyệt đối**. Ý nghĩa đúng: cả ô và láng giềng **giảm vị thế NTL tương đối** trong hai phân phối năm, không phải “suy giảm ánh sáng/kinh tế” tuyệt đối. PR #11 đã giải quyết nhãn UI, còn mã xuất CSV được giữ nguyên có chủ đích.
+**4.624/4.711 (~98,15%)** ô gắn nhãn máy `Synchronized_Decline` vẫn **tăng radiance tuyệt đối**. Ý nghĩa đúng: cả ô và láng giềng **giảm vị thế NTL tương đối** trong hai phân phối năm, không phải “suy giảm ánh sáng/kinh tế” tuyệt đối. PR #11 đã giải quyết nhãn UI, còn mã xuất CSV được giữ nguyên có chủ đích.
 
-Khi thay ngưỡng mô tả \`movement_magnitude\`, số ô Synchronized Relative Decline lần lượt khoảng **5.242** (0,025), **4.711** (0,050), **2.949** (0,100), **1.111** (0,200): kết luận chế độ nhạy với cutoff. Spatial Markov quartile gợi ý khoảng **74,90%** ô giữ cùng quartile 2014→2020; đây là **ổn định thứ hạng**, không phải NTL đứng yên.
+Khi thay ngưỡng mô tả `movement_magnitude`, số ô Synchronized Relative Decline lần lượt khoảng **5.242** (0,025), **4.711** (0,050), **2.949** (0,100), **1.111** (0,200): kết luận chế độ nhạy với cutoff. Spatial Markov quartile gợi ý khoảng **74,90%** ô giữ cùng quartile 2014→2020; đây là **ổn định thứ hạng**, không phải NTL đứng yên.
 
-Sai khác một ô \`grid_id=3922\` xuất hiện khi tái tính ngưỡng trực tiếp từ NTL **đã làm tròn** trong CSV; nhãn xuất gốc phù hợp với chỉ số chuyển động đã lưu. Không đủ bằng chứng coi đó là lỗi thuật toán.
+Sai khác một ô `grid_id=3922` xuất hiện khi tái tính ngưỡng trực tiếp từ NTL **đã làm tròn** trong CSV; nhãn xuất gốc phù hợp với chỉ số chuyển động đã lưu. Không đủ bằng chứng coi đó là lỗi thuật toán.
 
 ### 9.3 Phạm vi đã/ chưa có
 
@@ -263,7 +263,7 @@ Benchmark trên Streamlit Community Cloud với RAM, thời gian và lỗi netwo
 
 ## 13. Quy tắc cập nhật file này sau mỗi lần validation
 
-**Chỉ cần PR sửa file \`docs/VALIDATION_MASTER.md\`:**
+**Chỉ cần PR sửa file `docs/VALIDATION_MASTER.md`:**
 
 1. **Không ghi đè lịch sử:** thêm một mục dưới *Change log* và cập nhật dòng trạng thái tương ứng; nếu phát hiện kết luận cũ sai, ghi rõ “superseded by” và lý do.
 2. Mỗi lần thêm bằng chứng phải có: **ngày**, **commit/PR version**, **địa phương & GID**, **năm**, **collection & band**, **CRS/scale**, **grid specification**, **phương pháp & seed/perms/FDR**, **input hashes hoặc bền vững link**, **acceptance tolerance**, **kết quả**, **exceptions**, **script/test locator**.
@@ -274,7 +274,7 @@ Benchmark trên Streamlit Community Cloud với RAM, thời gian và lỗi netwo
 
 ### Mẫu bổ sung
 
-\`\`\`markdown
+```markdown
 ### YYYY-MM-DD — [Vxx] Tên đợt validation
 - Repository commit/PR:
 - Location (GID), years, source collection:
@@ -287,15 +287,15 @@ Benchmark trên Streamlit Community Cloud với RAM, thời gian và lỗi netwo
 - Deviations and uncertainty:
 - Conclusion with scope:
 - Follow-up action / issue / PR:
-\`\`\`
+```
 
 ## 14. Change log
 
 | Date (Asia/Ho_Chi_Minh) | Update | Relevant source |
 |---|---|---|
-| 2026-11-11 | Tổng hợp audit GADM/NoData/Local Moran và CI; regression fixes | [PR #10](https://github.com/hoanfg/spatial-app/pull/10), \`docs/audit-fixes-2026-11-11.md\` |
+| 2026-11-11 | Tổng hợp audit GADM/NoData/Local Moran và CI; regression fixes | [PR #10](https://github.com/hoanfg/spatial-app/pull/10), `docs/audit-fixes-2026-11-11.md` |
 | 2026-11-11 | Ghi nhận Yanqing VIIRS 2014/2020, LISA, GHSL sơ bộ, measurement/transformation/spatial/temporal sensitivity | Các CSV, GeoTIFF và evidence archive của chiến dịch validation; **chưa archive trực tiếp trong repo** |
-| 2026-11-11 | Cập nhật giải thích Space-Time “relative decline” và cutoff mô tả | [PR #11](https://github.com/hoanfg/spatial-app/pull/11), \`docs/spacetime-relative-regime-interpretation.md\` |
+| 2026-11-11 | Cập nhật giải thích Space-Time “relative decline” và cutoff mô tả | [PR #11](https://github.com/hoanfg/spatial-app/pull/11), `docs/spacetime-relative-regime-interpretation.md` |
 | 2026-11-11 | Khởi tạo một sổ cái validation tổng hợp, cập nhật tiếp bằng PR | PR tạo file này |
 
 ---
