@@ -15,6 +15,7 @@ from jinja2 import Template
 from streamlit_folium import st_folium
 
 from .formatting import fmt_p
+from .spacetime_labels import format_regime_summary
 from .lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
 from .lisa_diagnostics import (
     HEAVY_WORK_LIMIT, SEED_LIST, auto_diagnostics, estimate_seconds, heavy_work_units,
@@ -1040,11 +1041,13 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                 expanded=False,
             ):
                 st.caption(
-                    "Phân tích vector dịch chuyển (Δz, ΔLag z), phát hiện hiệu ứng 'Bóng tối tích tụ' (Agglomeration Shadow) "
-                    "và tính ma trận xác suất chuyển dịch Markov có điều kiện không gian (Rey, Arribas-Bel, & Wolf, 2023; Borusyak et al., 2024)."
+                    "Phân tích thay đổi vị thế ánh sáng tương đối: Δz và ΔLag z, trong đó z được chuẩn hóa riêng "
+                    "cho mỗi năm từ ln(1 + NTL); đồng thời tính ma trận chuyển dịch Spatial Markov "
+                    "(Rey, Arribas-Bel, & Wolf, 2023; Borusyak et al., 2024)."
                     if is_vi else
-                    "Computes directional movement vectors (Δz, ΔLag z), detects 'Agglomeration Shadow' effects, "
-                    "and estimates conditional Spatial Markov transition matrices (Rey, Arribas-Bel, & Wolf, 2023; Borusyak et al., 2024)."
+                    "Analyzes relative light-position changes (Δz, ΔLag z), using year-specific standardization "
+                    "of ln(1 + NTL), and computes spatially conditioned Markov transitions "
+                    "(Rey, Arribas-Bel, & Wolf, 2023; Borusyak et al., 2024)."
                 )
                 sc1, sc2 = st.columns([2, 1])
                 default_idx = 0
@@ -1101,7 +1104,22 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                               _num(sm["intensive_mean_dln_ntl"]),
                               help=(f"Tăng trưởng trung bình của ln(NTL) trên {sm['n_both_lit']:,} ô sáng ở cả hai kỳ (biên độ sâu)." if is_vi
                                     else f"Mean ln(NTL) growth over {sm['n_both_lit']:,} cells lit in both periods (intensive margin)."))
-                    st.dataframe(st_out.regime_summary, hide_index=True, use_container_width=True)
+                    st.caption(
+                        "**Lưu ý diễn giải:** Bốn chế độ mô tả hướng thay đổi của Z-score chuẩn hóa riêng từng năm "
+                        "và trung bình Z-score láng giềng, **không phải** biến động NTL tuyệt đối hoặc tăng/giảm kinh tế. "
+                        "Chỉ gán chế độ khi độ dài vector √(Δz² + ΔLag z²) ≥ 0,05; đây là **ngưỡng mô tả**, "
+                        "không phải kiểm định ý nghĩa thống kê hay FDR. Mã nhóm trong CSV giữ nguyên để tương thích."
+                        if is_vi else
+                        "**Interpretation:** The four regimes describe directions of change in year-standardized "
+                        "NTL Z-scores and neighboring Z-score lags—not absolute light or economic growth/decline. "
+                        "Regimes require vector length √(Δz² + ΔLag z²) ≥ 0.05, a **descriptive threshold**, "
+                        "not a significance test or FDR result. Raw regime codes remain unchanged in CSV exports."
+                    )
+                    st.dataframe(
+                        format_regime_summary(st_out.regime_summary, lang="vi" if is_vi else "en"),
+                        hide_index=True,
+                        use_container_width=True,
+                    )
                     mc1, mc2 = st.columns(2)
                     with mc1:
                         st.markdown(
