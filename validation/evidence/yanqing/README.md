@@ -1,4 +1,4 @@
-# Yanqing validation evidence — reproducibility package
+# Yanqing validation evidence: reproducibility package
 
 This directory holds source exports and independent comparison artifacts for the **Yanqing District, Beijing, China** validation of `spatial-app`. It is evidence, not an assertion that every statistical or economic claim has been verified.
 
