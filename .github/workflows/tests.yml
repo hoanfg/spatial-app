@@ -29,4 +29,4 @@ jobs:
           python-version: "3.13"
           cache: pip
       - run: pip install -r requirements-test.txt
-      - run: pytest -q tests/test_zonal.py tests/test_ui_smoke.py tests/test_audit_regressions.py
+      - run: pytest -q tests/test_zonal.py tests/test_ui_smoke.py tests/test_audit_regressions.py tests/test_spacetime_labels.py tests/test_pipeline_integration.py
