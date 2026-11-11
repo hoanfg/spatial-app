@@ -76,7 +76,7 @@ def test_raster_to_lisa_to_csv_roundtrip():
     )
     assert len(result.cell_df) == len(grid)
     assert not result.cell_df["lisa_class"].isna().any()
-    assert result.cell_df.loc[0, "lisa_class"] == "Dark"
+    assert result.cell_df.loc[0, "lisa_class"] == "Dark (NTL=0)"
 
     exported = pd.DataFrame({
         "grid_id": grid.grid_id.to_numpy(),
