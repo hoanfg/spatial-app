@@ -1,13 +1,13 @@
 <a id="top"></a>
 
-# Spatial-app — Validation specification and evidence register
+# Spatial-app: Validation specification and evidence register
 
 | Field | Description |
 |:---|:---|
 | Project | Spatial econometrics and VIIRS nighttime-lights extraction |
 | Repository | `hoanfg/spatial-app` |
-| Document | English validation specification |
-| Version | 1.0 — 11 November 2026 |
+| Document | Validation specification |
+| Version | 1.0: 11 November 2026 |
 | Reference implementation | Main branch, following pull requests #10, #11, #12 and #13 |
 | Reference study | Yanqing District, Beijing, China, 2014–2020 |
 | Scope | Methods, numerical findings, acceptance criteria, limitations and future verification |
@@ -21,8 +21,8 @@
 2. [Reference datasets and reproducibility](#s2)
 3. [GADM boundary audit](#s3)
 4. [Statistical implementation and Local Moran validation](#s4)
-5. [Independent VIIRS extraction — 2020](#s5)
-6. [Independent VIIRS extraction — 2014](#s6)
+5. [Independent VIIRS extraction - 2020](#s5)
+6. [Independent VIIRS extraction - 2014](#s6)
 7. [Measurement sensitivity](#s7)
 8. [Transformation sensitivity](#s8)
 9. [Spatial robustness](#s9)
@@ -40,13 +40,13 @@
 
 ### 1.1. Research objective
 
-The application integrates GADM 4.1 administrative boundaries, VIIRS Day/Night Band radiance, regularly spaced analytical grids, zonal statistics, spatial autocorrelation, Local Indicators of Spatial Association (LISA), GHSL reference variables, and two-period spatial dynamics. Verification must distinguish **numerical correctness** from **sensitivity to methodological choices**, **validity of a proxy for economic activity**, and **operational reliability**.
+The application integrates GADM 4.1 administrative boundaries, VIIRS Day/Night band radiance, regularly spaced analytical grids, zonal statistics, spatial autocorrelation, Local Indicators of Spatial Association (LISA), GHSL reference variables, and two-period spatial dynamics. Verification must distinguish **numerical correctness** from **sensitivity to methodological choices**, **validity of a proxy for economic activity**, and **operational reliability**.
 
 The verification programme uses the following categories:
 
 | Category | Meaning | What it does not imply |
 |---|---|---|
-| PASS — tested scope | Independent calculation agrees with the specified implementation within a prespecified numerical tolerance | General performance in all locations |
+| PASS: tested scope | Independent calculation agrees with the specified implementation within a prespecified numerical tolerance | General performance in all locations |
 | SENSITIVITY CHARACTERIZED | Effects of alternative definitions have been quantified | All specifications are interchangeable |
 | FIXED | A documented defect or interpretation problem was corrected and regression-tested | Every possible downstream use is validated |
 | PARTIAL | Relevant results exist, but part of the independent comparison is missing | End-to-end verification |
@@ -65,7 +65,7 @@ The validation reports were generated on 11 November 2026 and consolidated into 
 
 | Parameter | Value |
 |---|---|
-| Country and administrative district | China — Beijing — Yanqing (Diên Khánh) |
+| Country and administrative district | China - Beijing - Yanqing |
 | GADM identifier | `GID_2 = CHN.2.1.11_1` |
 | Boundary source | `data/gadm41_CHN_gpkg/CHN_Curated_Boundaries/Beijing/CHN_Beijing_Yanqing_District.geojson` |
 | VIIRS source | `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` |
@@ -185,7 +185,7 @@ Later sensitivity work, using the original seed and matching algorithm, reproduc
 **PASS within the reference configuration** for grid adjacency, deterministic Local Moran, permutation and BH-FDR behavior. This does not make the local hotspot map invariant to weights, transformations, grid sizes or the inference convention.
 
 <a id="s5"></a>
-## 5. Independent VIIRS extraction — 2020
+## 5. Independent VIIRS extraction: 2020
 
 ### 5.1. Independent Earth Engine reference
 
@@ -217,7 +217,7 @@ The separate valid-month raster indicated **12 months with `cf_cvg > 0` at every
 **PASS:** the complete 2020 VIIRS raster-to-cell extraction pipeline was independently reproduced at CSV output precision, including all clipped border polygons. No inference is made about missing data or calibration in other years or regions.
 
 <a id="s6"></a>
-## 6. Independent VIIRS extraction — 2014
+## 6. Independent VIIRS extraction: 2014
 
 ### 6.1. Reference image and quality control
 
@@ -247,7 +247,7 @@ The unweighted mean NTL across the common grid rose from **~0.4452 (2014)** to *
 **PASS for 2014 raster extraction and the two-year radiance comparison.** An increase in absolute nighttime radiance should not automatically be described as economic or GDP growth.
 
 <a id="s7"></a>
-## 7. Measurement sensitivity — annual aggregation and missingness
+## 7. Measurement sensitivity: annual aggregation and missingness
 
 ### 7.1. Experimental design
 
@@ -275,7 +275,7 @@ The masked and zero-filled medians agreed exactly over this pilot because the va
 The choice of annual aggregation influences radiance magnitude and inequality modestly, while preserving the main local clusters for this pilot. The application retains **annual median as the specified baseline**. Annual mean remains a sensitivity specification rather than a replacement.
 
 <a id="s8"></a>
-## 8. Transformation sensitivity — raw, P99 and log
+## 8. Transformation sensitivity: raw, P99 and log
 
 ### 8.1. Specifications
 
@@ -304,7 +304,7 @@ The NTL distribution is heavily right-skewed. Extremely bright cells strongly in
 Retain **raw NTL** as the baseline for absolute radiance concentration, **P99** as a robustness measure against extreme values, and **log NTL** as an alternative representation of relative light intensity. A specification must not be selected solely because it identifies more or fewer HH clusters. Findings sensitive to transformation should be reported as such.
 
 <a id="s9"></a>
-## 9. Spatial robustness — Queen/Rook and 500/1,000 m
+## 9. Spatial robustness: Queen/Rook and 500/1,000 m
 
 ### 9.1. Study design
 
@@ -330,7 +330,7 @@ Between 500 m and 1,000 m, the Queen HH area was approximately **92.5 km² → 9
 **SENSITIVITY CHARACTERIZED.** HH area is relatively stable across these cell scales but the boundaries change materially; results are more sensitive to Queen versus Rook adjacency. Neither weight system is universally correct. Scientific use must specify the chosen neighborhood definition and report robustness where that choice matters.
 
 <a id="s10"></a>
-## 10. Temporal validation and Spatial Markov — 2014 to 2020
+## 10. Temporal validation and Spatial Markov from 2014 to 2020
 
 ### 10.1. Temporal transform and directional vector
 
@@ -455,11 +455,11 @@ Static fixtures alone cannot confirm performance on all source data, and agreeme
 
 | ID | Topic | Current status | Principal outstanding requirement |
 |---|---|---|---|
-| V01 | Curated China GADM geometry/GIDs | PASS — audited China set | Extend scope when adding other countries |
-| V02 | Automated tests / regression fixes | PASS — covered CI runs | Continuous verification on future commits |
-| V03 | Independent LISA and BH-FDR | PASS — Yanqing 2020 | Additional geographies and Monte Carlo stability |
-| V04 | VIIRS 2020 raster-to-polygon | PASS — all 8,333 cells | Geographic transferability |
-| V05 | VIIRS 2014 raster-to-polygon | PASS — all 8,333 cells | Longer series and varying coverage |
+| V01 | Curated China GADM geometry/GIDs | PASS: audited China set | Extend scope when adding other countries |
+| V02 | Automated tests / regression fixes | PASS: covered CI runs | Continuous verification on future commits |
+| V03 | Independent LISA and BH-FDR | PASS: Yanqing 2020 | Additional geographies and Monte Carlo stability |
+| V04 | VIIRS 2020 raster-to-polygon | PASS: all 8,333 cells | Geographic transferability |
+| V05 | VIIRS 2014 raster-to-polygon | PASS: all 8,333 cells | Longer series and varying coverage |
 | V06 | Aggregation and missingness | SENSITIVITY CHARACTERIZED | Cases containing genuine missing pixels |
 | V07 | Raw/P99/log transformations | SENSITIVITY CHARACTERIZED | Interpretation across locations |
 | V08 | Queen/Rook and cell size | SENSITIVITY CHARACTERIZED | Other morphologies, resolutions and weights |
@@ -525,7 +525,7 @@ Update the status table in Section 13, add the detailed findings to the relevant
 ### 15.2. Entry template
 
 ```markdown
-### YYYY-MM-DD — Vxx: Study name
+### YYYY-MM-DD - Vxx: Study name
 - Repository commit / pull request:
 - Study area (GID), years, satellite products:
 - Source rasters, masks, grids, projection:
