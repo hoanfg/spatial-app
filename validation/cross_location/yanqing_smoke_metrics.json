@@ -1,0 +1,21 @@
+{
+  "grid_count": 8333,
+  "bounding_grid_cells": 17666,
+  "epsg_utm": 32650,
+  "grid_area_km2": 2003.50891203682,
+  "edge_masked": 600,
+  "n_comparable": 8333,
+  "pass_cells": 8333,
+  "n_fail_or_missing": 0,
+  "tolerance": 0.00005,
+  "mae": 0.00002502299375201045,
+  "max_abs_error": 0.00004999332915245347,
+  "pearson": 0.9999999999706128,
+  "inputs_sha256": {
+    "boundary": "3f40030b125423fa68e3350284ff79464843fa601a3bdfa7fa5ea891f9e91dbd",
+    "raster": "39d7d4789f816db6a066da4d90b022b8f4ba52abfb1e45da84c06be594090025",
+    "csv": "27d6b193749e8367c993bf9d8b6de0fdb0187603e41e52ba243af9ec08862bf1"
+  },
+  "passed": true,
+  "note": "Raster benchmark only; does not independently test Local Moran, FDR, GHSL, or economic validity."
+}
