@@ -45,13 +45,13 @@ Lặp lại cho Bao'an và Qimen bằng đúng GeoJSON/GeoTIFF/CSV tương ứng
 
 1. **Hình học:** số ô, `grid_id`, diện tích từng ô khớp với CSV app trong dung sai diện tích 0,00005 km².
 2. **NTL:** toàn bộ ô có raster đủ độ phủ khớp trong sai số làm tròn CSV ±0,00005 nW/cm²/sr; báo cáo mọi missing/fail, không xóa ô ngoại lệ.
-3. **Kiểm tra dữ liệu thiếu:** so annual median với masked median; phân tích `cf_cvg` theo tháng, mọi giá trị âm và ảnh hưởng tới polygon zonal mean. Không giả định tất cả pixel có 12 tháng như Yanqing.
+3. **Kiểm tra dữ liệu thiếu:** so annual median với masked median; phân tích `cf_cvg` theo tháng, mọi giá trị âm và ảnh hưởng tới polygon zonal mean. Không giả định tất cả pixel có 12 tháng như Diên Khánh.
 4. **LISA:** tái tính Queen adjacency, Local Moran và p-value/FDR trên 500 m bằng script kiểm chứng riêng; ngẫu nhiên có seed cố định, nêu rõ cách đếm tie/tail; báo cáo nhãn HH/LL và các ngoại lệ.
-5. **Khả năng khái quát:** chỉ coi V11 hoàn tất khi cả ba địa bàn đã có kết quả và bằng chứng đính kèm; không yêu cầu HH area share giống Yanqing — các địa bàn khác nhau về cấu trúc là điều được mong đợi.
+5. **Khả năng khái quát:** chỉ coi V11 hoàn tất khi cả ba địa bàn đã có kết quả và bằng chứng đính kèm; không yêu cầu HH area share giống Diên Khánh, các địa bàn khác nhau về cấu trúc là điều được mong đợi.
 6. **Lưu trữ:** đính kèm raster/CSV, mã kiểm thử, manifest SHA-256, phiên bản commit, kết quả theo ô và báo cáo; cập nhật đồng bộ hai bản `docs/VALIDATION MASTER.md` và `docs/VALIDATION MASTER-vi.md` theo đúng nội dung mới.
 
 ## 5. Tình trạng thực thi
 
-- **Đã thực hiện:** xác nhận tồn tại ba ranh giới trong GitHub, mã GID, bbox, diện tích gần đúng; chuẩn bị script Earth Engine và comparator Python; comparator đã được chạy trên Yanqing 2020 và đạt **8.333/8.333** ô (sai số lớn nhất ~0,00004999).
+- **Đã thực hiện:** xác nhận tồn tại ba ranh giới trong GitHub, mã GID, bbox, diện tích gần đúng; chuẩn bị script Earth Engine và comparator Python; comparator đã được chạy trên Diên Khánh 2020 và đạt **8.333/8.333** ô (sai số lớn nhất ~0,00004999).
 - **Chưa thực hiện:** xuất GeoTIFF 2020 ba vùng, CSV app cho ba vùng, kiểm chứng raster từng ô và LISA từng vùng, so sánh GHSL độc lập.
 - **Quyết định:** giữ V11 là `PENDING` cho tới khi có bằng chứng cho cả ba địa bàn.
