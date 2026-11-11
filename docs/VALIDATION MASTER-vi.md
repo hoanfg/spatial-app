@@ -512,9 +512,9 @@ Một chương trình validation có giá trị khoa học không yêu cầu t�
 
 ### 14.2. Phạm vi lưu trữ
 
-Tài liệu này giữ phương pháp và các kết quả số đã báo cáo, **không chứa trực tiếp** toàn bộ ZIP bằng chứng, GeoTIFF, script hoặc CSV lớn. Những tên file trong bảng là định danh sản phẩm của chiến dịch validation, **không phải liên kết GitHub**. Không thể tái thực thi mọi phép đối chiếu chỉ bằng clone repository.
+Repository hiện có **một phần bộ bằng chứng thực**, truy cập tại [validation/evidence/yanqing](../validation/evidence/yanqing/README.md), gồm các CSV gốc đủ 8.333 ô, bảng kiểm tra độc lập LISA và VIIRS 2020 theo ô, ZIP mã tái lập LISA, và GeoTIFF tham chiếu VIIRS 2014. Bảng chỉ mục ghi mã định danh Git và SHA-256 cho dữ liệu nhị phân đã công bố. Tuy nhiên, **chưa đăng đầy đủ** raster 2020, hình học lưới, toàn bộ script và kết quả các đợt độ nhạy. Gói ZIP tổng hợp 73 file đã được tạo và có checksum nhưng **chưa lưu trong GitHub**; không được khẳng định người ngoài có thể tái lập mọi kết quả chỉ từ repository.
 
-Đối với công bố và phản biện học thuật, cần lưu GeoTIFF/CSV nguồn, phiên bản script, môi trường thực thi và checksum bất biến vào kho lưu trữ bền vững, rồi cập nhật đường dẫn tại đây.
+Trước khi công bố học thuật, cần lưu gói bằng chứng đầy đủ vào kho bền vững và cập nhật đường dẫn cùng checksum tại đây.
 
 ### 14.3. Kết quả trung gian được thay thế
 

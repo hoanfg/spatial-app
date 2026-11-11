@@ -499,7 +499,7 @@ A scientifically useful validation programme does not require all correlations t
 
 ### 14.2. What is and is not stored
 
-The present specification records method details and reported numeric results, while the binary evidence bundles remain outside this documentation PR. Those filenames identify work products of the validation campaign **but are not hyperlinks to repository-hosted copies**. There is no claim that all comparisons can be executed from the Git repository without additional input data. For formal peer review, preserve source GeoTIFF/CSV, script versions, environment information and immutable file hashes in a stable evidence deposit.
+The validation evidence repository now includes **a partial, individually verifiable data deposit** at [validation/evidence/yanqing](../validation/evidence/yanqing/README.md): source 8,333-cell application CSVs, independent Local Moran and 2020 polygon comparisons, a reproducibility archive for Local Moran, and the independent 2014 VIIRS reference TIFF. The index records Git blob identifiers and SHA-256 checksums for available binary materials. This deposit **does not yet contain** every source raster, all scripts, the original grid GeoJSON, or all complete sensitivity runs. A 73-file consolidated evidence ZIP has been assembled separately with per-member SHA-256 hashes but is **not deposited here**. Public end-to-end reproduction of all reported results therefore remains incomplete; the evidence index states precisely what can currently be inspected and what is still outstanding.
 
 ### 14.3. Historical interim results
 
