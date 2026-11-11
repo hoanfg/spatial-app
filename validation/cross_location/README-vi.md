@@ -1,4 +1,4 @@
-# Đề cương Cross-location Validation — VIIRS 2020
+# Cross-location Validation cho VIIRS 2020
 
 **Trạng thái:** Đã chọn mẫu và kiểm chứng công cụ; **chưa** có dữ liệu NTL/LISA của ba địa bàn mới. Không đánh dấu V11 là PASS khi chưa đối chiếu raster–CSV.
 
@@ -6,9 +6,9 @@
 
 | Vai trò thử nghiệm | Địa bàn theo GADM 4.1 | GID_2 | Diện tích gần đúng (km²) | Ô 500 m tối thiểu theo diện tích |
 |---|---|---|---:|---:|
-| Lõi đô thị | Shanghai / Shanghai District | `CHN.24.1.10_1` | ~197,7 | ~791 |
-| Đô thị–công nghiệp/ven đô, nhiều thành phần hình học | Shenzhen / Bao'an District | `CHN.6.15.1_1` | ~1.655,5 | ~6.623 |
-| Đối chứng ít đô thị hơn | Anhui / Huangshan / Qimen County | `CHN.1.11.1_1` | ~2.206,9 | ~8.828 |
+| Lõi đô thị | Thượng Hải / Nội đô Thượng Hải | `CHN.24.1.10_1` | ~197,7 | ~791 |
+| Đô thị–công nghiệp/ven đô, nhiều thành phần hình học | Thâm Quyến / Quận Bảo An | `CHN.6.15.1_1` | ~1.655,5 | ~6.623 |
+| Đối chứng ít đô thị hơn | An Huy / Hoàng Sơn / Huyện Kỳ Môn | `CHN.1.11.1_1` | ~2.206,9 | ~8.828 |
 
 Các diện tích trên là **ước lượng bằng phép chiếu phẳng gần đúng** từ tọa độ GeoJSON GitHub; không thay cho diện tích UTM và không phải số ô clipping đã quan sát. Nhãn cấu trúc vùng là giả thuyết thiết kế mẫu, chưa được xác nhận từ VIIRS/GHSL. Bao'an có nhiều thành phần hình học rời, hữu ích để thử kiểm tra cắt biên.
 
