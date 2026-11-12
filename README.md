@@ -1,5 +1,7 @@
 <a id="top"></a>
 
+[A02 data semantics: implementation, evidence and pending live validation](validation/DATA_SEMANTICS_A02.md)
+
 <div align="center">
 
 # Technical manual and methodological framework

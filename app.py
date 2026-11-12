@@ -18,6 +18,7 @@ import folium
 import geopandas as gpd
 import numpy as np
 from ntl.zonal import read_valid_band
+from ntl.semantics import annual_image_with_quality, cell_quality
 import pandas as pd
 import requests
 import shapely
@@ -1404,7 +1405,7 @@ def boundary_stats(path: str, mtime: float):
 
 
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
-def fetch_ntl_raster(bbox: tuple, year_id: int, _v: int = 2) -> bytes:
+def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 3) -> bytes:
     """Tải GeoTIFF NTL trung vị năm `year_id` có lọc mây (cf_cvg > 0) trong bbox (WGS84)."""
     minx, miny, maxx, maxy = bbox
     roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
@@ -1420,7 +1421,7 @@ def fetch_ntl_raster(bbox: tuple, year_id: int, _v: int = 2) -> bytes:
         # Loại bỏ các điểm ảnh có số quan sát không mây bằng 0 (cf_cvg == 0)
         return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
 
-    img = col.map(_mask_cloud_free).median().select("avg_rad").unmask(0.0).toFloat().clip(roi)
+    img = annual_image_with_quality(col.map(_mask_cloud_free), roi)
     url = img.getDownloadUrl(
         {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
     )
@@ -1917,13 +1918,17 @@ def run_pipeline():
             mean_col = next(c for c in stats.columns if "mean" in str(c).lower())
             stats = stats[["grid_id", mean_col]].rename(columns={mean_col: "ntl_mean"})
             stats["grid_id"] = pd.to_numeric(stats["grid_id"], errors="coerce").astype("int64")
-            n_stat_nan = int(pd.to_numeric(stats["ntl_mean"], errors="coerce").isna().sum())
+            stats["dq_stat_missing"] = ~np.isfinite(pd.to_numeric(stats["ntl_mean"], errors="coerce"))
+            n_stat_nan = int(stats["dq_stat_missing"].sum())
             stats["ntl_mean"] = pd.to_numeric(stats["ntl_mean"], errors="coerce").fillna(0.0).clip(lower=0.0)
             
             grid = grid.merge(stats, on="grid_id", how="left").reset_index(drop=True)
             n_merge_miss = int(grid["ntl_mean"].isna().sum())
+            grid["dq_stat_missing"] = grid["dq_stat_missing"].fillna(True).astype(bool)
             grid["ntl_mean"] = grid["ntl_mean"].fillna(0.0).astype(float)
             cell_q = cell_report(len(grid), n_stat_nan, n_merge_miss, grid["ntl_mean"].to_numpy())
+            quality = cell_quality(tif_bytes, grid_wgs)
+            grid = pd.concat([grid.reset_index(drop=True), quality], axis=1)
 
             status.update(label="Trạm 3/3 · Đang tính Moran's I toàn cục (hoán vị)..." if LANG == "vi"
                           else "Station 3/3 · Computing global Moran's I (permutations)...")
@@ -2315,6 +2320,8 @@ export_df = pd.DataFrame(
     }
 )
 
+export_df = pd.concat([export_df, grid_utm.filter(regex=r"^dq_").reset_index(drop=True)], axis=1)
+
 top10_n = max(1, int(math.ceil(n * 0.10)))
 top10_share = float(np.sort(sol_cell)[::-1][:top10_n].sum() / sol * 100) if sol > 0 else 0.0
 gini_v = gini(sol_cell)
@@ -2636,7 +2643,7 @@ with tab_lisa:
     _dt_slug = slugify(res.get("district_raw") or res["district"])
     region_id = f"{_iso_id}_{_st_slug}_{_dt_slug}"
 
-    def _fetch_other_year_ntl(target_year: int) -> np.ndarray:
+    def _fetch_other_year_ntl(target_year: int) -> pd.DataFrame:
         """Tải và trích xuất NTL của năm đối chiếu t0 trên đúng lưới grid_utm hiện tại."""
         from exactextract import exact_extract
         import rasterio
@@ -2660,9 +2667,13 @@ with tab_lisa:
             st_df = exact_extract(tmp_p, grid_wgs[["grid_id", "geometry"]], ["mean"], include_cols=["grid_id"], output="pandas")
             mcol = next(c for c in st_df.columns if "mean" in str(c).lower())
             st_df["grid_id"] = pd.to_numeric(st_df["grid_id"], errors="coerce").astype("int64")
+            st_df["dq_stat_missing"] = ~np.isfinite(pd.to_numeric(st_df[mcol], errors="coerce"))
             st_df[mcol] = pd.to_numeric(st_df[mcol], errors="coerce").fillna(0.0).clip(lower=0.0)
-            merged = grid_utm[["grid_id"]].merge(st_df[["grid_id", mcol]], on="grid_id", how="left")
-            return merged[mcol].fillna(0.0).to_numpy(dtype=float)
+            merged = grid_utm[["grid_id"]].merge(st_df[["grid_id", mcol, "dq_stat_missing"]], on="grid_id", how="left")
+            quality = cell_quality(tif_bytes, grid_wgs)
+            quality["dq_stat_missing"] = merged["dq_stat_missing"].fillna(True).astype(bool).to_numpy()
+            quality["ntl_mean"] = merged[mcol].fillna(0.0).to_numpy(dtype=float)
+            return quality
         finally:
             if tmp_p and os.path.exists(tmp_p):
                 try:

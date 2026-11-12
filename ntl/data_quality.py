@@ -14,6 +14,7 @@ PIPELINE_PROVENANCE = {
     "ntl_composite": "median_of_monthly_cf_cvg_gt0",
     "ntl_negative_handling": "clip_to_0_before_zonal_mean",
     "ntl_nodata_handling": "unmask_to_0",
+    "ntl_observation_metadata": "annual_median_mask_and_month_count_v1",
 }
 
 

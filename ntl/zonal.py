@@ -15,7 +15,8 @@ def read_valid_band(src, clip_negative: bool = True):
 
 
 def zonal_stat(tif_bytes: bytes, grid_wgs, stat: str = "mean", clip_negative: bool = True,
-               id_col: str = "grid_id", fill_missing: float | None = 0.0) -> pd.Series:
+               id_col: str = "grid_id", fill_missing: float | None = 0.0,
+               band: int = 1) -> pd.Series:
     """Giá trị `stat` ('mean' hoặc 'sum') của raster trên từng ô, trả Series theo thứ tự grid_wgs[id_col].
 
     Missing/masked/nonfinite pixels are excluded; clip_negative clips valid negatives only.
@@ -26,7 +27,10 @@ def zonal_stat(tif_bytes: bytes, grid_wgs, stat: str = "mean", clip_negative: bo
 
     with MemoryFile(tif_bytes) as mf:
         with mf.open() as src:
-            arr = read_valid_band(src, clip_negative)
+            arr = src.read(band, masked=True).astype("float32").filled(np.nan)
+            arr[~np.isfinite(arr)] = np.nan
+            if clip_negative:
+                arr = np.maximum(arr, 0.0)
             crs, transform, h, w = src.crs, src.transform, src.height, src.width
 
     tmp = None
