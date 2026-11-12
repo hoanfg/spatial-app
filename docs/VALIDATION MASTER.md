@@ -11,7 +11,7 @@
 | Reference implementation | Main branch, following pull requests #10, #11, #12 and #13 |
 | Reference study | Yanqing District, Beijing, China, 2014–2020 |
 | Scope | Methods, numerical findings, acceptance criteria, limitations and future verification |
-| Maintenance | This document is revised through pull requests; previous findings remain traceable |
+| Maintenance | This document is revised through pull requests; previous findings remain traceable |\n\n> **Subsequent review (12 November 2026):** The original 11 November reference scope is preserved below. After PRs #19–#22, consult [Major validation review — coverage and evidence reconciliation](../validation/MAJOR_REVIEW_COVERAGE_EVIDENCE_2026-11.md) for current synthetic/CI coverage, archive integrity checks and outstanding field-evidence limitations. V11 cross-location, GHSL independent validation and cloud operational checks are not marked complete by those merges.
 
 > **Scope of assurance.** The principal raster extraction and spatial statistics have been reproduced for the specified Yanqing study. This does not establish universal validity for other locations, years, economic interpretations or the production hosting environment. This document records both successful tests and material sensitivities.
 
