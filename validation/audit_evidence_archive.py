@@ -18,6 +18,7 @@ from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
 TOLERANCE = 0.00005 + 1e-9  # exported CSV: four decimal places
+EXPECTED_ARCHIVE_SHA256 = "95b3874d4253eec2269f2477b648a067fb14d1c94be54bc0ed38f8795599260c"
 
 
 def read_rows(archive: ZipFile, name: str) -> list[dict[str, str]]:
@@ -74,6 +75,9 @@ def inspect(path: Path) -> dict:
                 bad.append(name)
         if bad:
             raise ValueError(f"SHA-256/size mismatch: {bad}")
+        archive_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+        if archive_hash != EXPECTED_ARCHIVE_SHA256:
+            raise ValueError("Archive SHA-256 differs from the separately recorded reference hash")
 
         f20 = "yanqing_viirs_all_8333_polygon_comparison.csv"
         f14 = "yanqing_2014_viirs_cell_validation.csv"
@@ -122,7 +126,7 @@ def inspect(path: Path) -> dict:
             raise ValueError("Space-Time cross-file output inconsistency")
 
         return {
-            "archive_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "archive_sha256": archive_hash,
             "manifest_files_verified": len(manifest),
             "zip_crc_passed": True,
             "viirs_2014_from_archived_reference_columns": results14,
