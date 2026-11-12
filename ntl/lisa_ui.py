@@ -1,4 +1,5 @@
 from __future__ import annotations
+from ntl.semantics import year_quality
 
 import json
 import re
@@ -661,6 +662,14 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     size, yr = int(res["size"]), int(res["year"])
     n = len(grid_utm)
 
+    st.caption(
+        "Các chỉ số vẫn dùng chính sách điền 0 hiện hành. CSV có cờ dq_ để phân biệt thiếu quan sát, "
+        "zero quan sát và radiance âm bị cắt; unknown nghĩa là chưa có bằng chứng coverage."
+        if lang == "vi" else
+        "Metrics retain the legacy zero-fill policy. CSV dq_ fields distinguish missing observations, "
+        "observed zeros and clipped negative radiance; unknown means coverage is not established."
+    )
+
     st.markdown(_CSS, unsafe_allow_html=True)
     h1c, h2c = st.columns([12, 1], vertical_alignment="center")
     h1c.subheader(L["title"])
@@ -1060,11 +1069,13 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     type="primary", use_container_width=True, key="btn_run_spacetime", help=L["h_st_run_btn"],
                 )
                 st_cache = st.session_state.setdefault("_spacetime_cache", {})
-                st_key = (res["ts"], size, int(year_t0), int(yr))
+                st_key = (res["ts"], size, int(year_t0), int(yr), "semantics_v3")
                 if run_st_btn and st_key not in st_cache:
                     with st.spinner(f"Đang tải ảnh VIIRS năm {year_t0} và tính Space-Time LISA..." if is_vi
                                     else f"Fetching {year_t0} VIIRS raster and computing Space-Time LISA..."):
-                        ntl_t0_arr = fetch_year_ntl_fn(int(year_t0))
+                        t0_result = fetch_year_ntl_fn(int(year_t0))
+                        t0_quality = year_quality(t0_result, year_t0) if isinstance(t0_result, pd.DataFrame) else pd.DataFrame()
+                        ntl_t0_arr = t0_result["ntl_mean"].to_numpy(float) if isinstance(t0_result, pd.DataFrame) else t0_result
                         cent_xy = grid_utm.geometry.centroid
                         st_cache[st_key] = run_spacetime_lisa(
                             cent_xy.x.to_numpy(), cent_xy.y.to_numpy(),
@@ -1072,6 +1083,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                             grid_utm["area_km2"].to_numpy(float), size,
                             year_t0=int(year_t0), year_t1=int(yr),
                         )
+                    st_cache[st_key].st_cell_df = pd.concat([st_cache[st_key].st_cell_df.reset_index(drop=True), t0_quality, year_quality(grid_utm.reset_index(drop=True), yr)], axis=1)
                 if st_key in st_cache:
                     st_out = st_cache[st_key]
                     sm = st_out.metrics
