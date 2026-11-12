@@ -1,6 +1,8 @@
 # A03 — Numerical and statistical reference validation
 
-**Current lifecycle update (12 November 2026):** PR [#21](https://github.com/hoanfg/spatial-app/pull/21) was merged; its [GitHub Actions run #111](https://github.com/hoanfg/spatial-app/actions/runs/43219550320) completed successfully. **Coverage remains partial:** numerical unit tests are not a general field-validation result. The original PR-time discussion below is retained as historical context.\n\nHistorical PR-time status: **partial, draft-only**. This change adds a small, deterministic core of independent reference tests. It does **not** certify all Spatial App statistical results or replace the remaining A03 audit tasks.
+**Current lifecycle update (12 November 2026):** PR [#21](https://github.com/hoanfg/spatial-app/pull/21) was merged; its [GitHub Actions run #111](https://github.com/hoanfg/spatial-app/actions/runs/43219550320) completed successfully. **Coverage remains partial:** numerical unit tests are not a general field-validation result. The original PR-time discussion below is retained as historical context.
+
+Historical PR-time status: **partial, draft-only**. This change adds a small, deterministic core of independent reference tests. It does **not** certify all Spatial App statistical results or replace the remaining A03 audit tasks.
 
 ## Reference definitions
 
