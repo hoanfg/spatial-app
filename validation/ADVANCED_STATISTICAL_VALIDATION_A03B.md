@@ -1,6 +1,8 @@
 # A03-B — Advanced statistical validation (incremental)
 
-**Current lifecycle update (12 November 2026):** PR [#22](https://github.com/hoanfg/spatial-app/pull/22) was merged; its [GitHub Actions run #116](https://github.com/hoanfg/spatial-app/actions/runs/43249266533) completed successfully. This confirms that the covered CI jobs succeeded, **not** that independent field validation was completed. PR-time instructions below are retained as historical context.\n\n## Scope and reproducibility
+**Current lifecycle update (12 November 2026):** PR [#22](https://github.com/hoanfg/spatial-app/pull/22) was merged; its [GitHub Actions run #116](https://github.com/hoanfg/spatial-app/actions/runs/43249266533) completed successfully. This confirms that the covered CI jobs succeeded, **not** that independent field validation was completed. PR-time instructions below are retained as historical context.
+
+## Scope and reproducibility
 
 This is a **test-only** extension of A03 (PR #21), built on the existing `main` implementation. The source implementation, default scientific parameters, Earth Engine workflows and CSV schemas have not been modified.
 
