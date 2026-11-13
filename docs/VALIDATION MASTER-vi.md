@@ -13,6 +13,8 @@
 | Phạm vi | Phương pháp, kết quả số, tiêu chí chấp nhận, giới hạn và kế hoạch kiểm chứng tiếp |
 | Bảo trì | Các đợt kiểm chứng bổ sung được cập nhật vào chính tài liệu này bằng PR |
 
+> **Cập nhật rà soát (12/11/2026):** Phần nội dung bên dưới vẫn giữ mốc kiểm chứng gốc ngày 11/11. Sau các PR #19–#22, xem [Major validation review — coverage and evidence reconciliation](../validation/MAJOR_REVIEW_COVERAGE_EVIDENCE_2026-11.md) để phân biệt mức độ kiểm thử CI/dữ liệu tổng hợp, kết quả đối chiếu archive và các giới hạn bằng chứng. V11 Cross-location, GHSL độc lập và vận hành Cloud chưa được xác nhận hoàn thành.
+
 > **Phạm vi bảo đảm.** Các phép tính trích xuất raster và thống kê không gian chính đã được tái lập tại trường hợp Diên Khánh với dữ liệu thực. Kết quả này **không** chứng minh tính đúng đắn trên mọi địa phương, mọi năm hoặc tính phù hợp của NTL như chỉ báo kinh tế. Tài liệu ghi nhận cả những phép kiểm thành công lẫn các lựa chọn phương pháp có độ nhạy lớn.
 
 ## Mục lục
