@@ -43,12 +43,21 @@ def extract_tif_bytes(content: bytes) -> bytes:
     return content
 
 
+def _http_error(resp, limit: int = 300) -> ConnectionError:
+    """ConnectionError giữ tiền tố 'HTTP:<mã>' và đính kèm lý do Earth Engine trả về (nếu có)."""
+    try:
+        detail = " ".join((resp.text or "").split())[:limit]
+    except Exception:  # noqa: BLE001  (phản hồi nhị phân hoặc không đọc được)
+        detail = ""
+    return ConnectionError(f"HTTP:{resp.status_code}" + (f" - {detail}" if detail else ""))
+
+
 def _download(img, roi, scale_m: float, timeout: int = 180) -> bytes:
     import requests
     url = img.getDownloadUrl({"scale": scale_m, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"})
     resp = requests.get(url, timeout=timeout)
     if resp.status_code != 200:
-        raise ConnectionError(f"HTTP:{resp.status_code}")
+        raise _http_error(resp)
     return extract_tif_bytes(resp.content)
 
 
@@ -87,7 +96,7 @@ def _download_native(image, params: dict, timeout: int = 180) -> bytes:
     url = image.getDownloadUrl(params)
     resp = requests.get(url, timeout=timeout)
     if resp.status_code != 200:
-        raise ConnectionError(f"HTTP:{resp.status_code}")
+        raise _http_error(resp)
     raw = extract_tif_bytes(resp.content)
     validate_native_download(raw, params)
     return raw
