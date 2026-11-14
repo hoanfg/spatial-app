@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 
 from . import ee_extra
+from .performance import measured_call
 from .data_quality import cell_report, obs_report, quality_export, quality_flags, raster_report  # noqa: F401
 from .formatting import fmt_p  # noqa: F401
 from .lisa_core import edge_cell_mask
@@ -96,6 +97,9 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
 
     items = quality_flags(dq["raster"], dq["cells"], obs_cache.get(ts)) if dq else []
     n_warn = sum(1 for i in items if i["level"] == "warn")
+    schema = ((dq or {}).get("raster") or {}).get("quality_band_schema")
+    if schema and not schema.get("supported"):
+        n_warn += 1
     title = ("🛡️ Chất lượng dữ liệu & kiểm chứng ngoài" if vi else "🛡️ Data quality & external validation") + \
         (f"  ·  ⚠️ {n_warn}" if n_warn else "  ·  ✅")
 
@@ -104,6 +108,15 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
             st.info("Lần chạy này chưa có báo cáo chất lượng. Bấm 'Chạy phân tích' lại để tạo." if vi
                     else "This run has no quality report yet. Press 'Run analysis' again to create it.")
             return
+        if schema:
+            if not schema.get("supported"):
+                st.warning(("A02: Không đọc được schema raster chất lượng " if vi
+                            else "A02: Unrecognized quality raster schema ")
+                           + f"(status={schema['status']}, bands={schema['band_count']}, "
+                           + f"descriptions={schema['descriptions']}).")
+            elif schema["status"] == "validated_producer_order":
+                st.info("A02: Đã xác minh thứ tự bands mặc dù GeoTIFF thiếu tên band."
+                        if vi else "A02: Trusted producer band order was validated despite missing descriptions.")
         st.subheader("Báo cáo tự động" if vi else "Automatic report",
                      help=("Đo những chỗ pipeline đổi thầm lặng thành 0: pixel không có giá trị, bức xạ âm bị cắt, ô không trích xuất được. "
                            "Chỉ ghi nhận, không sửa giá trị NTL." if vi else
@@ -194,13 +207,20 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
             else:
                 try:
                     with st.spinner("Đang tải GHSL và so sánh..." if vi else "Fetching GHSL and comparing..."):
-                        raw, epoch = ee_extra.fetch_ghsl_raster(ee, kind, bbox, year)
-                        sums = zonal_stat(raw, grid_wgs, "sum", clip_negative=True, fill_missing=0.0).to_numpy(float)
+                        raw, epoch = measured_call(res.get("perf_monitor"),
+                                                   f"ghsl.{kind}.fetch_native",
+                                                   ee_extra.fetch_ghsl_raster, ee, kind, bbox, year)
+                        sums = measured_call(res.get("perf_monitor"),
+                                             f"ghsl.{kind}.zonal_sum", zonal_stat, raw,
+                                             grid_wgs, "sum", clip_negative=True,
+                                             fill_missing=0.0).to_numpy(float)
                         area = grid_utm["area_km2"].to_numpy(float)
                         cent = grid_utm.geometry.centroid
                         core = ~edge_cell_mask(area, size, 0.99)
                         ntl = grid_utm["ntl_mean"].to_numpy(float)
-                        agree = proxy_agreement(ntl, sums, area, cent.x.to_numpy(), cent.y.to_numpy(), size, core=core)
+                        agree = measured_call(res.get("perf_monitor"), f"ghsl.{kind}.agreement",
+                                              proxy_agreement, ntl, sums, area, cent.x.to_numpy(),
+                                              cent.y.to_numpy(), size, core=core)
                         _put(val_cache, vkey, {"agree": agree, "epoch": epoch, "sums": sums, "core": core})
                     st.rerun()
                 except Exception as e:  # noqa: BLE001

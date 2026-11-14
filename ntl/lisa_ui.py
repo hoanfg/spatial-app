@@ -16,6 +16,7 @@ from jinja2 import Template
 from streamlit_folium import st_folium
 
 from .formatting import fmt_p
+from .performance import profile_stage
 from .spacetime_labels import format_regime_summary
 from .lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
 from .lisa_diagnostics import (
@@ -719,11 +720,12 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             st.write("② " + L["st_s2"])
             st.write("③ " + L["st_s3"].format(p=perms))
             st.write("④ " + L["st_s4"])
-            cache[ckey] = run_lisa(
-                cent.x.to_numpy(), cent.y.to_numpy(), grid_utm["ntl_mean"].to_numpy(float),
-                grid_utm["area_km2"].to_numpy(float), size, lit_threshold=thr, edge_tol=0.99,
-                perms=perms, alpha=alpha, fdr=fdr, log_transform=use_log, min_neighbors=min_nbr,
-                min_cluster_cells=min_clu, meta=meta)
+            with profile_stage(res.get("perf_monitor"), "lisa.local_moran"):
+                cache[ckey] = run_lisa(
+                    cent.x.to_numpy(), cent.y.to_numpy(), grid_utm["ntl_mean"].to_numpy(float),
+                    grid_utm["area_km2"].to_numpy(float), size, lit_threshold=thr, edge_tol=0.99,
+                    perms=perms, alpha=alpha, fdr=fdr, log_transform=use_log, min_neighbors=min_nbr,
+                    min_cluster_cells=min_clu, meta=meta)
             status.update(label=L["st_done"], state="complete", expanded=False)
 
     out = cache[ckey]

@@ -19,6 +19,7 @@ import geopandas as gpd
 import numpy as np
 from ntl.zonal import read_valid_band
 from ntl.semantics import annual_image_with_quality, cell_quality
+from ntl.performance import PerformanceRecorder, measured_call, render_performance_panel
 import pandas as pd
 import requests
 import shapely
@@ -1845,13 +1846,15 @@ with _cR:
 
 def run_pipeline():
     from exactextract import exact_extract  # lazy import
+    monitor = PerformanceRecorder()
+    st.session_state["_last_perf_monitor"] = monitor
 
     stage = "Station 1"
     tmp_path = None
     with st.status(L["st1"].format(s=cell_size), expanded=True) as status:
         try:
             # Trạm 1 
-            boundary = gpd.read_file(file_path)
+            boundary = measured_call(monitor, "boundary.load", gpd.read_file, file_path)
             if boundary.crs is None:
                 boundary = boundary.set_crs(epsg=4326)
             boundary = boundary[boundary.geometry.notna() & ~boundary.geometry.is_empty]
@@ -1867,7 +1870,7 @@ def run_pipeline():
             epsg = get_dynamic_utm_crs((bx0 + bx1) / 2, (by0 + by1) / 2)
             boundary_utm = boundary_wgs.to_crs(epsg=epsg)
 
-            grid = build_grid(boundary_utm, cell_size)
+            grid = measured_call(monitor, "grid.build", build_grid, boundary_utm, cell_size)
             st.write("✅ " + L["ok1"].format(n=len(grid), s=cell_size, e=epsg))
 
             # Trạm 2 
@@ -1877,7 +1880,7 @@ def run_pipeline():
             gx0, gy0, gx1, gy1 = grid_wgs.total_bounds
             pad = 0.005  # ~500m, đảm bảo raster phủ hết ô biên
             bbox = (round(gx0 - pad, 5), round(gy0 - pad, 5), round(gx1 + pad, 5), round(gy1 + pad, 5))
-            tif_bytes = fetch_ntl_raster(bbox, year_id=int(year))
+            tif_bytes = measured_call(monitor, "ntl.ee_download", fetch_ntl_raster, bbox, year_id=int(year))
             st.write("✅ " + L["ok2"].format(y=year))
 
             # Trạm 3 
@@ -1907,7 +1910,7 @@ def run_pipeline():
                 dst.write(arr, 1)
             st.write(f"ℹ️ Raster dtype gốc: {orig_dtype} → float32")
 
-            stats = exact_extract(
+            stats = measured_call(monitor, "ntl.zonal_mean", exact_extract,
                 tmp_path,
                 grid_wgs[["grid_id", "geometry"]],
                 ["mean"],
@@ -1927,14 +1930,17 @@ def run_pipeline():
             grid["dq_stat_missing"] = grid["dq_stat_missing"].fillna(True).astype(bool)
             grid["ntl_mean"] = grid["ntl_mean"].fillna(0.0).astype(float)
             cell_q = cell_report(len(grid), n_stat_nan, n_merge_miss, grid["ntl_mean"].to_numpy())
-            quality = cell_quality(tif_bytes, grid_wgs)
+            quality = measured_call(monitor, "a02.cell_quality", cell_quality,
+                                    tif_bytes, grid_wgs, trusted_producer=True)
+            raster_q["quality_band_schema"] = quality.attrs["quality_raster_schema"]
             grid = pd.concat([grid.reset_index(drop=True), quality], axis=1)
 
             status.update(label="Trạm 3/3 · Đang tính Moran's I toàn cục (hoán vị)..." if LANG == "vi"
                           else "Station 3/3 · Computing global Moran's I (permutations)...")
       
             try:  # Moran's I 
-                moran = morans_i(grid, grid["ntl_mean"].to_numpy(dtype=float), cell_size)
+                moran = measured_call(monitor, "ntl.global_moran", morans_i,
+                                      grid, grid["ntl_mean"].to_numpy(dtype=float), cell_size)
             except Exception:  # noqa: BLE001
                 moran = None
             st.write("✅ " + L["ok3"])
@@ -1943,14 +1949,17 @@ def run_pipeline():
         except LookupError:
             status.update(state="error")
             st.error(L["err_empty"].format(y=year))
+            monitor.finish_pipeline(success=False)
             return None
         except ConnectionError as e:
             status.update(state="error")
             st.error(L["err_http"].format(c=str(e).split(":")[-1]))
+            monitor.finish_pipeline(success=False)
             return None
         except Exception as e:  # noqa: BLE001
             status.update(state="error")
             st.error(f"{L['err_stage'].format(s=stage)}: {e}")
+            monitor.finish_pipeline(success=False)
             return None
         finally:
             if tmp_path and os.path.exists(tmp_path):
@@ -1959,7 +1968,9 @@ def run_pipeline():
                 except OSError:
                     pass
 
+    monitor.finish_pipeline(success=True)
     return {
+        "perf_monitor": monitor,
         "grid_utm": grid,
          "boundary_wgs": boundary_wgs,
          "epsg": epsg,
@@ -1995,6 +2006,8 @@ if run_btn and not fuse_blocked:   # điều kiện này phòng trường hợp 
 
 res = st.session_state.get("result")
 if not res:
+    if st.session_state.get("_last_perf_monitor") is not None:
+        render_performance_panel(st.session_state["_last_perf_monitor"], lang=LANG)
     empty_state(
         "Bắt đầu phân tích" if LANG == "vi" else "Get started",
         L["idle"].replace("**", "").replace("👆 ", ""),
@@ -2670,7 +2683,7 @@ with tab_lisa:
             st_df["dq_stat_missing"] = ~np.isfinite(pd.to_numeric(st_df[mcol], errors="coerce"))
             st_df[mcol] = pd.to_numeric(st_df[mcol], errors="coerce").fillna(0.0).clip(lower=0.0)
             merged = grid_utm[["grid_id"]].merge(st_df[["grid_id", mcol, "dq_stat_missing"]], on="grid_id", how="left")
-            quality = cell_quality(tif_bytes, grid_wgs)
+            quality = cell_quality(tif_bytes, grid_wgs, trusted_producer=True)
             quality["dq_stat_missing"] = merged["dq_stat_missing"].fillna(True).astype(bool).to_numpy()
             quality["ntl_mean"] = merged[mcol].fillna(0.0).to_numpy(dtype=float)
             return quality
@@ -2691,8 +2704,11 @@ with tab_lisa:
             region_label=place,
             render_cap=RENDER_CAP,
             basemap="CartoDB dark_matter",
-            fetch_year_ntl_fn=_fetch_other_year_ntl,
+            fetch_year_ntl_fn=lambda y: measured_call(
+                res.get("perf_monitor"), "spacetime.fetch_other_year", _fetch_other_year_ntl, y),
             available_years=YEARS,
         )
     except Exception as e:
         st.error(f"Không chạy được mô-đun LISA: {e}")
+
+    render_performance_panel(res.get("perf_monitor"), lang=LANG)
