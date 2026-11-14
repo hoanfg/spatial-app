@@ -142,6 +142,7 @@ def _write_geotiff(arr, params: dict) -> bytes:
 
 
 def _download_native(image, params: dict, timeout: int = 180) -> bytes:
+
     """Fetch exactly the requested native GHSL lattice and return it as a GeoTIFF.
 
     getDownloadUrl(format=GEO_TIFF) fails for GHSL with 400 INVALID_ARGUMENT
