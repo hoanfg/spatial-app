@@ -288,8 +288,16 @@ def test_T27b_ee_extra_builds_expected_calls(monkeypatch):
     ee2 = MagicMock()
     ghsl_col = ee2.ImageCollection.return_value.filter.return_value
     ghsl_col.size.return_value.getInfo.return_value = 1
+    native_params = {"crs": "ESRI:54009", "crs_transform": [100, 0, 100000, 0, -100, 4000000],
+                     "dimensions": [100, 100], "format": "GEO_TIFF"}
+    calls = []
+    monkeypatch.setattr(ee_extra, "native_download_params",
+                        lambda projection, bbox, max_pixels: native_params)
+    monkeypatch.setattr(ee_extra, "_download_native",
+                        lambda image, params, timeout=180: (calls.append((image, params)), b"II*\x00")[1])
     data, epoch = ee_extra.fetch_ghsl_raster(ee2, "pop", (16.5, 47.8, 16.6, 47.9), 2025)
     assert data == b"II*\x00" and epoch == 2020
+    assert len(calls) == 1 and calls[0][1] is native_params
     ee2.ImageCollection.assert_called_with("JRC/GHSL/P2023A/GHS_POP")
     ee2.Filter.calendarRange.assert_called_with(2020, 2020, "year")
 

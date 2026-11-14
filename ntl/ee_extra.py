@@ -81,15 +81,29 @@ def fetch_obs_count_raster(ee, dataset: str, bbox: tuple, year: int, scale_m: fl
     return _download(img, roi, scale_m)
 
 
+def _download_native(image, params: dict, timeout: int = 180) -> bytes:
+    """Download and validate exactly the requested native GHSL lattice."""
+    import requests
+    url = image.getDownloadUrl(params)
+    resp = requests.get(url, timeout=timeout)
+    if resp.status_code != 200:
+        raise ConnectionError(f"HTTP:{resp.status_code}")
+    raw = extract_tif_bytes(resp.content)
+    validate_native_download(raw, params)
+    return raw
+
+
 def fetch_ghsl_raster(ee, kind: str, bbox: tuple, year: int) -> tuple[bytes, int]:
     """Download a bounded *native 100m equal-area* GHSL window.
 
     GHSL values are quantities per source pixel (m²/people). EPSG:4326
     nearest-neighbor reprojection then unadjusted summation is incorrect.
     """
-    import requests
     if kind not in GHSL_DATASETS:
         raise ValueError("kind phải là 'built' hoặc 'pop'")
+    # Retain the preflight that rejects very large requests before Earth Engine.
+    if estimate_pixels(bbox, GHSL_SCALE_M) > MAX_PIXELS:
+        raise ValueError("Vùng quá lớn để tải GHSL ở 100 m; hãy chọn địa phương nhỏ hơn.")
     epoch = nearest_epoch(year)
     roi = ee.Geometry.Rectangle(list(bbox))
     col = ee.ImageCollection(GHSL_DATASETS[kind]).filter(
@@ -100,10 +114,4 @@ def fetch_ghsl_raster(ee, kind: str, bbox: tuple, year: int) -> tuple[bytes, int
     params = native_download_params(source.projection().getInfo(), bbox,
                                     max_pixels=MAX_PIXELS)
     image = source.unmask(0.0).toFloat().clip(roi)
-    url = image.getDownloadUrl(params)
-    resp = requests.get(url, timeout=180)
-    if resp.status_code != 200:
-        raise ConnectionError(f"HTTP:{resp.status_code}")
-    raw = extract_tif_bytes(resp.content)
-    validate_native_download(raw, params)
-    return raw, epoch
+    return _download_native(image, params), epoch
