@@ -3,7 +3,7 @@ from __future__ import annotations
 import io
 import zipfile
 
-from .ghsl_native import native_download_params, validate_native_download
+from .ghsl_native import native_download_params
 
 GHSL_DATASETS = {
     "built": "JRC/GHSL/P2023A/GHS_BUILT_S",   # diện tích xây dựng (m2 mỗi ô 100 m)
@@ -90,16 +90,72 @@ def fetch_obs_count_raster(ee, dataset: str, bbox: tuple, year: int, scale_m: fl
     return _download(img, roi, scale_m)
 
 
+def _pixel_grid(params: dict) -> dict:
+    """Chuyển tham số lưới gốc (native_download_params) thành PixelGrid của computePixels."""
+    import re
+    a, b, c, d, e, f = (float(v) for v in params["crs_transform"])
+    width, height = (int(v) for v in params["dimensions"])
+    crs = str(params["crs"]).strip()
+    grid = {"dimensions": {"width": width, "height": height},
+            "affineTransform": {"scaleX": a, "shearX": b, "translateX": c,
+                                "shearY": d, "scaleY": e, "translateY": f}}
+    if re.fullmatch(r"EPSG:\d+", crs, flags=re.IGNORECASE):
+        grid["crsCode"] = crs.upper()
+    else:  # WKT, hoặc mã ESRI:/SR-ORG: mà EE không nhận như crsCode
+        if re.fullmatch(r"[A-Za-z-]+:\d+", crs):
+            from rasterio.crs import CRS
+            crs = CRS.from_user_input(crs).to_wkt()
+        grid["crsWkt"] = crs
+    return grid
+
+
+def _npy_to_float32(content: bytes, width: int, height: int):
+    """Đọc phản hồi NPY của computePixels thành mảng float32 (height, width) của đúng một băng."""
+    import io
+    import numpy as np
+    try:
+        arr = np.load(io.BytesIO(content), allow_pickle=False)
+    except Exception as exc:  # noqa: BLE001
+        raise ValueError("Phản hồi computePixels không phải NPY") from exc
+    if arr.dtype.names:  # mảng có cấu trúc: mỗi băng là một trường
+        if len(arr.dtype.names) != 1:
+            raise ValueError("GHSL native download phải có đúng một băng")
+        arr = arr[arr.dtype.names[0]]
+    arr = np.squeeze(np.asarray(arr, dtype="float32"))
+    if arr.shape != (height, width):
+        raise ValueError(f"GHSL native download dimensions changed: {arr.shape} != {(height, width)}")
+    return arr
+
+
+def _write_geotiff(arr, params: dict) -> bytes:
+    """Ghi GeoTIFF một băng trên đúng CRS và affine đã yêu cầu (GDAL ghi được Mollweide, Earth Engine thì không)."""
+    from rasterio.crs import CRS
+    from rasterio.io import MemoryFile
+    from rasterio.transform import Affine
+    height, width = arr.shape
+    with MemoryFile() as mf:
+        with mf.open(driver="GTiff", height=height, width=width, count=1, dtype="float32",
+                     crs=CRS.from_user_input(params["crs"]),
+                     transform=Affine(*(float(v) for v in params["crs_transform"]))) as dst:
+            dst.write(arr, 1)
+        return mf.read()
+
+
 def _download_native(image, params: dict, timeout: int = 180) -> bytes:
-    """Download and validate exactly the requested native GHSL lattice."""
-    import requests
-    url = image.getDownloadUrl(params)
-    resp = requests.get(url, timeout=timeout)
-    if resp.status_code != 200:
-        raise _http_error(resp)
-    raw = extract_tif_bytes(resp.content)
-    validate_native_download(raw, params)
-    return raw
+    """Fetch exactly the requested native GHSL lattice and return it as a GeoTIFF.
+
+    getDownloadUrl(format=GEO_TIFF) fails for GHSL with 400 INVALID_ARGUMENT
+    ("Unable to write GeoTIFFs in projection ... World_Mollweide"). computePixels
+    can return the same grid as NPY, which has no projection limit, and we write
+    the GeoTIFF locally. The grid is requested and written from the same params,
+    and the array shape is checked, so the lattice cannot silently drift.
+    ``timeout`` is kept for call compatibility; computePixels does not take one.
+    """
+    import ee
+    content = ee.data.computePixels({"expression": image, "fileFormat": "NPY",
+                                     "grid": _pixel_grid(params)})
+    width, height = (int(v) for v in params["dimensions"])
+    return _write_geotiff(_npy_to_float32(content, width, height), params)
 
 
 def fetch_ghsl_raster(ee, kind: str, bbox: tuple, year: int) -> tuple[bytes, int]:
