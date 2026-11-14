@@ -9,7 +9,6 @@ its geographic ROI before getDownloadURL (region ignored with CRS+transform).
 from __future__ import annotations
 
 import math
-from rasterio.warp import transform_bounds
 
 SOURCE_SCALE_M = 100.0
 MAX_NATIVE_PIXELS = 3_000_000
@@ -38,6 +37,7 @@ def native_download_params(projection_info: dict, bbox: tuple, max_pixels=MAX_NA
     xmin,ymin,xmax,ymax = map(float,bbox)
     if not all(math.isfinite(v) for v in (xmin,ymin,xmax,ymax)) or xmin>=xmax or ymin>=ymax:
         raise ValueError('Invalid GHSL bounding box')
+    from rasterio.warp import transform_bounds  # lazy: core statistics CI does not install rasterio
     x0,y0,x1,y1=transform_bounds('EPSG:4326',crs,xmin,ymin,xmax,ymax,densify_pts=41)
     col_start = math.floor((x0-c)/a)
     col_end = math.ceil((x1-c)/a)
