@@ -11,7 +11,7 @@ from .data_quality import cell_report, obs_report, quality_export, quality_flags
 from .formatting import fmt_p  # noqa: F401
 from .lisa_core import edge_cell_mask
 from .validation import MIN_CELLS, compare_clipping, export_columns as val_export, proxy_agreement
-from .zonal import zonal_stat
+from .zonal import zonal_stat, zonal_sum_native
 
 _ICON = {"ok": "✅", "warn": "⚠️", "info": "ℹ️"}
 _PROXY_LABEL = {
@@ -211,12 +211,17 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                                                    f"ghsl.{kind}.fetch_native",
                                                    ee_extra.fetch_ghsl_raster, ee, kind, bbox, year)
                         sums = measured_call(res.get("perf_monitor"),
-                                             f"ghsl.{kind}.zonal_sum", zonal_stat, raw,
-                                             grid_wgs, "sum", clip_negative=True,
-                                             fill_missing=0.0).to_numpy(float)
+                                             f"ghsl.{kind}.zonal_sum", zonal_sum_native,
+                                             raw, grid_wgs, fill_missing=0.0).to_numpy(float)
                         area = grid_utm["area_km2"].to_numpy(float)
                         cent = grid_utm.geometry.centroid
                         core = ~edge_cell_mask(area, size, 0.99)
+                        if int(core.sum()) >= MIN_CELLS and not np.any(sums[core] > 0):
+                            raise ValueError(
+                                "GHSL has no positive values across usable core cells. "
+                                "Spearman/AUC cannot be calculated; validate source coverage "
+                                "and native raster/vector CRS before interpreting this result."
+                            )
                         ntl = grid_utm["ntl_mean"].to_numpy(float)
                         agree = measured_call(res.get("perf_monitor"), f"ghsl.{kind}.agreement",
                                               proxy_agreement, ntl, sums, area, cent.x.to_numpy(),
@@ -233,12 +238,15 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                         else f"Only {a['n']} core cells; at least {MIN_CELLS} are needed.")
             else:
                 m1, m2, m3 = st.columns(3)
-                m1.metric("Spearman ρ", f"{a['rho']:.3f}", help=("Tương quan hạng giữa NTL và mật độ đại lượng so sánh." if vi
+                if not np.isfinite(a["rho"]):
+                    st.warning("Không đủ biến thiên để tính tương quan Spearman; không thể kết luận mức đồng thuận." if vi
+                               else "Insufficient variation for Spearman; agreement cannot be determined.")
+                m1.metric("Spearman ρ", f"{a['rho']:.3f}" if np.isfinite(a["rho"]) else "N/A", help=("Tương quan hạng giữa NTL và mật độ đại lượng so sánh." if vi
                                                                   else "Rank correlation between NTL and the density of the compared quantity."))
-                m2.metric("CI 95% (theo khối)" if vi else "95% CI (block)", f"{a['ci_lo']:.2f} – {a['ci_hi']:.2f}",
+                m2.metric("CI 95% (theo khối)" if vi else "95% CI (block)", f"{a['ci_lo']:.2f} – {a['ci_hi']:.2f}" if np.isfinite(a["ci_lo"]) and np.isfinite(a["ci_hi"]) else "N/A",
                           help=("Lấy mẫu lại theo khối 5×5 ô để tôn trọng tự tương quan không gian." if vi
                                 else "Resampled in 5×5-cell blocks to respect spatial autocorrelation."))
-                m3.metric("AUC top 25%" if vi else "AUC top 25%", f"{a['auc']:.3f}",
+                m3.metric("AUC top 25%" if vi else "AUC top 25%", f"{a['auc']:.3f}" if np.isfinite(a["auc"]) else "N/A",
                           help=("Xác suất một ô thuộc 25% mật độ cao nhất có NTL cao hơn một ô khác; 0,5 là ngẫu nhiên." if vi
                                 else "Probability that a top-quartile cell has higher NTL than another cell; 0.5 is random."))
                 lvl = a["level"]

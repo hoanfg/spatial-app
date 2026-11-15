@@ -57,3 +57,69 @@ def test_missing_pixel_excluded_before_clipping(kind, clip):
     assert means[0] == pytest.approx(10.)
     assert means[1:].isna().all()
     assert zonal_stat(data, grid, 'sum', clip_negative=clip).tolist() == pytest.approx([10., 0., 0.])
+
+
+def _ghsl_native_tif(values, *, crs="ESRI:54009"):
+    """Synthetic equal-area source-grid quantity raster, not EPSG:4326."""
+    values = np.asarray(values, dtype="float32")
+    with MemoryFile() as mf:
+        with mf.open(driver="GTiff", width=values.shape[1], height=values.shape[0],
+                     count=1, dtype="float32", crs=crs,
+                     transform=from_origin(11030200, 3800200, 100, 100)) as dst:
+            dst.write(values, 1)
+        return mf.read()
+
+
+def test_ghsl_native_zonal_sum_reprojects_polygons_not_raster():
+    from ntl.zonal import zonal_sum_native
+    x, top = 11030200, 3800200
+    arr = np.arange(1, 17, dtype="float32").reshape(4, 4)
+    projected = gpd.GeoDataFrame({"grid_id": [9, 3]},
+        geometry=[box(x, top - 400, x + 200, top),
+                  box(x + 200, top - 400, x + 400, top)],
+        crs="ESRI:54009")
+    geographic = projected.to_crs("EPSG:4326")
+    with MemoryFile(_ghsl_native_tif(arr)) as mf, mf.open() as src:
+        assert src.crs.to_string() == "ESRI:54009"
+        # The old call passed geographic polygons directly to this raster.
+        assert not geographic.geometry.intersects(box(*src.bounds)).any()
+        assert geographic.to_crs(src.crs).geometry.intersects(box(*src.bounds)).all()
+    amounts = zonal_sum_native(_ghsl_native_tif(arr), geographic)
+    assert amounts.tolist() == pytest.approx([60.0, 76.0], abs=0.08)
+    assert geographic.grid_id.tolist() == [9, 3]
+
+
+def test_ghsl_native_zonal_sum_rejects_missing_crs_and_no_overlap():
+    from ntl.zonal import zonal_sum_native
+    tif = _ghsl_native_tif(np.ones((4, 4), dtype="float32"))
+    without_crs = gpd.GeoDataFrame({"grid_id": [1]},
+        geometry=[box(0, 0, 100, 100)])
+    with pytest.raises(ValueError, match="no CRS"):
+        zonal_sum_native(tif, without_crs)
+    outside = gpd.GeoDataFrame({"grid_id": [1]},
+        geometry=[box(0, 0, 100, 100)], crs="ESRI:54009")
+    with pytest.raises(ValueError, match="no spatial overlap"):
+        zonal_sum_native(tif, outside)
+
+
+def test_ghsl_native_zonal_sum_keeps_true_zero_values():
+    from ntl.zonal import zonal_sum_native
+    x, top = 11030200, 3800200
+    p = gpd.GeoDataFrame({"grid_id": [5]},
+        geometry=[box(x, top - 400, x + 400, top)], crs="ESRI:54009")
+    values = zonal_sum_native(_ghsl_native_tif(np.zeros((4, 4))), p.to_crs("EPSG:4326"))
+    assert values.tolist() == [0.0]
+
+
+def test_ghsl_ui_must_use_native_crs_zonal_extraction():
+    import ast
+    from pathlib import Path
+    module = ast.parse((Path(__file__).parents[1] / "ntl" / "quality_ui.py").read_text(encoding="utf-8"))
+    ghsl_calls = [
+        node for node in ast.walk(module)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name) and node.func.id == "measured_call"
+        and any(isinstance(arg, ast.Name) and arg.id == "zonal_sum_native"
+                for arg in node.args)
+    ]
+    assert len(ghsl_calls) == 1, "GHSL must reproject polygons to the raster CRS before extraction"
