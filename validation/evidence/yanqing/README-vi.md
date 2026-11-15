@@ -65,4 +65,4 @@ Các tệp đang chờ tải lên bao gồm các đa giác lưới tái thiết 
 - **GHSL:** các chỉ số chất lượng do ứng dụng báo cáo chỉ là sơ bộ và chưa được tái lập độc lập từ các raster GHSL gốc.
 - **Cấu trúc kinh tế và hiệu suất đám mây:** chưa được kiểm định đạt mức độ hoàn thiện để xuất bản.
 
-Phương pháp luận liên quan: `docs/VALIDATION MASTER.md` (tiếng Anh), `docs/VALIDATION MASTER-vi.md` (tiếng Việt). Các lần tải lên bằng chứng trong tương lai nên cập nhật chỉ mục này và cả hai tài liệu cùng lúc.
+Phương pháp liên quan: [hướng dẫn dữ liệu tiếng Việt](../../../docs/README-vi.md) và [bản tiếng Anh](../../../docs/README.md). Khi thêm bằng chứng, cần cập nhật chỉ mục này và cả hai bản hướng dẫn kiểm chứng.

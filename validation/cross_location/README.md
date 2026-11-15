@@ -22,7 +22,7 @@ Boundary GeoJSON files available in the repository:
 
 Run `gee_viirs_2020.js` in the Google Earth Engine Code Editor, executing **9 Export tasks** (three products per location): annual reference median, count of months with `cf_cvg > 0`, and median retaining NoData.
 
-In `spatial-app`, run **2020, 500 m grid, raw NTL, Queen, 999 permutations, seed 42, FDR 0.05**, then export CSV containing at least `grid_id, area_km2, ntl_mean`; export the full LISA CSV as well to enable p-value/quadrant cross-checking. Exporting the entire city or modifying the application's RAM protection mechanism is not required.
+In `spatial-app`, run **2020, 500 m grid, raw NTL, Queen, 999 permutations, seed 42, FDR 0.05**, then export CSV containing `grid_id`, `area_km2`, `ntl_mean`, `centroid_lon`, `centroid_lat`, and `centroid_x_epsg{E}` / `centroid_y_epsg{E}` for the selected UTM EPSG. Export the full LISA CSV for p-value/quadrant checks. Exporting an entire city or changing the RAM guard is unnecessary.
 
 Earth Engine and app data must maintain independent zonal mean calculations. The same NOAA/VIIRS product may be used, but app cell extraction results must not be reused as the "reference".
 
@@ -43,12 +43,12 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## 4. Evaluation criteria (pre-defined)
 
-1. **Geometry:** cell count, `grid_id`, per-cell area match the app CSV within an area tolerance of $0.00005\text{ km}^2$.
+1. **Geometry:** cell count, `grid_id`, area and UTM/WGS84 centroid match the app CSV. Area tolerance is $0.00005\text{ km}^2$; centroid tolerances follow the CSV's 0.1 m and six-decimal-degree rounding. This rejects same-area ID/location swaps.
 2. **NTL:** all cells with sufficient raster coverage match within the CSV rounding margin of $\pm 0.00005\text{ nW/cm}^2\text{/sr}$; report all missing/fail cases without removing outlier cells.
 3. **Missing data check:** compare annual median with masked median; analyze monthly `cf_cvg`, all negative values, and their impact on polygon zonal mean. Do not assume all pixels have 12 months as in Yanqing.
 4. **LISA:** recalculate Queen adjacency, Local Moran, and p-value/FDR at 500 m using a dedicated validation script; fixed-seed randomization, explicitly state tie/tail counting method; report HH/LL labels and outliers.
 5. **Generalizability:** mark V11 as complete only when results and attached evidence are available for all three locations; identical HH area share to Yanqing is not required, as structural differences across locations are expected.
-6. **Archiving:** attach raster/CSV, test code, SHA-256 manifest, commit version, per-cell results, and reports; synchronously update both `docs/VALIDATION MASTER.md` and `docs/VALIDATION MASTER-vi.md` to reflect the new content accurately.
+6. **Archiving:** attach raster/CSV, test code, SHA-256 manifest, commit version, per-cell results and reports; update both [validation guides](../README.md) and [the data/method guides](../../docs/README.md) accurately in both languages.
 
 ## 5. Execution status
 
@@ -58,4 +58,4 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## Audit evidence update — 2026-11-15
 
-See [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.
+See the [current validation status](../README.md). The pending steps above are the original plan; the later V11 field comparison is complete at its stated scope, while the source raster pairs and per-cell outputs remain unavailable in this repository.

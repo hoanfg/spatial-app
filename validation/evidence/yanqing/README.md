@@ -65,4 +65,4 @@ Pending files include the full-precision reconstructed grid polygons, the 2020 V
 - **GHSL:** application-reported quality metrics are preliminary and have not yet been independently reproduced from original GHSL rasters.
 - **Economic construct and cloud performance:** not validated to publication-level completeness.
 
-Related methodology: `docs/VALIDATION MASTER.md` (English), `docs/VALIDATION MASTER-vi.md` (Vietnamese). Future evidence uploads should update this index and both documents together.
+Related methodology: [English data/method guide](../../../docs/README.md) and [Vietnamese guide](../../../docs/README-vi.md). Future evidence uploads should update this index and both validation guides together.
