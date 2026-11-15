@@ -125,10 +125,10 @@ def cell_quality(tif_bytes, grid, *, trusted_producer: bool = False,
     if info["supported"]:
         # One exactextract traversal across all five quality bands.
         # The same float32/nodata policy as five historical zonal_stat calls.
-        out = zonal_mean_multiband(
-            tif_bytes, grid, bands=(2, 3, 4, 5, 6), names=QUALITY_BANDS,
-            timings=timings,
-        )
+        kwargs = {"bands": (2, 3, 4, 5, 6), "names": QUALITY_BANDS}
+        if timings is not None:
+            kwargs["timings"] = timings
+        out = zonal_mean_multiband(tif_bytes, grid, **kwargs)
     else:
         # Unsupported/untrusted rasters MUST remain unknown, not zero-filled.
         out = pd.DataFrame(np.nan, index=range(len(grid)), columns=QUALITY_BANDS)
