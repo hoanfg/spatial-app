@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import tempfile
+from time import perf_counter
 
 import numpy as np
 import pandas as pd
@@ -103,7 +104,8 @@ def zonal_sum_native(tif_bytes: bytes, grid, *, id_col: str = "grid_id",
 
 
 def zonal_mean_multiband(tif_bytes: bytes, grid, *, bands: tuple[int, ...],
-                         names: tuple[str, ...], id_col: str = "grid_id") -> pd.DataFrame:
+                         names: tuple[str, ...], id_col: str = "grid_id",
+                         timings: dict | None = None) -> pd.DataFrame:
     """Calculate area-weighted quality means together, preserving old numeric semantics.
 
     The legacy path called zonal_stat five times, repeatedly decoding/writing
@@ -122,10 +124,14 @@ def zonal_mean_multiband(tif_bytes: bytes, grid, *, bands: tuple[int, ...],
     if len(grid) == 0:
         return pd.DataFrame(columns=names, index=grid.index).reset_index(drop=True)
 
+    started = perf_counter()
     with MemoryFile(tif_bytes) as source_file, source_file.open() as source:
         stack = source.read(list(bands), masked=True).astype("float32").filled(np.nan)
         stack[~np.isfinite(stack)] = np.nan
+        if timings is not None:
+            timings['raster_read_normalize_s'] = round(perf_counter() - started, 4)
 
+        started = perf_counter()
         with MemoryFile() as normalized_file:
             with normalized_file.open(
                 driver="GTiff", width=source.width, height=source.height,
@@ -133,16 +139,22 @@ def zonal_mean_multiband(tif_bytes: bytes, grid, *, bands: tuple[int, ...],
                 transform=source.transform, nodata=np.nan
             ) as output:
                 output.write(stack)
+            if timings is not None:
+                timings['memory_geotiff_write_s'] = round(perf_counter() - started, 4)
             with normalized_file.open() as normalized:
                 layers = [
                     RasterioRasterSource(normalized, band_idx=i, name=name)
                     for i, name in enumerate(names, start=1)
                 ]
+                started = perf_counter()
                 data = exact_extract(
                     layers, grid[[id_col, "geometry"]], ["mean"],
                     include_cols=[id_col], output="pandas"
                 )
+                if timings is not None:
+                    timings['polygon_extract_s'] = round(perf_counter() - started, 4)
 
+    started = perf_counter()
     expected = {f"{name}_mean" for name in names}
     if not expected.issubset(data.columns):
         raise ValueError(
@@ -156,4 +168,7 @@ def zonal_mean_multiband(tif_bytes: bytes, grid, *, bands: tuple[int, ...],
     # Match the old one-band merge: preserve input order, NaN for missing
     # intersections, and source grid_id identity (including reordered cells).
     merged = grid[[id_col]].merge(table, on=id_col, how="left")
-    return merged[list(names)].reset_index(drop=True)
+    result = merged[list(names)].reset_index(drop=True)
+    if timings is not None:
+        timings['join_s'] = round(perf_counter() - started, 4)
+    return result
