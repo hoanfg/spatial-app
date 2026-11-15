@@ -483,7 +483,7 @@ The cell-level CSV exports **100% of observations** in the locality, including u
 | Group | Variables | What they are for |
 | :--- | :--- | :--- |
 | **Radiance intensity and light volume** | `ntl_mean`, `ntl_sol`, `ntl_log` | Measure how bright a cell is and how much light it emits in total, on both the raw and the log scale. |
-| **Spatial lag and relative location** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Directly provide the spatial lag of raw radiance ($\mathrm{Lag}(\mathrm{NTL}_i)$), the spatial lag of standardized scores ($\mathrm{Lag}(z_i)$) and the distance to the economic core, for estimating spatial spillovers and urban density decay gradients. |
+| **Spatial lag and relative location** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Directly provide the spatial lag of raw radiance ($$\mathrm{Lag}(\mathrm{NTL}_i)$$), the spatial lag of standardized scores ($$\mathrm{Lag}(z_i)$$) and the distance to the economic core, for estimating spatial spillovers and urban density decay gradients. |
 | **LISA cluster classification** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Build categorical dummy variables, or analyze urban boundary effects with spatial regression discontinuity designs (Spatial RDD). |
 
 > [!NOTE]
