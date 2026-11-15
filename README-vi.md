@@ -491,7 +491,7 @@ Tệp CSV cấp ô lưới xuất ra **100% quan sát** của địa phương, k
 | Nhóm biến | Biến | Dùng để làm gì |
 | :--- | :--- | :--- |
 | **Cường độ và quy mô ánh sáng** | `ntl_mean`, `ntl_sol`, `ntl_log` | Đo mức sáng và tổng lượng sáng của ô, ở cả thang gốc và thang logarit. |
-| **Trễ không gian và vị thế tương đối** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Cung cấp trực tiếp biến trễ không gian của bức xạ gốc ($$\operatorname{Lag}(\mathrm{NTL}_i)$$), trễ không gian của điểm chuẩn hóa ($$\operatorname{Lag}(z_i)$$) và khoảng cách tới tâm lõi kinh tế, để ước lượng hiệu ứng lan tỏa cũng như hàm suy giảm mật độ kinh tế từ tâm đô thị. |
+| **Trễ không gian và vị thế tương đối** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Cung cấp trực tiếp biến trễ không gian của bức xạ gốc ($$\mathrm{Lag}(\mathrm{NTL}_i)$$), trễ không gian của điểm chuẩn hóa ($$\mathrm{Lag}(z_i)$$) và khoảng cách tới tâm lõi kinh tế, để ước lượng hiệu ứng lan tỏa cũng như hàm suy giảm mật độ kinh tế từ tâm đô thị. |
 | **Phân loại cụm LISA** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Tạo biến giả, hoặc phân tích ranh giới đô thị bằng thiết kế hồi quy gián đoạn không gian (spatial regression discontinuity design – Spatial RDD). |
 
 > [!NOTE]
