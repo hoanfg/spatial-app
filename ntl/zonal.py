@@ -55,3 +55,48 @@ def zonal_stat(tif_bytes: bytes, grid_wgs, stat: str = "mean", clip_negative: bo
     if fill_missing is not None:
         out = out.fillna(fill_missing)
     return out.reset_index(drop=True)
+
+def zonal_sum_native(tif_bytes: bytes, grid, *, id_col: str = "grid_id",
+                     fill_missing: float | None = 0.0) -> pd.Series:
+    """Area-fraction-weighted sum of source-pixel quantities on their native grid.
+
+    exactextract warns about mismatched feature/raster CRS but does not
+    automatically reproject polygons. GHSL is stored in ESRI:54009 (100 m
+    Mollweide); passing WGS84 degree coordinates silently produces empty
+    zonal results, and filling those with zero destroys external validation.
+
+    Keep the source raster pixel lattice unchanged. Reproject only the
+    vector polygons, preserve id/order, and distinguish no-overlap from
+    legitimate zero-valued source pixels.
+    """
+    from rasterio.io import MemoryFile
+    from shapely.geometry import box
+
+    if getattr(grid, "crs", None) is None:
+        raise ValueError("GHSL zonal polygons have no CRS")
+    if len(grid) == 0:
+        raise ValueError("GHSL zonal grid contains no polygons")
+
+    with MemoryFile(tif_bytes) as mf, mf.open() as src:
+        if src.crs is None:
+            raise ValueError("GHSL raster has no CRS")
+        raster_crs = src.crs
+        raster_footprint = box(*src.bounds)
+
+    aligned_grid = grid.to_crs(raster_crs)
+    if not aligned_grid.geometry.intersects(raster_footprint).any():
+        raise ValueError(
+            "GHSL native raster and grid have no spatial overlap after CRS alignment"
+        )
+
+    sums = zonal_stat(tif_bytes, aligned_grid, stat="sum",
+                      clip_negative=True, id_col=id_col, fill_missing=None)
+    if sums.isna().all():
+        raise ValueError(
+            "GHSL native zonal extraction yielded no observed pixel intersections"
+        )
+    # After excluding absent/masked pixels, retain the application's
+    # explicit zero-fill policy; never fabricate overlap from an empty result.
+    if fill_missing is not None:
+        sums = sums.fillna(fill_missing)
+    return sums.reset_index(drop=True)
