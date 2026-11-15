@@ -1,3 +1,15 @@
+# Recovery update — original inventory and 78 report bodies now supplied
+
+This update supersedes the earlier missing-document inventory below. The user supplied the historical [JSON manifest](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json), [archive verifier](evidence/audit-2026-11-15/recovered-originals/verify_spatial_app_audit_archive.py), [118-record CSV inventory](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_FILE_MANIFEST_2026-11-15.csv) and [all 78 complete Markdown reports](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md). All are preserved byte-for-byte; the previously generated reconstruction is not substituted for them.
+
+The recovered JSON's whole-Markdown SHA-256 matches exactly. All 118 CSV records agree with JSON; every report body matches its recorded length/hash and corresponding direct-file or nested-member entry. The already published Bao'an CSV/profiler also match historical hashes. The archive verifier is syntax-checked only: its full run requires the original full ZIP and byte-range JSON, still unavailable. The recovered manifest indexes 271 nested files, but their bytes have not been recovered or checked here. No independent scientific computations were rerun.
+
+The 78 reports now provide historical V11 edge-validation, Shanghai post-deployment GHSL and Bao'an A02 evidence, including qualifications. These are recovered original report statements, not fresh numerical recomputations or substitutes for missing per-cell results, rasters, plots and scripts. Full raw data publication and post-PR-27 Cloud benchmarking remain open.
+
+The evidence README and next-performance baseline supplied by the user are embedded in full at the end of this document. Earlier contents and time-specific statements below are retained as history. Reproduce local checks using `node validation/audit_public_evidence.mjs --check-result`; see [recovery receipt](evidence/audit-2026-11-15/recovered-originals/recovery_receipt.json).
+
+---
+
 # Consolidated audit evidence — 15 November 2026
 
 ## Current evidence and limits
@@ -200,3 +212,116 @@ cell polygons with `exact_extract`.
 Full owner-held audit pack: `/Spatial-App/audit-evidence-2026-11-15/`.
 This PR deliberately excludes raw private imagery, large shapefiles, raw
 Cloud logs and proprietary account information.
+
+
+---
+
+## Recovered source: SPATIAL_APP_AUDIT_EVIDENCE_README_2026-11-15.md
+
+# Spatial App — full original audit evidence, 2026-11-15
+
+This is a **private evidence archive**, assembled *before* any performance optimization PR.
+No production files or GitHub branches were changed by assembling it.
+
+## Coverage (physically preserved)
+
+- **118 original physical files**, including all **30 files** currently present in the Library `/Spatial-App/major-review-staging/` snapshot.
+- **23 original ZIPs** left intact, with **271 indexed AND separately expanded files** to make CSV/JSON/scripts accessible without double-unzipping.
+- **16 direct CSVs** plus **28 CSVs referenced inside original ZIPs**.
+- **5 direct JSONs** plus **49 JSONs referenced inside original ZIPs**.
+- **3 direct GeoJSONs**, **14 direct GeoTIFFs**, and **10 screenshots**.
+- **78 complete Markdown source documents/versions**, merged into `SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md` without shortening or dropping text. Every original remains in the archive.
+
+## Where to find evidence
+
+- `01_ORIGINAL_FIELD_INPUTS`: the original app CSV/GeoJSON (including Bao'an, Shanghai and Qimen) and older audit CSV inputs.
+- `02_EARTH_ENGINE_AND_GHSL_RASTERS`: original NOAA VIIRS, A02 six-band and GHSL native/app-style GeoTIFF evidence.
+- `03_CELL_AND_METRIC_RESULTS`: cellwise V11 edge comparisons, quantitative JSON, and performance measurement.
+- `04_SCRIPTS_FOR_REPRODUCIBILITY`: independent verification scripts and Earth Engine export source.
+- `05_NOTES_REPORTS_AND_HISTORY`: original standalone audit notes and text.
+- `06_LIBRARY_STAGING_EXACT_ORIGINALS`: **exact copy of all Library staging files at packaging time**, including every original report, script and archive.
+- `07_ARCHIVES_AND_PRIOR_SNAPSHOTS`: other original ZIP snapshots of Yanqing / China GADM / historical review evidence.
+- `08_PRIVATE_RAW_LOGS_AND_SCREENSHOTS`: original Streamlit log and user screenshots — **do not publish indiscriminately**.
+- `10_WORKING_HISTORY_AND_ADDITIONAL_INPUTS`: older audit workspaces and older dataset excerpts, preserved for traceability.
+- `11_EXPANDED_ORIGINAL_ARCHIVE_CONTENTS`: unchanged byte-for-byte copies of ALL files inside the historical ZIPs; the original ZIPs are kept too.
+- `00_INDEX`: self-contained audit file manifest, SHA-256 list, Markdown byte offsets, and immutable GitHub provenance.
+
+## Markdown consolidation and 100% preservation
+
+The consolidated Markdown is a **view** of the original texts, not a replacement for raw files.
+Each original document is inserted with **all bytes unchanged**. Its start byte, length and SHA-256 are recorded in `00_INDEX/MARKDOWN_BYTE_RANGES.json`.
+The assembly script verified each segment against its raw source; `verify_spatial_app_audit_archive.py` can verify all SHA-256 hashes and byte offsets again.
+Distinct historical versions and duplicate reports were intentionally kept, not silently reconciled.
+
+## Audit interpretation and remaining limits
+
+- **V11**: 17,177 cells at the three new locations were compared against reference VIIRS; the single Bao'an cut-cell rounding boundary is recorded in its original evidence report. Detailed CSV and metrics are included.
+- **A02**: the post-deployment Bao'an CSV reports valid observation metadata for 7,148 cells with NTL values retained; the original before/after files and report are included.
+- **GHSL**: original Shanghai source-grid/app-grid raster exports and independent post-deployment Spearman/AUC metrics are included; screenshots for Shanghai, Qimen, and Bao'an are preserved. The later four screenshots are observed UI results, not independent per-cell reconstructions for Qimen/Bao'an.
+- **Performance**: the actual Streamlit Cloud recorder JSON is included, including stage times and sampled process RAM. It is not a Cloud capacity stress test.
+- **Incomplete external scope**: not every file in the production repo is duplicated here. `GITHUB_CANONICAL_PROVENANCE.json` links immutable validation docs from the exact latest audited commit.
+
+## Important scientific and publishing safeguards
+
+Do not upload this **full private ZIP** as a GitHub commit. Large GeoJSON, raster TIFFs, raw Cloud log and screenshots should remain out of a public source repository unless deliberately reviewed.
+For a future PR, use the consolidated report, small metric JSONs, selected cellwise CSV evidence and reproducibility scripts as appropriate. The PR should reference checksums for any large private raw inputs.
+No files have been deleted or abbreviated in this archive; historical contradictions, when present, remain visible as originally written.
+
+
+---
+
+## Recovered source: SPATIAL_APP_NEXT_PERFORMANCE_BASELINE_2026-11-15.md
+
+# Spatial App — Next performance baseline after A02 PR #27
+
+Date: 2026-11-15. Review-only record. No second PR, production change, or merge.
+
+## PR #27 status
+
+- URL: https://github.com/hoanfg/spatial-app/pull/27
+- Head commit at review: `58f38fd381ffa005a31832e0d3fdd5841d5882c0`
+- State: draft, unmerged at time checked.
+- Both `push` and `pull_request` CI workflows passed (core + full AppTest including five-band A02 regression).
+- New A02 extracts five quality bands in one `exact_extract` call. Legacy field CSV preservation and live Streamlit Cloud performance remain **unconfirmed** until deployed/benchmarked. Private audit archive: `/Spatial-App/audit-evidence-2026-11-15/`.
+
+## Existing real Cloud baseline (Bao'an, 2020, 500 m, 7,148 cells)
+
+From owner-provided profiler JSON before this optimization:
+
+- `pipeline_wall_time_s`: 46.6687 s
+- `a02.cell_quality`: 25.0028 s
+- `grid.build`: 9.7399 s
+- `ntl.zonal_mean`: 9.6193 s
+- Peak sampled process RSS: 728.531 MiB
+
+No post-optimization Cloud benchmark yet.
+
+## Next priority: grid build, investigation only
+
+Source: current repository `app.py::build_grid`. Workflow:
+1. Make regular 500 m candidate polygons over enlarged bounding box.
+2. Use `gpd.clip(..., keep_geom_type=True)` against the district boundary.
+3. Drop empties/nonpositive area, assign `grid_id` in resulting output order.
+
+Local exploratory measurement on **reconstructed** Bao'an geometry (union of 7,148 user-provided output GeoJSON cells, reprojected to EPSG:32650; not original GADM boundary):
+
+- `gpd.read_file` 7,148 rows: 0.586 s.
+- Conversion to UTM: 0.028 s.
+- Shapely union to approximate district geometry: 0.272 s.
+- Regular rectangular candidates: 20,116 cells.
+- `gpd.clip` stage: 3.491 s; resulting 7,148 cells.
+
+**Limitations:** Local runtime differs from Streamlit Cloud hardware and versions. The boundary is reconstructed from output cells, not the original source GADM polygon. This is a preliminary bottleneck localization, not a valid old-vs-new speedup benchmark and cannot be compared directly to the 9.7399 s Cloud `grid.build` wall time.
+
+## Safety and correctness gate for grid performance work
+
+- Preserve grid geometry, `grid_id`, ordering, `area_km2` and is-border-cell status exactly, including clipped and multipart boundary cases.
+- Compare candidate algorithms on an identical original district GADM boundary and 500 m cell size; evaluate geometry equality/area tolerance and permutation-invariant properties.
+- Compare memory use and full-grid correctness, not just wall-clock time.
+- Do not optimize `ntl.zonal_mean` in the same PR as grid. The owner prefers small bounded scopes and one reviewable PR at a time.
+
+## Next steps
+
+1. Review/merge PR #27 only after the approval gates are met; CI is currently green but actual Cloud speed gain is not yet evidenced.
+2. One post-deploy Bao'an 2020/500m performance JSON and field CSV will measure A02 runtime and establish numerical consistency against the existing baseline.
+3. Investigate grid build as a *subsequent, separate* optimization only if the A02 improvement is verified.

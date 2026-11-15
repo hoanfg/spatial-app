@@ -1,0 +1,25 @@
+{
+  "provenance": "User-supplied Downloads files; original bytes preserved. Distinct from earlier reconstructed manifest/script, which are not included in this PR.",
+  "files": [
+    {
+      "name": "SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md",
+      "bytes": 512854,
+      "sha256": "6a08462a964af83780882ad79ec8fe9f619215163eaa19b9beb161ebe208b892"
+    },
+    {
+      "name": "SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json",
+      "bytes": 205186,
+      "sha256": "6e682391fd43871f5c77ab567acf2c6e57ad26e99fd1ba4199b7a39f1f5d46d1"
+    },
+    {
+      "name": "SPATIAL_APP_AUDIT_FILE_MANIFEST_2026-11-15.csv",
+      "bytes": 26720,
+      "sha256": "9c698f70042ee9b0a09274be557cea75bc0f51912cc9aedda7551c0316316dba"
+    },
+    {
+      "name": "verify_spatial_app_audit_archive.py",
+      "bytes": 1981,
+      "sha256": "b4b45b55c9777c669e7f7a3bb0b62b9598714387a63ad16974a9d62d21099688"
+    }
+  ]
+}

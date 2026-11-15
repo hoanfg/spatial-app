@@ -1,3 +1,4 @@
 # Audit bytes and byte-range offsets must survive checkout on every platform.
 validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md -text
 validation/evidence/audit-2026-11-15/* -text
+validation/evidence/audit-2026-11-15/recovered-originals/* -text
