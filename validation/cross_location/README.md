@@ -55,3 +55,7 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 - **Completed:** verified existence of three boundaries in GitHub, GID codes, bbox, approximate area; prepared Earth Engine script and Python comparator; comparator was run on Yanqing 2020, achieving **8,333/8,333** cells (max error ~0.00004999).
 - **Pending:** export 2020 GeoTIFF for three regions, app CSV for three regions, per-cell raster validation and per-region LISA validation, independent GHSL comparison.
 - **Decision:** keep V11 as `PENDING` until evidence is provided for all three locations.
+
+## Audit evidence update — 2026-11-15
+
+See [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.

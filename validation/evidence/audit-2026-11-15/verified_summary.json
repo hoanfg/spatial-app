@@ -1,0 +1,18 @@
+{
+  "rows": 7148,
+  "unique_grid_ids": 7148,
+  "observed_rows": 7148,
+  "mean_valid_months": {
+    "min": 10,
+    "max": 12,
+    "mean": 11.988059972719691
+  },
+  "pipeline_wall_time_s": 46.6687,
+  "a02_wall_time_s": 25.0028,
+  "sampled_process_peak_mib": 728.531,
+  "limitations": [
+    "CSV integrity/semantics check only; no fresh Earth Engine or raster-overlay run.",
+    "No pre-fix CSV available for unchanged-NTL comparison.",
+    "Profiler has no commit identity; this is the historical pre-optimization baseline, not a measured PR #27 speedup."
+  ]
+}

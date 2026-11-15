@@ -1,0 +1,133 @@
+{
+  "schema": "spatial_app_perf_v1",
+  "created_utc": "2026-11-15T12:48:20+00:00",
+  "python_version": "3.14.10",
+  "measurement_scope": "Streamlit server process; not isolated per user/session",
+  "memory_measurement": "sampled RSS; may miss sub-100ms peaks; not Cloud RAM limit",
+  "earth_engine_measurement": "local download/request time only; not EE compute resource usage",
+  "sample_interval_s": 0.1,
+  "time_since_recorder_created_s": 369.7477,
+  "measured_stage_sum_s": 65.7007,
+  "pipeline_wall_time_s": 46.6687,
+  "pipeline_success": true,
+  "sampled_process_peak_mib": 728.531,
+  "stages": [
+    {
+      "stage": "boundary.load",
+      "wall_time_s": 0.1477,
+      "rss_before_mib": 591.27,
+      "rss_after_mib": 595.184,
+      "rss_sampled_peak_mib": 595.184,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "grid.build",
+      "wall_time_s": 9.7399,
+      "rss_before_mib": 598.199,
+      "rss_after_mib": 631.449,
+      "rss_sampled_peak_mib": 711.379,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ntl.ee_download",
+      "wall_time_s": 1.422,
+      "rss_before_mib": 631.723,
+      "rss_after_mib": 635.121,
+      "rss_sampled_peak_mib": 635.121,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ntl.zonal_mean",
+      "wall_time_s": 9.6193,
+      "rss_before_mib": 635.473,
+      "rss_after_mib": 680.113,
+      "rss_sampled_peak_mib": 728.531,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "a02.cell_quality",
+      "wall_time_s": 25.0028,
+      "rss_before_mib": 680.113,
+      "rss_after_mib": 680.305,
+      "rss_sampled_peak_mib": 680.305,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ntl.global_moran",
+      "wall_time_s": 0.1391,
+      "rss_before_mib": 680.305,
+      "rss_after_mib": 680.305,
+      "rss_sampled_peak_mib": 680.309,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "lisa.local_moran",
+      "wall_time_s": 3.6794,
+      "rss_before_mib": 639.559,
+      "rss_after_mib": 650.77,
+      "rss_sampled_peak_mib": 650.77,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ghsl.built.fetch_native",
+      "wall_time_s": 1.421,
+      "rss_before_mib": 643.984,
+      "rss_after_mib": 655.02,
+      "rss_sampled_peak_mib": 655.023,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ghsl.built.zonal_sum",
+      "wall_time_s": 5.7956,
+      "rss_before_mib": 655.02,
+      "rss_after_mib": 654.07,
+      "rss_sampled_peak_mib": 655.059,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ghsl.built.agreement",
+      "wall_time_s": 0.6729,
+      "rss_before_mib": 654.07,
+      "rss_after_mib": 654.074,
+      "rss_sampled_peak_mib": 654.078,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ghsl.pop.fetch_native",
+      "wall_time_s": 1.5538,
+      "rss_before_mib": 704.73,
+      "rss_after_mib": 719.645,
+      "rss_sampled_peak_mib": 719.645,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ghsl.pop.zonal_sum",
+      "wall_time_s": 5.6339,
+      "rss_before_mib": 719.645,
+      "rss_after_mib": 719.645,
+      "rss_sampled_peak_mib": 719.648,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ghsl.pop.agreement",
+      "wall_time_s": 0.8733,
+      "rss_before_mib": 719.645,
+      "rss_after_mib": 719.648,
+      "rss_sampled_peak_mib": 719.652,
+      "status": "ok",
+      "error_type": null
+    }
+  ]
+}

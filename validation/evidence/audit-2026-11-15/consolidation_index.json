@@ -1,0 +1,42 @@
+[
+  {
+    "source": "validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md",
+    "base_commit": "349612530fe118820831af610f67015636981bde",
+    "start_byte": 5745,
+    "length_bytes": 4820,
+    "sha256": "b64865b6eb9a8532a88c4721f0b0cd9c30887e17af43bb918854e4d21d7afeab"
+  },
+  {
+    "source": "validation/CLOUD_RUNTIME_LOG_REVIEW_2026-11-14.md",
+    "base_commit": "349612530fe118820831af610f67015636981bde",
+    "start_byte": 10634,
+    "length_bytes": 3570,
+    "sha256": "8c07d580c1bfe8a39a3356267f7dc8aa3c567c7c6e34fe519a3c239c635db5e1"
+  },
+  {
+    "source": "validation/GHSL_NATIVE_CRS_REGRESSION_2026-11-15.md",
+    "base_commit": "349612530fe118820831af610f67015636981bde",
+    "start_byte": 14275,
+    "length_bytes": 2212,
+    "sha256": "6f7ed6cb8c6f72553b4c18aca8b904c95e190013ec6781e72cd45e13cdd1cb6c"
+  },
+  {
+    "source": "validation/A02_MULTIBAND_OPTIMIZATION_2026-11-15.md",
+    "base_commit": "349612530fe118820831af610f67015636981bde",
+    "start_byte": 16558,
+    "length_bytes": 2586,
+    "sha256": "f2d2b460bcb8f00424035e01fa31849987f4b71e6e6ef333939049efed12c30d"
+  },
+  {
+    "source": "user-download/SPATIAL_APP_AUDIT_EVIDENCE_README_2026-11-15.md",
+    "start_byte": 19221,
+    "length_bytes": 4572,
+    "sha256": "da9fad1d64d8cbc3230c58a0dddc560149b108fba3aa24af2faebe18635eb098"
+  },
+  {
+    "source": "user-download/SPATIAL_APP_NEXT_PERFORMANCE_BASELINE_2026-11-15.md",
+    "start_byte": 23874,
+    "length_bytes": 3098,
+    "sha256": "86e9cd07ff306d8982ca9156b860a264f4db54e0f4e8d00fd5a825e1fb52c1c7"
+  }
+]

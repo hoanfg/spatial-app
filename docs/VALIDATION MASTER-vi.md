@@ -573,3 +573,8 @@ Cập nhật bảng trạng thái ở Mục 13, bổ sung kết quả chi tiết
 **Kết luận chung:** Việc trích xuất VIIRS, suy luận Local Moran và công thức động học hai thời điểm đã có bằng chứng độc lập mạnh **trong trường hợp Diên Khánh được thử**. Những độ nhạy quan trọng theo phép biến đổi, trọng số không gian và ngưỡng thời gian đã được định lượng. Khả năng áp dụng trên nhiều địa phương, pipeline GHSL độc lập, chuỗi nhiều năm liên tục, giá trị đại diện kinh tế và độ tin cậy trên Streamlit Cloud **vẫn chưa được kiểm chứng đầy đủ**.
 
 [Về đầu trang](#top)
+
+
+## Audit evidence update — 2026-11-15
+
+See [consolidated evidence](../validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.

@@ -55,3 +55,8 @@ Lặp lại cho Bao'an và Qimen bằng đúng GeoJSON/GeoTIFF/CSV tương ứng
 - **Đã thực hiện:** xác nhận tồn tại ba ranh giới trong GitHub, mã GID, bbox, diện tích gần đúng; chuẩn bị script Earth Engine và comparator Python; comparator đã được chạy trên Diên Khánh 2020 và đạt **8.333/8.333** ô (sai số lớn nhất ~0,00004999).
 - **Chưa thực hiện:** xuất GeoTIFF 2020 ba vùng, CSV app cho ba vùng, kiểm chứng raster từng ô và LISA từng vùng, so sánh GHSL độc lập.
 - **Quyết định:** giữ V11 là `PENDING` cho tới khi có bằng chứng cho cả ba địa bàn.
+
+
+## Audit evidence update — 2026-11-15
+
+See [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.

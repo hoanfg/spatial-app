@@ -1,0 +1,18 @@
+{
+  "base_commit": "349612530fe118820831af610f67015636981bde",
+  "provenance": "User attachments in Hỗ trợ Data Semantics Validation, turn cf7be3e1-c832-4036-b0a8-47e5481db16b; copied byte-for-byte, CSV renamed only.",
+  "files": [
+    {
+      "name": "baoan_ntl_2020_500m.csv",
+      "source": "bao_an_NTL_2020_500m(1).csv",
+      "bytes": 1835999,
+      "sha256": "40b76f2f0f1fec0834be16f88e4b97084986886f5edc84d8718e28bf263eaece"
+    },
+    {
+      "name": "spatial_app_performance.json",
+      "source": "spatial_app_performance.json",
+      "bytes": 3574,
+      "sha256": "04e634f07ff2816641f1fba3faa948485adeec5a4fdb3901474c0422b3dba2cf"
+    }
+  ]
+}
