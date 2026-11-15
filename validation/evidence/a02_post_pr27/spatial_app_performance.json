@@ -1,0 +1,79 @@
+{
+  "schema": "spatial_app_perf_v1",
+  "created_utc": "2026-11-15T15:54:29+00:00",
+  "python_version": "3.14.10",
+  "measurement_scope": "Streamlit server process; not isolated per user/session",
+  "memory_measurement": "sampled RSS; may miss sub-100ms peaks; not Cloud RAM limit",
+  "earth_engine_measurement": "local download/request time only; not EE compute resource usage",
+  "sample_interval_s": 0.1,
+  "time_since_recorder_created_s": 75.3129,
+  "measured_stage_sum_s": 41.4632,
+  "pipeline_wall_time_s": 37.6479,
+  "pipeline_success": true,
+  "sampled_process_peak_mib": 688.941,
+  "stages": [
+    {
+      "stage": "boundary.load",
+      "wall_time_s": 0.0337,
+      "rss_before_mib": 546.758,
+      "rss_after_mib": 549.707,
+      "rss_sampled_peak_mib": 549.707,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "grid.build",
+      "wall_time_s": 5.0124,
+      "rss_before_mib": 552.176,
+      "rss_after_mib": 560.59,
+      "rss_sampled_peak_mib": 560.59,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ntl.ee_download",
+      "wall_time_s": 1.3541,
+      "rss_before_mib": 561.02,
+      "rss_after_mib": 561.027,
+      "rss_sampled_peak_mib": 561.031,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ntl.zonal_mean",
+      "wall_time_s": 4.4589,
+      "rss_before_mib": 561.227,
+      "rss_after_mib": 560.242,
+      "rss_sampled_peak_mib": 561.227,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "a02.cell_quality",
+      "wall_time_s": 26.4623,
+      "rss_before_mib": 560.242,
+      "rss_after_mib": 560.41,
+      "rss_sampled_peak_mib": 560.41,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "ntl.global_moran",
+      "wall_time_s": 0.1081,
+      "rss_before_mib": 560.41,
+      "rss_after_mib": 560.594,
+      "rss_sampled_peak_mib": 560.598,
+      "status": "ok",
+      "error_type": null
+    },
+    {
+      "stage": "lisa.local_moran",
+      "wall_time_s": 4.0337,
+      "rss_before_mib": 634.488,
+      "rss_after_mib": 608.258,
+      "rss_sampled_peak_mib": 688.941,
+      "status": "ok",
+      "error_type": null
+    }
+  ]
+}

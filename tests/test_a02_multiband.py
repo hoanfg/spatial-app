@@ -58,11 +58,22 @@ def test_batch_exactly_matches_legacy_five_band_contract():
     raw, grid = synthetic_case()
     for data in (grid, grid.iloc[[4, 0, 3, 1, 2]].copy()):
         legacy = legacy_bandwise(raw, data)
-        fast = zonal_mean_multiband(raw, data, bands=(2, 3, 4, 5, 6), names=QUALITY_BANDS)
+        timings = {}
+        fast = zonal_mean_multiband(raw, data, bands=(2, 3, 4, 5, 6), names=QUALITY_BANDS,
+                                    timings=timings)
+        assert all(timings[key] >= 0 for key in (
+            'raster_read_normalize_s', 'memory_geotiff_write_s',
+            'polygon_extract_s', 'join_s'))
         assert fast.columns.tolist() == list(QUALITY_BANDS)
         np.testing.assert_allclose(fast.to_numpy(float), legacy.to_numpy(float),
                                    rtol=0, atol=1e-7, equal_nan=True)
-        new_quality = cell_quality(raw, data)
+        quality_timings = {}
+        new_quality = cell_quality(raw, data, timings=quality_timings)
+        assert quality_timings['schema_status'] == 'named'
+        assert quality_timings['grid_cells'] == len(data)
+        assert quality_timings['schema_validation_s'] >= 0
+        assert quality_timings['polygon_extract_s'] >= 0
+        assert quality_timings['quality_status_s'] >= 0
         np.testing.assert_allclose(new_quality[list(QUALITY_BANDS)].to_numpy(float),
                                    legacy.to_numpy(float),
                                    rtol=0, atol=1e-7, equal_nan=True)

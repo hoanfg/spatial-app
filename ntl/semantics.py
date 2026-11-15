@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from time import perf_counter
 
 QUALITY_BANDS = (
     "dq_observed_fraction", "dq_negative_fraction", "dq_zero_fraction",
@@ -105,7 +106,8 @@ def quality_raster_schema(tif_bytes: bytes, *, trusted_producer: bool = False) -
         return details
 
 
-def cell_quality(tif_bytes, grid, *, trusted_producer: bool = False):
+def cell_quality(tif_bytes, grid, *, trusted_producer: bool = False,
+                 timings: dict | None = None):
     """Area-weighted quality flags in grid order; absent evidence stays unknown.
 
     Raw quality bands are accepted by name. If the trusted app download strips
@@ -114,16 +116,23 @@ def cell_quality(tif_bytes, grid, *, trusted_producer: bool = False):
     """
     from ntl.zonal import zonal_mean_multiband
 
+    started = perf_counter()
     info = quality_raster_schema(tif_bytes, trusted_producer=trusted_producer)
+    if timings is not None:
+        timings['schema_validation_s'] = round(perf_counter() - started, 4)
+        timings['schema_status'] = info['status']
+        timings['grid_cells'] = len(grid)
     if info["supported"]:
         # One exactextract traversal across all five quality bands.
         # The same float32/nodata policy as five historical zonal_stat calls.
-        out = zonal_mean_multiband(
-            tif_bytes, grid, bands=(2, 3, 4, 5, 6), names=QUALITY_BANDS
-        )
+        kwargs = {"bands": (2, 3, 4, 5, 6), "names": QUALITY_BANDS}
+        if timings is not None:
+            kwargs["timings"] = timings
+        out = zonal_mean_multiband(tif_bytes, grid, **kwargs)
     else:
         # Unsupported/untrusted rasters MUST remain unknown, not zero-filled.
         out = pd.DataFrame(np.nan, index=range(len(grid)), columns=QUALITY_BANDS)
+    started = perf_counter()
     observed = out.dq_observed_fraction
     out["dq_status"] = np.select(
         [observed.isna(), observed <= 0, observed < 1 - 1e-6],
@@ -131,6 +140,8 @@ def cell_quality(tif_bytes, grid, *, trusted_producer: bool = False):
     )
     out["dq_ntl_policy"] = "legacy_zero_fill"
     out.attrs["quality_raster_schema"] = info
+    if timings is not None:
+        timings['quality_status_s'] = round(perf_counter() - started, 4)
     return out
 
 

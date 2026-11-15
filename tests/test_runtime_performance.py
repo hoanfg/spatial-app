@@ -43,6 +43,12 @@ def test_calls_and_fallback():
     rec=perf.PerformanceRecorder()
     assert perf.measured_call(rec,'sum',sum,[1,2,3])==6
     assert rec.records[0]['stage']=='sum'
+    rec.attach_details('sum', {'polygon_extract_s': 0.01, 'grid_cells': 3})
+    assert rec.export()['stages'][0]['details']['grid_cells']==3
+    commit=rec.export()['source_commit']
+    assert commit is None or (len(commit)==40 and all(c in '0123456789abcdef' for c in commit))
+    with pytest.raises(ValueError, match='most recent'):
+        rec.attach_details('wrong_stage', {})
     assert perf.measured_call(None,'sum',sum,[1,2,3])==6
     with perf.profile_stage(None, 'unused'):
         pass

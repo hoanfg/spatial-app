@@ -11,9 +11,24 @@ from contextlib import contextmanager, nullcontext
 from datetime import datetime, timezone
 import json
 import os
+from pathlib import Path
+import subprocess
 import sys
 import threading
 import time
+
+
+def source_commit() -> str | None:
+    """Identify deployed checkout when Git metadata is available."""
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', 'HEAD'], cwd=Path(__file__).resolve().parents[1],
+            capture_output=True, text=True, timeout=2, check=True,
+        )
+        sha = result.stdout.strip()
+        return sha if len(sha) == 40 and all(c in '0123456789abcdef' for c in sha) else None
+    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return None
 
 
 def process_rss_mb() -> float | None:
@@ -38,6 +53,7 @@ class PerformanceRecorder:
 
     def __init__(self, sample_interval_s: float = 0.1):
         self.created_utc = datetime.now(timezone.utc).isoformat(timespec='seconds')
+        self.source_commit = source_commit()
         self._interval = max(0.05, float(sample_interval_s))
         self._start = time.perf_counter()
         self.records: list[dict] = []
@@ -94,6 +110,12 @@ class PerformanceRecorder:
         with self.stage(label):
             return function(*args, **kwargs)
 
+    def attach_details(self, label: str, details: dict) -> None:
+        """Attach bounded, non-sensitive timing details to the last completed stage."""
+        if not self.records or self.records[-1]['stage'] != label:
+            raise ValueError('Stage details require the most recent completed stage')
+        self.records[-1]['details'] = dict(details)
+
     def finish_pipeline(self, *, success: bool = True) -> None:
         """Freeze end-to-end pipeline time before subsequent UI/LISA actions."""
         if self.pipeline_wall_time_s is None:
@@ -105,6 +127,7 @@ class PerformanceRecorder:
         return {
             'schema': 'spatial_app_perf_v1',
             'created_utc': self.created_utc,
+            'source_commit': self.source_commit,
             'python_version': '.'.join(map(str, sys.version_info[:3])),
             'measurement_scope': 'Streamlit server process; not isolated per user/session',
             'memory_measurement': 'sampled RSS; may miss sub-100ms peaks; not Cloud RAM limit',

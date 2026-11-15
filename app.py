@@ -1930,8 +1930,11 @@ def run_pipeline():
             grid["dq_stat_missing"] = grid["dq_stat_missing"].fillna(True).astype(bool)
             grid["ntl_mean"] = grid["ntl_mean"].fillna(0.0).astype(float)
             cell_q = cell_report(len(grid), n_stat_nan, n_merge_miss, grid["ntl_mean"].to_numpy())
+            a02_timings = {}
             quality = measured_call(monitor, "a02.cell_quality", cell_quality,
-                                    tif_bytes, grid_wgs, trusted_producer=True)
+                                    tif_bytes, grid_wgs, trusted_producer=True,
+                                    timings=a02_timings)
+            monitor.attach_details("a02.cell_quality", a02_timings)
             raster_q["quality_band_schema"] = quality.attrs["quality_raster_schema"]
             grid = pd.concat([grid.reset_index(drop=True), quality], axis=1)
 
