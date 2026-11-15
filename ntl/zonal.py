@@ -100,3 +100,60 @@ def zonal_sum_native(tif_bytes: bytes, grid, *, id_col: str = "grid_id",
     if fill_missing is not None:
         sums = sums.fillna(fill_missing)
     return sums.reset_index(drop=True)
+
+
+def zonal_mean_multiband(tif_bytes: bytes, grid, *, bands: tuple[int, ...],
+                         names: tuple[str, ...], id_col: str = "grid_id") -> pd.DataFrame:
+    """Calculate area-weighted quality means together, preserving old numeric semantics.
+
+    The legacy path called zonal_stat five times, repeatedly decoding/writing
+    each quality band and traversing the same polygons. Here a single in-memory
+    five-band float32 raster retains the identical nodata/NaN policy, while
+    exactextract processes all named sources in a single invocation.
+
+    The input remains read-only; no changes to VIIRS, LISA or GHSL values.
+    """
+    from exactextract import exact_extract
+    from exactextract.raster import RasterioRasterSource
+    from rasterio.io import MemoryFile
+
+    if len(bands) != len(names) or not bands or len(set(names)) != len(names):
+        raise ValueError("Quality bands/names are inconsistent")
+    if len(grid) == 0:
+        return pd.DataFrame(columns=names, index=grid.index).reset_index(drop=True)
+
+    with MemoryFile(tif_bytes) as source_file, source_file.open() as source:
+        stack = source.read(list(bands), masked=True).astype("float32").filled(np.nan)
+        stack[~np.isfinite(stack)] = np.nan
+
+        with MemoryFile() as normalized_file:
+            with normalized_file.open(
+                driver="GTiff", width=source.width, height=source.height,
+                count=len(bands), dtype="float32", crs=source.crs,
+                transform=source.transform, nodata=np.nan
+            ) as output:
+                output.write(stack)
+            with normalized_file.open() as normalized:
+                layers = [
+                    RasterioRasterSource(normalized, band_idx=i, name=name)
+                    for i, name in enumerate(names, start=1)
+                ]
+                data = exact_extract(
+                    layers, grid[[id_col, "geometry"]], ["mean"],
+                    include_cols=[id_col], output="pandas"
+                )
+
+    expected = {f"{name}_mean" for name in names}
+    if not expected.issubset(data.columns):
+        raise ValueError(
+            "Unexpected multi-band zonal columns: "
+            + ", ".join(map(str, data.columns))
+        )
+    data[id_col] = pd.to_numeric(data[id_col], errors="coerce").astype("int64")
+    columns = {name: pd.to_numeric(data[f"{name}_mean"], errors="coerce")
+               for name in names}
+    table = pd.DataFrame({id_col: data[id_col], **columns})
+    # Match the old one-band merge: preserve input order, NaN for missing
+    # intersections, and source grid_id identity (including reordered cells).
+    merged = grid[[id_col]].merge(table, on=id_col, how="left")
+    return merged[list(names)].reset_index(drop=True)

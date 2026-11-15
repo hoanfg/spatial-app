@@ -84,11 +84,14 @@ def test_cell_quality_status_no_forced_unknown(monkeypatch):
     # not a second test of exactextract or previously validated NTL sums.
     import rasterio
     fake=types.ModuleType('ntl.zonal')
-    def zonal(raw, grid, *, band, clip_negative, fill_missing):
+    def zonal_mean_multiband(raw, grid, *, bands, names, id_col="grid_id"):
+        # This test isolates A02 band schema/status behavior from exactextract.
+        # Actual multi-band numerical equivalence is checked separately.
         with MemoryFile(raw) as mf, mf.open() as ds:
-            vals=ds.read(band).ravel()
-        return pd.Series(vals)
-    fake.zonal_stat=zonal
+            values = {name: ds.read(band).ravel()
+                      for band, name in zip(bands, names)}
+        return pd.DataFrame(values)
+    fake.zonal_mean_multiband=zonal_mean_multiband
     monkeypatch.setitem(sys.modules,'ntl.zonal',fake)
     grid=pd.DataFrame({'grid_id':[0,1,2]})
     good=sem.cell_quality(make_tif(), grid, trusted_producer=True)
