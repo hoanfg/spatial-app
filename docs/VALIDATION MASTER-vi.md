@@ -577,4 +577,4 @@ Cập nhật bảng trạng thái ở Mục 13, bổ sung kết quả chi tiết
 
 ## Audit evidence update — 2026-11-15
 
-See [consolidated evidence](../validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.
+Xem [bảng trạng thái audit hiện tại](../validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md#current-audit-status-after-pr-29) sau PR #29. Kết quả thực địa V11 ở ba địa bàn, kiểm chứng GHSL độc lập tại Thượng Hải và A02 cho trường hợp Bảo An có quan sát đã được ghi nhận trong phạm vi cụ thể. Các dòng chưa thực hiện phía trên là ảnh chụp trạng thái ngày 11/11. Việc tái lập công khai theo từng ô V11/GHSL, ca A02 thật sự thiếu quan sát và đo hiệu năng Cloud sau PR #29 vẫn còn mở.

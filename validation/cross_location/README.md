@@ -1,6 +1,6 @@
 # Cross-location Validation for VIIRS 2020
 
-**Status:** Sample selected and tooling verified; NTL/LISA data for the three new locations is **not yet** available. Do not mark V11 as PASS prior to raster–CSV cross-checking.
+**Current status (15 November 2026):** Historical V11 field comparisons were completed for Shanghai Core, Bao'an and Qimen at the scope recorded in the [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md#v11-cross-location-2020-viirs). The 17,177-cell aggregate result is preserved, with the clipped-cell rounding exception and polygon-independence limit. The original per-cell comparator files and rasters are not in this repository, so the public package cannot reproduce that result. The instructions below are the original execution plan; their earlier pending state is superseded by the field record. The [current audit ledger](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md#current-audit-status-after-pr-29) lists remaining work.
 
 ## 1. Three-case design
 
@@ -22,7 +22,7 @@ Boundary GeoJSON files available in the repository:
 
 Run `gee_viirs_2020.js` in the Google Earth Engine Code Editor, executing **9 Export tasks** (three products per location): annual reference median, count of months with `cf_cvg > 0`, and median retaining NoData.
 
-In `spatial-app`, run **2020, 500 m grid, raw NTL, Queen, 999 permutations, seed 42, FDR 0.05**, then export CSV containing at least `grid_id, area_km2, ntl_mean`; export the full LISA CSV as well to enable p-value/quadrant cross-checking. Exporting the entire city or modifying the application's RAM protection mechanism is not required.
+In `spatial-app`, run **2020, 500 m grid, raw NTL, Queen, 999 permutations, seed 42, FDR 0.05**, then export CSV containing `grid_id`, `area_km2`, `ntl_mean`, `centroid_lon`, `centroid_lat`, and `centroid_x_epsg{E}` / `centroid_y_epsg{E}` for the selected UTM EPSG. Export the full LISA CSV as well to enable p-value/quadrant cross-checking. Exporting the entire city or modifying the application's RAM protection mechanism is not required.
 
 Earth Engine and app data must maintain independent zonal mean calculations. The same NOAA/VIIRS product may be used, but app cell extraction results must not be reused as the "reference".
 
@@ -43,7 +43,7 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## 4. Evaluation criteria (pre-defined)
 
-1. **Geometry:** cell count, `grid_id`, per-cell area match the app CSV within an area tolerance of $0.00005\text{ km}^2$.
+1. **Geometry:** cell count, `grid_id`, per-cell area and UTM/WGS84 centroid match the app CSV. Area tolerance is $0.00005\text{ km}^2$; centroid tolerances cover the app's one-decimal metre and six-decimal degree exports. This detects same-area ID/location swaps.
 2. **NTL:** all cells with sufficient raster coverage match within the CSV rounding margin of $\pm 0.00005\text{ nW/cm}^2\text{/sr}$; report all missing/fail cases without removing outlier cells.
 3. **Missing data check:** compare annual median with masked median; analyze monthly `cf_cvg`, all negative values, and their impact on polygon zonal mean. Do not assume all pixels have 12 months as in Yanqing.
 4. **LISA:** recalculate Queen adjacency, Local Moran, and p-value/FDR at 500 m using a dedicated validation script; fixed-seed randomization, explicitly state tie/tail counting method; report HH/LL labels and outliers.
@@ -58,4 +58,4 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## Audit evidence update — 2026-11-15
 
-See [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.
+See the [current audit ledger](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md#current-audit-status-after-pr-29). Historical pending steps above describe the original plan; the recorded V11 field comparison is complete at its stated scope, while its raster pairs and per-cell comparator outputs are unavailable here.

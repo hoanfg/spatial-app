@@ -560,4 +560,4 @@ Update the status table in Section 13, add the detailed findings to the relevant
 
 ## Audit evidence update — 2026-11-15
 
-See [consolidated evidence](../validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.
+See the [current audit ledger](../validation/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md#current-audit-status-after-pr-29) for the status after PR #29. The V11 three-location field comparisons, Shanghai independent GHSL check, and Bao'an observed-case A02 check are recorded at their stated scope. Historical pending statements above remain as the original 11 November snapshot. Public per-cell V11/GHSL reproduction, a genuine missing-support A02 case, and post-PR-29 Cloud performance measurements remain open.
