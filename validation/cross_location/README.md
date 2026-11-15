@@ -48,7 +48,7 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 3. **Missing data check:** compare annual median with masked median; analyze monthly `cf_cvg`, all negative values, and their impact on polygon zonal mean. Do not assume all pixels have 12 months as in Yanqing.
 4. **LISA:** recalculate Queen adjacency, Local Moran, and p-value/FDR at 500 m using a dedicated validation script; fixed-seed randomization, explicitly state tie/tail counting method; report HH/LL labels and outliers.
 5. **Generalizability:** mark V11 as complete only when results and attached evidence are available for all three locations; identical HH area share to Yanqing is not required, as structural differences across locations are expected.
-6. **Archiving:** attach raster/CSV, test code, SHA-256 manifest, commit version, per-cell results, and reports; synchronously update both `docs/VALIDATION MASTER.md` and `docs/VALIDATION MASTER-vi.md` to reflect the new content accurately.
+6. **Archiving:** attach raster/CSV, test code, SHA-256 manifest, commit version, per-cell results and reports; update both [validation guides](../README.md) and [the data/method guides](../../docs/README.md) accurately in both languages.
 
 ## 5. Execution status
 
@@ -58,4 +58,4 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## Audit evidence update — 2026-11-15
 
-See [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.
+See the [current validation status](../README.md). The pending steps above are the original plan; the later V11 field comparison is complete at its stated scope, while the source raster pairs and per-cell outputs remain unavailable in this repository.

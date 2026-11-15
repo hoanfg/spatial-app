@@ -1,47 +1,21 @@
 <a id="top"></a>
 
-# 🗂️ Technical specification: GADM v4.1 data extraction & country classification for spatial econometrics
+# Data and validation guide
 
-| Item | Details |
-| :--- | :--- |
-| **Project** | Nighttime lights (NTL) data extractor & Spatial econometrics engine |
-| **Objective** | Standardize global administrative boundaries from the GADM v4.1 database (`.gpkg`) into a consistent 3-level structure, for VIIRS nighttime radiance extraction and LISA/Moran's I testing. |
-| **Related document** | [📘 Read the technical manual here](https://github.com/hoanfg/spatial-app/blob/main/README.md) |
+[English](README.md) · [Tiếng Việt](README-vi.md) · [Application manual](../README.md)
 
-The output structure that the whole pipeline is built to produce:
+This guide keeps the GADM v4.1 extraction rules and the validation record in one place. The country table is a design specification; the China field checks and scientific validation are identified separately below.
 
-```text
-Country
-└── Level 1 folder   (state / province)
-    └── Level 2 GeoJSON file   (district / county)
-```
-
-> [!TIP]
-> **⚡ The 20-second version**
->
-> - **The problem:** GADM v4.1 is not as clean as it looks. Missing values are stored as the text `"NA"`, lakes show up as administrative units, some units share names, some countries have units that are far too small, and others are missing an intermediate level altogether.
-> - **If you ignore it:** you get garbage folders, wrongly merged giant polygons, samples that mix several administrative levels, and distorted regression results.
-> - **The fix:** don't guess. Use a **declarative rules table for each country group** (4 groups, see [Section 3](#s3)), and run every output file through **5 automated quality checks** (see [Section 4](#s4)).
-
-<details>
-<summary><b>📖 A few terms you will meet (click to expand)</b></summary>
-
-<br>
-
-| Term | Meaning |
-| :--- | :--- |
-| **GADM** | A database of global administrative boundaries. |
-| **`.gpkg`** | A GeoPackage file holding spatial data, one per country (`gadm41_XXX.gpkg`). |
-| **`ADM_ADM_1`, `ADM_ADM_2`, `ADM_ADM_3`** | Layers inside the `.gpkg` file, matching administrative levels 1, 2 and 3. |
-| **`NAME_x`** | Name of the administrative unit at level *x*. Can repeat. |
-| **`GID_x`** | **Unique** identifier of the unit at level *x*. |
-| **`TYPE_x`, `ENGTYPE_x`** | Unit type (local and English), for example County, Independent City, Water body. |
-| **ETL** | Extract – Transform – Load: the process of extracting, transforming and writing data. |
-
-</details>
+| Section | Contents |
+| --- | --- |
+| [1. GADM input risks](#s1) | Source values, names, geometry and hierarchy |
+| [2. Architecture choices](#s2) | Extraction and application trade-offs |
+| [3. Country rules](#s3) | Four classification groups and country table |
+| [4. Output checks](#s4) | Five proposed checks before use |
+| [5. Current implementation](#current-implementation-and-evidence) | What the repository actually contains |
+| [6. Validation status](#validation-status) | Completed checks and remaining scope |
 
 ---
-
 <a id="s1"></a>
 
 ## 🔍 1. Diagnosing the root causes of garbage data in GADM v4.1
@@ -400,3 +374,31 @@ This naming is compatible with the `list_counties()` and `split_county()` functi
 Issue a warning if a polygon has an area of $< 0.25 \text{ km}^2$, which is smaller than one $500 \times 500 \text{ m}$ grid cell.
 
 <sub>[↑ Back to top](#top)</sub>
+
+---
+
+## Current implementation and evidence
+
+The four country groups above describe the intended extraction rules. They are not a claim that every country has been processed and checked. The application reads the curated GeoJSON hierarchy under `data/`; it does not run the complete global extraction procedure whenever a user opens the app.
+
+For China, the curated schema intentionally maps source `GID_3` → `GID_2`, `NAME_3` → `NAME_2`, and `ENGTYPE_3` → `TYPE_2`. The folder name is a processing group and may combine province and prefecture. Join external data by the preserved GID, not by the display name or filename. The source-level review checked 2,420 curated districts against the full-resolution GADM 4.1 GeoPackage. The sole omitted level-3 record had `NA` administrative fields. The `CHN.14.10.2_1` display name was corrected to **Nan** in PR #10; its legacy filename remains for compatibility. These checks establish correspondence to that source release, not current legal boundaries. [Validation evidence](../validation/README.md) records the scope.
+
+The five checks in Section 4 are the target contract for future extraction. Before extending country coverage, verify the chosen source layer, the GID/NAME mapping, invalid geometries, water classes, duplicate filenames and small polygons on the actual country output. A warning for area below 0.25 km² is a sampling warning; it is not an automatic reason to delete a valid unit.
+
+## Validation status
+
+| Area | Current result | Remaining scope |
+| --- | --- | --- |
+| Yanqing VIIRS, LISA and two-period calculations | Independent 2014/2020 raster-to-cell and statistical comparisons at the recorded precision | Continuous annual series and other locations |
+| Cross-location V11 | Historical Shanghai, Bao'an and Qimen field comparisons completed at their stated NTL/LISA scope | Original raster and cellwise outputs are absent from this repository; clipped polygons in the edge check were app exports |
+| GHSL | Native-grid quantity correction and independent aggregate Shanghai core comparison after deployment | Per-cell live export, other locations and epochs |
+| A02 observation metadata | Bao'an observed-case CSV has 7,148/7,148 usable rows | A real no-observation/low-support case |
+| Cloud performance | Single-run Bao'an baselines and profiler are available | Repeated runs with deployed commit, multiple sessions and full resource checks |
+
+The [current validation guide](../validation/README.md) separates observed results from untested claims and links to the original evidence. The previous full validation master, GADM specification and correction notes are preserved byte-for-byte in the [historical document archive](../validation/evidence/historical_document_sources_2026-11-15.md).
+
+### Method notes retained from the earlier documents
+
+- Global Moran uses all grid cells and binary Queen weights; Local Moran uses its eligible sample and row-standardized Queen weights. Their values are not interchangeable. PR #10 changed conditional Local Moran sampling to distinct non-focal values without replacement and aligned the observed Local I normalization with ESDA; existing results made before that change need a fresh export before comparison.
+- The Space-Time label **Synchronized Decline** describes a decline in relative standardized position of a cell and its neighbours. It does not assert a fall in absolute radiance or economic output. Directional regimes are descriptive and are not permutation/FDR significance labels.
+- Explicit raster NoData masks are preserved before zonal extraction. The final application policy still fills missing cell values with zero and records quality metadata; that policy requires separate real-missingness evidence before any scientific change.

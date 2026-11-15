@@ -48,7 +48,7 @@ Lặp lại cho Bao'an và Qimen bằng đúng GeoJSON/GeoTIFF/CSV tương ứng
 3. **Kiểm tra dữ liệu thiếu:** so annual median với masked median; phân tích `cf_cvg` theo tháng, mọi giá trị âm và ảnh hưởng tới polygon zonal mean. Không giả định tất cả pixel có 12 tháng như Diên Khánh.
 4. **LISA:** tái tính Queen adjacency, Local Moran và p-value/FDR trên 500 m bằng script kiểm chứng riêng; ngẫu nhiên có seed cố định, nêu rõ cách đếm tie/tail; báo cáo nhãn HH/LL và các ngoại lệ.
 5. **Khả năng khái quát:** chỉ coi V11 hoàn tất khi cả ba địa bàn đã có kết quả và bằng chứng đính kèm; không yêu cầu HH area share giống Diên Khánh, các địa bàn khác nhau về cấu trúc là điều được mong đợi.
-6. **Lưu trữ:** đính kèm raster/CSV, mã kiểm thử, manifest SHA-256, phiên bản commit, kết quả theo ô và báo cáo; cập nhật đồng bộ hai bản `docs/VALIDATION MASTER.md` và `docs/VALIDATION MASTER-vi.md` theo đúng nội dung mới.
+6. **Lưu trữ:** đính kèm raster/CSV, mã kiểm thử, manifest SHA-256, phiên bản commit, kết quả theo ô và báo cáo; cập nhật đúng [hướng dẫn kiểm chứng](../README-vi.md) và [hướng dẫn dữ liệu/phương pháp](../../docs/README-vi.md) ở cả hai ngôn ngữ.
 
 ## 5. Tình trạng thực thi
 
@@ -59,4 +59,4 @@ Lặp lại cho Bao'an và Qimen bằng đúng GeoJSON/GeoTIFF/CSV tương ứng
 
 ## Audit evidence update — 2026-11-15
 
-See [consolidated evidence](../CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for the latest evidence inventory. Historical PENDING statements above describe the earlier stage: V11 now has repository aggregate results, while source pairs and per-cell outputs for all three locations remain unavailable in this revision. The retrievable Bao'an CSV and profiler are published with hashes; this does not establish full V11/GHSL or post-PR-27 acceptance.
+Xem [trạng thái kiểm chứng hiện tại](../README-vi.md). Các bước còn chờ phía trên là kế hoạch ban đầu; đối chiếu V11 sau đó đã hoàn tất trong phạm vi ghi rõ, còn cặp raster nguồn và kết quả từng ô chưa có trong repo này.

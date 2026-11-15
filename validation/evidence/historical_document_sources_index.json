@@ -1,0 +1,80 @@
+[
+  {
+    "source": "docs/GADM_v41 pipeline specification.md",
+    "start_byte": 341,
+    "length_bytes": 22990,
+    "sha256": "6360df1edf81820535fe54edc5d8448febce3b40c7fb9b4a9423194646bd0d01"
+  },
+  {
+    "source": "docs/GADM_v41-vi pipeline specification.md",
+    "start_byte": 23439,
+    "length_bytes": 25016,
+    "sha256": "83ac86cd9bb0b62b48300be86a63dbf7609f3f1c6fde6d0b142fdd29830a7672"
+  },
+  {
+    "source": "docs/VALIDATION MASTER.md",
+    "start_byte": 48546,
+    "length_bytes": 39387,
+    "sha256": "f486e27f235fca4cf0817ed5e18a3e390a20aee2e824d935620cc7c4d9f943ed"
+  },
+  {
+    "source": "docs/VALIDATION MASTER-vi.md",
+    "start_byte": 88027,
+    "length_bytes": 42386,
+    "sha256": "55339bcbfdf93617dec771d451cd02d23780a93594ffc3bb4609b608d9754b8e"
+  },
+  {
+    "source": "docs/audit-fixes-2026-11-11.md",
+    "start_byte": 130509,
+    "length_bytes": 4446,
+    "sha256": "fe4eb340a9130252f13d04202f1c8b0176d6779e8ef44d1e34914f3150357c6c"
+  },
+  {
+    "source": "docs/spacetime-relative-regime-interpretation.md",
+    "start_byte": 135069,
+    "length_bytes": 2660,
+    "sha256": "5eef1660a424c125cfb20969341b9762f7961d8ff28cfb941891711adac8bcac"
+  },
+  {
+    "source": "validation/A02_POST_OPTIMIZATION_FIELD_2026-11-15.md",
+    "start_byte": 137847,
+    "length_bytes": 3482,
+    "sha256": "ec6cb6b937fa9ff70fe290b40d2c66dc9636886110345ce54b279364b32e4424"
+  },
+  {
+    "source": "validation/A02_PR_PROPOSAL.md",
+    "start_byte": 141424,
+    "length_bytes": 1747,
+    "sha256": "9b1787e5ca4b2c7fd416b53087d8f650a2106f4c1d5099473a481249b6e81663"
+  },
+  {
+    "source": "validation/ADVANCED_STATISTICAL_VALIDATION_A03B.md",
+    "start_byte": 143287,
+    "length_bytes": 3911,
+    "sha256": "d5d77fb2d6576fc7582b93f7dbbe8067508f4193170f8f54ada3c2fc49f7a444"
+  },
+  {
+    "source": "validation/DATA_SEMANTICS_A02.md",
+    "start_byte": 147296,
+    "length_bytes": 8204,
+    "sha256": "0af0979daa4fe56abc4cae690ac57b17b9791b2efac5d1d3f640da8a0cbd1d63"
+  },
+  {
+    "source": "validation/INTEGRATION_AUDIT_2026-11-11-vi.md",
+    "start_byte": 155611,
+    "length_bytes": 9490,
+    "sha256": "253e32b70948d830766c8385d1093037ca23789ab1336cdfe32cf46a2b60804d"
+  },
+  {
+    "source": "validation/MAJOR_REVIEW_COVERAGE_EVIDENCE_2026-11.md",
+    "start_byte": 165219,
+    "length_bytes": 9942,
+    "sha256": "d76c153570648ed77922e6fdd3966401715ac05723179f4d36cd7e7dc8757e11"
+  },
+  {
+    "source": "validation/NUMERICAL_VALIDATION_A03.md",
+    "start_byte": 175265,
+    "length_bytes": 3181,
+    "sha256": "dea2a63134721b09eedba954126523aa47ff844f5270c16497b358ba86468471"
+  }
+]

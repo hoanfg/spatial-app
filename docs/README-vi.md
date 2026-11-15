@@ -1,47 +1,21 @@
 <a id="top"></a>
 
-# 🗂️ Đặc tả kỹ thuật: trích xuất dữ liệu GADM v4.1 & phân loại quốc gia cho kinh tế lượng không gian
+# Hướng dẫn dữ liệu và kiểm chứng
 
-| Hạng mục | Nội dung |
-| :--- | :--- |
-| **Dự án** | Nighttime lights (NTL) data extractor & Spatial econometrics engine |
-| **Mục tiêu** | Chuẩn hóa ranh giới hành chính toàn cầu từ cơ sở dữ liệu GADM v4.1 (`.gpkg`) sang cấu trúc 3 cấp đồng nhất, phục vụ trích xuất bức xạ đêm VIIRS và kiểm định LISA/Moran's I. |
-| **Tài liệu liên quan** | [📘 Đọc sổ tay kỹ thuật tại đây](https://github.com/hoanfg/spatial-app/blob/main/README-vi.md) |
+[English](README.md) · [Tiếng Việt](README-vi.md) · [Sổ tay ứng dụng](../README-vi.md)
 
-Cấu trúc đầu ra mà toàn bộ quy trình hướng tới:
+Tài liệu này gom quy tắc trích xuất GADM v4.1 và tình trạng kiểm chứng vào một nơi. Bảng phân loại quốc gia là đặc tả thiết kế; kết quả đã kiểm tra với dữ liệu Trung Quốc và các phép kiểm chứng khoa học được nêu riêng ở cuối.
 
-```text
-Quốc gia
-└── Thư mục Cấp 1   (tỉnh / bang)
-    └── Tệp GeoJSON Cấp 2   (quận / huyện / hạt)
-```
-
-> [!TIP]
-> **⚡ Đọc nhanh trong 20 giây**
->
-> - **Vấn đề:** dữ liệu GADM v4.1 không "sạch" như vẻ ngoài. Có giá trị khuyết bị lưu thành chữ `"NA"`, có cả hồ nước bị tính như một đơn vị hành chính, có những đơn vị trùng tên, có nước thì cấp hành chính quá nhỏ, có nước lại thiếu hẳn một cấp trung gian.
-> - **Nếu bỏ qua:** thư mục rác, đa giác khổng lồ ghép sai, mẫu phân tích lẫn lộn nhiều cấp hành chính, và kết quả hồi quy lệch.
-> - **Cách giải:** không đoán mò, mà dùng một **bảng quy tắc khai báo theo từng nhóm quốc gia** (4 nhóm, xem [Mục 3](#s3)), rồi cho mọi tệp đầu ra đi qua **5 lần kiểm định chất lượng** (xem [Mục 4](#s4)).
-
-<details>
-<summary><b>📖 Vài ký hiệu hay gặp (bấm để mở)</b></summary>
-
-<br>
-
-| Ký hiệu | Ý nghĩa |
-| :--- | :--- |
-| **GADM** | Cơ sở dữ liệu ranh giới hành chính toàn cầu. |
-| **`.gpkg`** | Tệp GeoPackage chứa dữ liệu không gian, mỗi quốc gia một tệp (`gadm41_XXX.gpkg`). |
-| **`ADM_ADM_1`, `ADM_ADM_2`, `ADM_ADM_3`** | Các lớp (layer) trong tệp `.gpkg`, ứng với cấp hành chính 1, 2, 3. |
-| **`NAME_x`** | Tên đơn vị hành chính ở cấp *x*. Có thể trùng nhau. |
-| **`GID_x`** | Mã định danh **duy nhất** của đơn vị ở cấp *x*. |
-| **`TYPE_x`, `ENGTYPE_x`** | Loại hình đơn vị (bản địa và bản tiếng Anh), ví dụ County, Independent City, Water body. |
-| **ETL** | Extract – Transform – Load: quy trình trích xuất, biến đổi và ghi dữ liệu. |
-
-</details>
+| Phần | Nội dung |
+| --- | --- |
+| [1. Rủi ro dữ liệu GADM](#s1) | Giá trị nguồn, tên, hình học và phân cấp |
+| [2. Lựa chọn kiến trúc](#s2) | Cách trích xuất và vận hành ứng dụng |
+| [3. Quy tắc theo quốc gia](#s3) | Bốn nhóm và bảng phân loại |
+| [4. Kiểm tra đầu ra](#s4) | Năm bước đề xuất trước khi sử dụng |
+| [5. Hiện trạng triển khai](#hien-trang-trien-khai-va-bang-chung) | Dữ liệu thực sự có trong repo |
+| [6. Tình trạng kiểm chứng](#tinh-trang-kiem-chung) | Kết quả đã có và giới hạn |
 
 ---
-
 <a id="s1"></a>
 
 ## 🔍 1. Chẩn đoán nguyên nhân gốc rễ của dữ liệu rác trong GADM v4.1
@@ -400,3 +374,31 @@ Cách đặt tên này tương thích với hàm `list_counties()` và `split_co
 Cảnh báo nếu một đa giác có diện tích $< 0.25 \text{ km}^2$, tức nhỏ hơn một ô lưới $500 \times 500 \text{ m}$.
 
 <sub>[↑ Về đầu trang](#top)</sub>
+
+---
+
+## Hiện trạng triển khai và bằng chứng
+
+Bốn nhóm quốc gia ở trên là quy tắc thiết kế, không có nghĩa mọi quốc gia đã được trích xuất và kiểm tra. Ứng dụng đọc cây GeoJSON đã biên tập trong `data/`; ứng dụng không chạy toàn bộ quy trình trích xuất toàn cầu mỗi khi người dùng mở trang.
+
+Với Trung Quốc, cấu trúc biên tập cố ý đổi `GID_3` nguồn thành `GID_2`, `NAME_3` thành `NAME_2` và `ENGTYPE_3` thành `TYPE_2`. Tên thư mục là nhóm xử lý, đôi khi ghép tỉnh với địa khu. Khi nối dữ liệu ngoài, dùng GID đã giữ lại thay vì tên hiển thị hoặc tên tệp. Đợt kiểm tra nguồn đã đối chiếu 2.420 quận/huyện với GeoPackage GADM 4.1 đầy đủ; một bản ghi cấp 3 bị bỏ có các thuộc tính hành chính là `NA`. Tên hiển thị của `CHN.14.10.2_1` đã sửa thành **Nan** trong PR #10, còn tên tệp cũ được giữ để tương thích. Kết quả chỉ xác nhận sự tương ứng với bản GADM đó, không khẳng định ranh giới pháp lý hiện nay. Xem [bằng chứng kiểm chứng](../validation/README-vi.md).
+
+Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất tiếp theo. Trước khi mở rộng quốc gia, cần kiểm tra tầng dữ liệu nguồn, cách ánh xạ GID/NAME, hình học lỗi, lớp mặt nước, tên tệp trùng và đa giác nhỏ trên đầu ra thực tế. Cảnh báo diện tích dưới 0,25 km² là cảnh báo về thang đo; không tự động xóa đơn vị hành chính hợp lệ.
+
+## Tình trạng kiểm chứng
+
+| Mảng | Kết quả hiện có | Phạm vi còn thiếu |
+| --- | --- | --- |
+| VIIRS, LISA và tính toán hai thời điểm tại Yanqing (Bắc Kinh) | Đã đối chiếu độc lập raster theo ô năm 2014/2020 và các phép thống kê trong sai số ghi nhận | Chuỗi năm liên tục và địa bàn khác |
+| V11 nhiều địa bàn | Báo cáo thực địa đã đối chiếu NTL/LISA tại Thượng Hải, Bảo An, Kỳ Môn trong phạm vi nêu rõ | Repo thiếu raster và kết quả từng ô; phép kiểm ô cắt biên dùng đa giác do app xuất |
+| GHSL | Đã sửa phép cộng lượng trên lưới nguồn và tái lập độc lập chỉ tiêu tổng hợp tại nội đô Thượng Hải | Đầu ra live từng ô, địa bàn và kỳ GHSL khác |
+| Metadata A02 | CSV Bảo An có 7.148/7.148 ô thuộc trường hợp có quan sát | Ca thực tế không có hoặc ít quan sát |
+| Hiệu năng Cloud | Có số đo một lượt Bảo An và bộ ghi hiệu năng | Nhiều lượt cùng phiên bản triển khai, nhiều người dùng và kiểm tra tài nguyên đầy đủ |
+
+[Hướng dẫn kiểm chứng hiện tại](../validation/README-vi.md) phân biệt kết quả quan sát với điều chưa kiểm tra và dẫn về chứng cứ gốc. Bản validation master, đặc tả GADM và ghi chú sửa lỗi trước đây được giữ nguyên byte trong [bản lưu tài liệu lịch sử](../validation/evidence/historical_document_sources_2026-11-15.md).
+
+### Ghi chú phương pháp từ tài liệu trước
+
+- Global Moran dùng toàn bộ ô và trọng số Queen nhị phân; Local Moran dùng tập ô đủ điều kiện và Queen chuẩn hóa theo hàng. Không diễn giải hai trị số như cùng một phép thống kê. PR #10 chuyển hoán vị Local Moran sang rút các ô khác nhau, không hoàn lại trong mỗi lượt, và căn chỉnh mẫu số Local I với ESDA. Kết quả xuất trước thay đổi đó cần tạo lại trước khi so sánh.
+- Nhãn Space-Time **Synchronized Decline** mô tả sự giảm vị thế tương đối sau chuẩn hóa của ô và láng giềng, không khẳng định bức xạ hay hoạt động kinh tế giảm tuyệt đối. Các chế độ hướng biến động mang tính mô tả, không phải nhãn có ý nghĩa thống kê theo permutation/FDR.
+- Mask NoData của raster được giữ trước khi trích xuất. Chính sách cuối của ứng dụng vẫn điền 0 cho ô thiếu và ghi metadata chất lượng; cần dữ liệu thiếu quan sát thực tế trước khi đổi chính sách khoa học.

@@ -1,12 +1,12 @@
 # Recovery update — original inventory and 78 report bodies now supplied
 
-This update supersedes the earlier missing-document inventory below. The user supplied the historical [JSON manifest](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json), [archive verifier](evidence/audit-2026-11-15/recovered-originals/verify_spatial_app_audit_archive.py), [118-record CSV inventory](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_FILE_MANIFEST_2026-11-15.csv) and [all 78 complete Markdown reports](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md). All are preserved byte-for-byte; the previously generated reconstruction is not substituted for them.
+This update supersedes the earlier missing-document inventory below. The user supplied the historical [JSON manifest](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json), [archive verifier](audit-2026-11-15/recovered-originals/verify_spatial_app_audit_archive.py), [118-record CSV inventory](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_FILE_MANIFEST_2026-11-15.csv) and [all 78 complete Markdown reports](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md). All are preserved byte-for-byte; the previously generated reconstruction is not substituted for them.
 
 The recovered JSON's whole-Markdown SHA-256 matches exactly. All 118 CSV records agree with JSON; every report body matches its recorded length/hash and corresponding direct-file or nested-member entry. The already published Bao'an CSV/profiler also match historical hashes. The archive verifier is syntax-checked only: its full run requires the original full ZIP and byte-range JSON, still unavailable. The recovered manifest indexes 271 nested files, but their bytes have not been recovered or checked here. No independent scientific computations were rerun.
 
 The 78 reports now provide historical V11 edge-validation, Shanghai post-deployment GHSL and Bao'an A02 evidence, including qualifications. These are recovered original report statements, not fresh numerical recomputations or substitutes for missing per-cell results, rasters, plots and scripts. Full raw data publication and post-PR-27 Cloud benchmarking remain open.
 
-The evidence README and next-performance baseline supplied by the user are embedded in full at the end of this document. Earlier contents and time-specific statements below are retained as history. Reproduce local checks using `node validation/audit_public_evidence.mjs --check-result`; see [recovery receipt](evidence/audit-2026-11-15/recovered-originals/recovery_receipt.json).
+The evidence README and next-performance baseline supplied by the user are embedded in full at the end of this document. Earlier contents and time-specific statements below are retained as history. Reproduce local checks using `node validation/audit_public_evidence.mjs --check-result`; see [recovery receipt](audit-2026-11-15/recovered-originals/recovery_receipt.json).
 
 ---
 
@@ -16,8 +16,8 @@ The evidence README and next-performance baseline supplied by the user are embed
 
 Repository baseline: `349612530fe118820831af610f67015636981bde` (main after merged PR #27). This revision publishes the two retrievable user attachments and reconciles historical reports. It does not certify the entire audit campaign.
 
-- [Bao'an original cell CSV](evidence/audit-2026-11-15/baoan_ntl_2020_500m.csv): 7,148 rows, 2020, 500 m. [Original profiler JSON](evidence/audit-2026-11-15/spatial_app_performance.json). Byte counts and SHA-256: [manifest](evidence/audit-2026-11-15/manifest.json).
-- [Recomputed public summary](evidence/audit-2026-11-15/verified_summary.json). Reproduce with `node validation/audit_public_evidence.mjs --check-result`. This checks all rows, schema, finite quality values, ranges, unique IDs and hashes. It does not recompute raster extraction or scientific indicators.
+- [Bao'an original cell CSV](audit-2026-11-15/baoan_ntl_2020_500m.csv): 7,148 rows, 2020, 500 m. [Original profiler JSON](audit-2026-11-15/spatial_app_performance.json). Byte counts and SHA-256: [manifest](audit-2026-11-15/manifest.json).
+- [Recomputed public summary](audit-2026-11-15/verified_summary.json). Reproduce with `node validation/audit_public_evidence.mjs --check-result`. This checks all rows, schema, finite quality values, ranges, unique IDs and hashes. It does not recompute raster extraction or scientific indicators.
 - Historical V11 aggregate evidence below reports 17,177 cells across Shanghai Core, Bao'an and Qimen. Per-cell comparator outputs, source raster pairs, LISA results and external-validation plots for these three locations are not present in the reviewed repository. V11 is therefore **aggregate evidence recorded / public reproduction incomplete**, not a fresh PASS.
 - Bao'an metadata is directly inspectable in the attached CSV. The previous CSV is unavailable here: the chat's claim of unchanged NTL before/after cannot be reverified. This sample does not validate genuine missing-support cases.
 - Profiler: 46.6687 s pipeline, 25.0028 s A02, 728.531 MiB sampled server-process RSS. Created 2026-11-15 12:48:20 UTC, before PR #27; no source commit is embedded. No post-optimization speedup is established. Stage sums include later LISA/GHSL operations and must not be equated with pipeline time.
@@ -27,11 +27,11 @@ Repository baseline: `349612530fe118820831af610f67015636981bde` (main after merg
 
 The retrieved chat describes `SPATIAL_APP_FULL_AUDIT_EVIDENCE_2026-11-15.zip` (118 source files, 271 extracted historical members, 78 Markdown reports), `SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md`, CSV/JSON manifests, a byte-range index, `verify_spatial_app_audit_archive.py`, and `SPATIAL_APP_NEXT_PERFORMANCE_BASELINE_2026-11-15.md` under Library path `/Spatial-App/audit-evidence-2026-11-15/`. These are **chat-reported inventory, not files recovered or verified in this revision**. The local project sources directory is empty. The retrieved chat pages return no older cursor. No package checksum is invented and no unavailable file is linked as a repository artifact.
 
-The actual published historical evidence remains in [Yanqing](evidence/yanqing/README.md), [A02](DATA_SEMANTICS_A02.md), [A03](NUMERICAL_VALIDATION_A03.md), [A03-B](ADVANCED_STATISTICAL_VALIDATION_A03B.md), [coverage review](MAJOR_REVIEW_COVERAGE_EVIDENCE_2026-11.md), and [cross-location tooling](cross_location/README.md). Its scope is distinct from the unavailable full package.
+The current entry point is the [validation guide](../README.md). Original A02, A03, A03-B and coverage reports are preserved in the [indexed document archive](historical_document_sources_2026-11-15.md); the [Yanqing evidence](yanqing/README.md) and [cross-location tooling](../cross_location/README.md) remain available at their own paths. This recovered subset is distinct from the unavailable full package.
 
 ## Preserved historical reports
 
-The four reports below are embedded as original bytes, without removing historical caveats or replacing their time-specific statuses. The original consolidated report is followed by three short reports now merged here. Their old paths and hashes at the baseline commit are recorded in [the byte-range index](evidence/audit-2026-11-15/consolidation_index.json). Read current evidence above before historical pending/merge instructions.
+The four reports below are embedded as original bytes, without removing historical caveats or replacing their time-specific statuses. The original consolidated report is followed by three short reports now merged here. Their old paths and hashes at the baseline commit are recorded in [the byte-range index](audit-2026-11-15/consolidation_index.json). Read current evidence above before historical pending/merge instructions.
 
 
 ---

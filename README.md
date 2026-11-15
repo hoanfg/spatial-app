@@ -1,6 +1,6 @@
 <a id="top"></a>
 
-[A02 data semantics: implementation, evidence and pending live validation](validation/DATA_SEMANTICS_A02.md)
+[Data and GADM guide](docs/README.md) · [Validation status and evidence](validation/README.md)
 
 <div align="center">
 
@@ -88,7 +88,7 @@ The job mixes three very different kinds of data: **vector** (administrative bou
 | **Tier 4**<br>📊 Econometrics & rendering | Runs the spatial econometrics core (Global Moran's I, Local Moran's I / LISA, connected hotspot cluster detection, distance to the economic core, Gini inequality coefficient) and renders the multi-layer interactive map. Output is packaged through the data bridge as cell-level and region–year panel CSV files. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 How the system recognizes and classifies countries, and how it handles the quirks of GADM data, is covered in a separate document: [read the technical specification for country classification here](https://github.com/hoanfg/spatial-app/blob/main/docs/GADM_v41%20pipeline%20specification.md).
+> 📎 Country classification and GADM source rules are in the [data and validation guide](docs/README.md).
 
 ### 1.2. Hardware constraints and out-of-memory (OOM) safeguards on Cloud
 
@@ -165,7 +165,7 @@ Why the mask is needed: in monsoon tropical regions, heavy cloud cover during ra
 
 #### 🎯 Step 2: zonal statistics via fractional coverage
 
-Traditional center-of-pixel raster stats introduce substantial error when the grid cell size approaches the native VIIRS pixel size. The system therefore uses the C/C++ library `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}\_{i}$ of grid cell $i$ is a weighted average, with weights given by the fractional pixel area $w\_{ip} \in [0, 1]$ that actually falls inside polygon cell $i$:
+Traditional center-of-pixel raster stats introduce substantial error when the grid cell size approaches the native VIIRS pixel size. The system therefore uses the C/C++ library `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}_{i}$ of grid cell $i$ is a weighted average, with weights given by the fractional pixel area $w_{ip} \in [0, 1]$ that actually falls inside polygon cell $i$:
 
 $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
@@ -266,7 +266,7 @@ $$
 
 where $k_i = \lvert N(i) \cap S \rvert$ is the number of valid neighbors of cell $i$. Only cells $i \in S$ with $k_i \ge k_{\min}$ (default $k_{\min} = 1$) enter the tested set $\mathrm{Focal}$.
 
-> Method update (11 November 2026): Local I now uses ESDA normalization and conditional sampling without replacement. Recompute earlier LISA/panel exports; see [audit corrections and migration](docs/audit-fixes-2026-11-11.md).
+> Method update (11 November 2026): Local I now uses ESDA normalization and conditional sampling without replacement. Recompute earlier LISA/panel exports; see [method notes and migration](docs/README.md#method-notes-retained-from-the-earlier-documents) and the original correction note in the historical archive.
 
 ### 3.3. Local Moran's I (LISA) test and conditional permutation
 
@@ -382,13 +382,13 @@ $$
 
 Estimates the structural spatial decay equation by area-weighted WLS across core cells:
 
-$$\ln(1 + \mathrm{NTL}\_{i}) = \alpha\_{0} - \gamma \cdot d\_{\mathrm{core}, i} + u\_{i}$$
+$$\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}$$
 
 It exports both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and the monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
 **3. Recentered market access** ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023)
 
-Computes the gravity-weighted market potential $\mathrm{MA}\_{i} = \sum\_{j \ne i} \mathrm{SOL}\_{j} \exp(-\tau d\_{ij})$ over a symmetric UTM grid stencil, then subtracts its exact analytical expectation under spatial permutation $\mathbb{E}\_{\pi}[\mathrm{MA}\_{i}] = \overline{\mathrm{SOL}}\_{\mathrm{Core}} \sum\_{j \ne i} \exp(-\tau d\_{ij})$ to purge geographic centrality bias (`recentered_market_access`).
+Computes the gravity-weighted market potential $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ over a symmetric UTM grid stencil, then subtracts its exact analytical expectation under spatial permutation $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ to purge geographic centrality bias (`recentered_market_access`).
 
 **4. Concentric spillover rings and signed boundary distance for Spatial RDD** (Vazquez-Bare, 2023; Butts, 2024)
 
@@ -412,7 +412,13 @@ Three additions that report how much the result depends on pipeline and analytic
 - **Robustness checks** (LISA tab): re-runs LISA under Rook weights, higher lit thresholds, P99 / asinh / ln transforms, other α, with and without FDR, a 2×2 coarser grid (MAUP) and adjacent years, then reports the Jaccard overlap of the High-High set with the baseline and the area that is HH in at least 80% of runs. Output columns: `rob_*`. The verdict cut-offs (median Jaccard 0.70 and 0.50) are rules of thumb, not statistical thresholds.
 - **External validation** (Data tab): Spearman ρ with a spatial block-bootstrap CI and AUC between NTL and GHSL built-up surface or population on the same cells. GHSL epochs are 5-yearly, so the epoch used can differ from the NTL year. Output columns: `val_*`.
 
-Code: `ntl/data_quality.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`; tests in `tests/test_robustness.py` and `tests/test_zonal.py`. The Earth Engine fetch code (valid-month count, GHSL) and the UI panels have not been run against live data.
+**Observation support (A02).** The annual VIIRS image has the historical radiance band and five quality bands: observed, negative and measured-zero fractions, mean valid-month count, and low-month fraction. Cell exports also carry `dq_status` (`observed`, `partial_observation`, `no_observation` or `unknown`), `dq_stat_missing` and `dq_ntl_policy=legacy_zero_fill`. A measured zero and a missing observation can still share the legacy NTL value 0; the support fields distinguish them when the raster schema is verified. The Bao'an observed case has 7,148/7,148 populated cells. A real missing/low-support case remains untested.
+
+**GHSL quantities.** Built surface and population are amounts per native source pixel. The application now preserves the GHSL source grid and projects cell polygons to it before area-fraction sums. An independent calculation reproduces the deployed Shanghai core Spearman, block-bootstrap interval and AUC at UI rounding precision. This does not establish per-cell identity or the same result in Qimen and Bao'an.
+
+**Evidence and runtime.** V11 NTL/LISA comparisons for Shanghai, Bao'an and Qimen were completed at the scope in the [validation guide](validation/README.md); the original raster pairs and detailed outputs are not all in this repository. The downloadable performance JSON records stage times and process RSS; PR #29 added the deployed commit when available and A02 substep timings. One Bao'an post-optimization run did not show an A02 speedup. Cloud concurrency and a full authenticated Earth Engine-to-CSV run remain open.
+
+Code: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`, `ntl/ghsl_native.py`, `ntl/performance.py`. The [validation guide](validation/README.md) distinguishes synthetic tests, recorded field checks and remaining work.
 
 ## 🛡️ IV. Memory safeguard algorithms
 
@@ -525,7 +531,7 @@ I_{\mathrm{global}} = \frac{N}{\sum_{i=1}^N \sum_{j=1}^N w_{ij}} \frac{\sum_{i=1
 $$
 
 > [!WARNING]
-> If $I_{\mathrm{global}} > E[I] = -\frac{1}{N-1}$ and is statistically significant ($p < 0.05$), standard OLS residuals violate spatial independence. Researchers then need spatial econometric specifications such as SAR, SEM, or SDM (LeSage & Pace, 2009), or Conley spatial-autocorrelation-robust standard errors (Conley, 1999).
+> Significant spatial autocorrelation in NTL is a reason to check the residuals of a fitted model; it does not by itself prove that OLS residuals are spatially correlated. If residual dependence remains, consider an appropriate spatial specification such as SAR, SEM or SDM (LeSage & Pace, 2009), or spatially robust inference (Conley, 1999), according to the research design.
 
 #### 4️⃣ Internal clustering of illuminated areas: `moran_I_lit`
 

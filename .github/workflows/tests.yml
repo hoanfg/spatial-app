@@ -18,6 +18,7 @@ jobs:
       - run: pip install numpy pandas scipy pytest
       - run: pytest -q tests/test_lisa_reliability.py tests/test_robustness.py
       - run: node validation/audit_public_evidence.mjs --check-result
+      - run: node validation/check_docs.mjs
 
   ui-smoke:
     name: Kiểm thử khói giao diện (AppTest)

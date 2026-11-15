@@ -1,5 +1,7 @@
 <a id="top"></a>
 
+[Hướng dẫn dữ liệu và GADM](docs/README-vi.md) · [Tình trạng kiểm chứng và bằng chứng](validation/README-vi.md)
+
 <div align="center">
 
 # Sổ tay kỹ thuật và khung phương pháp luận
@@ -86,7 +88,7 @@ Bài toán ở đây là phải trộn ba loại dữ liệu khác bản chất:
 | **Tier 4**<br>📊 Kinh tế lượng & kết xuất | Tính Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini; kết xuất bản đồ tương tác đa lớp. Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu thành các tệp CSV cấp độ ô lưới và cấp độ vùng – năm. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 Cách hệ thống nhận diện, phân loại quốc gia và xử lý các lỗi của dữ liệu GADM nằm ở tài liệu riêng: [đọc mô tả kỹ thuật phân loại quốc gia tại đây](https://github.com/hoanfg/spatial-app/blob/main/docs/GADM_v41-vi%20pipeline%20specification.md).
+> 📎 Quy tắc phân loại quốc gia và xử lý nguồn GADM nằm trong [hướng dẫn dữ liệu và kiểm chứng](docs/README-vi.md).
 
 ### 1.2. Giới hạn phần cứng và cơ chế phòng thủ "out-of-memory" (OOM) trên Cloud
 
@@ -163,7 +165,7 @@ Lý do cần mặt nạ: ở vùng nhiệt đới gió mùa, mây phủ dày đ�
 
 #### 🎯 Bước 2: tính thống kê vùng bằng tỷ lệ phủ
 
-Phương pháp tâm điểm ảnh (center-of-pixel) truyền thống gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS. Vì vậy hệ thống dùng thư viện C/C++ `exactextract` (Baston, 2023). Bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ là trung bình có trọng số, với trọng số là tỷ lệ diện tích điểm ảnh $w\_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
+Phương pháp tâm điểm ảnh (center-of-pixel) truyền thống gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS. Vì vậy hệ thống dùng thư viện C/C++ `exactextract` (Baston, 2023). Bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ là trung bình có trọng số, với trọng số là tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
 
 $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
@@ -264,7 +266,7 @@ $$
 
 với $k_i = \lvert N(i) \cap S \rvert$ là số láng giềng hợp lệ của ô $i$. Chỉ các ô $i \in S$ có $k_i \ge k_{\min}$ (mặc định $k_{\min} = 1$) mới vào tập kiểm định $\mathrm{Focal}$.
 
-> Cập nhật phương pháp (11/11/2026): Local I dùng chuẩn hóa ESDA và hoán vị có điều kiện không hoàn lại. Cần tính lại các kết quả LISA/panel cũ; xem [chi tiết thay đổi và chuyển đổi](docs/audit-fixes-2026-11-11.md).
+> Cập nhật phương pháp (11/11/2026): Local I dùng chuẩn hóa ESDA và hoán vị có điều kiện không hoàn lại. Cần tính lại các kết quả LISA/panel cũ; xem [ghi chú phương pháp và chuyển đổi](docs/README-vi.md#ghi-chu-phuong-phap-tu-tai-lieu-truoc) cùng bản ghi gốc trong hồ sơ lịch sử.
 
 ### 3.3. Kiểm định Local Moran's I (LISA) và hoán vị có điều kiện
 
@@ -380,13 +382,13 @@ $$
 
 Ước lượng phương trình cấu trúc không gian đô thị bằng bình phương tối thiểu có trọng số diện tích (WLS) trên tập ô lõi:
 
-$$\ln(1 + \mathrm{NTL}\_{i}) = \alpha\_{0} - \gamma \cdot d\_{\mathrm{core}, i} + u\_{i}$$
+$$\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}$$
 
 Kết quả gồm tốc độ suy giảm mật độ $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số xác định đơn tâm $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
 **3. Tiếp cận thị trường đã khử thiên lệch vị trí trung tâm** ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023)
 
-Tính tiềm năng thị trường trọng lực $\mathrm{MA}\_{i} = \sum\_{j \ne i} \mathrm{SOL}\_{j} \exp(-\tau d\_{ij})$ trên cửa sổ lưới đối xứng, rồi trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}\_{\pi}[\mathrm{MA}\_{i}] = \overline{\mathrm{SOL}}\_{\mathrm{Core}} \sum\_{j \ne i} \exp(-\tau d\_{ij})$ để loại bỏ thiên lệch do vị trí trung tâm địa lý (`recentered_market_access`).
+Tính tiềm năng thị trường trọng lực $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ trên cửa sổ lưới đối xứng, rồi trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ để loại bỏ thiên lệch do vị trí trung tâm địa lý (`recentered_market_access`).
 
 **4. Vành đai lan tỏa đồng tâm và biến chạy có dấu cho Spatial RDD** (Vazquez-Bare, 2023; Butts, 2024)
 
@@ -418,7 +420,13 @@ Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa c
 - **Kiểm định độ vững** (tab LISA): chạy lại LISA với trọng số Rook, ngưỡng ô sáng cao hơn, biến đổi P99 / asinh / ln, α khác, bật/tắt FDR, lưới thô hơn 2×2 (MAUP) và các năm kề, rồi báo hệ số Jaccard của tập High-High so với bản gốc và diện tích là HH trong ít nhất 80% số lần chạy. Cột xuất: `rob_*`. Ngưỡng kết luận (Jaccard trung vị 0,70 và 0,50) là quy ước thực hành, không phải ngưỡng thống kê.
 - **Kiểm chứng ngoài** (tab Dữ liệu): Spearman ρ với khoảng tin cậy bootstrap theo khối không gian và AUC giữa NTL và diện tích xây dựng hoặc dân số GHSL trên cùng các ô. GHSL có epoch 5 năm nên epoch dùng có thể lệch so với năm NTL. Cột xuất: `val_*`.
 
-Mã nguồn: `ntl/data_quality.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`; kiểm thử ở `tests/test_robustness.py` và `tests/test_zonal.py`. Phần tải dữ liệu từ Earth Engine (đếm tháng, GHSL) và giao diện chưa được chạy với dữ liệu thật.
+**Hỗ trợ quan sát (A02).** Ảnh VIIRS năm có band bức xạ theo chính sách cũ và năm band chất lượng: tỷ lệ có quan sát, giá trị âm, giá trị 0 đo được, số tháng hợp lệ trung bình và tỷ lệ ít tháng. CSV theo ô còn ghi `dq_status` (`observed`, `partial_observation`, `no_observation` hoặc `unknown`), `dq_stat_missing` và `dq_ntl_policy=legacy_zero_fill`. Giá trị 0 đo được và dữ liệu thiếu vẫn có thể cùng cho NTL bằng 0 theo chính sách cũ; metadata hỗ trợ phân biệt chúng khi schema raster hợp lệ. Bảo An có 7.148/7.148 ô thuộc trường hợp đã quan sát. Ca thực tế thiếu hoặc ít quan sát chưa được kiểm tra.
+
+**Đại lượng GHSL.** Diện tích xây dựng và dân số là lượng trên từng pixel gốc. Ứng dụng hiện giữ lưới GHSL nguồn và chuyển đa giác ô sang CRS đó trước khi cộng theo tỷ lệ diện tích giao. Phép tính độc lập tái lập rho Spearman, khoảng bootstrap theo khối và AUC nội đô Thượng Hải đúng mức làm tròn UI. Kết quả này chưa xác nhận từng ô hoặc Kỳ Môn/Bảo An.
+
+**Bằng chứng và hiệu năng.** V11 đã đối chiếu NTL/LISA tại Thượng Hải, Bảo An, Kỳ Môn theo phạm vi trong [hướng dẫn kiểm chứng](validation/README-vi.md); repo chưa có toàn bộ cặp raster và kết quả chi tiết. JSON hiệu năng tải được ghi thời gian từng bước và RSS tiến trình; PR #29 thêm mã commit triển khai khi có thể cùng thời gian các bước A02. Một lượt đo sau tối ưu chưa cho thấy A02 chạy nhanh hơn. Tải nhiều phiên Cloud và luồng Earth Engine đến CSV live vẫn còn mở.
+
+Mã nguồn: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`, `ntl/ghsl_native.py`, `ntl/performance.py`. [Hướng dẫn kiểm chứng](validation/README-vi.md) tách rõ test nhân tạo, kết quả thực địa đã ghi và việc còn thiếu.
 
 ## 🛡️ IV. Thuật toán quản trị tài nguyên bộ nhớ (memory safeguards)
 
@@ -531,7 +539,7 @@ I_{\mathrm{global}} = \frac{N}{\sum_{i=1}^N \sum_{j=1}^N w_{ij}} \frac{\sum_{i=1
 $$
 
 > [!WARNING]
-> Nếu $I_{\mathrm{global}} > E[I] = -\frac{1}{N-1}$ và có ý nghĩa thống kê ($p < 0.05$), phần dư của hồi quy OLS truyền thống sẽ vi phạm giả định độc lập không gian. Khi đó nhà nghiên cứu phải dùng các mô hình kinh tế lượng không gian như SAR, SEM, SDM (LeSage & Pace, 2009) hoặc sai số chuẩn hiệu chỉnh tự tương quan không gian Conley (Conley, 1999).
+> Tự tương quan không gian có ý nghĩa trong NTL là lý do để kiểm tra phần dư của mô hình đã ước lượng; riêng nó chưa chứng minh phần dư OLS có tương quan không gian. Nếu phần dư còn phụ thuộc không gian, chọn đặc tả phù hợp như SAR, SEM, SDM (LeSage & Pace, 2009) hoặc suy luận với sai số chuẩn vững theo không gian (Conley, 1999) tùy thiết kế nghiên cứu.
 
 #### 4️⃣ Mức kết tụ nội tại của vùng sáng: `moran_I_lit`
 
