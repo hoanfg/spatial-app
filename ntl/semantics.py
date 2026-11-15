@@ -112,13 +112,18 @@ def cell_quality(tif_bytes, grid, *, trusted_producer: bool = False):
     *all* five quality descriptions, validate the value/logic contracts before
     relying on the known order. Misnamed bands never fall back to positional use.
     """
-    from ntl.zonal import zonal_stat
+    from ntl.zonal import zonal_mean_multiband
 
     info = quality_raster_schema(tif_bytes, trusted_producer=trusted_producer)
-    out = pd.DataFrame(index=range(len(grid)))
-    for band, name in enumerate(QUALITY_BANDS, start=2):
-        out[name] = (zonal_stat(tif_bytes, grid, band=band, clip_negative=False,
-                                fill_missing=None).to_numpy() if info["supported"] else np.nan)
+    if info["supported"]:
+        # One exactextract traversal across all five quality bands.
+        # The same float32/nodata policy as five historical zonal_stat calls.
+        out = zonal_mean_multiband(
+            tif_bytes, grid, bands=(2, 3, 4, 5, 6), names=QUALITY_BANDS
+        )
+    else:
+        # Unsupported/untrusted rasters MUST remain unknown, not zero-filled.
+        out = pd.DataFrame(np.nan, index=range(len(grid)), columns=QUALITY_BANDS)
     observed = out.dq_observed_fraction
     out["dq_status"] = np.select(
         [observed.isna(), observed <= 0, observed < 1 - 1e-6],
