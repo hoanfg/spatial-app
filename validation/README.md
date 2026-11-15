@@ -31,7 +31,7 @@ See the [field record](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for exac
 | ID | Action or decision | Evidence needed before closure |
 | --- | --- | --- |
 | S01–S03 | Preserve independent-checker safeguards for GHSL coverage/resolution and A02 reference footprint when original staged scripts can be recovered | The reports describe synthetic negative controls; checker source files and field inputs are absent from this repository |
-| S04 | Match every reconstructed polygon to exported UTM/WGS84 centroid by `grid_id`; area alone misses equal-area swaps | A local draft and negative control exist; not part of `main` |
+| S04 | Match every reconstructed polygon to exported UTM/WGS84 centroid by `grid_id`; area alone misses equal-area swaps | Implemented with a negative control on this local branch; not part of `main` |
 | S05 | Reject fractional monthly valid-observation counts in independent checks | Production A02 schema already enforces integral counts; staged checker source is absent |
 | A02 | Test a genuine no-observation/low-month field case without silently changing `legacy_zero_fill` | Aligned real raster support and app CSV from the same run |
 | A03, A07, A09 | Keep Global/Local Moran samples and weights distinct; label block-aggregated MAUP correctly; treat rho thresholds as heuristics | A direct coarse-grid field comparison remains open; no numerical defect is inferred from the terminology alone |

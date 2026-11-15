@@ -91,6 +91,46 @@ def independent_zonal(grid,raster):
     return means
 
 
+def verify_grid_identity(grid, app, epsg):
+    """Match each exported ID to its reconstructed polygon centroid.
+
+    All full 500 m cells have the same area, so area alone cannot detect an
+    ID/location swap. Tolerances cover the app's 0.1 m / 6-decimal exports.
+    """
+    columns = ('centroid_lon', 'centroid_lat',
+               f'centroid_x_epsg{epsg}', f'centroid_y_epsg{epsg}')
+    missing = set(columns) - set(app.columns)
+    if missing:
+        raise ValueError(f'App CSV lacks centroid identity columns: {sorted(missing)}')
+    expected = grid.set_index('grid_id')
+    actual = app.set_index('grid_id')
+    if not expected.index.is_unique or not actual.index.is_unique or set(expected.index) != set(actual.index):
+        raise ValueError('Grid identity mismatch: duplicate or unmatched grid IDs')
+    actual = actual.loc[expected.index]
+    centers = expected.geometry.centroid
+    geographic = gpd.GeoSeries(centers, crs=grid.crs).to_crs(4326)
+    comparisons = (
+        (columns[0], geographic.x.to_numpy(), 0.00000051),
+        (columns[1], geographic.y.to_numpy(), 0.00000051),
+        (columns[2], centers.x.to_numpy(), 0.051),
+        (columns[3], centers.y.to_numpy(), 0.051),
+    )
+    maximum = {}
+    for name, reference, tolerance in comparisons:
+        observed = pd.to_numeric(actual[name], errors='coerce').to_numpy(dtype=float)
+        if not np.isfinite(observed).all():
+            raise ValueError(f'Grid identity mismatch: invalid {name}')
+        error = np.abs(observed - reference)
+        maximum[name] = float(error.max()) if len(error) else 0.0
+        if np.any(error > tolerance):
+            position = int(np.argmax(error))
+            raise ValueError(
+                f'Grid identity mismatch at grid_id={expected.index[position]}: '
+                f'{name} difference {error[position]:.9g} exceeds {tolerance}'
+            )
+    return maximum
+
+
 def run(args):
     app=pd.read_csv(args.csv)
     required={'grid_id','area_km2','ntl_mean'}
@@ -105,6 +145,7 @@ def run(args):
     area_errors=(joined.area_km2_reference-joined.area_km2_app).abs()
     if area_errors.max()>5e-5:
         raise ValueError(f'Grid geometry/ordering mismatch (max area diff {area_errors.max()})')
+    centroid_errors = verify_grid_identity(grid, app, epsg)
     reference=independent_zonal(grid,args.raster)
     out=joined.copy()
     out['ntl_reference']=reference
@@ -124,6 +165,7 @@ def run(args):
         'max_abs_error':float(np.nanmax(errors)),
         'pearson':float(np.corrcoef(out.ntl_mean[valid],reference[valid])[0,1]) if n_valid>2 else None,
         'inputs_sha256':{k:sha256(getattr(args,k)) for k in ('boundary','raster','csv')},
+        'centroid_max_abs_error':centroid_errors,
         'passed':pass_cells==len(grid),
         'note':'Raster benchmark only; does not independently test Local Moran, FDR, GHSL, or economic validity.'}
     Path(args.out_json).write_text(json.dumps(metrics,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')

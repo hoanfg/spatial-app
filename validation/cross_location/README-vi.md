@@ -22,7 +22,7 @@ GeoJSON ranh giới có sẵn trong repository:
 
 Chạy `gee_viirs_2020.js` trong Google Earth Engine Code Editor, thực thi **9 tác vụ Export** (ba sản phẩm cho mỗi địa bàn): annual median tham chiếu, số tháng có `cf_cvg > 0`, và median giữ NoData.
 
-Trên `spatial-app`, chạy **2020, lưới 500 m, raw NTL, Queen, 999 permutations, seed 42, FDR 0.05**, rồi xuất CSV chứa ít nhất `grid_id, area_km2, ntl_mean`; xuất cả CSV LISA đầy đủ để có thể đối chiếu p-value/quadrant. Không cần xuất toàn thành phố hoặc thay đổi cơ chế bảo vệ RAM của ứng dụng.
+Trên `spatial-app`, chạy **2020, lưới 500 m, raw NTL, Queen, 999 permutations, seed 42, FDR 0.05**, rồi xuất CSV có `grid_id`, `area_km2`, `ntl_mean`, `centroid_lon`, `centroid_lat` và `centroid_x_epsg{E}` / `centroid_y_epsg{E}` theo mã UTM EPSG được chọn. Xuất cả CSV LISA để đối chiếu p-value/quadrant. Không cần xuất toàn thành phố hoặc đổi giới hạn RAM.
 
 Dữ liệu Earth Engine và app cần độc lập về phép tính zonal mean. Có thể dùng cùng sản phẩm NOAA/VIIRS, nhưng không dùng lại kết quả trích xuất theo ô từ app làm “reference”.
 
@@ -43,7 +43,7 @@ Lặp lại cho Bao'an và Qimen bằng đúng GeoJSON/GeoTIFF/CSV tương ứng
 
 ## 4. Tiêu chí đánh giá (đã định trước)
 
-1. **Hình học:** số ô, `grid_id`, diện tích từng ô khớp với CSV app trong dung sai diện tích 0,00005 km².
+1. **Hình học:** số ô, `grid_id`, diện tích và tâm ô theo UTM/WGS84 khớp CSV app. Dung sai diện tích là 0,00005 km²; dung sai tâm ô theo mức làm tròn 0,1 m và sáu chữ số thập phân của độ. Kiểm tra này từ chối tráo hai ID cùng diện tích.
 2. **NTL:** toàn bộ ô có raster đủ độ phủ khớp trong sai số làm tròn CSV ±0,00005 nW/cm²/sr; báo cáo mọi missing/fail, không xóa ô ngoại lệ.
 3. **Kiểm tra dữ liệu thiếu:** so annual median với masked median; phân tích `cf_cvg` theo tháng, mọi giá trị âm và ảnh hưởng tới polygon zonal mean. Không giả định tất cả pixel có 12 tháng như Diên Khánh.
 4. **LISA:** tái tính Queen adjacency, Local Moran và p-value/FDR trên 500 m bằng script kiểm chứng riêng; ngẫu nhiên có seed cố định, nêu rõ cách đếm tie/tail; báo cáo nhãn HH/LL và các ngoại lệ.

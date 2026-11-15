@@ -31,7 +31,7 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | Mã | Việc cần làm hoặc quyết định | Bằng chứng cần có |
 | --- | --- | --- |
 | S01–S03 | Giữ các chốt chặn của công cụ kiểm chứng ngoài đối với độ phủ/độ phân giải GHSL và vùng tham chiếu A02 nếu khôi phục được script gốc | Báo cáo ghi ca âm nhân tạo; repo chưa có mã checker và đầu vào thực địa đó |
-| S04 | So tâm UTM/WGS84 của từng đa giác dựng lại theo `grid_id`; so diện tích không phát hiện tráo hai ô cùng diện tích | Đã có bản nháp cục bộ và ca âm, chưa nằm trong `main` |
+| S04 | So tâm UTM/WGS84 của từng đa giác dựng lại theo `grid_id`; so diện tích không phát hiện tráo hai ô cùng diện tích | Đã thêm mã và ca âm trên nhánh cục bộ này; chưa nằm trong `main` |
 | S05 | Công cụ độc lập cần từ chối số tháng quan sát dạng phân số | Schema A02 production đã kiểm tra số nguyên; mã checker trong bản lưu cũ chưa có ở repo |
 | A02 | Kiểm chứng ca thật sự không có hoặc ít quan sát mà chưa tự đổi chính sách `legacy_zero_fill` | Raster support và CSV app cùng lượt chạy |
 | A03, A07, A09 | Tách biệt mẫu và trọng số Global/Local Moran; gọi đúng MAUP gộp ô; coi ngưỡng rho là quy ước diễn giải | Vẫn cần so trực tiếp với lưới thô từ raster; chưa suy ra lỗi số học chỉ từ thuật ngữ |
