@@ -17,23 +17,24 @@ Sáu vị trí sau có hai bản hướng dẫn riêng: bản tiếng Anh `READM
 
 Đây là các bản hướng dẫn dành cho người đọc. Lệnh `validation/check_docs.mjs` hiện từ chối ký tự gạch ngang dài Unicode trong những bản hướng dẫn đang sử dụng. Việc tồn tại hai tên tệp chưa đủ để khẳng định hai bản dịch hoàn toàn tương đương.
 
-## Bằng chứng lịch sử còn thiếu bản dịch riêng
+## Phạm vi bản đọc tiếng Anh và tiếng Việt
 
-| Bằng chứng gốc | Phạm vi | Tình trạng bản dịch |
-| --- | --- | --- |
-| [Bằng chứng thực địa tổng hợp](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) | Sáu phần lịch sử có chỉ mục cùng phần giải thích kiểm toán hiện hành | Chưa có bản đọc tiếng Việt đầy đủ |
-| [Nguồn tài liệu lịch sử](historical_document_sources_2026-11-15.md) | Mười ba tài liệu gốc có chỉ mục, gồm nguồn tiếng Anh và tiếng Việt | Kho lưu trữ chứa cả hai ngôn ngữ; chưa có đầy đủ bản đọc tách riêng theo từng ngôn ngữ |
-| [Các báo cáo gốc được khôi phục](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) | Bảy mươi tám báo cáo gốc | Giữ ngôn ngữ nguồn; chưa có đầy đủ hai bộ bản dịch |
+| Bằng chứng gốc | Số bản ghi nguồn | Bản đọc |
+| --- | ---: | --- |
+| [Bằng chứng thực địa tổng hợp](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) | Sáu phần lịch sử có chỉ mục và phần giải thích kiểm toán | [Tiếng Anh](CONSOLIDATED_FIELD_EVIDENCE_2026-11-en.md) và [tiếng Việt](CONSOLIDATED_FIELD_EVIDENCE_2026-11-vi.md) |
+| [Nguồn tài liệu lịch sử](historical_document_sources_2026-11-15.md) | Mười ba tài liệu gốc, thuộc mười một nhóm chủ đề | [Chỉ mục tiếng Anh](reading-editions/historical/README.md) và [chỉ mục tiếng Việt](reading-editions/historical/README-vi.md) |
+| [Báo cáo gốc khôi phục](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) | Bảy mươi tám bản ghi, tương ứng ba mươi lăm nội dung khác nhau theo SHA-256 | [Chỉ mục tiếng Anh](reading-editions/recovered/README.md) và [chỉ mục tiếng Việt](reading-editions/recovered/README-vi.md) |
 
-**Ba tệp trên là kho bằng chứng gốc, không phải tài liệu biên tập đã chuẩn hóa.** Không sửa trực tiếp dấu câu, loại bỏ dấu gạch ngang dài, dịch đoạn văn, đổi kiểu xuống dòng CRLF/LF hoặc thay thông tin về nguồn. Những thay đổi đó có thể làm sai vị trí byte hay mã băm SHA-256. Bản dịch phục vụ người đọc cần là tệp mới tách riêng tiếng Anh và tiếng Việt, đồng thời giữ nguyên thông số, đường dẫn, mã băm, điều kiện kiểm chứng và ngày tháng kết luận.
+Cả 35 nội dung báo cáo khôi phục khác nhau đều có bản đọc riêng bằng tiếng Anh và tiếng Việt. Các bản ghi trong kho lưu trữ chỉ dùng chung bản đọc khi mã băm SHA-256 của nội dung gốc giống hệt nhau. Mười ba tài liệu lịch sử được xếp thành mười một nhóm chủ đề. Hai chủ đề vốn đã có tài liệu nguồn tiếng Anh và tiếng Việt riêng. **Cùng chủ đề không chứng minh hai văn bản lịch sử tương đương từng câu.** [Manifest bản dịch](reading-editions/translation_manifest.json) cho phép tra cứu từng bản ghi nguồn và cặp bản đọc tương ứng.
 
-### Công việc còn lại
+**Các tệp nguồn là kho bằng chứng pháp chứng, không phải tài liệu biên tập.** Không thay dấu câu, ngôn ngữ nguồn, công thức, kiểu xuống dòng CRLF/LF hay độ dài byte của chúng, kể cả dấu gạch ngang dài lịch sử. Chỉ các bản đọc mới được chuẩn hóa ngôn ngữ và dấu câu. Thời điểm kết luận, điều kiện kiểm chứng và SHA-256 của nguồn gốc vẫn có giá trị ưu tiên.
 
-- Dịch toàn bộ báo cáo thực địa tổng hợp thành bản đọc tiếng Việt độc lập.
-- Lập bảng đối chiếu bản dịch cho đủ mười ba tài liệu lịch sử; bổ sung các bản tiếng Anh hoặc tiếng Việt còn thiếu.
-- Lập bảng đối chiếu cho đủ bảy mươi tám báo cáo gốc; dịch các bản đọc còn thiếu mà không sửa kho lưu trữ.
-- Rà soát văn phong pha trộn ngôn ngữ, thay dấu gạch ngang dài bằng dấu câu phù hợp trong *các bản đọc mới*, không thay trong bản gốc.
-- Kiểm tra độ đầy đủ của từng bản dịch, đường dẫn tham chiếu và nguồn dữ liệu trước khi công bố là hoàn tất.
+### Việc kiểm tra chất lượng còn lại
+
+- Đối chiếu toàn bộ bản đọc với nguồn về giá trị số, bảng, công thức, giới hạn, ngày tháng và các phát biểu kiểm chứng; không lược bỏ nội dung.
+- Với chủ đề lịch sử có hai văn bản nguồn ở hai ngôn ngữ, cần xác định khác biệt giữa hai nguồn thay vì mặc nhiên coi là bản dịch khớp từng câu.
+- Giữ nguyên tên tệp, mã định danh, mã băm và địa danh gốc; các yếu tố kỹ thuật này không được xem là văn xuôi pha tạp ngôn ngữ.
+- Chạy `node validation/check_evidence_language_editions.mjs --strict` và `node validation/audit_bilingual_editions.mjs` để kiểm tra phạm vi, liên kết nguồn, điều hướng và dấu câu. Các phép kiểm tra tự động không chứng minh bản dịch tương đương hoàn toàn về ý nghĩa.
 
 ## Tính toàn vẹn bằng chứng
 
