@@ -96,5 +96,17 @@ assert.deepEqual(regimes, {
   '4_Synchronized_Decline': 4711,
   'Excluded_or_Static': 1897,
 });
-console.log(`PASS: Yanqing VIIRS ${viirsWithinTolerance}/8333 within 0.00005 (mean ${viirsMeanError}, max ${viirsMaxError}); LISA class matches ${lisaClassMatches}/8333 with ${lisaActive} active cells; Space-Time regime counts agree.`);
+const ntl2014 = spaceTimeRows.map(r => Number(r.ntl_2014));
+const ntl2020 = spaceTimeRows.map(r => Number(r.ntl_2020));
+const mean = values => values.reduce((a, b) => a + b, 0) / values.length;
+assert.ok(Math.abs(mean(ntl2014) - 0.44515832233289426) < 1e-12);
+assert.ok(Math.abs(mean(ntl2020) - 1.4137191407656382) < 1e-12);
+const increases = spaceTimeRows.filter(r => Number(r.ntl_2020) > Number(r.ntl_2014)).length;
+const decreases = spaceTimeRows.filter(r => Number(r.ntl_2020) < Number(r.ntl_2014)).length;
+const synchronized = spaceTimeRows.filter(r => r.spacetime_regime === '4_Synchronized_Decline');
+const synchronizedIncreases = synchronized.filter(r => Number(r.ntl_2020) > Number(r.ntl_2014)).length;
+assert.equal(increases, 8221);
+assert.equal(decreases, 112);
+assert.equal(synchronizedIncreases, 4624);
+console.log(`PASS: Yanqing VIIRS ${viirsWithinTolerance}/8333 within 0.00005 (mean ${viirsMeanError}, max ${viirsMaxError}); LISA class matches ${lisaClassMatches}/8333 with ${lisaActive} active cells; Space-Time regime counts and absolute NTL changes agree (${increases} up, ${decreases} down; ${synchronizedIncreases}/4711 synchronized-decline cells increased).`);
 await import('./audit_evidence_inventory.mjs');

@@ -41,6 +41,14 @@ The Space-Time CSV is checked by row count and by the exported regime codes for 
 | Space-Time regimes | 1,456 Synergistic Growth; 75 Agglomeration Shadow; 194 Emergent Pioneer; 4,711 Synchronized Decline; 1,897 Excluded or Static. | These are descriptive two-date categories, not causal or permutation-significance results. |
 | 2014 reference raster metadata | 30,814 finite pixels, one negative pixel and no zero pixels are recorded for the deposited raster. | The legacy raster has no observation-count bands, so monthly support is unknown. |
 
+## Interpreting the two-date change
+
+The deposited Space-Time CSV permits a separate check of absolute radiance change. Mean cell NTL rises from 0.4451583 in 2014 to 1.4137191 in 2020. Across all 8,333 cells, 8,221 increase and 112 decrease; none tie at the exported precision.
+
+The regime code is based on changes in each year's standardized `log1p(NTL)` value and its spatial lag. It therefore measures a change in relative position, not necessarily a change in raw radiance. Of the 4,711 cells labelled `4_Synchronized_Decline`, 4,624 increase in absolute NTL and 87 decrease. The appropriate reading is synchronized decline in relative standing. It is not evidence that 4,711 cells lost light or experienced economic contraction.
+
+The evidence command recalculates these counts directly from the deposited CSV. The comparison still has only two dates, uses rounded exported values and does not establish what happened in the intervening years.
+
 ## Integrity
 
 | File | SHA-256 |

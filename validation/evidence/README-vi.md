@@ -4,6 +4,17 @@
 
 Thư mục này chứa dữ liệu và kết quả dùng để kiểm tra ứng dụng. Mỗi kết quả chỉ áp dụng cho đúng địa bàn, năm, lưới và tệp đầu vào đã nêu.
 
+## Cách phân loại bằng chứng
+
+Repo có nhiều loại phép kiểm. Mỗi loại trả lời một câu hỏi khác nhau, vì vậy không thể gộp tất cả thành một kết luận đạt chung.
+
+| Mức | Ý nghĩa | Ví dụ |
+| --- | --- | --- |
+| Có tệp và chạy lại được | Đầu vào hoặc bảng kết quả nằm trong repo và có lệnh cục bộ để kiểm tra. | A02 tại Bảo An, bảng đối chiếu Diên Khánh, kiểm thử hồi quy nhân tạo |
+| Có kết quả nhưng chưa chạy lại đầy đủ | Báo cáo, tóm tắt hoặc danh mục ghi lại kết quả, nhưng còn thiếu raster nguồn, đầu ra từng ô hoặc chương trình cần thiết. | V11 ba địa bàn và GHSL tại Thượng Hải |
+| Kiểm thử hợp đồng | Một ca nhỏ có kiểm soát kiểm tra công thức, cấu trúc dữ liệu, mặt nạ hoặc đường xử lý lỗi. | Gini, Moran, FDR, NoData và bộ nhớ đệm |
+| Câu hỏi còn mở | Repo chưa có đủ bằng chứng để kết luận về khoa học hoặc vận hành. | Ca A02 thật sự thiếu hỗ trợ, tải Cloud nhiều phiên, giá trị đại diện kinh tế |
+
 ## Bằng chứng hiện có
 | Bằng chứng | Tệp | Kết quả có căn cứ | Giới hạn |
 | --- | --- | --- | --- |
@@ -22,6 +33,27 @@ Thư mục này chứa dữ liệu và kết quả dùng để kiểm tra ứng 
 | A02 có nhanh hơn không? | Tổng thời gian ngắn hơn không chứng minh riêng bước A02 đã cải thiện. | JSON thời gian từng bước trước và sau thay đổi |
 | Kết quả trích xuất raster có khớp tham chiếu độc lập không? | Mã đúng vẫn có thể dùng nhầm raster, phép chiếu, mặt nạ hoặc hình học ô. | Đối chiếu raster và đa giác tại Diên Khánh cùng quy trình ba địa bàn |
 | Local Moran và FDR có khớp khi tính độc lập không? | Cách dựng láng giềng, làm tròn, hạt hoán vị và đếm hai đuôi có thể đổi nhãn ý nghĩa. | Đối chiếu LISA từng ô tại Diên Khánh và kiểm thử hồi quy của repo |
+
+## Ma trận câu hỏi kiểm toán đầy đủ
+
+Ma trận này hợp nhất đợt rà soát A01 đến A12 và các phép kiểm thực địa về sau. Cột kết quả chỉ nêu điều mà bằng chứng được dẫn có thể hỗ trợ.
+
+| Mã và câu hỏi khoa học | Bằng chứng sử dụng | Cách kiểm tra và điều kiện chấp nhận | Kết quả định lượng | Giới hạn |
+| --- | --- | --- | --- | --- |
+| A01. CI có chạy mọi tệp kiểm thử đang được duy trì không? | [Quy trình CI](../../.github/workflows/tests.yml) và [bộ kiểm thử](../../tests/) | Tác vụ lõi chạy hai tệp thống kê nhẹ. Tác vụ thứ hai chạy phần còn lại của cây `tests/`, chỉ bỏ qua đúng hai tệp đã chạy ở tác vụ lõi. Cả hai tác vụ phải thành công. | Khoảng trống ban đầu đã được đóng khi kiểm thử Không gian và Thời gian được đưa vào CI. Kết quả kiểm tra của nhánh hiện tại là bằng chứng thực thi; con số lịch sử 54 lên 61 không được dùng làm tổng hiện tại vì bộ kiểm thử đã tăng. | CI chỉ xác nhận các đường mã đã được chạy trong môi trường cài đặt của nó. Đây không phải phép kiểm Earth Engine trực tiếp, dữ liệu thực địa hoặc tải Cloud. |
+| A02. Có phân biệt được giá trị 0 đo được với thiếu hỗ trợ quan sát không? | [CSV Bảo An và bản tóm tắt đã kiểm tra](audit-2026-11-15/), [JSON độ nhạy nhân tạo](a02/synthetic_sensitivity.json), `tests/test_data_semantics.py` và `tests/test_a02_field_schema.py` | Yêu cầu mã ô không trùng, có trạng thái và chính sách rõ ràng, các trường chất lượng hữu hạn và nằm trong miền hợp lệ. Dùng ca thiếu dữ liệu có kiểm soát để xem điền 0 có làm đổi thống kê phía sau hay không. | Bảo An: 7.148/7.148 dòng ở trạng thái đã quan sát; số tháng hợp lệ trung bình từ 10 đến 12, trung bình 11,9880599727. Ca che sáu ô làm đổi trung bình, tỷ lệ ô 0, Gini, Global Moran, sáu nhãn LISA và 33 chế độ Không gian và Thời gian. | Bảo An không có dòng thật sự thiếu hỗ trợ. Ca nhân tạo chứng minh độ nhạy, không ước lượng sai lệch ngoài thực địa. |
+| A03. Công thức thống kê có khớp chuẩn tham chiếu độc lập không? | `tests/test_numerical_validation_a03.py`, `tests/test_advanced_statistics_a03b.py`, `tests/test_audit_regressions.py` và [bằng chứng Diên Khánh](yanqing/README-vi.md) | So Gini với định nghĩa sai khác tuyệt đối theo từng cặp; so Global Moran Queen nhị phân với chuỗi bốn ô tính tay; kiểm tra Local I và láng giềng Queen trên lưới nhỏ; kiểm tra BH-FDR bằng p-value cố định; kiểm tra hoán vị có điều kiện bằng cách liệt kê không gian mẫu. | Chuẩn tính tay cho Global Moran là $1/3$; Local I là $[0,45;0,15;0,15;0,45]$; BH-FDR 5% bác bỏ giá trị thứ hai và thứ tư trong $[0,2;0,01;0,04;0,001]$. Diên Khánh có 8.154/8.333 nhãn LISA cuối khớp. | Kiểm thử nhỏ không xác nhận mọi dạng không gian hoặc toàn bộ phân phối hoán vị có điều kiện trên dữ liệu thực. Diên Khánh dùng NTL đã làm tròn và hạt độc lập. |
+| A04. Hai hàm Gini có cùng quy tắc đầu vào không? | `app.py::gini`, `ntl/lisa_core.py::gini` và kiểm thử số học | Kiểm tra cách xử lý giá trị không hữu hạn và giá trị âm, sau đó so các mảng không âm hợp lệ với cùng một công thức tham chiếu. | Hai công thức khớp trên đầu vào không âm hợp lệ. `ntl/lisa_core.py` loại giá trị không hữu hạn và giá trị âm; `app.py` không loại. | Quy tắc cho đầu vào không hợp lệ vẫn chưa được quyết định. Không nên âm thầm đổi ước lượng trước khi xác định quy tắc khoa học mong muốn. |
+| A05. Có tái lập được môi trường phần mềm không? | `requirements.txt`, `requirements-test.txt` và quy trình CI | Ghi phiên bản Python và thư viện dùng trong CI cùng quá trình tạo bằng chứng; yêu cầu chạy lặp trong môi trường được khai báo. | Phần kiểm thử cố định ESDA 2.10.0 và libpysal 4.15.1. Phần lớn thư viện vận hành chưa cố định phiên bản; CI dùng Python 3.11 và 3.13 ở hai tác vụ. | Chưa có tệp khóa đầy đủ hoặc kết quả tương đương giữa nhiều phiên bản. Một lượt CI đạt không bảo đảm tái lập lâu dài. |
+| A06. Mức liên kết giữa các phần ứng dụng đã đủ an toàn cho thay đổi chưa? | `app.py`, các mô-đun trong `ntl/` và bộ kiểm thử tích hợp | Dùng hồi quy tích hợp và cấu trúc dữ liệu để phát hiện thay đổi qua ranh giới raster, lưới, thống kê, giao diện và CSV. | Các phép tính lõi cùng nhiều đường giao diện đã có kiểm thử hồi quy; các mô-đun thống kê được tách dưới `ntl/`. | Phần điều phối lớn vẫn nằm trong `app.py`. Chưa có chỉ số nào chứng minh mọi lần tách mã sau này giữ nguyên hành vi ngoài phạm vi kiểm thử. |
+| A07. Gộp khối có tương đương với trích xuất raster trực tiếp trên lưới thô không? | `ntl/robustness.py`, `tests/test_robustness.py` và phương pháp nhiều địa bàn | Phân biệt việc gộp trung bình các ô 500 m thành khối với việc dựng lại lưới 1.000 m rồi trích xuất raster. Chỉ phép so cùng dữ liệu mới xác nhận tương đương. | Ứng dụng tính đường gộp khối và mức chồng lấn HH của nó. Chưa có đối chiếu thực địa được lưu để chứng minh bằng với trích xuất trực tiếp trên lưới thô. | Kết quả MAUP là chẩn đoán độ vững cho đúng cách gộp đã triển khai, không phải kết quả chung cho mọi cách dựng lưới khác. |
+| A08. Lượng GHSL có được bảo toàn và căn đúng với lưới không? | `ntl/ghsl_native.py`, `tests/test_ghsl_native_grid.py`, `tests/test_ghsl_computepixels.py` và kết quả Thượng Hải đã ghi | Giữ lượng GHSL trên lưới Mollweide 100 m gốc, chuyển đa giác sang hệ tọa độ đó, nhân lượng từng điểm ảnh với tỷ lệ giao, từ chối vùng không phủ, rồi so rho, khoảng bootstrap theo khối và AUC trên các ô lõi đủ điều kiện. | Phép tái chiếu cũ tại Thượng Hải làm diện tích xây dựng tăng sai 16,51428% và dân số tăng sai 16,59686%. Sau sửa, 715 ô cho diện tích xây dựng: rho -0,0794533, khoảng [-0,220123;0,086086], AUC 0,394636; dân số: rho 0,1358105, khoảng [-0,029628;0,271008], AUC 0,576274. | Repo hiện không có bản xuất GHSL trực tiếp theo từng ô và raster nguồn riêng đã dùng cho kết quả độc lập. Khớp chỉ số tổng hợp không chứng minh đồng nhất từng ô hoặc khái quát sang Bảo An và Kỳ Môn. |
+| A09. Ngưỡng diễn giải có phải tiêu chí chấp nhận khoa học không? | `ntl/validation.py` và kết quả GHSL Thượng Hải | Tính rho, khoảng bootstrap theo khối không gian và AUC của nhóm một phần tư cao nhất. Xem các mốc 0,4 và 0,6 là quy ước hiển thị, không phải ngưỡng kiểm định phổ quát. | Hai khoảng rho tại Thượng Hải đều chứa 0. Vì vậy mẫu nội đô này chưa chứng minh quan hệ đơn điệu khác 0 một cách tin cậy. | GHSL là biến bối cảnh, không phải chuẩn đúng của ánh sáng ban đêm hoặc biến kinh tế độc lập. AUC ở đây chỉ mang tính mô tả. |
+| A10. Bộ nhớ đệm và hiệu năng có được giới hạn không? | `ntl/lisa_ui.py`, các JSON hiệu năng và kiểm thử vận hành | Giới hạn bộ nhớ đệm trong phiên, ghi thời gian từng bước cùng RSS tiến trình được lấy mẫu và chỉ so các lượt cùng cấu hình. Muốn kết luận năng lực cần nhiều phép đo đồng thời. | Bộ nhớ đệm LISA giới hạn năm bộ tham số. Đỉnh lấy mẫu tại Bảo An là 728,531 và 688,941 MiB; thời gian toàn quy trình là 46,6687 và 37,6479 giây. | RSS là số lấy mẫu của tiến trình máy chủ, không tách theo người dùng. Chưa đo năng lực nhiều người dùng hoặc giới hạn bộ nhớ chắc chắn. |
+| A11. Toàn bộ quy trình có chạy từ dịch vụ trực tiếp đến tệp xuất không? | `tests/test_pipeline_integration.py`, `tests/test_ui_smoke.py`, bản xuất Bảo An và JSON hiệu năng | Kiểm tra raster sang thống kê vùng, LISA và CSV bằng đầu vào có kiểm soát; tách riêng việc đọc CSV thật và profiler từng bước. | Lượt Bảo An đã lưu ghi thành công ở cả 13 công đoạn. Hai bản xuất có 7.148 dòng và mọi giá trị trong 32 cột chung đều khớp. | Bộ kiểm thử không đăng nhập Earth Engine. Profiler và CSV chưa tạo thành phép thử có thể lặp đầy đủ từ Earth Engine qua Streamlit đến tệp xuất kèm lỗi được chủ động tạo. |
+| A12. Tài liệu được duy trì có khớp mã và bằng chứng không? | [Chương trình kiểm tra tài liệu](../check_docs.mjs), sáu cặp README Anh và Việt cùng ma trận này | Kiểm tra đủ cặp hướng dẫn, liên kết nội bộ, dấu công thức và dấu câu bị cấm. Mọi số liệu phải liên kết tới tệp đã lưu hoặc nêu rõ bằng chứng còn thiếu. | Bộ tài liệu duy trì có 12 hướng dẫn trong sáu cặp song ngữ và đạt chương trình kiểm tra trên nhánh này. | Kiểm tra liên kết và định dạng không chứng minh bản dịch tương đương hoặc kết luận khoa học đúng. Vẫn cần đọc thủ công khi bằng chứng hoặc mã thay đổi. |
+| V11. Trích xuất VIIRS độc lập có khớp ở các địa bàn khác nhau không? | [Quy trình nhiều địa bàn](../cross_location/README-vi.md) và kết quả tổng hợp V11 lịch sử | So tích phân raster Earth Engine độc lập với ô của ứng dụng ở lưới 500 m. Ô đầy đủ dùng dung sai làm tròn CSV bốn chữ số; ô cắt biên vẫn được giữ và báo cáo. Queen cùng BH-FDR được tính lại với giới hạn về hạt hoán vị. | Thượng Hải 886 ô, Bảo An 7.148 và Kỳ Môn 9.143, tổng 17.177. Toàn bộ 15.330 ô đầy đủ đạt. Trong 1.847 ô cắt biên, 1.846 ô nằm trong 0,00005 và toàn bộ nằm trong 0,0000501. | Repo thiếu đầy đủ raster tương ứng, kết quả từng ô và biểu đồ. Đa giác cắt biên lấy từ bản xuất ứng dụng, không được dựng lại độc lập hoàn toàn. |
+| GADM. Ranh giới Trung Quốc đã biên tập có khớp bản nguồn được chọn không? | [Hướng dẫn dữ liệu và phương pháp](../../docs/README-vi.md) cùng tệp dưới `data/` | So mã định danh được giữ lại và các trường hành chính đã ánh xạ với GADM 4.1 ở độ chính xác đã nêu; nối dữ liệu theo GID thay vì tên hiển thị. | 2.420 đơn vị đã biên tập được đối chiếu. Một bản ghi nguồn thiếu trường hành chính bị loại; `CHN.14.10.2_1` được xác định là Nam, còn tên tệp cũ giữ lại để tương thích. | Đây là đối chiếu với một bản phát hành nguồn, không xác nhận ranh giới pháp lý hiện nay hoặc mọi quốc gia. |
 
 ## Kiểm tra hỗ trợ quan sát tại Bảo An
 
@@ -60,6 +92,92 @@ Cả hai lượt đều thành công, nhưng mỗi bên chỉ có một phép đ
 Ca nhân tạo 36 ô che sáu ô. So với dữ liệu đầy đủ, chính sách điền 0 làm trung bình NTL đổi từ 10,9444 xuống 9,1944, tỷ lệ ô bằng 0 từ 0,0278 lên 0,1944, Gini từ 0,3054 lên 0,4289 và Global Moran Queen nhị phân từ 0,7319 xuống 0,6210. Trong ví dụ dựng sẵn, sáu nhãn LISA và 33 chế độ Không gian và Thời gian thay đổi.
 
 Đây là phản ví dụ chẩn đoán, không phải ước lượng sai lệch ngoài thực địa. Kết quả giải thích vì sao phải xuất trường hỗ trợ quan sát và vì sao ca thiếu hỗ trợ thực vẫn là bước tiếp theo.
+
+## Kiểm tra VIIRS và LISA tại ba địa bàn
+
+**Câu hỏi và lý do.** Kết quả ở một địa bàn thí điểm có thể phụ thuộc hình học, phân bố độ sáng hoặc tỷ lệ ô biên. Thượng Hải, Bảo An và Kỳ Môn được chọn để đại diện cho nội đô, quận đô thị-công nghiệp có hình học nhiều phần và huyện ít đô thị hóa hơn.
+
+**Bằng chứng.** Repo có ba ranh giới GADM, chương trình đối chiếu độc lập và hướng dẫn xuất Earth Engine trong [`validation/cross_location/`](../cross_location/). Báo cáo kiểm toán lịch sử cung cấp kết quả tổng hợp. Raster nguồn tương ứng và bảng đối chiếu từng ô chưa được đưa vào repo.
+
+**Cách kiểm tra và dung sai.** Raster tham chiếu được tích phân độc lập trên đa giác ô của ứng dụng. Ô đầy đủ phải khớp trong giới hạn làm tròn CSV bốn chữ số là 0,00005. Ô cắt biên không bị loại; ngưỡng phụ 0,0000501 giúp phân biệt ngưỡng đúng nghĩa với nhiễu số dấu phẩy động. Phần LISA dựng lại láng giềng Queen, Local I và BH-FDR, đồng thời giữ rõ tác động của NTL đã làm tròn và quy ước hạt Monte Carlo.
+
+| Địa bàn | Toàn bộ ô | Ô đầy đủ | Ô cắt biên |
+| --- | ---: | ---: | ---: |
+| Thượng Hải | 886 | 706 | 180 |
+| Bảo An | 7.148 | 6.131 | 1.017 |
+| Kỳ Môn | 9.143 | 8.493 | 650 |
+| Tổng | 17.177 | 15.330 | 1.847 |
+
+Toàn bộ 15.330 ô đầy đủ đạt ngưỡng CSV. Trong số ô cắt biên, 1.846/1.847 ô đạt 0,00005. Tại Bảo An, `grid_id=628` so giá trị 18,8768 với 18,876850039; sai khác chỉ vượt ngưỡng đúng nghĩa $3,93\times10^{-8}$ và vẫn nằm trong 0,0000501.
+
+**Giới hạn.** Đây là kết quả tổng hợp đã ghi, không phải gói công khai có thể chạy lại trọn vẹn. Đa giác cắt biên do ứng dụng xuất được dùng lại, nên phép so không tự dựng mọi ô từ ranh giới nguồn. Kết quả không xác nhận GHSL hoặc giá trị đại diện kinh tế.
+
+## Kiểm tra GHSL tại Thượng Hải
+
+**Câu hỏi và lý do.** Các dải diện tích xây dựng và dân số GHSL lưu lượng trên từng điểm ảnh nguồn. Nếu tái chiếu sang lưới khác rồi cộng như thể đó là lượng của điểm ảnh mới, tổng lượng có thể không được bảo toàn. Phép tính cũng có thể thất bại hoàn toàn nếu raster và đa giác không cùng hệ tọa độ.
+
+**Bằng chứng.** Repo có cách tính đã sửa trên lưới gốc và các kiểm thử hồi quy nhân tạo. Kết quả thực địa tổng hợp được lấy từ hồ sơ kiểm toán. Raster gốc, bản xuất GHSL trực tiếp theo từng ô và ảnh chụp giao diện không nằm trong repo này.
+
+**Cách kiểm tra.** Giữ raster GHSL 100 m trên lưới ESRI:54009, chuyển đa giác 500 m sang hệ tọa độ đó rồi cộng `lượng điểm ảnh × diện tích giao / 10.000 m²`. Chỉ dùng ô lõi có ít nhất 99% diện tích danh nghĩa. Phần tương quan dùng thứ hạng trung bình khi hòa, 200 lượt bootstrap theo khối 5 nhân 5 ô với hạt 42 và AUC một phần tư cao nhất theo Mann-Whitney.
+
+Trước khi sửa bảo toàn lượng, vùng lõi chung tại Thượng Hải có 36.234 điểm ảnh nguồn nhưng 42.244 điểm ảnh đích. Tổng theo cách cũ làm diện tích xây dựng tăng từ 118.319.940 lên 137.859.621 m², sai 16,51428%; dân số tăng từ 11.674.618,205 lên 13.612.238,308, sai 16,59686%.
+
+Sau khi sửa lưới gốc và hệ tọa độ, phép tính tổng hợp độc lập dùng 715 trong 886 ô:
+
+| Chỉ tiêu | Diện tích xây dựng | Dân số |
+| --- | ---: | ---: |
+| Ô đủ điều kiện có proxy dương | 715 | 715 |
+| Spearman rho | -0,0794533 | 0,1358105 |
+| Khoảng bootstrap 95% | [-0,220123; 0,086086] | [-0,029628; 0,271008] |
+| AUC một phần tư cao nhất | 0,394636 | 0,576274 |
+| Mật độ GHSL trung vị | 353.036 m²/km² | 33.799 người/km² |
+
+Rho, hai đầu khoảng và AUC tái lập các giá trị hiển thị của ứng dụng ở đúng mức làm tròn. Cả hai khoảng rho đều chứa 0, nên mẫu này chưa chứng minh mối liên hệ đơn điệu khác 0 một cách tin cậy.
+
+**Giới hạn.** Khớp chỉ số tổng hợp không chứng minh từng ô giống nhau giữa bản xuất Earth Engine Drive và đường tải `computePixels` trực tiếp. Kết quả Thượng Hải không xác nhận Bảo An, Kỳ Môn hoặc epoch GHSL khác. GHSL không phải biến kết quả kinh tế trực tiếp.
+
+## Kiểm tra số học và tích hợp
+
+**Lý do.** Đối chiếu thực địa có thể phát hiện lỗi đầu vào và hình học, còn chuẩn tham chiếu nhỏ giúp cô lập công thức cùng đường xử lý lỗi. Dự án cần cả hai loại.
+
+Bộ kiểm thử số học gồm Global Moran Queen nhị phân tính tay bằng $1/3$, Local I $[0,45;0,15;0,15;0,45]$, láng giềng Queen trên lưới 2 nhân 2, Gini đối chiếu với định nghĩa sai khác tuyệt đối theo cặp, biên BH-FDR, đuôi hoán vị có điều kiện, giá trị hòa, xử lý thiếu một năm của Không gian và Thời gian cùng vòng xuất rồi đọc lại CSV. Phần raster kiểm tra đa giác cắt biên, mặt nạ, NoData, giá trị không hữu hạn và sự khác nhau giữa giữ thiếu với điền 0.
+
+Các ca dùng kỳ vọng chính xác hoặc dung sai riêng được ghi trong tệp kiểm thử. Kiểm thử Monte Carlo đánh giá phân phối trong dung sai đã nêu, không buộc dùng cùng chuỗi số ngẫu nhiên với thư viện khác. Toàn bộ kiểm thử đạt chỉ có nghĩa các hợp đồng đã khai báo được chạy thành công, không có nghĩa mọi dữ liệu trực tiếp hoặc diễn giải khoa học đều đúng.
+
+## Độ nhạy đặc tả đã ghi tại Diên Khánh
+
+Danh mục kiểm toán đã khôi phục ghi nhận các báo cáo và tệp kết quả đầy đủ cho độ nhạy theo phép tổng hợp tháng, phép biến đổi, loại trọng số và kích thước lưới. Phần tóm tắt được giữ lại ở đây vì chúng trả lời câu hỏi diễn giải khoa học khác với kiểm tra mã cơ bản. Chương trình gốc và toàn bộ bảng từng ô chưa nằm trong repo hiện tại, nên đây là kết quả đã ghi nhưng chưa thể chạy lại công khai đầy đủ, không phải phép tính mới của nhánh này.
+
+### Trung vị năm và trung bình năm
+
+Với cùng 8.333 ô, hình học và quy tắc LISA, thay tổng hợp tháng năm 2020 từ trung vị năm sang trung bình năm làm NTL trung bình không trọng số tăng từ 1,4137188 lên 1,4754449, tương đương 4,366%. Gini đổi từ 0,6809244 lên 0,6861015 và Global Moran Queen nhị phân từ 0,914128499 lên 0,914558970. Số ô HH có ý nghĩa đổi từ 370 lên 385 và LL từ 2.510 xuống 2.499; Jaccard HH và LL lần lượt là 0,96104 và 0,96201. Trung vị giữ mặt nạ và trung vị điền 0 giống nhau tại toàn bộ 30.814 điểm ảnh của raster này, nên mẫu không có dữ liệu thiếu cần thiết để kiểm tra A02 ngoài thực địa.
+
+### Dữ liệu thô, chặn P99 và log
+
+Mọi đặc tả dùng cùng 7.733 ô tham gia, trọng số Queen, 999 hoán vị có điều kiện không hoàn lại, hạt 42, p-value hai đuôi tính cả trường hợp hòa và BH-FDR ở mức 0,05.
+
+| Kết quả | NTL thô | Chặn P99 | Log NTL |
+| --- | ---: | ---: | ---: |
+| Số ô HH | 370 | 457 | 1.050 |
+| Số ô LL | 2.510 | 2.510 | 2.441 |
+| Toàn bộ ô có ý nghĩa sau FDR | 2.880 | 2.967 | 3.491 |
+| Tỷ lệ diện tích HH | 4,617% | 5,702% | 13,102% |
+| Độ lệch đầu vào | 6,312 | 4,905 | 1,928 |
+
+Jaccard HH giữa dữ liệu thô và P99 là 0,809628; giữa dữ liệu thô và log là 0,352381. Cả 370 ô HH thô vẫn là HH ở hai đặc tả thay thế, vì vậy mức chồng lấn thô-log thấp là do log bổ sung 680 ô sáng vừa phải, không phải thay thế lõi ban đầu. Phép biến đổi làm đổi thang phân tích; nó không chỉ là lựa chọn hiển thị, và kết quả này chưa quyết định thang nào dự báo tốt nhất một biến kinh tế độc lập.
+
+### Queen, Rook và độ phân giải lưới
+
+| Đặc tả | Số ô lưới | Số ô kiểm định | HH | LL | Tỷ lệ diện tích HH |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Queen 500 m | 8.333 | 7.733 | 370 | 2.510 | 4,6169% |
+| Rook 500 m | 8.333 | 7.733 | 187 | 906 | 2,3334% |
+| Queen 1.000 m | 2.162 | 1.865 | 92 | 562 | 4,5919% |
+| Rook 1.000 m | 2.162 | 1.865 | 46 | 210 | 2,2960% |
+
+Tại 500 m, Jaccard HH giữa Queen và Rook là 0,5054. Giữa lưới 500 m và lưới 1.000 m được dựng mới, Jaccard theo diện tích HH là 0,6547 với Queen và 0,6864 với Rook. Vì vậy tổng diện tích HH gần nhau không đồng nghĩa ranh giới điểm nóng ổn định. Các số liệu này thuộc phép dựng lưới thô độc lập trong nghiên cứu lưu trữ; chúng không chứng minh chẩn đoán gộp khối riêng của ứng dụng tương đương về số học.
+
+Danh tính báo cáo và tệp kết quả nằm trong [danh mục 118 bản ghi](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_FILE_MANIFEST_2026-11-15.csv). Muốn công bố rộng hơn cần khôi phục đúng chương trình, tệp chỉ số và đầu vào đã nêu, không chỉ sao chép các số tóm tắt này.
 
 ## Cách kiểm tra
 Chạy từ thư mục gốc của repo:

@@ -19,6 +19,25 @@ A result applies only to the stated location, year, input and precision. The tab
 
 File locations, hashes and runnable checks are listed in the [evidence guide](evidence/README.md).
 
+## Audit coverage register
+
+The original source review used identifiers A01 to A12. Their current status is summarized here; the [complete audit question matrix](evidence/README.md#complete-audit-question-matrix) records the question, reason, evidence file, method, quantitative result or acceptance rule, tolerance and limit for each item.
+
+| IDs | Current status |
+| --- | --- |
+| A01 | CI discovery gap closed. Current workflow runs the full maintained test tree across two jobs. |
+| A02 | Observation fields verified for an all-observed Bao'an case; synthetic sensitivity quantified; a real missing-support case remains open. |
+| A03 | Independent numerical oracles and Yanqing field comparisons are recorded; broader morphologies and continuous annual data remain open. |
+| A04 | Two Gini functions still differ for negative or nonfinite inputs; the scientific input contract is not yet unified. |
+| A05 | Test versions are partly pinned, but production dependencies and a full reproducible lock remain incomplete. |
+| A06 | Integration coverage and modular statistical code reduce risk; application orchestration remains coupled. |
+| A07 | Block-aggregation MAUP is tested as implemented; equivalence to direct coarse-grid raster extraction is not established. |
+| A08 | Native-grid GHSL conservation and CRS handling are fixed and tested; Shanghai aggregate evidence is available, while public per-cell field evidence is incomplete. |
+| A09 | Rho labels are descriptive conventions. Shanghai confidence intervals include zero and do not establish a nonzero association. |
+| A10 | In-session caches are bounded and two field profiler files are deposited; concurrent Cloud capacity is untested. |
+| A11 | Synthetic integration and one stored Bao'an execution cover many stages; a repeatable authenticated live-service end-to-end test is still absent. |
+| A12 | Six maintained bilingual guide pairs and automated link/math checks are in place; semantic and scientific review remains manual. |
+
 ## What can be reproduced from this repository
 
 | Check | Command or material | Scope |
