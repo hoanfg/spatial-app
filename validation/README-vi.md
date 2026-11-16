@@ -11,7 +11,7 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | Trạng thái và việc còn mở | [Bảng dưới đây](#tinh-trang-hien-tai) |
 | Bằng chứng thực địa gốc và giới hạn | [Hồ sơ thực địa tổng hợp](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) |
 | Nguyên văn báo cáo cũ | [Nguồn 78 báo cáo](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) và [bản lưu 13 tài liệu](evidence/historical_document_sources_2026-11-15.md) |
-| Dữ liệu và phép kiểm có thể chạy | [Yanqing, Bắc Kinh](evidence/yanqing/README-vi.md), [Bảo An](evidence/audit-2026-11-15/), [quy trình nhiều địa bàn](cross_location/README-vi.md) |
+| Dữ liệu và phép kiểm có thể chạy | [Diên Khánh, Bắc Kinh](evidence/yanqing/README-vi.md), [Bảo An](evidence/audit-2026-11-15/), [quy trình nhiều địa bàn](cross_location/README-vi.md) |
 
 ## Tình trạng hiện tại
 
