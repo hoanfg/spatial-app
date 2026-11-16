@@ -1,6 +1,6 @@
 # Audit bytes and byte-range offsets must survive checkout on every platform.
-validation/evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt -text
-validation/evidence/historical_document_sources_2026-11-15.txt -text
+validation/evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md -text
+validation/evidence/historical_document_sources_2026-11-15.md -text
 validation/evidence/audit-2026-11-15/* -text
 validation/evidence/audit-2026-11-15/recovered-originals/* -text
 validation/evidence/a02_post_pr27/* -text
