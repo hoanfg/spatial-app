@@ -41,6 +41,14 @@ CSV Không gian và Thời gian được kiểm tra theo số dòng và mã ch�
 | Chế độ Không gian và Thời gian | 1.456 Tăng trưởng cộng hưởng; 75 Bóng tích tụ; 194 Tiên phong mới nổi; 4.711 Cùng giảm vị thế tương đối; 1.897 Bị loại hoặc ổn định. | Đây là nhóm mô tả hai mốc, không phải kết quả nhân quả hoặc nhãn ý nghĩa hoán vị. |
 | Siêu dữ liệu raster tham chiếu 2014 | Dữ liệu ghi 30.814 điểm ảnh hữu hạn, một điểm ảnh âm và không có điểm ảnh bằng 0. | Raster cũ không có dải đếm quan sát nên chưa biết mức hỗ trợ theo tháng. |
 
+## Diễn giải thay đổi giữa hai mốc
+
+CSV Không gian và Thời gian đã lưu cho phép kiểm tra riêng thay đổi bức xạ tuyệt đối. NTL trung bình theo ô tăng từ 0,4451583 năm 2014 lên 1,4137191 năm 2020. Trong toàn bộ 8.333 ô, 8.221 ô tăng và 112 ô giảm; không có ô bằng nhau ở mức chính xác của tệp xuất.
+
+Mã chế độ dựa trên thay đổi của `log1p(NTL)` đã chuẩn hóa riêng từng năm cùng độ trễ không gian của nó. Vì vậy, mã này đo thay đổi vị thế tương đối chứ không nhất thiết là thay đổi bức xạ thô. Trong 4.711 ô mang mã `4_Synchronized_Decline`, có 4.624 ô tăng NTL tuyệt đối và 87 ô giảm. Cách đọc phù hợp là cùng giảm vị thế tương đối. Kết quả không chứng minh 4.711 ô bị mất ánh sáng hoặc suy giảm kinh tế.
+
+Lệnh kiểm tra bằng chứng tính lại trực tiếp các số đếm này từ CSV đã lưu. Phép so vẫn chỉ có hai mốc, dùng giá trị xuất đã làm tròn và không cho biết diễn biến trong các năm ở giữa.
+
 ## Tính toàn vẹn
 
 | Tệp | SHA-256 |
