@@ -2,7 +2,7 @@
 
 [English](README.md) | [Tiếng Việt](README-vi.md) | [Overview](../README.md) | [Complete source mapping](../translation_manifest.json)
 
-All **13 archived source documents** are accounted for by **11 bilingual reading pairs**. Sources 01/02 are the original English/Vietnamese GADM specification editions; 03/04 are the corresponding Validation Master editions. Each pair shares one canonical identifier because those original documents were already intended as language counterparts. The remaining nine original sources have been translated into their missing language. Original archived texts and indexed SHA-256 remain unchanged.
+All **13 archived source documents** are accounted for by **11 bilingual reading pairs**. Sources 01/02 are the original English/Vietnamese GADM specification editions; 03/04 are the corresponding Validation Master editions. Each pair shares one canonical topic identifier because the original documents were intended as language counterparts. They remain two independently indexed source versions, not proof of exact sentence-by-sentence translation equivalence. The remaining nine original sources have been translated into their missing language. Original archived texts and indexed SHA-256 remain unchanged.
 
 | Source ID | Historical source path | English edition | Vietnamese edition |
 |---|---|---|---|
