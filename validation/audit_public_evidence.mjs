@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dir = path.join(root, 'evidence/audit-2026-11-15');
 const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8'));
-const consolidated = fs.readFileSync(path.join(root, 'evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md'));
+const consolidated = fs.readFileSync(path.join(root, 'evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt'));
 for (const section of JSON.parse(fs.readFileSync(path.join(dir, 'consolidation_index.json'), 'utf8'))) {
   const bytes = consolidated.subarray(section.start_byte, section.start_byte + section.length_bytes);
   assert.equal(bytes.length, section.length_bytes, section.source);

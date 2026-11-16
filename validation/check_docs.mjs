@@ -13,6 +13,21 @@ const files = [
   'validation/evidence/yanqing/README.md', 'validation/evidence/yanqing/README-vi.md',
 ];
 const problems = [];
+function markdownFiles(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+    const item = path.join(dir, entry.name);
+    if (entry.isDirectory()) return markdownFiles(item);
+    return entry.name.endsWith('.md') ? [path.relative(root, item).replaceAll('\\', '/')] : [];
+  });
+}
+const expected = new Set(files);
+const actual = [
+  ...fs.readdirSync(root).filter(name => /^README(?:-vi)?\.md$/.test(name)),
+  ...markdownFiles(path.join(root, 'docs')),
+  ...markdownFiles(path.join(root, 'validation')),
+];
+for (const file of actual) if (!expected.has(file)) problems.push(`unexpected active Markdown file: ${file}`);
+for (const file of files) if (!actual.includes(file)) problems.push(`missing active Markdown file: ${file}`);
 function checkBraces(math, where) {
   let depth = 0;
   for (let i = 0; i < math.length; i++) {
@@ -26,6 +41,7 @@ function checkBraces(math, where) {
 for (const file of files) {
   const raw = fs.readFileSync(path.join(root, file), 'utf8');
   if (raw.includes('—')) problems.push(`${file}: em dash must be replaced with normal punctuation`);
+  const vietnamese = file.endsWith('-vi.md');
   const lines = raw.split(/\r?\n/);
   let inCode = false;
   let inDisplay = false;
@@ -34,6 +50,12 @@ for (const file of files) {
     const line = lines[i];
     if (/^\s*```/.test(line)) { inCode = !inCode; continue; }
     if (inCode) continue;
+    if (/^#{1,6}\s/.test(line)) {
+      if (vietnamese && /\b(Audit|Evidence|Validation|Overview|Current status|Source)\b/i.test(line))
+        problems.push(`${file}:${i + 1}: English heading in Vietnamese guide`);
+      if (!vietnamese && /(Hướng dẫn|Bằng chứng|Kiểm chứng|Tình trạng|Phương pháp)/i.test(line))
+        problems.push(`${file}:${i + 1}: Vietnamese heading in English guide`);
+    }
     if (line.includes('$$') && line.trim() !== '$$')
       problems.push(`${file}:${i + 1}: display-math delimiter must be on its own line`);
     const displays = (line.match(/\$\$/g) || []).length;

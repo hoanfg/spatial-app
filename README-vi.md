@@ -22,7 +22,7 @@
 > - **Bài toán.** Muốn biết một vùng giàu hay nghèo khi không có số liệu GDP, người ta nhìn ảnh vệ tinh chụp ánh sáng ban đêm. **Nhưng** đống dữ liệu này rất nặng: chạy trên máy tính thường là tràn RAM, làm thủ công thì mất cả tuần.
 > - **App làm gì.** Bạn chọn một khu vực $\rightarrow$ app tự kết nối *Google Earth Engine* để tải ảnh $\rightarrow$ engine C/C++ gom hàng triệu điểm ảnh vào từng ô lưới $\rightarrow$ **các giới hạn an toàn kiểm soát khối lượng xử lý; khả năng chạy ổn định trong 1GB vẫn cần kiểm thử toàn bộ hệ thống triển khai.**
 > - **Bạn nhận lại gì.** Một nút bấm, một file CSV đã dọn sẵn các chỉ số kinh tế: đâu là lõi đô thị? chỗ nào là "điểm nóng" (LISA)? mức bất bình đẳng (Gini) cao hay thấp? Việc của bạn chỉ còn là tải về và đưa thẳng vào mô hình hồi quy.
-> - 👉 **[BẤM VÀO ĐÂY ĐỂ DÙNG THỬ TRỰC TIẾP (LIVE DEMO)](https://spatial-app.streamlit.app/?)**
+> - 👉 **[BẤM VÀO ĐÂY ĐỂ DÙNG THỬ TRỰC TIẾP](https://spatial-app.streamlit.app/?)**
 
 ```mermaid
 flowchart LR
@@ -55,7 +55,7 @@ Dự án này là một hệ thống dành cho **kinh tế lượng không gian*
 | **NTL** (Nighttime Lights) | Ánh sáng ban đêm quan sát từ vệ tinh. Ở đây là bức xạ trung bình của một ô lưới. |
 | **VIIRS** | Cảm biến/bộ dữ liệu vệ tinh cung cấp ảnh ánh sáng ban đêm mà hệ thống sử dụng. |
 | **GEE** | Google Earth Engine, nơi hệ thống lấy ảnh vệ tinh về. |
-| **Vector / Raster** | Vector là các đa giác ranh giới (tỉnh, huyện...). Raster là ảnh gồm các điểm ảnh (pixel). |
+| **Dữ liệu vectơ / raster** | Vectơ là các đa giác ranh giới (tỉnh, huyện...). Raster là ảnh gồm các điểm ảnh. |
 | **SOL** (Sum of Lights) | Tổng lượng ánh sáng của một ô = bức xạ trung bình × diện tích ô. |
 | **LISA** | Chỉ số cho biết *từng ô lưới* có tụ cụm với các ô xung quanh hay không (tụ cụm sáng, tụ cụm tối, hay lạc quẻ). |
 | **HH / LL / HL / LH** | Bốn loại nhãn của LISA: High-High, Low-Low, High-Low, Low-High (xem [Mục 3.1](#s3)). |
@@ -90,9 +90,9 @@ Bài toán ở đây là phải trộn ba loại dữ liệu khác bản chất:
 > [!NOTE]
 > 📎 Quy tắc phân loại quốc gia và xử lý nguồn GADM nằm trong [hướng dẫn dữ liệu và kiểm chứng](docs/README-vi.md).
 
-### 1.2. Giới hạn phần cứng và cơ chế phòng thủ "out-of-memory" (OOM) trên Cloud
+### 1.2. Giới hạn phần cứng và cơ chế phòng ngừa tràn bộ nhớ trên đám mây
 
-Môi trường triển khai mục tiêu là Streamlit Community Cloud (hoặc các docker container chi phí thấp), nơi tài nguyên bị giới hạn ở mức **~1GB RAM** và **1 CPU Core**.
+Môi trường triển khai mục tiêu là Streamlit Community Cloud hoặc các bộ chứa Docker chi phí thấp, nơi tài nguyên bị giới hạn ở mức **~1 GB RAM** và **1 lõi CPU**.
 
 Xử lý hình học không gian tốn bộ nhớ tăng rất nhanh theo độ phân giải lưới.
 
@@ -109,7 +109,7 @@ Xử lý hình học không gian tốn bộ nhớ tăng rất nhanh theo độ p
 
 ### 1.3. Cơ chế stateless của trình duyệt web
 
-Streamlit vận hành theo nguyên lý **stateless (không trạng thái)**: mỗi lần người dùng chạm vào bất kỳ điều khiển nào trên giao diện, Python lại chạy lại cả script từ đầu. Hệ thống "nhớ" được trạng thái nhờ hai cơ chế:
+Streamlit vận hành theo nguyên lý **không trạng thái**: mỗi lần người dùng chạm vào bất kỳ điều khiển nào trên giao diện, Python lại chạy lại toàn bộ chương trình từ đầu. Hệ thống "nhớ" được trạng thái nhờ hai cơ chế:
 
 | Cơ chế | Dùng cho việc gì |
 | :--- | :--- |
@@ -420,15 +420,15 @@ Hệ thống tính khoảng cách Euclid có dấu tới ranh giới cụm đi�
 
 Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa chọn của pipeline và của người phân tích. Không phần nào đổi giá trị NTL.
 
-- **Báo cáo chất lượng dữ liệu** (tab Dữ liệu): tỷ lệ pixel NaN và pixel âm, số ô không có kết quả trích xuất, tỷ lệ ô bằng 0 và (khi bấm nút) số tháng không mây của mỗi pixel. Các số này cùng nguồn gốc xử lý của pipeline (`ntl_composite`, `ntl_negative_handling`, `ntl_nodata_handling`) được ghi vào CSV panel dưới dạng cột `dq_*`. Một nút trích xuất lại trung bình theo ô không cắt giá trị âm rồi so với bản đã cắt.
+- **Báo cáo chất lượng dữ liệu** (thẻ Dữ liệu): tỷ lệ điểm ảnh NaN và điểm ảnh âm, số ô không có kết quả trích xuất, tỷ lệ ô bằng 0 và số tháng không mây của mỗi điểm ảnh. Các số này cùng nguồn gốc xử lý của quy trình (`ntl_composite`, `ntl_negative_handling`, `ntl_nodata_handling`) được ghi vào CSV bảng dữ liệu dưới dạng cột `dq_*`. Một nút trích xuất lại trung bình theo ô không cắt giá trị âm rồi so với bản đã cắt.
 - **Kiểm định độ vững** (tab LISA): chạy lại LISA với trọng số Rook, ngưỡng ô sáng cao hơn, biến đổi P99 / asinh / ln, α khác, bật/tắt FDR, lưới thô hơn 2×2 (MAUP) và các năm kề, rồi báo hệ số Jaccard của tập High-High so với bản gốc và diện tích là HH trong ít nhất 80% số lần chạy. Cột xuất: `rob_*`. Ngưỡng kết luận (Jaccard trung vị 0,70 và 0,50) là quy ước thực hành, không phải ngưỡng thống kê.
 - **Kiểm chứng ngoài** (tab Dữ liệu): Spearman ρ với khoảng tin cậy bootstrap theo khối không gian và AUC giữa NTL và diện tích xây dựng hoặc dân số GHSL trên cùng các ô. GHSL có epoch 5 năm nên epoch dùng có thể lệch so với năm NTL. Cột xuất: `val_*`.
 
-**Hỗ trợ quan sát (A02).** Ảnh VIIRS năm có band bức xạ theo chính sách cũ và năm band chất lượng: tỷ lệ có quan sát, giá trị âm, giá trị 0 đo được, số tháng hợp lệ trung bình và tỷ lệ ít tháng. CSV theo ô còn ghi `dq_status` (`observed`, `partial_observation`, `no_observation` hoặc `unknown`), `dq_stat_missing` và `dq_ntl_policy=legacy_zero_fill`. Giá trị 0 đo được và dữ liệu thiếu vẫn có thể cùng cho NTL bằng 0 theo chính sách cũ; metadata hỗ trợ phân biệt chúng khi schema raster hợp lệ. Bảo An có 7.148/7.148 ô thuộc trường hợp đã quan sát. Ca thực tế thiếu hoặc ít quan sát chưa được kiểm tra.
+**Hỗ trợ quan sát (A02).** Ảnh VIIRS năm có dải bức xạ theo chính sách cũ và năm dải chất lượng: tỷ lệ có quan sát, giá trị âm, giá trị 0 đo được, số tháng hợp lệ trung bình và tỷ lệ ít tháng. CSV theo ô còn ghi `dq_status` (`observed`, `partial_observation`, `no_observation` hoặc `unknown`), `dq_stat_missing` và `dq_ntl_policy=legacy_zero_fill`. Giá trị 0 đo được và dữ liệu thiếu vẫn có thể cùng cho NTL bằng 0 theo chính sách cũ; siêu dữ liệu giúp phân biệt chúng khi cấu trúc raster hợp lệ. Bảo An có 7.148/7.148 ô thuộc trường hợp đã quan sát. Ca thực tế thiếu hoặc ít quan sát chưa được kiểm tra.
 
-**Đại lượng GHSL.** Diện tích xây dựng và dân số là lượng trên từng pixel gốc. Ứng dụng hiện giữ lưới GHSL nguồn và chuyển đa giác ô sang CRS đó trước khi cộng theo tỷ lệ diện tích giao. Phép tính độc lập tái lập rho Spearman, khoảng bootstrap theo khối và AUC nội đô Thượng Hải đúng mức làm tròn UI. Kết quả này chưa xác nhận từng ô hoặc Kỳ Môn/Bảo An.
+**Đại lượng GHSL.** Diện tích xây dựng và dân số là lượng trên từng điểm ảnh gốc. Ứng dụng hiện giữ lưới GHSL nguồn và chuyển đa giác ô sang CRS đó trước khi cộng theo tỷ lệ diện tích giao. Phép tính độc lập tái lập rho Spearman, khoảng bootstrap theo khối và AUC nội đô Thượng Hải đúng mức làm tròn giao diện. Kết quả này chưa xác nhận từng ô hoặc Kỳ Môn/Bảo An.
 
-**Bằng chứng và hiệu năng.** V11 đã đối chiếu NTL/LISA tại Thượng Hải, Bảo An, Kỳ Môn theo phạm vi trong [hướng dẫn kiểm chứng](validation/README-vi.md); repo chưa có toàn bộ cặp raster và kết quả chi tiết. JSON hiệu năng tải được ghi thời gian từng bước và RSS tiến trình; PR #29 thêm mã commit triển khai khi có thể cùng thời gian các bước A02. Một lượt đo sau tối ưu chưa cho thấy A02 chạy nhanh hơn. Tải nhiều phiên Cloud và luồng Earth Engine đến CSV live vẫn còn mở.
+**Bằng chứng và hiệu năng.** V11 đã đối chiếu NTL/LISA tại Thượng Hải, Bảo An, Kỳ Môn theo phạm vi trong [hướng dẫn kiểm chứng](validation/README-vi.md); repo chưa có toàn bộ cặp raster và kết quả chi tiết. JSON hiệu năng ghi thời gian từng bước và RSS tiến trình; PR #29 thêm mã commit triển khai khi có thể cùng thời gian các bước A02. Một lượt đo sau tối ưu chưa cho thấy A02 chạy nhanh hơn. Phép thử nhiều phiên trên đám mây và luồng Earth Engine đến CSV trực tiếp vẫn còn mở.
 
 Mã nguồn: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`, `ntl/ghsl_native.py`, `ntl/performance.py`. [Hướng dẫn kiểm chứng](validation/README-vi.md) tách rõ test nhân tạo, kết quả thực địa đã ghi và việc còn thiếu.
 

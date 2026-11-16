@@ -87,8 +87,8 @@ Bảng dưới đây so sánh 3 phương án kiến trúc cho đường ống d�
 | :--- | :--- | :--- | :--- |
 | **Chất lượng hình học** | 🔴 **Thấp:** dễ trộn đa giác cấp Hạt (lớn) với cấp Xã/Quận (nhỏ) trong cùng một quốc gia, khi chỉ một số dòng có `NAME_2 == 'NA'`. | 🔴 **Thấp (nếu dữ liệu gốc bất đối xứng):** file JSON ở front-end chỉ đổi được nhãn hiển thị, không thể tách một đa giác `NA` 37MB đã bị gộp sai dưới ổ cứng. | 🟢 **Triệt để:** xử lý dứt điểm việc gộp/tách hình học (`dissolve` theo `GID`) ngay ở bước tạo file `.geojson`. |
 | **Tính đồng nhất kinh tế lượng** | 🔴 **Kém:** gây hiện tượng *cross-level mixing* (các dòng trong bảng panel không cùng cấp hành chính, vi phạm giả định đồng nhất đơn vị quan sát). | 🟡 **Tốt** với các nước đồng nhất (`CHN`, `VNM`), nhưng **thất bại** với các nước lai ghép (`GBR`, `TWN`). | 🟢 **Tối ưu:** đảm bảo 100% các tệp `.geojson` trong một quốc gia đại diện cho các đơn vị kinh tế tương đương. |
-| **Hiệu năng runtime trên Streamlit Cloud (~1GB RAM)** | 🔴 **Rủi ro tràn bộ nhớ:** sinh ra hàng chục ngàn file cấp xã/phường cho các nước có `ADM_3`/`ADM_4`. | 🟡 **Nhanh:** front-end nhẹ, nhưng phải duy trì một file JSON khổng lồ hàng chục ngàn dòng nếu muốn sửa tên từng quận. | 🟢 **Tối ưu nhất:** toàn bộ chi phí xử lý nặng làm offline đúng 1 lần. `app.py` giữ nguyên cấu trúc đọc thư mục cực nhẹ hiện tại. |
-| **Khả năng bảo trì** | 🔴 Khó kiểm soát lỗi ngầm khi thêm quốc gia mới. | 🟡 Phải sửa cả script trích xuất lẫn file JSON ở front-end. | 🟢 Chỉ cần thêm 1 dòng khai báo quy tắc (5 thuộc tính) vào từ điển `COUNTRY_RULES` trong script ETL. |
+| **Hiệu năng trên Streamlit Cloud (khoảng 1 GB RAM)** | 🔴 **Rủi ro tràn bộ nhớ:** sinh ra hàng chục ngàn tệp cấp xã/phường cho các nước có `ADM_3`/`ADM_4`. | 🟡 **Nhanh:** giao diện nhẹ, nhưng phải duy trì một tệp JSON khổng lồ hàng chục ngàn dòng nếu muốn sửa tên từng quận. | 🟢 **Tối ưu nhất:** toàn bộ xử lý nặng chỉ thực hiện ngoại tuyến một lần. `app.py` giữ nguyên cấu trúc đọc thư mục rất nhẹ hiện tại. |
+| **Khả năng bảo trì** | 🔴 Khó kiểm soát lỗi ngầm khi thêm quốc gia mới. | 🟡 Phải sửa cả chương trình trích xuất lẫn tệp JSON ở giao diện. | 🟢 Chỉ cần thêm một dòng khai báo quy tắc gồm năm thuộc tính vào từ điển `COUNTRY_RULES` trong chương trình ETL. |
 
 > [!IMPORTANT]
 > **Kết luận kiến trúc.** Không đặt logic chữa lỗi hình học ở front-end, và không để trình trích xuất tự đoán lớp sâu nhất một cách mù quáng. Hãy dùng **trình trích xuất điều khiển bằng quy tắc khai báo** với đủ 5 thuộc tính cho mỗi nhóm quốc gia:
@@ -244,7 +244,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 
 Nếu xuất ở `ADM_2`, toàn bộ thành phố Thâm Quyến hay Quảng Châu chỉ là một file duy nhất. Khi đó không thể phân tích sự phân hóa giữa các quận lõi (Nam Sơn, Phúc Điền, Thiên Hà) và vùng ven.
 
-**Xử lý ngoại lệ cho 4 thành phố trực thuộc trung ương (`Beijing`, `Shanghai`, `Tianjin`, `Chongqing`) và các huyện trực thuộc tỉnh (`NAME_2 == "NA"`).** Ở 4 đô thị này, tên thành phố nằm ngay ở `NAME_1`. Do đó, công thức đặt tên Thư mục chuẩn xác nhất cho `CHN` là:
+**Xử lý ngoại lệ cho bốn thành phố trực thuộc trung ương: Bắc Kinh (`Beijing`), Thượng Hải (`Shanghai`), Thiên Tân (`Tianjin`), Trùng Khánh (`Chongqing`), cùng các huyện trực thuộc tỉnh (`NAME_2 == "NA"`).** Ở bốn đô thị này, tên thành phố nằm ngay ở `NAME_1`. Do đó, công thức đặt tên thư mục phù hợp nhất cho `CHN` là:
 
 | Trường hợp | Thư mục |
 | :--- | :--- |
@@ -387,18 +387,4 @@ Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất ti�
 
 ## Tình trạng kiểm chứng
 
-| Mảng | Kết quả hiện có | Phạm vi còn thiếu |
-| --- | --- | --- |
-| VIIRS, LISA và tính toán hai thời điểm tại Yanqing (Bắc Kinh) | Đã đối chiếu độc lập raster theo ô năm 2014/2020 và các phép thống kê trong sai số ghi nhận | Chuỗi năm liên tục và địa bàn khác |
-| V11 nhiều địa bàn | Báo cáo thực địa đã đối chiếu NTL/LISA tại Thượng Hải, Bảo An, Kỳ Môn trong phạm vi nêu rõ | Repo thiếu raster và kết quả từng ô; phép kiểm ô cắt biên dùng đa giác do app xuất |
-| GHSL | Đã sửa phép cộng lượng trên lưới nguồn và tái lập độc lập chỉ tiêu tổng hợp tại nội đô Thượng Hải | Đầu ra live từng ô, địa bàn và kỳ GHSL khác |
-| Metadata A02 | CSV Bảo An có 7.148/7.148 ô thuộc trường hợp có quan sát | Ca thực tế không có hoặc ít quan sát |
-| Hiệu năng Cloud | Có số đo một lượt Bảo An và bộ ghi hiệu năng | Nhiều lượt cùng phiên bản triển khai, nhiều người dùng và kiểm tra tài nguyên đầy đủ |
-
-[Hướng dẫn kiểm chứng hiện tại](../validation/README-vi.md) phân biệt kết quả quan sát với điều chưa kiểm tra và dẫn về chứng cứ gốc. Bản validation master, đặc tả GADM và ghi chú sửa lỗi trước đây được giữ nguyên byte trong [bản lưu tài liệu lịch sử](../validation/evidence/historical_document_sources_2026-11-15.md).
-
-### Ghi chú phương pháp từ tài liệu trước
-
-- Global Moran dùng toàn bộ ô và trọng số Queen nhị phân; Local Moran dùng tập ô đủ điều kiện và Queen chuẩn hóa theo hàng. Không diễn giải hai trị số như cùng một phép thống kê. PR #10 chuyển hoán vị Local Moran sang rút các ô khác nhau, không hoàn lại trong mỗi lượt, và căn chỉnh mẫu số Local I với ESDA. Kết quả xuất trước thay đổi đó cần tạo lại trước khi so sánh.
-- Nhãn Space-Time **Synchronized Decline** mô tả sự giảm vị thế tương đối sau chuẩn hóa của ô và láng giềng, không khẳng định bức xạ hay hoạt động kinh tế giảm tuyệt đối. Các chế độ hướng biến động mang tính mô tả, không phải nhãn có ý nghĩa thống kê theo permutation/FDR.
-- Mask NoData của raster được giữ trước khi trích xuất. Chính sách cuối của ứng dụng vẫn điền 0 cho ô thiếu và ghi metadata chất lượng; cần dữ liệu thiếu quan sát thực tế trước khi đổi chính sách khoa học.
+[Hướng dẫn kiểm chứng](../validation/README-vi.md) là nơi duy nhất cập nhật kết quả đã xác nhận, giới hạn và việc còn thiếu. Các bản kiểm chứng tổng, đặc tả GADM và ghi chú sửa lỗi trước đây vẫn được giữ nguyên từng byte trong [kho nguồn lịch sử](../validation/evidence/historical_document_sources_2026-11-15.txt); chúng là bằng chứng, không phải hướng dẫn song song.
