@@ -9,7 +9,7 @@
 | CSV Bao'an, hồ sơ thời gian chạy và mã băm | [Bộ dữ liệu kiểm chứng](audit-2026-11-15/) |
 | Raster và đối chiếu từng ô Diên Khánh | [Hướng dẫn Diên Khánh](yanqing/README-vi.md) |
 | Hồ sơ kiểm chứng thực địa tổng hợp gốc | [Văn bản nguồn](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) |
-| Mười ba tài liệu đã thay thế | [Văn bản nguồn](historical_document_sources_2026-11-15.txt) và [chỉ mục byte](historical_document_sources_index.json) |
+| Mười ba tài liệu đã thay thế | [Văn bản nguồn](historical_document_sources_2026-11-15.md) và [chỉ mục byte](historical_document_sources_index.json) |
 | Bảy mươi tám báo cáo khôi phục | [Văn bản nguồn](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt) |
 
 Các tệp văn bản nguồn giữ ngôn ngữ, dấu câu và công thức đã nhận để đối chiếu lịch sử. Đây là dữ liệu nguồn, chưa phải bản dịch biên tập đầy đủ. Nội dung byte và mã băm được giữ nguyên. Các hướng dẫn hiện hành đã có bản tiếng Anh và tiếng Việt riêng tại các liên kết phía trên.
