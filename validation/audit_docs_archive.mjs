@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const archivePath = path.join(root, 'validation/evidence/historical_document_sources_2026-11-15.md');
+const archivePath = path.join(root, 'validation/evidence/historical_document_sources_2026-11-15.txt');
 const indexPath = path.join(root, 'validation/evidence/historical_document_sources_index.json');
 const sources = [
   'docs/GADM_v41 pipeline specification.md',

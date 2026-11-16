@@ -160,13 +160,13 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 | :---: | :--- | :--- | :--- |
 | `JPN` | Japan | 47 prefectures | ~1,741 Shi/Ku/Machi/Mura |
 | `KOR` | South Korea | 17 provinces/cities | ~250 Si/Gun/Gu |
-| `PRK` | North Korea | — | — |
+| `PRK` | North Korea | Not specified | Not specified |
 | `MNG` | Mongolia | 22 provinces | 339 Sums |
 | `IND` | India | 36 states/UTs | ~676 districts |
 | `BGD` | Bangladesh | 8 Divisions | 64 Districts; or `ADM_3` for 544 Upazilas |
 | `PAK` | Pakistan | 8 Level 1 units | ~36 Divisions in `ADM_2` or ~160 Districts in `ADM_3` |
 | `LKA` | Sri Lanka | 25 Districts in `ADM_1` | 331 DS Divisions in `ADM_2` |
-| `NPL` | Nepal | — | — |
+| `NPL` | Nepal | Not specified | Not specified |
 
 </details>
 
@@ -185,7 +185,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 | `CHL` | Chile | 16 regions | 56 provinces in `ADM_2` or 346 Comunas in `ADM_3` |
 | `COL` | Colombia | 33 regions | 1,122 Municipios |
 | `PER` | Peru | 26 regions | 196 Provincias |
-| `VEN`, `CUB` | Venezuela, Cuba | — | — |
+| `VEN`, `CUB` | Venezuela, Cuba | Not specified | Not specified |
 
 </details>
 
@@ -210,7 +210,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 | `DNK` | Denmark | 5 regions | 99 Kommuner |
 | `RUS` | Russia | ~85 federal subjects | ~2,350 Raions/Cities |
 | `TUR` | Turkey | 81 provinces | 973 Ilçe |
-| `CZE`, `HUN`, `ROU`, `BGR`, `GRC`, `PRT`, `FIN`, `UKR` | — | — | — |
+| `CZE`, `HUN`, `ROU`, `BGR`, `GRC`, `PRT`, `FIN`, `UKR` | Not specified | Not specified | Not specified |
 
 </details>
 
@@ -224,7 +224,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 | `AUS` | Australia | 8 states/territories | 562 Local Government Areas |
 | `NZL` | New Zealand | 16 regions | 67 Territorial Authorities |
 | `NGA` | Nigeria | 37 states | 774 LGAs |
-| `SAU`, `EGY`, `ZAF`, `KEN`, `ETH`, `MAR`, `DZA`, `GHA`, `TZA`, `KAZ`, `UZB`, `IRN`, `IRQ` | — | — | — |
+| `SAU`, `EGY`, `ZAF`, `KEN`, `ETH`, `MAR`, `DZA`, `GHA`, `TZA`, `KAZ`, `UZB`, `IRN`, `IRQ` | Not specified | Not specified | Not specified |
 
 </details>
 
@@ -258,8 +258,8 @@ This naming convention lets users search by province easily in the Streamlit sel
 | Code | To analyze at the level of... | Instead of... | Setup |
 | :---: | :--- | :--- | :--- |
 | `PAK` | 160 `Districts` in `ADM_3` | 36 `Divisions` in `ADM_2` | Folder = `NAME_1`, File = `NAME_3` |
-| `BGD` | 544 `Upazilas` in `ADM_3` | 64 `Districts` in `ADM_2` | — |
-| `FRA` | 333 `Arrondissements` in `ADM_3` | — | Folder = `NAME_2` (Département) |
+| `BGD` | 544 `Upazilas` in `ADM_3` | 64 `Districts` in `ADM_2` | Not specified |
+| `FRA` | 333 `Arrondissements` in `ADM_3` | Not specified | Folder = `NAME_2` (Département) |
 
 ---
 
@@ -395,7 +395,7 @@ The five checks in Section 4 are the target contract for future extraction. Befo
 | A02 observation metadata | Bao'an observed-case CSV has 7,148/7,148 usable rows | A real no-observation/low-support case |
 | Cloud performance | Single-run Bao'an baselines and profiler are available | Repeated runs with deployed commit, multiple sessions and full resource checks |
 
-The [current validation guide](../validation/README.md) separates observed results from untested claims and links to the original evidence. The previous full validation master, GADM specification and correction notes are preserved byte-for-byte in the [historical document archive](../validation/evidence/historical_document_sources_2026-11-15.md).
+The [current validation guide](../validation/README.md) separates observed results from untested claims and links to the original evidence. The previous full validation master, GADM specification and correction notes are preserved byte-for-byte in the [historical document archive](../validation/evidence/historical_document_sources_2026-11-15.txt).
 
 ### Method notes retained from the earlier documents
 
