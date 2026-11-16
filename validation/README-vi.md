@@ -23,7 +23,7 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | GHSL Thượng Hải | PR #24–26 đã sửa phép cộng lượng trên lưới nguồn. Rho, khoảng bootstrap và AUC độc lập tại 715 ô lõi khớp mức làm tròn giao diện | Chưa có GHSL từng ô do ứng dụng đang chạy xuất; biểu đồ Kỳ Môn/Bảo An không thay phép kiểm từng ô độc lập |
 | Hiệu năng A02 | Một hồ sơ đo tại Bảo An sau PR #27 ghi A02 26,4623 giây, so với mốc trước 25,0028 giây; PR #29 thêm thời gian từng bước con và `source_commit` | Chưa chứng minh tăng tốc; cần nhiều lượt chạy đám mây cùng cấu hình |
 
-[Hướng dẫn bằng chứng](evidence/README-vi.md) ghi dữ liệu đã lưu, hồ sơ nguồn và phép kiểm SHA-256. Danh mục 78 báo cáo liệt kê 118 tệp trực tiếp và 271 thành viên ZIP; repo có báo cáo và một số CSV/JSON, **không có** toàn bộ raster, mã kiểm, biểu đồ hay thành viên ZIP đã liệt kê.
+[Hướng dẫn bằng chứng](evidence/README-vi.md) ghi dữ liệu đã lưu, hồ sơ nguồn và phép kiểm SHA-256. Danh mục khôi phục liệt kê 118 tệp trực tiếp và 271 thành viên ZIP. Repo có bản tổng hợp đã biên tập cùng một số CSV/JSON, **không có** toàn bộ báo cáo gốc, raster, mã kiểm, biểu đồ hay thành viên ZIP đã liệt kê.
 
 ## Kết quả rà soát và việc còn mở
 
@@ -39,7 +39,7 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | A08, A10, A11 | Kiểm tra kỳ GHSL hoặc mặt nạ khác, lượt Earth Engine đến ứng dụng rồi CSV, hiệu năng/RSS đám mây lặp lại và nhiều phiên | Dịch vụ có quyền truy cập và số đo gắn mã commit triển khai |
 | V12, V13 | Xem chuỗi VIIRS nhiều năm và đối chứng kinh tế độc lập cùng thời gian/địa bàn | So sánh hai mốc và GHSL không tự chứng minh hai điều này |
 
-A01 về CI đã sửa trong PR #19. PR #10 sửa Local Moran, mask NoData và một tên nguồn GADM; #20–22 thêm A02 và các phép kiểm số; #24–27 sửa phần vận hành A02/GHSL và gộp reducer nhiều band; #28 công bố bằng chứng khôi phục được; #29 thêm chẩn đoán A02; #31 thêm chốt kiểm tra danh tính ô S04. [Kho nguồn văn bản thuần](evidence/historical_document_sources_2026-11-15.txt) giữ nguyên các báo cáo từng nằm rải trong `docs/` và thư mục này.
+A01 về CI đã sửa trong PR #19. PR #10 sửa Local Moran, mặt nạ NoData và một tên nguồn GADM; #20–22 thêm A02 và các phép kiểm số; #24–27 sửa phần vận hành A02/GHSL và gộp bộ giảm nhiều dải; #28 công bố bằng chứng khôi phục được; #29 thêm chẩn đoán A02; #31 thêm chốt kiểm tra danh tính ô S04. [Danh mục kiểm chứng đã khôi phục](evidence/audit-2026-11-15/recovered-originals/README-vi.md) tách kết luận được giữ lại khỏi ghi chú chuẩn bị trùng lặp.
 
 ## Phương pháp và khả năng tái lập
 
@@ -56,9 +56,8 @@ A01 về CI đã sửa trong PR #19. PR #10 sửa Local Moran, mask NoData và m
 
 ```sh
 node validation/audit_public_evidence.mjs --check-result
-node validation/audit_docs_archive.mjs
 node validation/check_docs.mjs
 python -m pytest -q tests
 ```
 
-Hai lệnh đầu kiểm tra byte của tài liệu/dữ liệu đã nộp và tóm tắt CSV công khai; `check_docs.mjs` kiểm tra liên kết và dấu công thức cơ bản. Bộ Python kiểm tra hợp đồng mã; không tự chạy lại Earth Engine, GHSL thực địa hoặc phép đo hiệu năng đám mây. Chỉ ghi đạt sau khi có kết quả chạy thực tế.
+Lệnh bằng chứng kiểm tra dữ liệu đã nộp và tóm tắt CSV công khai; `check_docs.mjs` kiểm tra liên kết và dấu công thức cơ bản. Bộ Python kiểm tra hợp đồng mã; không tự chạy lại Earth Engine, GHSL thực địa hoặc phép đo hiệu năng đám mây. Chỉ ghi đạt sau khi có kết quả chạy thực tế.

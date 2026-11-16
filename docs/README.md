@@ -387,4 +387,4 @@ The five checks in Section 4 are the target contract for future extraction. Befo
 
 ## Validation status
 
-The [validation guide](../validation/README.md) is the single current record of verified results, limits and remaining work. Earlier validation masters, GADM specifications and correction notes remain byte-for-byte in the [historical source archive](../validation/evidence/historical_document_sources_2026-11-15.txt); they are evidence, not parallel guidance.
+The [validation guide](../validation/README.md) is the single current record of verified results, limits and remaining work. The [recovered audit inventory](../validation/evidence/audit-2026-11-15/recovered-originals/README.md) explains which historical findings remain supported and which source bytes are not public.

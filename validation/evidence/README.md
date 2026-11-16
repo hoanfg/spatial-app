@@ -2,7 +2,7 @@
 
 [English](README.md) · [Tiếng Việt](README-vi.md) · [Validation status](../README.md) · [Data and methods](../../docs/README.md)
 
-This is the only English guide for the evidence folder. It records what is deposited, what each item can support and where the original source bytes are kept.
+This is the English guide for the evidence folder. It records what is deposited and what each item can support.
 
 | Evidence | Deposited material | Scope |
 | --- | --- | --- |
@@ -11,15 +11,11 @@ This is the only English guide for the evidence folder. It records what is depos
 | A02 after PR #27 | Cell CSV and performance JSON in [the A02 deposit](a02_post_pr27/) | Supports the recorded observed-data case and timing. It does not cover a real missing-support case. |
 | Synthetic controls | Test outputs in [the A02 control folder](a02/) | Checks specific numerical and schema contracts only. |
 
-## Original source records
+## Recovered source records
 
-Three large records are retained as plain text so GitHub does not present mixed-language historical material as current documentation:
+The earlier plain-text compilations repeated superseded reports, mixed languages and retained pull-request staging instructions that were not scientific evidence. Their useful conclusions are now integrated into this README pair, the validation guide and the new [recovered audit inventory](audit-2026-11-15/recovered-originals/README.md).
 
-- [Consolidated field record](CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt)
-- [Thirteen-document historical archive](historical_document_sources_2026-11-15.txt), with its [byte index](historical_document_sources_index.json)
-- [Seventy-eight recovered reports](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt), with the original JSON and CSV manifests in the same folder
-
-These files preserve the received languages, punctuation, formulas and line endings because their SHA-256 values and byte ranges are audit evidence. Current conclusions are maintained in the English and Vietnamese README pairs, rather than duplicated as separate reading editions.
+The original JSON and CSV inventories, recovery receipt and byte indexes remain available as provenance metadata. Selected CSV, JSON, raster and ZIP evidence remains in its subject folder. The repository does not claim to hold all private files named by the historical inventory, and a retained byte index is not presented as runnable without its former compilation.
 
 ## Verification
 
@@ -27,8 +23,7 @@ Run from the repository root:
 
 ```sh
 node validation/audit_public_evidence.mjs --check-result
-node validation/audit_docs_archive.mjs
 node validation/check_docs.mjs
 ```
 
-The first two commands verify deposited bytes and indexes. The documentation check enforces the active README pairs, links, language-specific headings, punctuation and basic math delimiters.
+The evidence command checks the deposited Bao'an data and cross-checks the recovered JSON and CSV inventories. The documentation check enforces the maintained README pairs, links, language-specific headings, punctuation and basic math delimiters.

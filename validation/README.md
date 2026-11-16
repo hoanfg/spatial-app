@@ -23,7 +23,7 @@ The result of a test applies to its stated location, year, input and precision. 
 | GHSL Shanghai | Native-grid quantity conservation defect corrected in PRs #24–26. Independent Shanghai core rho, bootstrap interval and AUC reproduce deployed UI rounding on 715 eligible cells | No live per-cell GHSL export; Qimen/Bao'an UI charts are not independent cellwise validation |
 | A02 performance | One post-PR-27 Bao'an profiler records A02 at 26.4623 s versus the earlier 25.0028 s; PR #29 added substep timings and `source_commit` | A02 speedup is not established; new comparable Cloud runs are needed |
 
-See the [evidence guide](evidence/README.md) for deposited inputs, source records and SHA-256 checks. The 78-report manifest indexes 118 direct files and 271 ZIP members; the repository holds the reports and selected CSV/JSON evidence, **not** every indexed original raster, script, plot or ZIP member.
+See the [evidence guide](evidence/README.md) for deposited inputs, source records and SHA-256 checks. The recovered inventory indexes 118 direct files and 271 ZIP members. The repository holds a curated audit summary and selected CSV/JSON evidence, **not** every indexed original report, raster, script, plot or ZIP member.
 
 ## Audit findings and work still open
 
@@ -39,7 +39,7 @@ See the [evidence guide](evidence/README.md) for deposited inputs, source record
 | A08, A10, A11 | Check other GHSL epochs/masks, live Earth Engine→app→CSV execution, repeated Cloud runtime/RSS and multiple sessions | Authenticated service and measured runs with deployed commit |
 | V12, V13 | Examine a continuous annual VIIRS series and compare with independently sourced, aligned economic outcomes | Neither two-year dynamics nor GHSL agreement proves these claims |
 
-A01 CI discovery was fixed in PR #19. PR #10 corrected Local Moran's conditional sampling, observed-I normalization, explicit NoData masks and one GADM source label. PRs #20–22 added A02 and numerical controls; #24–27 addressed A02/GHSL production issues and the multiband reducer; #28 published recoverable audit evidence; #29 added A02 diagnostics; #31 added the S04 grid-identity guard. The [plain-text source archive](evidence/historical_document_sources_2026-11-15.txt) retains the dated standalone reports that previously occupied `docs/` and this folder.
+A01 CI discovery was fixed in PR #19. PR #10 corrected Local Moran's conditional sampling, observed-I normalization, explicit NoData masks and one GADM source label. PRs #20–22 added A02 and numerical controls; #24–27 addressed A02/GHSL production issues and the multiband reducer; #28 published recoverable audit evidence; #29 added A02 diagnostics; #31 added the S04 grid-identity guard. The [recovered audit inventory](evidence/audit-2026-11-15/recovered-originals/README.md) separates retained findings from duplicated staging notes.
 
 ## Methods and reproducibility
 
@@ -56,9 +56,8 @@ The root [technical manual](../README.md) gives the formulas and CSV dictionary.
 
 ```sh
 node validation/audit_public_evidence.mjs --check-result
-node validation/audit_docs_archive.mjs
 node validation/check_docs.mjs
 python -m pytest -q tests
 ```
 
-The first two commands check the deposited document/data bytes and the public CSV summary; `check_docs.mjs` checks active links and basic math delimiters. The Python suite checks code contracts; it does not perform a fresh Earth Engine, GHSL field or Cloud benchmark. Do not mark a command as passed without its actual run result.
+The evidence command checks the deposited data and public CSV summary; `check_docs.mjs` checks active links and basic math delimiters. The Python suite checks code contracts; it does not perform a fresh Earth Engine, GHSL field or Cloud benchmark. Do not mark a command as passed without its actual run result.

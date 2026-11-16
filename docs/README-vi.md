@@ -387,4 +387,4 @@ Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất ti�
 
 ## Tình trạng kiểm chứng
 
-[Hướng dẫn kiểm chứng](../validation/README-vi.md) là nơi duy nhất cập nhật kết quả đã xác nhận, giới hạn và việc còn thiếu. Các bản kiểm chứng tổng, đặc tả GADM và ghi chú sửa lỗi trước đây vẫn được giữ nguyên từng byte trong [kho nguồn lịch sử](../validation/evidence/historical_document_sources_2026-11-15.txt); chúng là bằng chứng, không phải hướng dẫn song song.
+[Hướng dẫn kiểm chứng](../validation/README-vi.md) là nơi duy nhất cập nhật kết quả đã xác nhận, giới hạn và việc còn thiếu. [Danh mục kiểm chứng đã khôi phục](../validation/evidence/audit-2026-11-15/recovered-originals/README-vi.md) giải thích kết luận lịch sử nào còn căn cứ và dữ liệu nguồn nào chưa được công bố.
