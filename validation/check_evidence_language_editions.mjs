@@ -31,6 +31,9 @@ function readingEdition(location, language, marker, label) {
 }
 
 const manifest = JSON.parse(read(path.join(evidence, 'audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json')));
+const editionManifest = JSON.parse(read(path.join(editions, 'translation_manifest.json')));
+const recoveredLinks = new Map(editionManifest.recovered_reports.map(entry => [entry.source_id, entry]));
+const historicalLinks = new Map(editionManifest.historical_sources.map(entry => [entry.source_id, entry]));
 const original = read(path.join(evidence, 'audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md'));
 const matches = [...original.matchAll(/^## Source (\d{3}): `([^\r\n]+)`\r?\n\r?\n\*\*Original bytes:\*\* ([\d,]+) · \*\*SHA-256:\*\* `([a-f0-9]{64})`/gm)];
 if (matches.length !== 78) problems.push(`expected 78 recovered originals, found ${matches.length}`);
@@ -43,14 +46,36 @@ for (const [index, match] of matches.entries()) {
     ? manifest.embedded_zip_members.some(x => x.outer_archive_path === outer && x.member_path === inner && x.member_sha256 === sha)
     : manifest.source_files.some(x => x.archive_path === outer && x.sha256 === sha);
   if (!linked) problems.push(`source ${number}: manifest provenance mismatch`);
-  for (const lang of ['en', 'vi']) readingEdition(path.join(editions, 'recovered', `${number}-${lang}.md`), lang, sha, `recovered ${number}`);
+  const link = recoveredLinks.get(number);
+  if (!link || link.sha256 !== sha) {
+    problems.push(`source ${number}: missing or incorrect edition manifest mapping`);
+    continue;
+  }
+  for (const lang of ['en', 'vi']) {
+    const file = path.join(editions, link[lang === 'en' ? 'english' : 'vietnamese']);
+    readingEdition(file, lang, sha, `recovered ${number}`);
+  }
 }
 
 const history = JSON.parse(read(path.join(evidence, 'historical_document_sources_index.json')));
 if (history.length !== 13) problems.push(`expected 13 historical documents, found ${history.length}`);
 history.forEach((record, i) => {
-  const number = String(i + 1).padStart(3, '0');
-  for (const lang of ['en', 'vi']) readingEdition(path.join(editions, 'historical', `${number}-${lang}.md`), lang, record.sha256, `historical ${number}`);
+  const number = String(i + 1).padStart(2, '0');
+  const link = historicalLinks.get(number);
+  if (!link || link.sha256 !== record.sha256) {
+    problems.push(`historical source ${number}: missing or incorrect edition manifest mapping`);
+    return;
+  }
+  for (const lang of ['en', 'vi']) {
+    const pairSourceId = (link.canonical_id === '01' || link.canonical_id === '03')
+      ? (lang === 'en' ? link.canonical_id : String(Number(link.canonical_id) + 1).padStart(2, '0'))
+      : number;
+    const pairRecord = historicalLinks.get(pairSourceId);
+    const expectedSha = pairRecord?.sha256;
+    if (!expectedSha) { problems.push(`historical source ${number}: missing paired provenance`); continue; }
+    readingEdition(path.join(editions, link[lang === 'en' ? 'english' : 'vietnamese']),
+      lang, expectedSha, `historical ${number}`);
+  }
 });
 
 for (const lang of ['en', 'vi']) {
@@ -66,7 +91,7 @@ for (const lang of ['en', 'vi']) {
 
 const expected = 78 * 2 + 13 * 2 + 2;
 const count = expected - absent.length;
-console.log(`Bilingual reading editions: ${count}/${expected} files present (${(count / expected * 100).toFixed(1)}%).`);
+console.log(`Bilingual reading mappings: ${count}/${expected} source-language references resolved (${(count / expected * 100).toFixed(1)}%).`);
 console.log(`Recovered reports: ${matches.length} source records; historical documents: ${history.length} source records.`);
 console.log(`Missing reading editions: ${absent.length}; detected content issues: ${problems.length}.`);
 for (const item of absent) console.log(`MISSING ${item}`);

@@ -1,22 +1,21 @@
 # Bilingual evidence edition quality check
 
-This check inspects **reading editions only**. It never changes, translates, reformats or reparses the archived evidence bytes.
+The checks inspect **editorial reading editions only**; they do not change, translate or rewrite the SHA-256-protected archives.
 
 ```sh
-node validation/check_evidence_language_editions.mjs
 node validation/check_evidence_language_editions.mjs --strict
+node validation/audit_bilingual_editions.mjs
+node validation/audit_public_evidence.mjs --check-result
 ```
 
-The default command reports missing translations without failing on absence, making it suitable during incremental translation. `--strict` exits unsuccessfully if any expected edition is missing or a detected file-level problem exists.
+The manifest at `validation/evidence/reading-editions/translation_manifest.json` maps **78 recovered report sections** (35 distinct SHA-256 bodies) and **13 historical document sources** (11 bilingual topic pairs) to one complete English and one complete Vietnamese reading edition per unique text. The consolidated field report is a separate bilingual pair.
 
-Expected layout:
+**Logical coverage:** 78 × 2 + 13 × 2 + 2 = **184 source-language references**, resolved to **94 content files** (70 report files, 22 historical files and 2 consolidated reports). Shared original report hashes are deliberately translated once, rather than writing dozens of duplicate full texts.
 
-- `validation/evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11-en.md` and `-vi.md`.
-- `validation/evidence/reading-editions/historical/001-en.md` through `013-vi.md`, indexed by `historical_document_sources_index.json`.
-- `validation/evidence/reading-editions/recovered/001-en.md` through `078-vi.md`, numbered in the verbatim source archive.
+`check_evidence_language_editions.mjs` validates the original inventory, manifest associations, source SHA citations in editions, Unicode em dashes, basic placeholders, minimum edition length and Vietnamese diacritics. `--strict` fails on missing mappings; CI runs strict mode. `audit_bilingual_editions.mjs` independently cross-checks every recovered source entry and historical manifest record, verifies canonical pair presence and basic editorial navigation.
 
-The report checks the existence of both languages, original SHA-256 citations for each indexed report, selected manifest relationships, Unicode em dashes, obvious placeholders and minimal document length. A Vietnamese edition must contain Vietnamese diacritics. Names, quoted source data, code blocks and technical terms may legitimately appear in their original language.
+Historical sources 01/02 and 03/04 originally constitute separate English and Vietnamese source documents with **different original SHA-256 hashes**. The source-language edition cites the corresponding original hash. Every original remains in the protected archival file.
 
-**Important limitation:** a passing report only confirms file coverage and basic mechanical consistency. It does not certify translation accuracy, completeness of every paragraph, methodological equivalence, or independent reproduction of reported scientific results. A bilingual domain reviewer must compare each full edition against the original, with particular attention to limitations, status dates, numerical values, tables and formulas. Preserved originals remain the evidential authority.
+**Limitations:** automated coverage, file-level formatting and source-hash referencing do not certify that every translation is linguistically perfect, that all section-level details are equivalent, or that scientific computations have been rerun. A bilingual domain reviewer should compare formulas, all numbers, caveats, historical status dates and tables against each original. The archived original bytes and hashes remain authoritative.
 
-No original evidence hashes or source binaries are modified by these checks.
+No additional GeoTIFF, GeoJSON, raw Cloud logs or private source binaries are published by this documentation work.
