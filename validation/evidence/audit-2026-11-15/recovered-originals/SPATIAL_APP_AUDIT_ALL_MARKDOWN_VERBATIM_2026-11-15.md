@@ -1,4 +1,4 @@
-# Spatial App — complete audit Markdown evidence (verbatim)
+# Spatial App: complete audit Markdown evidence (verbatim)
 
 > This file concatenates complete original Markdown byte sequences. **Nothing is shortened, paraphrased, or filtered.**
 > Every report is also retained in its original file or original ZIP. The `MARKDOWN_BYTE_RANGES.json` provides exact UTF-8 byte offsets, lengths, and SHA-256 for each original section.
@@ -15,7 +15,7 @@
 **Original bytes:** 4,362 · **SHA-256:** `b4484af154e06a57d044c7e9ea69bfda29867de2968c625eb9eb04b0e022777b` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 001 -->
-# A02 — real CSV `dq_status=unknown` field defect / root-cause investigation
+# A02: real CSV `dq_status=unknown` field defect / root-cause investigation
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Carry forward to the ONE consolidated Major Review PR; not a new PR.**
 
@@ -59,7 +59,7 @@ All 17,177 newly exported 2020 cell records across Shanghai (886), Bao'an (7,148
 **Original bytes:** 4,019 · **SHA-256:** `dd96ca1716064c6a4d558d707ae555e824571a75181de2369ca06863df4056f1` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 002 -->
-# Bao'an A02 & runtime post-merge audit — 2026-11-15
+# Bao'an A02 & runtime post-merge audit: 2026-11-15
 
 ## Scope and provenance
 - Area: Shenzhen Bao'an, 2020, 500 m; 7,148 grid cells, grid IDs 0–7147.
@@ -144,7 +144,7 @@ No production modification is proposed on the basis of these two inputs.
 **Original bytes:** 7,041 · **SHA-256:** `484478ad27db5b48bbce380fc8496649739326affc26d1dddf1a7f9939452562` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 003 -->
-# Spatial App — field evidence: GHSL native vs app-style raster and A02 six-band intake
+# Spatial App field evidence: GHSL native vs app-style raster and A02 six-band intake
 
 Date: 2026-11-15 (Asia/Ho_Chi_Minh). This document preserves **real exported data** from the user's connected Google Drive. No GitHub PR, production edit or renewed Yanqing/V11 test is included.
 
@@ -156,7 +156,7 @@ The five distinct raster types are present in Drive folder `1VJGX8ElFo2xavlRrD7W
 
 The geographic export rectangle for GHSL is `[121.35299, 31.16607, 121.57693, 31.33889]`. To reduce nonuniform edge rasterization, a common interior rectangle `[121.35899, 31.17207, 121.57093, 31.33289]` (0.006° inset on all four sides) is used for the primary comparison. Both native/app pixels are selected by centre position, independently transformed to geographic coordinates. This is a bounded-field comparison, **not** an administrative census estimate or official total for Shanghai.
 
-## GHSL measured impact — identical geographic core
+## GHSL measured impact: identical geographic core
 
 | Quantity | Native GHSL grid total | App-style EPSG:4326 grid total | App-style overcount | Identical nearest-sampled pixel values |
 |---|---:|---:|---:|---:|
@@ -171,7 +171,7 @@ The app-style cells cover **8514.7–8530.0 m²** physically, whereas source pix
 
 **Production trace:** `ntl/ee_extra.py::fetch_ghsl_raster()` calls `getDownloadURL` with `scale=100, crs='EPSG:4326'`, then `ntl/quality_ui.py` calls `zonal_stat(raw, grid_wgs, 'sum', clip_negative=True, fill_missing=0.0)` with no compensation for changed destination cell size. `ntl/zonal.py` performs a pixel-footprint fraction-weighted `sum` on whatever grid is supplied. An appropriate production correction would download or otherwise aggregate in the source's native equal-area 100m lattice, transforming polygons into its CRS for coverage-weighted sums. **Do not** blindly scale EPSG:4326 pixel values by a single latitude factor: that is an approximate diagnostic, not a robust spatial integration method. Preserve the existing NTL and LISA estimators.
 
-## A02 six-band export — verified, but no low/missing-support test case
+## A02 six-band export: verified, but no low/missing-support test case
 
 The actual `baoan_2020_a02_six_band_reference.tif` has six `float32` bands with exact descriptions:
 
@@ -198,7 +198,7 @@ These new data prove that Earth Engine `Export.image.toDrive` can preserve all s
 **Original bytes:** 4,754 · **SHA-256:** `e46979acb604d88486d008e973c005eb5f89059f765e5b8cfeadfedee21b5cec` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 004 -->
-# Shanghai GHSL 2020 — independent post-deployment validation
+# Shanghai GHSL 2020: independent post-deployment validation
 
 Date: 2026-11-15. Scope: Shanghai Core (`CHN.24.1.10_1`), year 2020, 500 m grid, GHSL built-surface and population. Evidence relates to the post-merge #26 application figures shown by the user; it does **not** re-run V11 or Yanqing.
 
@@ -260,7 +260,7 @@ No actual live Cloud RSS/runtime JSON and no post-merge A02 per-cell CSV have be
 **Original bytes:** 3,993 · **SHA-256:** `e894614571169faf4ece973def016b0a4994ca0809a57b62f05bdc2dee429015` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 005 -->
-# V11 — Independent reference GeoTIFF intake and consistency check
+# V11: Independent reference GeoTIFF intake and consistency check
 
 **Date:** 2026-11-14.  **Input:** Nine GeoTIFF exports discovered in two separate Google Drive folders, downloaded read-only.
 
@@ -396,7 +396,7 @@ Run `v11_field_validation_2026_11.py` and `v11_independent_permutation_sample.py
 **Original bytes:** 4,368 · **SHA-256:** `4cdb1b84cf0ceb2cc970560c699967971d169da568840a1a67c3892221c66896` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 007 -->
-# V11 — Cross-location 2020 edge-cell validation completion
+# V11: Cross-location 2020 edge-cell validation completion
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Private staging evidence; not a new PR.**
 
@@ -448,7 +448,7 @@ All raw GeoJSON files stay outside the public repository; do not commit multi-me
 **Original bytes:** 3,280 · **SHA-256:** `2ab78372b5b30d47d9b9c16df5c92c4e9137aba7d83fa74bf0d897e16049648a` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 008 -->
-# Spatial App — Cross-location validation preflight (Yanqing reference)
+# Spatial App: Cross-location validation preflight (Yanqing reference)
 
 Date: 13 November 2026 · Repository: `hoanfg/spatial-app` · Commit: `05f03eccd4051c7c68fb039f6a292dea169f1d40`
 
@@ -511,7 +511,7 @@ Pending for V11: independent 2020 raster, VIIRS support/count products and spati
 **Original bytes:** 4,362 · **SHA-256:** `b4484af154e06a57d044c7e9ea69bfda29867de2968c625eb9eb04b0e022777b` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 009 -->
-# A02 — real CSV `dq_status=unknown` field defect / root-cause investigation
+# A02: real CSV `dq_status=unknown` field defect / root-cause investigation
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Carry forward to the ONE consolidated Major Review PR; not a new PR.**
 
@@ -555,7 +555,7 @@ All 17,177 newly exported 2020 cell records across Shanghai (886), Bao'an (7,148
 **Original bytes:** 4,019 · **SHA-256:** `dd96ca1716064c6a4d558d707ae555e824571a75181de2369ca06863df4056f1` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 010 -->
-# Bao'an A02 & runtime post-merge audit — 2026-11-15
+# Bao'an A02 & runtime post-merge audit: 2026-11-15
 
 ## Scope and provenance
 - Area: Shenzhen Bao'an, 2020, 500 m; 7,148 grid cells, grid IDs 0–7147.
@@ -640,7 +640,7 @@ No production modification is proposed on the basis of these two inputs.
 **Original bytes:** 3,570 · **SHA-256:** `8c07d580c1bfe8a39a3356267f7dc8aa3c567c7c6e34fe519a3c239c635db5e1` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 011 -->
-# Streamlit Cloud runtime log review — 14 November 2026
+# Streamlit Cloud runtime log review: 14 November 2026
 
 **Source:** user-supplied Streamlit deployment log downloaded on 14 Nov 2026, containing entries from 11–14 Nov 2026 (UTC). File SHA-256: `92d1b8829288fbc50458989e4d0fcda1ec4b2486b10b77469352902d4799f873`. The full source log is retained privately, **not committed**. This report is an interpretation of the log, not an end-to-end Cloud benchmark.
 
@@ -673,7 +673,7 @@ No production modification is proposed on the basis of these two inputs.
 **Original bytes:** 4,820 · **SHA-256:** `b64865b6eb9a8532a88c4721f0b0cd9c30887e17af43bb918854e4d21d7afeab` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 012 -->
-# Consolidated independent field evidence — November 2026
+# Consolidated independent field evidence: November 2026
 
 This report records bounded checks relevant to the A02/GHSL/runtime correction. Source GeoTIFFs, user cell CSVs and GeoJSONs remain outside the public repository; only aggregate results and SHA-256 values are published here. Results are **not** a claim of final live Cloud acceptance.
 
@@ -728,7 +728,7 @@ A Streamlit Cloud log (source retained outside this repository) shows a historic
 **Original bytes:** 7,041 · **SHA-256:** `484478ad27db5b48bbce380fc8496649739326affc26d1dddf1a7f9939452562` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 013 -->
-# Spatial App — field evidence: GHSL native vs app-style raster and A02 six-band intake
+# Spatial App: field evidence: GHSL native vs app-style raster and A02 six-band intake
 
 Date: 2026-11-15 (Asia/Ho_Chi_Minh). This document preserves **real exported data** from the user's connected Google Drive. No GitHub PR, production edit or renewed Yanqing/V11 test is included.
 
@@ -740,7 +740,7 @@ The five distinct raster types are present in Drive folder `1VJGX8ElFo2xavlRrD7W
 
 The geographic export rectangle for GHSL is `[121.35299, 31.16607, 121.57693, 31.33889]`. To reduce nonuniform edge rasterization, a common interior rectangle `[121.35899, 31.17207, 121.57093, 31.33289]` (0.006° inset on all four sides) is used for the primary comparison. Both native/app pixels are selected by centre position, independently transformed to geographic coordinates. This is a bounded-field comparison, **not** an administrative census estimate or official total for Shanghai.
 
-## GHSL measured impact — identical geographic core
+## GHSL measured impact: identical geographic core
 
 | Quantity | Native GHSL grid total | App-style EPSG:4326 grid total | App-style overcount | Identical nearest-sampled pixel values |
 |---|---:|---:|---:|---:|
@@ -755,7 +755,7 @@ The app-style cells cover **8514.7–8530.0 m²** physically, whereas source pix
 
 **Production trace:** `ntl/ee_extra.py::fetch_ghsl_raster()` calls `getDownloadURL` with `scale=100, crs='EPSG:4326'`, then `ntl/quality_ui.py` calls `zonal_stat(raw, grid_wgs, 'sum', clip_negative=True, fill_missing=0.0)` with no compensation for changed destination cell size. `ntl/zonal.py` performs a pixel-footprint fraction-weighted `sum` on whatever grid is supplied. An appropriate production correction would download or otherwise aggregate in the source's native equal-area 100m lattice, transforming polygons into its CRS for coverage-weighted sums. **Do not** blindly scale EPSG:4326 pixel values by a single latitude factor: that is an approximate diagnostic, not a robust spatial integration method. Preserve the existing NTL and LISA estimators.
 
-## A02 six-band export — verified, but no low/missing-support test case
+## A02 six-band export: verified, but no low/missing-support test case
 
 The actual `baoan_2020_a02_six_band_reference.tif` has six `float32` bands with exact descriptions:
 
@@ -782,7 +782,7 @@ These new data prove that Earth Engine `Export.image.toDrive` can preserve all s
 **Original bytes:** 16,264 · **SHA-256:** `55006f34c322dbbe7e6e2a57f0cf4038f6fa8ec4038fd9cd1bf15a461d4cfadc` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 014 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -820,7 +820,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -828,7 +828,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -836,13 +836,13 @@ The field data and user evidence archives should not be published or copied into
 4. Historical Yanqing 2020 GADM, real VIIRS raster and application CSV were checked with the amended comparator. Exactly **8,333/8,333** per-cell NTL references and centroid identity comparisons passed at exported rounding tolerances; detailed metrics JSON and source hashes are included, but private input raster/GeoJSON/CSV and the 8,333-row diagnostic table are *not* bundled.
 5. No new branch, PR, production algorithm changes or geospatial data bundles. One consolidated PR remains the only proposed repository update.
 
-## Field update 15 November 2026 — V11 edge closure + A02 real-data `unknown`
+## Field update 15 November 2026: V11 edge closure + A02 real-data `unknown`
 
 - **V11 new evidence:** analyzed exactly 1,847 previously excluded boundary-clipped cells from 3 user GeoJSONs against 3 independent EE VIIRS TIFFs. All covered. 1,846/1,847 pass the literal 5e-5 half-bin; one Bao'an record (`grid_id=628`) exceeds by 3.93e-8 and is explicitly reported; 1,847/1,847 pass 5.01e-5 including a 1e-7 floating guard. Prior 15,330 core cell results were not repeated. Detailed private report: `V11_EDGE_COMPLETION_2026-11-15.md`.
 - **A02 real-data finding:** `dq_status=unknown` for all 17,177 new cell CSV rows; strict exact 6-band-description condition in `cell_quality` is a verified route to this symptom. Optional Data Quality UI buttons do not populate those fields. Actual live band count/description still unobserved; do not claim a confirmed Cloud root cause. Proposed surgical diagnostics/fix, not yet applied: `A02_DQ_UNKNOWN_FIELD_FINDING_2026-11-15.md`.
 - No production changes, no new PR, no revalidation of old Yanqing benchmarks, no large GeoJSON/raster inputs added to the public repo. Keep these artifacts in the existing private staging folder.
 
-## Unresolved scientific gates — 15 November 2026, targeted remediation staged
+## Unresolved scientific gates: 15 November 2026, targeted remediation staged
 
 - A02 silent unknown is confirmed in 17,177 new field CSV rows. Nine EE `Export.image.toDrive` single-band TIFFs show band descriptions, so absent names in the distinct application `getDownloadURL` output remain a **hypothesis**, not a proved root cause.
 - Prepared but **did not deploy** a fail-closed A02 schema patch (only app-created raster may use verified, unlabeled six-band positional fallback). Explicit schema warnings and focused regression controls are included in `remaining_field_package.zip` (8/8 focused tests pass locally). No NTL/Moran/LISA estimator modifications.
@@ -850,14 +850,14 @@ The field data and user evidence archives should not be published or copied into
 - Cloud runtime remains unmeasured; owner Cloud logs available via Manage app; no claims of memory PASS.
 - Remain on ONE future consolidated PR. Source rasters and large geospatial outputs remain outside public repo.
 
-## Field update 15 November 2026 — GHSL measured real-world bias; A02 six-band EE export
+## Field update 15 November 2026: GHSL measured real-world bias; A02 six-band EE export
 
 - Five distinct TIFF export products were located in two same-named Google Drive folders. The folder preview briefly omitted the two new native GHSL files; direct `list_folder` found both. Source bytes were retrieved and analyzed; no re-export needed.
 - **GHSL empirical defect confirmed:** Shanghai 2020 `JRC/GHSL/P2023A` `GHS_BUILT_S` and `GHS_POP` per-native-100m-cell amounts were exported at native Mollweide 100 m and application-style EPSG:4326 `scale=100`. In a common inset geographic core, naive appstyle sums exceed native by **16.51428% built area** and **16.59686% population**. Reprojection of the native raster to the app grid by nearest neighbor matched **42,244/42,244** app-grid samples for each product exactly: native per-pixel amounts were duplicated onto more/smaller cells before unadjusted zonal sums. Original `ntl/ee_extra.py` hardcodes EPSG:4326 and `ntl/quality_ui.py` sums destination-grid amounts. This is real-world, source-grid quantity-conservation evidence, not a synthetic demonstration. Impact at other sites remains unmeasured.
 - **A02 field reference verified but Cloud unknown unresolved:** Export.image.toDrive Bao'an six-band VIIRS GeoTIFF contains exact six `avg_rad` and `dq_` band descriptions. Band one matched the independent 2020 VIIRS median on every **26,786/26,786** shared finite pixel. All 27,013 quality pixels are observed with **9–12** monthly supports; the export lacks genuine missing/low-support cells. Streamlit uses distinct getDownloadURL route and its 17,177 prior CSV rows have `dq_status=unknown`; cannot declare Cloud root cause solved from this export.
 - New non-GitHub staged evidence: `GHSL_A02_REAL_FIELD_FINDINGS_2026-11-15.md`, `GHSL_A02_SHANGHAI_BAOAN_FIELD_METRICS_2026-11-15.json`, and `ghsl_field_compare_2020.py`. GeoTIFF input bytes stay on connected Google Drive; hashes are in JSON. Implement the GHSL native-grid conservation fix and fail-closed A02 Cloud schema diagnosis together only after review, **one consolidated PR**. No repetition of Yanqing/V11 and no production code edit in this field audit.
 
-## 15 November 2026 — In-app performance instrumentation and native GHSL correction candidate
+## 15 November 2026: In-app performance instrumentation and native GHSL correction candidate
 
 User has no Streamlit Cloud **Manage app** access and therefore cannot obtain owner logs. In the **same planned consolidated PR** (not a new PR), add owner-visible/self-service profiling:
 
@@ -869,14 +869,14 @@ User has no Streamlit Cloud **Manage app** access and therefore cannot obtain ow
 - **16/16 focused tests PASS** in isolated container Python (A02=8, GHSL source-grid=4, profiler=4). These are not equivalent to a Cloud/EE green light. `targeted_tests.xml` is bundled.
 - Stop gate: compare the corrected native GHSL per-cell totals/Spearman/AUC against the already-saved real raster reference and capture one authenticated Cloud profiler JSON; verify A02 real `getDownloadURL` schema. Do not declare GHSL/A02/Cloud fully closed before this. No new PR opened and no old V11/Yanqing reruns.
 
-## 15 November 2026 — User-supplied Cloud log and consolidated draft PR #24
+## 15 November 2026: User-supplied Cloud log and consolidated draft PR #24
 
 - Reviewed complete 1,313-line Streamlit Cloud log covering 11–14 November (downloaded 14 November). Detected two historic `ntl.semantics` import tracebacks on 12 November followed by app updates, 99 `st.components.v1.html` notices, 107 `use_container_width` notices, 34 CartoDB API-key warnings, Python 3.14.10, and automatic downgrade from PyArrow 26 to 24. No logged OOM, forced kill, or timeout. The uploaded log cannot establish Cloud per-analysis timing or a process RAM bound.
 - GitHub **draft PR #24** opened: https://github.com/hoanfg/spatial-app/pull/24 (branch `review/consolidated-a02-ghsl-runtime-2026-11`, head `0a1dec7c5a471e600d96f2347cae001ef3c74910`). It consolidates GHSL native-source-grid fixes, A02 schema diagnostics, visible runtime profiler, tests and compact field/log evidence in 12 files. **Main remains unchanged.** Raw field data and logs are not committed.
 - Targeted GHSL-native and performance tests re-executed in the available environment: **8 passed**. Full GitHub Actions CI was still in progress when the PR was opened. The 8 A02 tests and full test matrix require CI / the geospatial test environment. Do not claim a merge-ready state until CI, Cloud A02 download schema, GHSL results and profiler JSON are checked.
 - Preserve the original one-PR rule: do not open a secondary fix PR or re-run historical Yanqing/V11 evidence without a change that warrants it. Any necessary review changes should update the **same PR #24**.
 
-### 15 November 2026 — Draft PR #24 CI regression fixes and gate
+### 15 November 2026: Draft PR #24 CI regression fixes and gate
 
 - Opened one draft PR #24 on the reviewed `main` snapshot; public PR: https://github.com/hoanfg/spatial-app/pull/24. No merge, no production deployment, no separate follow-up PR. Field data and full user Cloud log are not committed.
 - Initial PR CI failed in the lightweight core job because the new `ntl/ghsl_native.py` imported Rasterio at module import time. This was corrected with a lazy `transform_bounds` import (commit `9218ec185d836b26913b9c6ded452517d92228e7`).
@@ -894,7 +894,7 @@ User has no Streamlit Cloud **Manage app** access and therefore cannot obtain ow
 **Original bytes:** 9,716 · **SHA-256:** `a0b82b9fd376b4e8c3f96adfb7e8f7f7497e761a9f6dee2cf070c56371c284e9` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 015 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **15 November 2026** (incremental v4 of 13–14 November staging). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code and a small, reproducible Yanqing 2020 metrics JSON**, but no Earth Engine credentials, private input GeoTIFFs, original GADM boundaries, or large per-cell result tables. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -905,7 +905,7 @@ Review date: **15 November 2026** (incremental v4 of 13–14 November staging). 
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV must be a current Spatial App cell export containing `grid_id`, `area_km2`, `ntl_mean` and four rounded **per-ID centroids** (`centroid_lon`, `centroid_lat`, `centroid_x_epsgNNNN`, `centroid_y_epsgNNNN`) for the same GADM boundary and grid. Area and IDs alone are insufficient to detect identical-size cells reordered geographically.
 
@@ -924,7 +924,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -953,10 +953,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (11 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -970,7 +970,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 
 See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes and scientific boundaries.
 
-## 15 November addendum — grid identity and negative controls
+## 15 November addendum: grid identity and negative controls
 
 - **GHSL:** per-cell UTM centroids (application exports rounded to 0.1 m) and geographic centroids (six decimal places) must match the independently reconstructed grid at their respective rounding precision. Omitting these four columns is an error, not permission to skip the spatial-identity check.
 - **Cross-location comparator:** the staged `compare_raster_cells.py` now applies the same per-ID geometry gate *before* calculating raster zonal statistics. It is intended to replace the existing script in the **single future consolidated PR**, not to create a micro-PR.
@@ -988,7 +988,7 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 3,461 · **SHA-256:** `5ddace573c0c0c79920b1812a29b11205a3c2932bbfc57000558bf6d0975d95e` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 016 -->
-# Spatial App — Staging review findings (14 November 2026)
+# Spatial App: Staging review findings (14 November 2026)
 
 ## Executive finding
 
@@ -1037,13 +1037,13 @@ Do not open a new micro-PR for this report alone. The corrected tools and tests 
 **Original bytes:** 4,122 · **SHA-256:** `0ce9c8d7b12bc8066a5b1899516f55587a7e0ec3c9772be84c2611f48b1e69dd` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 017 -->
-# Spatial App — Independent checker follow-up (15 November 2026)
+# Spatial App: Independent checker follow-up (15 November 2026)
 
 ## Decision
 
 Continue staging changes for one future major-review PR; no new PR and no changes to production formulas. An area-only comparator can fail to detect a spatial identity mismatch for equal-area cells. Fix the independent checking tools before interpreting later GHSL comparisons.
 
-## Finding S04 — same-area ID swaps bypass the previous area gate
+## Finding S04: same-area ID swaps bypass the previous area gate
 
 - Observed in: both the staged GHSL comparator and the existing `validation/cross_location/compare_raster_cells.py` checked grid IDs, polygon counts and areas, but not **per-ID geographic identity**.
 - Why this matters: two full 500 m grid cells both have `area_km2 = 0.25`; their polygon-to-CSV pairing can be wrong while an area and ID validation still reports success.
@@ -1064,7 +1064,7 @@ Results: **8,333/8,333 cells** passed the raster–polygon NTL comparison within
 
 This is an **independent recomputation using archived field input** from Yanqing, not new field sampling. A controlled same-area swap of two historical full-size cells was correctly rejected by the new check. It does not establish V11 across contrasting locations or GHSL product equality.
 
-## Finding S05 — fractional monthly observation counts
+## Finding S05: fractional monthly observation counts
 
 The staged A02 checker checked count in `[0,12]` but did not reject, for example, `2.5` months of annual valid observation support. Such a value can arise if a reference count raster is improperly interpolated. The checker now requires integral valid-month counts, and the corrupted synthetic example is rejected.
 
@@ -1074,10 +1074,10 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 
 ## Acceptance log
 
-- **11 passed** — `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
-- **8,333 passed** — Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
-- **Expected fail** — spatial-identity negative control on two same-area historical cell IDs.
-- **Not run / PENDING** — GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
+- **11 passed**: `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
+- **8,333 passed**: Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
+- **Expected fail**: spatial-identity negative control on two same-area historical cell IDs.
+- **Not run / PENDING**: GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
 - No new PR, no code modification in `ntl/`, and no large GeoJSON/GeoTIFF committed.
 
 <!-- END ORIGINAL SOURCE 017 -->
@@ -1090,7 +1090,7 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 **Original bytes:** 4,754 · **SHA-256:** `e46979acb604d88486d008e973c005eb5f89059f765e5b8cfeadfedee21b5cec` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 018 -->
-# Shanghai GHSL 2020 — independent post-deployment validation
+# Shanghai GHSL 2020: independent post-deployment validation
 
 Date: 2026-11-15. Scope: Shanghai Core (`CHN.24.1.10_1`), year 2020, 500 m grid, GHSL built-surface and population. Evidence relates to the post-merge #26 application figures shown by the user; it does **not** re-run V11 or Yanqing.
 
@@ -1152,7 +1152,7 @@ No actual live Cloud RSS/runtime JSON and no post-merge A02 per-cell CSV have be
 **Original bytes:** 4,754 · **SHA-256:** `e46979acb604d88486d008e973c005eb5f89059f765e5b8cfeadfedee21b5cec` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 019 -->
-# Shanghai GHSL 2020 — independent post-deployment validation
+# Shanghai GHSL 2020: independent post-deployment validation
 
 Date: 2026-11-15. Scope: Shanghai Core (`CHN.24.1.10_1`), year 2020, 500 m grid, GHSL built-surface and population. Evidence relates to the post-merge #26 application figures shown by the user; it does **not** re-run V11 or Yanqing.
 
@@ -1214,7 +1214,7 @@ No actual live Cloud RSS/runtime JSON and no post-merge A02 per-cell CSV have be
 **Original bytes:** 5,568 · **SHA-256:** `c77f737d7a59562c5f476f3cc688dc62a1f87bcc3ba9f55ebd77c7afaa0a2140` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 020 -->
-# Spatial App — Unresolved-field-evidence package (single future PR)
+# Spatial App: Unresolved-field-evidence package (single future PR)
 
 Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging only**: no PR, no repository changes, no geospatial data copied into the repository. Historical Yanqing/V11/FDR/Moran findings are reused and were not recomputed.
 
@@ -1231,11 +1231,11 @@ Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging onl
 
 Open `validation/gee_a02_ghsl_field_exports_2020.js` in Google Earth Engine Code Editor. It creates **5 tasks** in Drive folder `spatial_app_field_validation_2020`:
 
-1. `baoan_2020_a02_six_band_reference.tif` — production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
-2. `shanghai_2020_ghsl_built_native_100m.tif` — JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
-3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif` — same image reprojected with production `EPSG:4326`, scale 100m.
-4. `shanghai_2020_ghsl_pop_native_100m.tif` — GHSL population count on source 100m projection.
-5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif` — matching production-style reprojection.
+1. `baoan_2020_a02_six_band_reference.tif`: production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
+2. `shanghai_2020_ghsl_built_native_100m.tif`: JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
+3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif`: same image reprojected with production `EPSG:4326`, scale 100m.
+4. `shanghai_2020_ghsl_pop_native_100m.tif`: GHSL population count on source 100m projection.
+5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif`: matching production-style reprojection.
 
 If EE splits files into same-named Drive folders, leave them intact: Drive search by folder and filename can locate them. No new CSV/GeoJSON is required; the existing Shanghai district 2020 CSV and GeoJSON are already available.
 
@@ -1243,7 +1243,7 @@ If EE splits files into same-named Drive folders, leave them intact: Drive searc
 
 To audit GHSL, use the existing private staging tool `audit_ghsl_native_vs_reprojected.py` from the earlier v4 bundle (one run each `kind=built` and `kind=pop`). It compares exact fractional pixel-polygon sums, valid coverage and Spearman-rank movement. Do not compare global raster totals: use the clipped GADM cells and their complete-coverage flags.
 
-## Streamlit Cloud — remaining operational gate
+## Streamlit Cloud: remaining operational gate
 
 CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requires a run in Streamlit Community Cloud. The owner can open the app, select **Manage app** at bottom right, then download **Cloud logs**. Do not upload `.streamlit/secrets.toml`, credentials or personal-account tokens. Logs show errors but not necessarily peak RAM; a controlled, opt-in in-app profiler would be needed for exact RAM use. No RAM or latency PASS is claimed.
 
@@ -1271,7 +1271,7 @@ CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requir
 **Original bytes:** 7,159 · **SHA-256:** `8610ab1372b8838eade489c22b7d676dc37e7824c6ce90c05ab46b230e8d6e5d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 021 -->
-# Spatial App — one-PR code candidate: A02, native GHSL, owner-visible performance
+# Spatial App: one-PR code candidate: A02, native GHSL, owner-visible performance
 
 Date: 2026-11-15. Target: `hoanfg/spatial-app` `main` as observed on this date.
 **Status: prepared and locally unit-tested, NOT pushed to GitHub, NOT Cloud-tested.**
@@ -1342,7 +1342,7 @@ The Bao'an six-band Earth Engine Drive export has correctly named six bands and 
 **Original bytes:** 3,993 · **SHA-256:** `e894614571169faf4ece973def016b0a4994ca0809a57b62f05bdc2dee429015` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 022 -->
-# V11 — Independent reference GeoTIFF intake and consistency check
+# V11: Independent reference GeoTIFF intake and consistency check
 
 **Date:** 2026-11-14.  **Input:** Nine GeoTIFF exports discovered in two separate Google Drive folders, downloaded read-only.
 
@@ -1560,7 +1560,7 @@ Run `v11_field_validation_2026_11.py` and `v11_independent_permutation_sample.py
 **Original bytes:** 4,368 · **SHA-256:** `4cdb1b84cf0ceb2cc970560c699967971d169da568840a1a67c3892221c66896` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 025 -->
-# V11 — Cross-location 2020 edge-cell validation completion
+# V11: Cross-location 2020 edge-cell validation completion
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Private staging evidence; not a new PR.**
 
@@ -1612,7 +1612,7 @@ All raw GeoJSON files stay outside the public repository; do not commit multi-me
 **Original bytes:** 4,362 · **SHA-256:** `b4484af154e06a57d044c7e9ea69bfda29867de2968c625eb9eb04b0e022777b` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 026 -->
-# A02 — real CSV `dq_status=unknown` field defect / root-cause investigation
+# A02: real CSV `dq_status=unknown` field defect / root-cause investigation
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Carry forward to the ONE consolidated Major Review PR; not a new PR.**
 
@@ -1656,7 +1656,7 @@ All 17,177 newly exported 2020 cell records across Shanghai (886), Bao'an (7,148
 **Original bytes:** 4,368 · **SHA-256:** `4cdb1b84cf0ceb2cc970560c699967971d169da568840a1a67c3892221c66896` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 027 -->
-# V11 — Cross-location 2020 edge-cell validation completion
+# V11: Cross-location 2020 edge-cell validation completion
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Private staging evidence; not a new PR.**
 
@@ -1708,7 +1708,7 @@ All raw GeoJSON files stay outside the public repository; do not commit multi-me
 **Original bytes:** 4,067 · **SHA-256:** `26a3a56a1a57839e45bb4066d32b92675c143ccbb676782afe14d93ad1caa4ae` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 028 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 13 November 2026. Target repository: `hoanfg/spatial-app`.
 
@@ -1756,7 +1756,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 6,389 · **SHA-256:** `88d35d669a6caecbbfa0c6976d5e5a7f248a8177ab2de79015d2da53165d82f6` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 029 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -1767,7 +1767,7 @@ Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -1786,7 +1786,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -1815,10 +1815,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (7 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -1833,7 +1833,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 **Original bytes:** 4,992 · **SHA-256:** `972a638ebbac490dc990ca0d5602f04a500ffe03d3d4b8d99e0a6b6581599c9d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 030 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -1871,7 +1871,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -1889,7 +1889,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 7,942 · **SHA-256:** `b3a3b72db9e8ef51843c77824bebf500ef359bafd9596b6cf91c6ba6eaef7648` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 031 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **14 November 2026** (updated from 13 November). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -1900,7 +1900,7 @@ Review date: **14 November 2026** (updated from 13 November). Scope: GHSL native
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -1919,7 +1919,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -1948,10 +1948,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (9 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -1975,7 +1975,7 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 3,461 · **SHA-256:** `5ddace573c0c0c79920b1812a29b11205a3c2932bbfc57000558bf6d0975d95e` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 032 -->
-# Spatial App — Staging review findings (14 November 2026)
+# Spatial App: Staging review findings (14 November 2026)
 
 ## Executive finding
 
@@ -2024,7 +2024,7 @@ Do not open a new micro-PR for this report alone. The corrected tools and tests 
 **Original bytes:** 5,978 · **SHA-256:** `fce7228d802a6989deb7eb352423d91ce1f403dde844d8cb24f06d5b5459a89d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 033 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -2062,7 +2062,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -2070,7 +2070,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -2088,7 +2088,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 9,716 · **SHA-256:** `a0b82b9fd376b4e8c3f96adfb7e8f7f7497e761a9f6dee2cf070c56371c284e9` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 034 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **15 November 2026** (incremental v4 of 13–14 November staging). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code and a small, reproducible Yanqing 2020 metrics JSON**, but no Earth Engine credentials, private input GeoTIFFs, original GADM boundaries, or large per-cell result tables. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -2099,7 +2099,7 @@ Review date: **15 November 2026** (incremental v4 of 13–14 November staging). 
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV must be a current Spatial App cell export containing `grid_id`, `area_km2`, `ntl_mean` and four rounded **per-ID centroids** (`centroid_lon`, `centroid_lat`, `centroid_x_epsgNNNN`, `centroid_y_epsgNNNN`) for the same GADM boundary and grid. Area and IDs alone are insufficient to detect identical-size cells reordered geographically.
 
@@ -2118,7 +2118,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -2147,10 +2147,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (11 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -2164,7 +2164,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 
 See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes and scientific boundaries.
 
-## 15 November addendum — grid identity and negative controls
+## 15 November addendum: grid identity and negative controls
 
 - **GHSL:** per-cell UTM centroids (application exports rounded to 0.1 m) and geographic centroids (six decimal places) must match the independently reconstructed grid at their respective rounding precision. Omitting these four columns is an error, not permission to skip the spatial-identity check.
 - **Cross-location comparator:** the staged `compare_raster_cells.py` now applies the same per-ID geometry gate *before* calculating raster zonal statistics. It is intended to replace the existing script in the **single future consolidated PR**, not to create a micro-PR.
@@ -2182,13 +2182,13 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 4,122 · **SHA-256:** `0ce9c8d7b12bc8066a5b1899516f55587a7e0ec3c9772be84c2611f48b1e69dd` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 035 -->
-# Spatial App — Independent checker follow-up (15 November 2026)
+# Spatial App: Independent checker follow-up (15 November 2026)
 
 ## Decision
 
 Continue staging changes for one future major-review PR; no new PR and no changes to production formulas. An area-only comparator can fail to detect a spatial identity mismatch for equal-area cells. Fix the independent checking tools before interpreting later GHSL comparisons.
 
-## Finding S04 — same-area ID swaps bypass the previous area gate
+## Finding S04: same-area ID swaps bypass the previous area gate
 
 - Observed in: both the staged GHSL comparator and the existing `validation/cross_location/compare_raster_cells.py` checked grid IDs, polygon counts and areas, but not **per-ID geographic identity**.
 - Why this matters: two full 500 m grid cells both have `area_km2 = 0.25`; their polygon-to-CSV pairing can be wrong while an area and ID validation still reports success.
@@ -2209,7 +2209,7 @@ Results: **8,333/8,333 cells** passed the raster–polygon NTL comparison within
 
 This is an **independent recomputation using archived field input** from Yanqing, not new field sampling. A controlled same-area swap of two historical full-size cells was correctly rejected by the new check. It does not establish V11 across contrasting locations or GHSL product equality.
 
-## Finding S05 — fractional monthly observation counts
+## Finding S05: fractional monthly observation counts
 
 The staged A02 checker checked count in `[0,12]` but did not reject, for example, `2.5` months of annual valid observation support. Such a value can arise if a reference count raster is improperly interpolated. The checker now requires integral valid-month counts, and the corrupted synthetic example is rejected.
 
@@ -2219,10 +2219,10 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 
 ## Acceptance log
 
-- **11 passed** — `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
-- **8,333 passed** — Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
-- **Expected fail** — spatial-identity negative control on two same-area historical cell IDs.
-- **Not run / PENDING** — GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
+- **11 passed**: `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
+- **8,333 passed**: Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
+- **Expected fail**: spatial-identity negative control on two same-area historical cell IDs.
+- **Not run / PENDING**: GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
 - No new PR, no code modification in `ntl/`, and no large GeoJSON/GeoTIFF committed.
 
 <!-- END ORIGINAL SOURCE 035 -->
@@ -2235,7 +2235,7 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 **Original bytes:** 4,754 · **SHA-256:** `e46979acb604d88486d008e973c005eb5f89059f765e5b8cfeadfedee21b5cec` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 036 -->
-# Shanghai GHSL 2020 — independent post-deployment validation
+# Shanghai GHSL 2020: independent post-deployment validation
 
 Date: 2026-11-15. Scope: Shanghai Core (`CHN.24.1.10_1`), year 2020, 500 m grid, GHSL built-surface and population. Evidence relates to the post-merge #26 application figures shown by the user; it does **not** re-run V11 or Yanqing.
 
@@ -2297,7 +2297,7 @@ No actual live Cloud RSS/runtime JSON and no post-merge A02 per-cell CSV have be
 **Original bytes:** 5,568 · **SHA-256:** `c77f737d7a59562c5f476f3cc688dc62a1f87bcc3ba9f55ebd77c7afaa0a2140` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 037 -->
-# Spatial App — Unresolved-field-evidence package (single future PR)
+# Spatial App: Unresolved-field-evidence package (single future PR)
 
 Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging only**: no PR, no repository changes, no geospatial data copied into the repository. Historical Yanqing/V11/FDR/Moran findings are reused and were not recomputed.
 
@@ -2314,11 +2314,11 @@ Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging onl
 
 Open `validation/gee_a02_ghsl_field_exports_2020.js` in Google Earth Engine Code Editor. It creates **5 tasks** in Drive folder `spatial_app_field_validation_2020`:
 
-1. `baoan_2020_a02_six_band_reference.tif` — production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
-2. `shanghai_2020_ghsl_built_native_100m.tif` — JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
-3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif` — same image reprojected with production `EPSG:4326`, scale 100m.
-4. `shanghai_2020_ghsl_pop_native_100m.tif` — GHSL population count on source 100m projection.
-5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif` — matching production-style reprojection.
+1. `baoan_2020_a02_six_band_reference.tif`: production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
+2. `shanghai_2020_ghsl_built_native_100m.tif`: JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
+3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif`: same image reprojected with production `EPSG:4326`, scale 100m.
+4. `shanghai_2020_ghsl_pop_native_100m.tif`: GHSL population count on source 100m projection.
+5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif`: matching production-style reprojection.
 
 If EE splits files into same-named Drive folders, leave them intact: Drive search by folder and filename can locate them. No new CSV/GeoJSON is required; the existing Shanghai district 2020 CSV and GeoJSON are already available.
 
@@ -2326,7 +2326,7 @@ If EE splits files into same-named Drive folders, leave them intact: Drive searc
 
 To audit GHSL, use the existing private staging tool `audit_ghsl_native_vs_reprojected.py` from the earlier v4 bundle (one run each `kind=built` and `kind=pop`). It compares exact fractional pixel-polygon sums, valid coverage and Spearman-rank movement. Do not compare global raster totals: use the clipped GADM cells and their complete-coverage flags.
 
-## Streamlit Cloud — remaining operational gate
+## Streamlit Cloud: remaining operational gate
 
 CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requires a run in Streamlit Community Cloud. The owner can open the app, select **Manage app** at bottom right, then download **Cloud logs**. Do not upload `.streamlit/secrets.toml`, credentials or personal-account tokens. Logs show errors but not necessarily peak RAM; a controlled, opt-in in-app profiler would be needed for exact RAM use. No RAM or latency PASS is claimed.
 
@@ -2354,7 +2354,7 @@ CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requir
 **Original bytes:** 7,159 · **SHA-256:** `8610ab1372b8838eade489c22b7d676dc37e7824c6ce90c05ab46b230e8d6e5d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 038 -->
-# Spatial App — one-PR code candidate: A02, native GHSL, owner-visible performance
+# Spatial App: one-PR code candidate: A02, native GHSL, owner-visible performance
 
 Date: 2026-11-15. Target: `hoanfg/spatial-app` `main` as observed on this date.
 **Status: prepared and locally unit-tested, NOT pushed to GitHub, NOT Cloud-tested.**
@@ -2507,7 +2507,7 @@ Run `v11_field_validation_2026_11.py` and `v11_independent_permutation_sample.py
 **Original bytes:** 4,362 · **SHA-256:** `b4484af154e06a57d044c7e9ea69bfda29867de2968c625eb9eb04b0e022777b` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 040 -->
-# A02 — real CSV `dq_status=unknown` field defect / root-cause investigation
+# A02: real CSV `dq_status=unknown` field defect / root-cause investigation
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Carry forward to the ONE consolidated Major Review PR; not a new PR.**
 
@@ -2551,7 +2551,7 @@ All 17,177 newly exported 2020 cell records across Shanghai (886), Bao'an (7,148
 **Original bytes:** 4,368 · **SHA-256:** `4cdb1b84cf0ceb2cc970560c699967971d169da568840a1a67c3892221c66896` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 041 -->
-# V11 — Cross-location 2020 edge-cell validation completion
+# V11: Cross-location 2020 edge-cell validation completion
 
 Date: 15 November 2026. Repository: `hoanfg/spatial-app`. **Private staging evidence; not a new PR.**
 
@@ -2603,7 +2603,7 @@ All raw GeoJSON files stay outside the public repository; do not commit multi-me
 **Original bytes:** 4,067 · **SHA-256:** `26a3a56a1a57839e45bb4066d32b92675c143ccbb676782afe14d93ad1caa4ae` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 042 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 13 November 2026. Target repository: `hoanfg/spatial-app`.
 
@@ -2651,7 +2651,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 6,073 · **SHA-256:** `4fdb38e3ba95397c30d8679d12794f5623bd5dbe8d595d4488876671c923f2b5` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 043 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -2662,7 +2662,7 @@ Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -2681,7 +2681,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -2710,10 +2710,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (2 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -2728,7 +2728,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 **Original bytes:** 4,067 · **SHA-256:** `26a3a56a1a57839e45bb4066d32b92675c143ccbb676782afe14d93ad1caa4ae` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 044 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 13 November 2026. Target repository: `hoanfg/spatial-app`.
 
@@ -2776,7 +2776,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 6,389 · **SHA-256:** `88d35d669a6caecbbfa0c6976d5e5a7f248a8177ab2de79015d2da53165d82f6` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 045 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -2787,7 +2787,7 @@ Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -2806,7 +2806,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -2835,10 +2835,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (7 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -2853,7 +2853,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 **Original bytes:** 4,992 · **SHA-256:** `972a638ebbac490dc990ca0d5602f04a500ffe03d3d4b8d99e0a6b6581599c9d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 046 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -2891,7 +2891,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -2909,7 +2909,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 7,942 · **SHA-256:** `b3a3b72db9e8ef51843c77824bebf500ef359bafd9596b6cf91c6ba6eaef7648` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 047 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **14 November 2026** (updated from 13 November). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -2920,7 +2920,7 @@ Review date: **14 November 2026** (updated from 13 November). Scope: GHSL native
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -2939,7 +2939,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -2968,10 +2968,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (9 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -2995,7 +2995,7 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 3,461 · **SHA-256:** `5ddace573c0c0c79920b1812a29b11205a3c2932bbfc57000558bf6d0975d95e` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 048 -->
-# Spatial App — Staging review findings (14 November 2026)
+# Spatial App: Staging review findings (14 November 2026)
 
 ## Executive finding
 
@@ -3044,7 +3044,7 @@ Do not open a new micro-PR for this report alone. The corrected tools and tests 
 **Original bytes:** 5,978 · **SHA-256:** `fce7228d802a6989deb7eb352423d91ce1f403dde844d8cb24f06d5b5459a89d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 049 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -3082,7 +3082,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -3090,7 +3090,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -3108,7 +3108,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 9,716 · **SHA-256:** `a0b82b9fd376b4e8c3f96adfb7e8f7f7497e761a9f6dee2cf070c56371c284e9` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 050 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **15 November 2026** (incremental v4 of 13–14 November staging). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code and a small, reproducible Yanqing 2020 metrics JSON**, but no Earth Engine credentials, private input GeoTIFFs, original GADM boundaries, or large per-cell result tables. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -3119,7 +3119,7 @@ Review date: **15 November 2026** (incremental v4 of 13–14 November staging). 
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV must be a current Spatial App cell export containing `grid_id`, `area_km2`, `ntl_mean` and four rounded **per-ID centroids** (`centroid_lon`, `centroid_lat`, `centroid_x_epsgNNNN`, `centroid_y_epsgNNNN`) for the same GADM boundary and grid. Area and IDs alone are insufficient to detect identical-size cells reordered geographically.
 
@@ -3138,7 +3138,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -3167,10 +3167,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (11 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -3184,7 +3184,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 
 See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes and scientific boundaries.
 
-## 15 November addendum — grid identity and negative controls
+## 15 November addendum: grid identity and negative controls
 
 - **GHSL:** per-cell UTM centroids (application exports rounded to 0.1 m) and geographic centroids (six decimal places) must match the independently reconstructed grid at their respective rounding precision. Omitting these four columns is an error, not permission to skip the spatial-identity check.
 - **Cross-location comparator:** the staged `compare_raster_cells.py` now applies the same per-ID geometry gate *before* calculating raster zonal statistics. It is intended to replace the existing script in the **single future consolidated PR**, not to create a micro-PR.
@@ -3202,13 +3202,13 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 4,122 · **SHA-256:** `0ce9c8d7b12bc8066a5b1899516f55587a7e0ec3c9772be84c2611f48b1e69dd` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 051 -->
-# Spatial App — Independent checker follow-up (15 November 2026)
+# Spatial App: Independent checker follow-up (15 November 2026)
 
 ## Decision
 
 Continue staging changes for one future major-review PR; no new PR and no changes to production formulas. An area-only comparator can fail to detect a spatial identity mismatch for equal-area cells. Fix the independent checking tools before interpreting later GHSL comparisons.
 
-## Finding S04 — same-area ID swaps bypass the previous area gate
+## Finding S04: same-area ID swaps bypass the previous area gate
 
 - Observed in: both the staged GHSL comparator and the existing `validation/cross_location/compare_raster_cells.py` checked grid IDs, polygon counts and areas, but not **per-ID geographic identity**.
 - Why this matters: two full 500 m grid cells both have `area_km2 = 0.25`; their polygon-to-CSV pairing can be wrong while an area and ID validation still reports success.
@@ -3229,7 +3229,7 @@ Results: **8,333/8,333 cells** passed the raster–polygon NTL comparison within
 
 This is an **independent recomputation using archived field input** from Yanqing, not new field sampling. A controlled same-area swap of two historical full-size cells was correctly rejected by the new check. It does not establish V11 across contrasting locations or GHSL product equality.
 
-## Finding S05 — fractional monthly observation counts
+## Finding S05: fractional monthly observation counts
 
 The staged A02 checker checked count in `[0,12]` but did not reject, for example, `2.5` months of annual valid observation support. Such a value can arise if a reference count raster is improperly interpolated. The checker now requires integral valid-month counts, and the corrupted synthetic example is rejected.
 
@@ -3239,10 +3239,10 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 
 ## Acceptance log
 
-- **11 passed** — `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
-- **8,333 passed** — Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
-- **Expected fail** — spatial-identity negative control on two same-area historical cell IDs.
-- **Not run / PENDING** — GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
+- **11 passed**: `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
+- **8,333 passed**: Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
+- **Expected fail**: spatial-identity negative control on two same-area historical cell IDs.
+- **Not run / PENDING**: GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
 - No new PR, no code modification in `ntl/`, and no large GeoJSON/GeoTIFF committed.
 
 <!-- END ORIGINAL SOURCE 051 -->
@@ -3255,7 +3255,7 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 **Original bytes:** 6,073 · **SHA-256:** `4fdb38e3ba95397c30d8679d12794f5623bd5dbe8d595d4488876671c923f2b5` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 052 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -3266,7 +3266,7 @@ Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -3285,7 +3285,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -3314,10 +3314,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (2 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -3650,7 +3650,7 @@ No repository fixes or external publications were made.
 **Original bytes:** 5,654 · **SHA-256:** `41d2a8ea43a81d53c560c1f35644ec92705843baa9660432e67eb578aab3086c` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 056 -->
-# Independent VIIRS 2014 & Temporal Input Validation — Yanqing, Beijing
+# Independent VIIRS 2014 & Temporal Input Validation: Yanqing, Beijing
 
 **Date:** 2026-11-11  
 **Reference app commit:** `9574cf872c52d266aa15c363df7965cce31601f0`  
@@ -3721,7 +3721,7 @@ This test establishes **computational reproduction** of 2014 VIIRS extraction an
 **Original bytes:** 5,885 · **SHA-256:** `d587529713166268fcbab5f2f0f807399777540fb41dcd3d198abbd31cbb6b3a` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 057 -->
-# Measurement sensitivity validation — Yanqing, Beijing (2020, 500 m)
+# Measurement sensitivity validation: Yanqing, Beijing (2020, 500 m)
 
 **Ngày:** 11/11/2026. **Đối tượng:** 8.333 ô lưới của Diên Khánh (Yanqing), `CHN.2.1.11_1`, 2020. **Mã ứng dụng được đối chiếu:** commit `9574cf872c52d266aa15c363df7965cce31601f0` sau PR #10.
 
@@ -3791,7 +3791,7 @@ This test establishes **computational reproduction** of 2014 VIIRS extraction an
 **Original bytes:** 6,598 · **SHA-256:** `5a29e6bc2f5c96b160fd3447f4076e4cb4034272c2c260afa6afa48a15e3b6b1` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 058 -->
-# Independent Transformation Sensitivity Validation — Yanqing, Beijing (2020)
+# Independent Transformation Sensitivity Validation: Yanqing, Beijing (2020)
 
 **Date:** 11 November 2026  
 **Baseline:** `hoanfg/spatial-app`, post-PR #10 method (`conditional-wor-esda-v2`).  
@@ -3816,7 +3816,7 @@ The independent implementation reconstructs Queen neighbors from snapped exporte
 | All significant cells after FDR | 2,880 | 2,967 | 3,491 |
 | HH area share | 4.617% | 5.702% | 13.102% |
 | HH raw quadrants before significance | 1,072 | 1,135 | 2,517 |
-| NTL mean (raw units where applicable) | 1.413719 | 1.331317 | — |
+| NTL mean (raw units where applicable) | 1.413719 | 1.331317 |: |
 | Standardized input skewness | 6.312 | 4.905 | 1.928 |
 | Excess kurtosis | 48.127 | 25.754 | 3.659 |
 
@@ -3866,7 +3866,7 @@ Run `python validate_yanqing_transformations.py` with NumPy, pandas and SciPy fr
 **Original bytes:** 6,987 · **SHA-256:** `9efd7fe7a01ea2b4b3904117e909bb369451b65ef5968dae28d30ccc452533f9` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 059 -->
-# Independent Spatial Robustness Validation — Yanqing, Beijing, 2020
+# Independent Spatial Robustness Validation: Yanqing, Beijing, 2020
 
 **Status:** Completed (four LISA specifications). **Scope:** VIIRS annual median, GADM v4.1 Yanqing, EPSG:32650, 500 m and 1,000 m, Queen vs Rook. **Date:** 2026-11-11.
 
@@ -3903,7 +3903,7 @@ All four analyses found zero FDR-significant High–Low and Low–High cells. Th
 
 The Rook significant HH and LL sets are subsets of the corresponding Queen sets in both tested scales. Their smaller size may reflect fewer neighbors, different spatial lag, permutation null distribution and changes in FDR significance; the tests do not identify a single causal reason without further decomposition. Rook is not automatically more correct or more conservative in all geographies.
 
-## Changing resolution at fixed weights — geographical footprint overlap
+## Changing resolution at fixed weights: geographical footprint overlap
 
 | Comparison | 500 m HH area (km²) | 1,000 m HH area (km²) | Intersection (km²) | Spatial Jaccard | Share of 500 m HH retained |
 |---|---:|---:|---:|---:|---:|
@@ -3950,7 +3950,7 @@ The broadly consistent aggregate HH area is **not** proof of complete location s
 **Original bytes:** 8,054 · **SHA-256:** `3f104e22e1bb248eabbc548f62eaf83281c0937880b09ae73d4ecd7d02956ff5` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 060 -->
-# Temporal Validation — Yanqing (Diên Khánh), Bắc Kinh, 2014 → 2020
+# Temporal Validation: Yanqing (Diên Khánh), Bắc Kinh, 2014 → 2020
 
 **Trạng thái:** PASS về tái lập phép tính Space-Time từ dữ liệu CSV đã xuất, với một sai khác tại ngưỡng do làm tròn; **chưa PASS** về kiểm chứng độc lập raster VIIRS năm 2014, vốn chưa được cung cấp.
 
@@ -4025,7 +4025,7 @@ Như vậy, **số ô được gắn nhãn theo chuyển động khá nhạy v�
 
 ## 6. Kết luận và khuyến nghị cho ứng dụng
 
-1. **PASS — công thức và phân loại trong CSV:** kiểm tra độc lập cho kết quả nhất quán; ngoại lệ `grid_id=3922` là tình huống nhạy với việc CSV làm tròn gần 0,05.
+1. **PASS: công thức và phân loại trong CSV:** kiểm tra độc lập cho kết quả nhất quán; ngoại lệ `grid_id=3922` là tình huống nhạy với việc CSV làm tròn gần 0,05.
 2. **Cần chỉnh diễn giải/nhãn UI:** thay vì hiểu `Synchronized Decline` là "suy giảm ánh sáng/kinh tế", nên mô tả rõ "Relative Z-score decline of cell and spatial neighborhood" (suy giảm vị thế tương đối của ô và láng giềng). Tương tự, `Synergistic Growth` không tự bảo đảm tốc độ tăng kinh tế cao.
 3. **Nhãn Space-Time không phải nhãn có ý nghĩa thống kê:** kết quả không thực hiện permutations hay FDR; không gọi các nhóm này là statistically significant mà không có kiểm định riêng.
 4. **Ngưỡng `movement_magnitude=0,05` cần được công bố** và trình bày kết quả robustness theo nhiều ngưỡng.
@@ -4052,7 +4052,7 @@ Không chỉnh sửa repository trong bước này.
 **Original bytes:** 4,027 · **SHA-256:** `8f949647d87a3d71f49446cca393b9b9bb404e70f59e941e75022709e2fa8851` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 061 -->
-# Kiểm chứng độc lập Local Moran / LISA — Diên Khánh, Bắc Kinh (2020, 500 m)
+# Kiểm chứng độc lập Local Moran / LISA: Diên Khánh, Bắc Kinh (2020, 500 m)
 
 **Ngày:** 11/11/2026. **Nguồn:** `CHN_beijing_yanqing_2020_500m_lisa_cells.csv` do người dùng xuất từ spatial-app. **Công thức đối chiếu:** repository `hoanfg/spatial-app`, `main` sau PR #10, commit `9574cf872c52d266aa15c363df7965cce31601f0`. Đây là phân tích độc lập trên bản CSV đã xuất, **không phải** một phép đo lặp lại từ raster VIIRS gốc hay một phiên chạy ESDA.
 
@@ -4112,7 +4112,7 @@ Không nên coi 179 ô đổi quyết định là 179 lỗi: pseudop có sai s�
 **Original bytes:** 6,561 · **SHA-256:** `092904cafcfa05dd6ef11ee4e5dad5f8c0fc5dd376668249ff9e166bf9dc0522` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 062 -->
-# Xác thực độc lập VIIRS — Diên Khánh (Yanqing), Bắc Kinh, năm 2020
+# Xác thực độc lập VIIRS: Diên Khánh (Yanqing), Bắc Kinh, năm 2020
 
 **Ngày:** 11/11/2026  
 **Commit spatial-app:** [`9574cf872c52d266aa15c363df7965cce31601f0`](https://github.com/hoanfg/spatial-app/commit/9574cf872c52d266aa15c363df7965cce31601f0)  
@@ -4143,7 +4143,7 @@ Không nên coi 179 ô đổi quyết định là 179 lỗi: pseudop có sai s�
 1. Sử dụng GeoJSON Yanqing tại commit đã kiểm định và khôi phục đầy đủ tọa độ nguồn. GeoJSON, giá trị nguồn và SHA-256 của các input có trong bộ bằng chứng. Mã GID `CHN.2.1.11_1` được giữ nguyên.
 2. Chiếu ranh giới sang UTM EPSG:32650; tạo các ô vuông 500 × 500 m bắt đầu tại tọa độ bội số của 500, nới một ô; cắt từng ô bằng ranh giới. Kiểm tra được **đúng 8.333 đa giác** theo cùng thứ tự `grid_id` và diện tích/tâm tọa độ trùng với các giá trị được làm tròn trong CSV.
 3. Chiếu mỗi **đa giác đã cắt** về CRS raster EPSG:4326. Với mỗi pixel, tính diện tích giao nhau giữa polygon và pixel theo hệ tọa độ raster, nhân với `avg_rad` rồi chia tổng diện tích giao nhau. Script tính độc lập không import `ntl.zonal` hoặc `exactextract`.
-4. So sánh kết quả reference với `ntl_mean` của CSV theo từng `grid_id` — cả 630 ô bị cắt (600 biên + 30 cắt nhẹ), không chỉ ô nguyên vẹn. File `yanqing_viirs_all_8333_polygon_comparison.csv` chứa các phép đối chiếu và sai số.
+4. So sánh kết quả reference với `ntl_mean` của CSV theo từng `grid_id`: cả 630 ô bị cắt (600 biên + 30 cắt nhẹ), không chỉ ô nguyên vẹn. File `yanqing_viirs_all_8333_polygon_comparison.csv` chứa các phép đối chiếu và sai số.
 
 ## Kiểm tra theo nhóm
 
@@ -4196,7 +4196,7 @@ Khi dùng ranh giới được lượng tử hóa còn 7 chữ số thập phân
 **Original bytes:** 5,858 · **SHA-256:** `c72f33666f491988af3964dbe63b6179af80301dc78e6db6f6ffc341acb3c724` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 063 -->
-# Independent VIIRS extraction validation — Yanqing, Beijing (2020)
+# Independent VIIRS extraction validation: Yanqing, Beijing (2020)
 
 **Date:** 2026-11-11  
 **Target application:** `hoanfg/spatial-app`, post-merge commit `9574cf872c52d266aa15c363df7965cce31601f0`  
@@ -4265,7 +4265,7 @@ For comparison, a **center-pixel sample** instead of a fractional-coverage mean 
 **Original bytes:** 16,264 · **SHA-256:** `55006f34c322dbbe7e6e2a57f0cf4038f6fa8ec4038fd9cd1bf15a461d4cfadc` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 064 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -4303,7 +4303,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -4311,7 +4311,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -4319,13 +4319,13 @@ The field data and user evidence archives should not be published or copied into
 4. Historical Yanqing 2020 GADM, real VIIRS raster and application CSV were checked with the amended comparator. Exactly **8,333/8,333** per-cell NTL references and centroid identity comparisons passed at exported rounding tolerances; detailed metrics JSON and source hashes are included, but private input raster/GeoJSON/CSV and the 8,333-row diagnostic table are *not* bundled.
 5. No new branch, PR, production algorithm changes or geospatial data bundles. One consolidated PR remains the only proposed repository update.
 
-## Field update 15 November 2026 — V11 edge closure + A02 real-data `unknown`
+## Field update 15 November 2026: V11 edge closure + A02 real-data `unknown`
 
 - **V11 new evidence:** analyzed exactly 1,847 previously excluded boundary-clipped cells from 3 user GeoJSONs against 3 independent EE VIIRS TIFFs. All covered. 1,846/1,847 pass the literal 5e-5 half-bin; one Bao'an record (`grid_id=628`) exceeds by 3.93e-8 and is explicitly reported; 1,847/1,847 pass 5.01e-5 including a 1e-7 floating guard. Prior 15,330 core cell results were not repeated. Detailed private report: `V11_EDGE_COMPLETION_2026-11-15.md`.
 - **A02 real-data finding:** `dq_status=unknown` for all 17,177 new cell CSV rows; strict exact 6-band-description condition in `cell_quality` is a verified route to this symptom. Optional Data Quality UI buttons do not populate those fields. Actual live band count/description still unobserved; do not claim a confirmed Cloud root cause. Proposed surgical diagnostics/fix, not yet applied: `A02_DQ_UNKNOWN_FIELD_FINDING_2026-11-15.md`.
 - No production changes, no new PR, no revalidation of old Yanqing benchmarks, no large GeoJSON/raster inputs added to the public repo. Keep these artifacts in the existing private staging folder.
 
-## Unresolved scientific gates — 15 November 2026, targeted remediation staged
+## Unresolved scientific gates: 15 November 2026, targeted remediation staged
 
 - A02 silent unknown is confirmed in 17,177 new field CSV rows. Nine EE `Export.image.toDrive` single-band TIFFs show band descriptions, so absent names in the distinct application `getDownloadURL` output remain a **hypothesis**, not a proved root cause.
 - Prepared but **did not deploy** a fail-closed A02 schema patch (only app-created raster may use verified, unlabeled six-band positional fallback). Explicit schema warnings and focused regression controls are included in `remaining_field_package.zip` (8/8 focused tests pass locally). No NTL/Moran/LISA estimator modifications.
@@ -4333,14 +4333,14 @@ The field data and user evidence archives should not be published or copied into
 - Cloud runtime remains unmeasured; owner Cloud logs available via Manage app; no claims of memory PASS.
 - Remain on ONE future consolidated PR. Source rasters and large geospatial outputs remain outside public repo.
 
-## Field update 15 November 2026 — GHSL measured real-world bias; A02 six-band EE export
+## Field update 15 November 2026: GHSL measured real-world bias; A02 six-band EE export
 
 - Five distinct TIFF export products were located in two same-named Google Drive folders. The folder preview briefly omitted the two new native GHSL files; direct `list_folder` found both. Source bytes were retrieved and analyzed; no re-export needed.
 - **GHSL empirical defect confirmed:** Shanghai 2020 `JRC/GHSL/P2023A` `GHS_BUILT_S` and `GHS_POP` per-native-100m-cell amounts were exported at native Mollweide 100 m and application-style EPSG:4326 `scale=100`. In a common inset geographic core, naive appstyle sums exceed native by **16.51428% built area** and **16.59686% population**. Reprojection of the native raster to the app grid by nearest neighbor matched **42,244/42,244** app-grid samples for each product exactly: native per-pixel amounts were duplicated onto more/smaller cells before unadjusted zonal sums. Original `ntl/ee_extra.py` hardcodes EPSG:4326 and `ntl/quality_ui.py` sums destination-grid amounts. This is real-world, source-grid quantity-conservation evidence, not a synthetic demonstration. Impact at other sites remains unmeasured.
 - **A02 field reference verified but Cloud unknown unresolved:** Export.image.toDrive Bao'an six-band VIIRS GeoTIFF contains exact six `avg_rad` and `dq_` band descriptions. Band one matched the independent 2020 VIIRS median on every **26,786/26,786** shared finite pixel. All 27,013 quality pixels are observed with **9–12** monthly supports; the export lacks genuine missing/low-support cells. Streamlit uses distinct getDownloadURL route and its 17,177 prior CSV rows have `dq_status=unknown`; cannot declare Cloud root cause solved from this export.
 - New non-GitHub staged evidence: `GHSL_A02_REAL_FIELD_FINDINGS_2026-11-15.md`, `GHSL_A02_SHANGHAI_BAOAN_FIELD_METRICS_2026-11-15.json`, and `ghsl_field_compare_2020.py`. GeoTIFF input bytes stay on connected Google Drive; hashes are in JSON. Implement the GHSL native-grid conservation fix and fail-closed A02 Cloud schema diagnosis together only after review, **one consolidated PR**. No repetition of Yanqing/V11 and no production code edit in this field audit.
 
-## 15 November 2026 — In-app performance instrumentation and native GHSL correction candidate
+## 15 November 2026: In-app performance instrumentation and native GHSL correction candidate
 
 User has no Streamlit Cloud **Manage app** access and therefore cannot obtain owner logs. In the **same planned consolidated PR** (not a new PR), add owner-visible/self-service profiling:
 
@@ -4352,14 +4352,14 @@ User has no Streamlit Cloud **Manage app** access and therefore cannot obtain ow
 - **16/16 focused tests PASS** in isolated container Python (A02=8, GHSL source-grid=4, profiler=4). These are not equivalent to a Cloud/EE green light. `targeted_tests.xml` is bundled.
 - Stop gate: compare the corrected native GHSL per-cell totals/Spearman/AUC against the already-saved real raster reference and capture one authenticated Cloud profiler JSON; verify A02 real `getDownloadURL` schema. Do not declare GHSL/A02/Cloud fully closed before this. No new PR opened and no old V11/Yanqing reruns.
 
-## 15 November 2026 — User-supplied Cloud log and consolidated draft PR #24
+## 15 November 2026: User-supplied Cloud log and consolidated draft PR #24
 
 - Reviewed complete 1,313-line Streamlit Cloud log covering 11–14 November (downloaded 14 November). Detected two historic `ntl.semantics` import tracebacks on 12 November followed by app updates, 99 `st.components.v1.html` notices, 107 `use_container_width` notices, 34 CartoDB API-key warnings, Python 3.14.10, and automatic downgrade from PyArrow 26 to 24. No logged OOM, forced kill, or timeout. The uploaded log cannot establish Cloud per-analysis timing or a process RAM bound.
 - GitHub **draft PR #24** opened: https://github.com/hoanfg/spatial-app/pull/24 (branch `review/consolidated-a02-ghsl-runtime-2026-11`, head `0a1dec7c5a471e600d96f2347cae001ef3c74910`). It consolidates GHSL native-source-grid fixes, A02 schema diagnostics, visible runtime profiler, tests and compact field/log evidence in 12 files. **Main remains unchanged.** Raw field data and logs are not committed.
 - Targeted GHSL-native and performance tests re-executed in the available environment: **8 passed**. Full GitHub Actions CI was still in progress when the PR was opened. The 8 A02 tests and full test matrix require CI / the geospatial test environment. Do not claim a merge-ready state until CI, Cloud A02 download schema, GHSL results and profiler JSON are checked.
 - Preserve the original one-PR rule: do not open a secondary fix PR or re-run historical Yanqing/V11 evidence without a change that warrants it. Any necessary review changes should update the **same PR #24**.
 
-### 15 November 2026 — Draft PR #24 CI regression fixes and gate
+### 15 November 2026: Draft PR #24 CI regression fixes and gate
 
 - Opened one draft PR #24 on the reviewed `main` snapshot; public PR: https://github.com/hoanfg/spatial-app/pull/24. No merge, no production deployment, no separate follow-up PR. Field data and full user Cloud log are not committed.
 - Initial PR CI failed in the lightweight core job because the new `ntl/ghsl_native.py` imported Rasterio at module import time. This was corrected with a lazy `transform_bounds` import (commit `9218ec185d836b26913b9c6ded452517d92228e7`).
@@ -4377,7 +4377,7 @@ User has no Streamlit Cloud **Manage app** access and therefore cannot obtain ow
 **Original bytes:** 5,568 · **SHA-256:** `c77f737d7a59562c5f476f3cc688dc62a1f87bcc3ba9f55ebd77c7afaa0a2140` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 065 -->
-# Spatial App — Unresolved-field-evidence package (single future PR)
+# Spatial App: Unresolved-field-evidence package (single future PR)
 
 Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging only**: no PR, no repository changes, no geospatial data copied into the repository. Historical Yanqing/V11/FDR/Moran findings are reused and were not recomputed.
 
@@ -4394,11 +4394,11 @@ Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging onl
 
 Open `validation/gee_a02_ghsl_field_exports_2020.js` in Google Earth Engine Code Editor. It creates **5 tasks** in Drive folder `spatial_app_field_validation_2020`:
 
-1. `baoan_2020_a02_six_band_reference.tif` — production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
-2. `shanghai_2020_ghsl_built_native_100m.tif` — JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
-3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif` — same image reprojected with production `EPSG:4326`, scale 100m.
-4. `shanghai_2020_ghsl_pop_native_100m.tif` — GHSL population count on source 100m projection.
-5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif` — matching production-style reprojection.
+1. `baoan_2020_a02_six_band_reference.tif`: production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
+2. `shanghai_2020_ghsl_built_native_100m.tif`: JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
+3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif`: same image reprojected with production `EPSG:4326`, scale 100m.
+4. `shanghai_2020_ghsl_pop_native_100m.tif`: GHSL population count on source 100m projection.
+5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif`: matching production-style reprojection.
 
 If EE splits files into same-named Drive folders, leave them intact: Drive search by folder and filename can locate them. No new CSV/GeoJSON is required; the existing Shanghai district 2020 CSV and GeoJSON are already available.
 
@@ -4406,7 +4406,7 @@ If EE splits files into same-named Drive folders, leave them intact: Drive searc
 
 To audit GHSL, use the existing private staging tool `audit_ghsl_native_vs_reprojected.py` from the earlier v4 bundle (one run each `kind=built` and `kind=pop`). It compares exact fractional pixel-polygon sums, valid coverage and Spearman-rank movement. Do not compare global raster totals: use the clipped GADM cells and their complete-coverage flags.
 
-## Streamlit Cloud — remaining operational gate
+## Streamlit Cloud: remaining operational gate
 
 CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requires a run in Streamlit Community Cloud. The owner can open the app, select **Manage app** at bottom right, then download **Cloud logs**. Do not upload `.streamlit/secrets.toml`, credentials or personal-account tokens. Logs show errors but not necessarily peak RAM; a controlled, opt-in in-app profiler would be needed for exact RAM use. No RAM or latency PASS is claimed.
 
@@ -4434,7 +4434,7 @@ CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requir
 **Original bytes:** 4,992 · **SHA-256:** `972a638ebbac490dc990ca0d5602f04a500ffe03d3d4b8d99e0a6b6581599c9d` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 066 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -4472,7 +4472,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -4490,7 +4490,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 7,942 · **SHA-256:** `b3a3b72db9e8ef51843c77824bebf500ef359bafd9596b6cf91c6ba6eaef7648` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 067 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **14 November 2026** (updated from 13 November). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -4501,7 +4501,7 @@ Review date: **14 November 2026** (updated from 13 November). Scope: GHSL native
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -4520,7 +4520,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -4549,10 +4549,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (9 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -4576,7 +4576,7 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 3,461 · **SHA-256:** `5ddace573c0c0c79920b1812a29b11205a3c2932bbfc57000558bf6d0975d95e` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 068 -->
-# Spatial App — Staging review findings (14 November 2026)
+# Spatial App: Staging review findings (14 November 2026)
 
 ## Executive finding
 
@@ -4625,7 +4625,7 @@ Do not open a new micro-PR for this report alone. The corrected tools and tests 
 **Original bytes:** 10,484 · **SHA-256:** `fd601f45ab4e5a626d45d10ac8c16341b7bbea1edf62e87c1705939c30f804aa` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 069 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -4663,7 +4663,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -4671,7 +4671,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -4679,13 +4679,13 @@ The field data and user evidence archives should not be published or copied into
 4. Historical Yanqing 2020 GADM, real VIIRS raster and application CSV were checked with the amended comparator. Exactly **8,333/8,333** per-cell NTL references and centroid identity comparisons passed at exported rounding tolerances; detailed metrics JSON and source hashes are included, but private input raster/GeoJSON/CSV and the 8,333-row diagnostic table are *not* bundled.
 5. No new branch, PR, production algorithm changes or geospatial data bundles. One consolidated PR remains the only proposed repository update.
 
-## Field update 15 November 2026 — V11 edge closure + A02 real-data `unknown`
+## Field update 15 November 2026: V11 edge closure + A02 real-data `unknown`
 
 - **V11 new evidence:** analyzed exactly 1,847 previously excluded boundary-clipped cells from 3 user GeoJSONs against 3 independent EE VIIRS TIFFs. All covered. 1,846/1,847 pass the literal 5e-5 half-bin; one Bao'an record (`grid_id=628`) exceeds by 3.93e-8 and is explicitly reported; 1,847/1,847 pass 5.01e-5 including a 1e-7 floating guard. Prior 15,330 core cell results were not repeated. Detailed private report: `V11_EDGE_COMPLETION_2026-11-15.md`.
 - **A02 real-data finding:** `dq_status=unknown` for all 17,177 new cell CSV rows; strict exact 6-band-description condition in `cell_quality` is a verified route to this symptom. Optional Data Quality UI buttons do not populate those fields. Actual live band count/description still unobserved; do not claim a confirmed Cloud root cause. Proposed surgical diagnostics/fix, not yet applied: `A02_DQ_UNKNOWN_FIELD_FINDING_2026-11-15.md`.
 - No production changes, no new PR, no revalidation of old Yanqing benchmarks, no large GeoJSON/raster inputs added to the public repo. Keep these artifacts in the existing private staging folder.
 
-## Unresolved scientific gates — 15 November 2026, targeted remediation staged
+## Unresolved scientific gates: 15 November 2026, targeted remediation staged
 
 - A02 silent unknown is confirmed in 17,177 new field CSV rows. Nine EE `Export.image.toDrive` single-band TIFFs show band descriptions, so absent names in the distinct application `getDownloadURL` output remain a **hypothesis**, not a proved root cause.
 - Prepared but **did not deploy** a fail-closed A02 schema patch (only app-created raster may use verified, unlabeled six-band positional fallback). Explicit schema warnings and focused regression controls are included in `remaining_field_package.zip` (8/8 focused tests pass locally). No NTL/Moran/LISA estimator modifications.
@@ -4693,7 +4693,7 @@ The field data and user evidence archives should not be published or copied into
 - Cloud runtime remains unmeasured; owner Cloud logs available via Manage app; no claims of memory PASS.
 - Remain on ONE future consolidated PR. Source rasters and large geospatial outputs remain outside public repo.
 
-## Field update 15 November 2026 — GHSL measured real-world bias; A02 six-band EE export
+## Field update 15 November 2026: GHSL measured real-world bias; A02 six-band EE export
 
 - Five distinct TIFF export products were located in two same-named Google Drive folders. The folder preview briefly omitted the two new native GHSL files; direct `list_folder` found both. Source bytes were retrieved and analyzed; no re-export needed.
 - **GHSL empirical defect confirmed:** Shanghai 2020 `JRC/GHSL/P2023A` `GHS_BUILT_S` and `GHS_POP` per-native-100m-cell amounts were exported at native Mollweide 100 m and application-style EPSG:4326 `scale=100`. In a common inset geographic core, naive appstyle sums exceed native by **16.51428% built area** and **16.59686% population**. Reprojection of the native raster to the app grid by nearest neighbor matched **42,244/42,244** app-grid samples for each product exactly: native per-pixel amounts were duplicated onto more/smaller cells before unadjusted zonal sums. Original `ntl/ee_extra.py` hardcodes EPSG:4326 and `ntl/quality_ui.py` sums destination-grid amounts. This is real-world, source-grid quantity-conservation evidence, not a synthetic demonstration. Impact at other sites remains unmeasured.
@@ -4710,7 +4710,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 9,716 · **SHA-256:** `a0b82b9fd376b4e8c3f96adfb7e8f7f7497e761a9f6dee2cf070c56371c284e9` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 070 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **15 November 2026** (incremental v4 of 13–14 November staging). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code and a small, reproducible Yanqing 2020 metrics JSON**, but no Earth Engine credentials, private input GeoTIFFs, original GADM boundaries, or large per-cell result tables. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -4721,7 +4721,7 @@ Review date: **15 November 2026** (incremental v4 of 13–14 November staging). 
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV must be a current Spatial App cell export containing `grid_id`, `area_km2`, `ntl_mean` and four rounded **per-ID centroids** (`centroid_lon`, `centroid_lat`, `centroid_x_epsgNNNN`, `centroid_y_epsgNNNN`) for the same GADM boundary and grid. Area and IDs alone are insufficient to detect identical-size cells reordered geographically.
 
@@ -4740,7 +4740,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -4769,10 +4769,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (11 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -4786,7 +4786,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 
 See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes and scientific boundaries.
 
-## 15 November addendum — grid identity and negative controls
+## 15 November addendum: grid identity and negative controls
 
 - **GHSL:** per-cell UTM centroids (application exports rounded to 0.1 m) and geographic centroids (six decimal places) must match the independently reconstructed grid at their respective rounding precision. Omitting these four columns is an error, not permission to skip the spatial-identity check.
 - **Cross-location comparator:** the staged `compare_raster_cells.py` now applies the same per-ID geometry gate *before* calculating raster zonal statistics. It is intended to replace the existing script in the **single future consolidated PR**, not to create a micro-PR.
@@ -4804,13 +4804,13 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 4,122 · **SHA-256:** `0ce9c8d7b12bc8066a5b1899516f55587a7e0ec3c9772be84c2611f48b1e69dd` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 071 -->
-# Spatial App — Independent checker follow-up (15 November 2026)
+# Spatial App: Independent checker follow-up (15 November 2026)
 
 ## Decision
 
 Continue staging changes for one future major-review PR; no new PR and no changes to production formulas. An area-only comparator can fail to detect a spatial identity mismatch for equal-area cells. Fix the independent checking tools before interpreting later GHSL comparisons.
 
-## Finding S04 — same-area ID swaps bypass the previous area gate
+## Finding S04: same-area ID swaps bypass the previous area gate
 
 - Observed in: both the staged GHSL comparator and the existing `validation/cross_location/compare_raster_cells.py` checked grid IDs, polygon counts and areas, but not **per-ID geographic identity**.
 - Why this matters: two full 500 m grid cells both have `area_km2 = 0.25`; their polygon-to-CSV pairing can be wrong while an area and ID validation still reports success.
@@ -4831,7 +4831,7 @@ Results: **8,333/8,333 cells** passed the raster–polygon NTL comparison within
 
 This is an **independent recomputation using archived field input** from Yanqing, not new field sampling. A controlled same-area swap of two historical full-size cells was correctly rejected by the new check. It does not establish V11 across contrasting locations or GHSL product equality.
 
-## Finding S05 — fractional monthly observation counts
+## Finding S05: fractional monthly observation counts
 
 The staged A02 checker checked count in `[0,12]` but did not reject, for example, `2.5` months of annual valid observation support. Such a value can arise if a reference count raster is improperly interpolated. The checker now requires integral valid-month counts, and the corrupted synthetic example is rejected.
 
@@ -4841,10 +4841,10 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 
 ## Acceptance log
 
-- **11 passed** — `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
-- **8,333 passed** — Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
-- **Expected fail** — spatial-identity negative control on two same-area historical cell IDs.
-- **Not run / PENDING** — GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
+- **11 passed**: `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
+- **8,333 passed**: Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
+- **Expected fail**: spatial-identity negative control on two same-area historical cell IDs.
+- **Not run / PENDING**: GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
 - No new PR, no code modification in `ntl/`, and no large GeoJSON/GeoTIFF committed.
 
 <!-- END ORIGINAL SOURCE 071 -->
@@ -4857,7 +4857,7 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 **Original bytes:** 4,067 · **SHA-256:** `26a3a56a1a57839e45bb4066d32b92675c143ccbb676782afe14d93ad1caa4ae` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 072 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 13 November 2026. Target repository: `hoanfg/spatial-app`.
 
@@ -4905,7 +4905,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 6,389 · **SHA-256:** `88d35d669a6caecbbfa0c6976d5e5a7f248a8177ab2de79015d2da53165d82f6` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 073 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code only, no Earth Engine credentials, private data or real-world result tables**. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -4916,7 +4916,7 @@ Review date: **13 November 2026**. Scope: GHSL native-grid quantity conservation
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV is a spatial-app cell export containing `grid_id`, `area_km2`, `ntl_mean` for the same GADM boundary and 500 m cell configuration.
 
@@ -4935,7 +4935,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -4964,10 +4964,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (7 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -4982,7 +4982,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 **Original bytes:** 13,224 · **SHA-256:** `92e2c9dd00b4627d9e23cf843574f982e66d2025414a76e4c2a1e0699c0e1e30` · **Origin:** direct_file
 
 <!-- BEGIN ORIGINAL SOURCE 074 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -5020,7 +5020,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -5028,7 +5028,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -5036,13 +5036,13 @@ The field data and user evidence archives should not be published or copied into
 4. Historical Yanqing 2020 GADM, real VIIRS raster and application CSV were checked with the amended comparator. Exactly **8,333/8,333** per-cell NTL references and centroid identity comparisons passed at exported rounding tolerances; detailed metrics JSON and source hashes are included, but private input raster/GeoJSON/CSV and the 8,333-row diagnostic table are *not* bundled.
 5. No new branch, PR, production algorithm changes or geospatial data bundles. One consolidated PR remains the only proposed repository update.
 
-## Field update 15 November 2026 — V11 edge closure + A02 real-data `unknown`
+## Field update 15 November 2026: V11 edge closure + A02 real-data `unknown`
 
 - **V11 new evidence:** analyzed exactly 1,847 previously excluded boundary-clipped cells from 3 user GeoJSONs against 3 independent EE VIIRS TIFFs. All covered. 1,846/1,847 pass the literal 5e-5 half-bin; one Bao'an record (`grid_id=628`) exceeds by 3.93e-8 and is explicitly reported; 1,847/1,847 pass 5.01e-5 including a 1e-7 floating guard. Prior 15,330 core cell results were not repeated. Detailed private report: `V11_EDGE_COMPLETION_2026-11-15.md`.
 - **A02 real-data finding:** `dq_status=unknown` for all 17,177 new cell CSV rows; strict exact 6-band-description condition in `cell_quality` is a verified route to this symptom. Optional Data Quality UI buttons do not populate those fields. Actual live band count/description still unobserved; do not claim a confirmed Cloud root cause. Proposed surgical diagnostics/fix, not yet applied: `A02_DQ_UNKNOWN_FIELD_FINDING_2026-11-15.md`.
 - No production changes, no new PR, no revalidation of old Yanqing benchmarks, no large GeoJSON/raster inputs added to the public repo. Keep these artifacts in the existing private staging folder.
 
-## Unresolved scientific gates — 15 November 2026, targeted remediation staged
+## Unresolved scientific gates: 15 November 2026, targeted remediation staged
 
 - A02 silent unknown is confirmed in 17,177 new field CSV rows. Nine EE `Export.image.toDrive` single-band TIFFs show band descriptions, so absent names in the distinct application `getDownloadURL` output remain a **hypothesis**, not a proved root cause.
 - Prepared but **did not deploy** a fail-closed A02 schema patch (only app-created raster may use verified, unlabeled six-band positional fallback). Explicit schema warnings and focused regression controls are included in `remaining_field_package.zip` (8/8 focused tests pass locally). No NTL/Moran/LISA estimator modifications.
@@ -5050,14 +5050,14 @@ The field data and user evidence archives should not be published or copied into
 - Cloud runtime remains unmeasured; owner Cloud logs available via Manage app; no claims of memory PASS.
 - Remain on ONE future consolidated PR. Source rasters and large geospatial outputs remain outside public repo.
 
-## Field update 15 November 2026 — GHSL measured real-world bias; A02 six-band EE export
+## Field update 15 November 2026: GHSL measured real-world bias; A02 six-band EE export
 
 - Five distinct TIFF export products were located in two same-named Google Drive folders. The folder preview briefly omitted the two new native GHSL files; direct `list_folder` found both. Source bytes were retrieved and analyzed; no re-export needed.
 - **GHSL empirical defect confirmed:** Shanghai 2020 `JRC/GHSL/P2023A` `GHS_BUILT_S` and `GHS_POP` per-native-100m-cell amounts were exported at native Mollweide 100 m and application-style EPSG:4326 `scale=100`. In a common inset geographic core, naive appstyle sums exceed native by **16.51428% built area** and **16.59686% population**. Reprojection of the native raster to the app grid by nearest neighbor matched **42,244/42,244** app-grid samples for each product exactly: native per-pixel amounts were duplicated onto more/smaller cells before unadjusted zonal sums. Original `ntl/ee_extra.py` hardcodes EPSG:4326 and `ntl/quality_ui.py` sums destination-grid amounts. This is real-world, source-grid quantity-conservation evidence, not a synthetic demonstration. Impact at other sites remains unmeasured.
 - **A02 field reference verified but Cloud unknown unresolved:** Export.image.toDrive Bao'an six-band VIIRS GeoTIFF contains exact six `avg_rad` and `dq_` band descriptions. Band one matched the independent 2020 VIIRS median on every **26,786/26,786** shared finite pixel. All 27,013 quality pixels are observed with **9–12** monthly supports; the export lacks genuine missing/low-support cells. Streamlit uses distinct getDownloadURL route and its 17,177 prior CSV rows have `dq_status=unknown`; cannot declare Cloud root cause solved from this export.
 - New non-GitHub staged evidence: `GHSL_A02_REAL_FIELD_FINDINGS_2026-11-15.md`, `GHSL_A02_SHANGHAI_BAOAN_FIELD_METRICS_2026-11-15.json`, and `ghsl_field_compare_2020.py`. GeoTIFF input bytes stay on connected Google Drive; hashes are in JSON. Implement the GHSL native-grid conservation fix and fail-closed A02 Cloud schema diagnosis together only after review, **one consolidated PR**. No repetition of Yanqing/V11 and no production code edit in this field audit.
 
-## 15 November 2026 — In-app performance instrumentation and native GHSL correction candidate
+## 15 November 2026: In-app performance instrumentation and native GHSL correction candidate
 
 User has no Streamlit Cloud **Manage app** access and therefore cannot obtain owner logs. In the **same planned consolidated PR** (not a new PR), add owner-visible/self-service profiling:
 
@@ -5079,7 +5079,7 @@ User has no Streamlit Cloud **Manage app** access and therefore cannot obtain ow
 **Original bytes:** 5,568 · **SHA-256:** `c77f737d7a59562c5f476f3cc688dc62a1f87bcc3ba9f55ebd77c7afaa0a2140` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 075 -->
-# Spatial App — Unresolved-field-evidence package (single future PR)
+# Spatial App: Unresolved-field-evidence package (single future PR)
 
 Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging only**: no PR, no repository changes, no geospatial data copied into the repository. Historical Yanqing/V11/FDR/Moran findings are reused and were not recomputed.
 
@@ -5096,11 +5096,11 @@ Date: 2026-11-15. Repository: `hoanfg/spatial-app` (main). **Private staging onl
 
 Open `validation/gee_a02_ghsl_field_exports_2020.js` in Google Earth Engine Code Editor. It creates **5 tasks** in Drive folder `spatial_app_field_validation_2020`:
 
-1. `baoan_2020_a02_six_band_reference.tif` — production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
-2. `shanghai_2020_ghsl_built_native_100m.tif` — JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
-3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif` — same image reprojected with production `EPSG:4326`, scale 100m.
-4. `shanghai_2020_ghsl_pop_native_100m.tif` — GHSL population count on source 100m projection.
-5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif` — matching production-style reprojection.
+1. `baoan_2020_a02_six_band_reference.tif`: production-equivalent six-band radiance/quality image, aligned to the *already exported* Bao'an 2020 reference TIFF.
+2. `shanghai_2020_ghsl_built_native_100m.tif`: JRC GHSL built-surface 2020, **Earth Engine asset's native projection and affine transform**.
+3. `shanghai_2020_ghsl_built_appstyle_4326_100m.tif`: same image reprojected with production `EPSG:4326`, scale 100m.
+4. `shanghai_2020_ghsl_pop_native_100m.tif`: GHSL population count on source 100m projection.
+5. `shanghai_2020_ghsl_pop_appstyle_4326_100m.tif`: matching production-style reprojection.
 
 If EE splits files into same-named Drive folders, leave them intact: Drive search by folder and filename can locate them. No new CSV/GeoJSON is required; the existing Shanghai district 2020 CSV and GeoJSON are already available.
 
@@ -5108,7 +5108,7 @@ If EE splits files into same-named Drive folders, leave them intact: Drive searc
 
 To audit GHSL, use the existing private staging tool `audit_ghsl_native_vs_reprojected.py` from the earlier v4 bundle (one run each `kind=built` and `kind=pop`). It compares exact fractional pixel-polygon sums, valid coverage and Spearman-rank movement. Do not compare global raster totals: use the clipped GADM cells and their complete-coverage flags.
 
-## Streamlit Cloud — remaining operational gate
+## Streamlit Cloud: remaining operational gate
 
 CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requires a run in Streamlit Community Cloud. The owner can open the app, select **Manage app** at bottom right, then download **Cloud logs**. Do not upload `.streamlit/secrets.toml`, credentials or personal-account tokens. Logs show errors but not necessarily peak RAM; a controlled, opt-in in-app profiler would be needed for exact RAM use. No RAM or latency PASS is claimed.
 
@@ -5136,7 +5136,7 @@ CI is not a memory benchmark. Real latency/peak RAM/HTTP failure analysis requir
 **Original bytes:** 5,978 · **SHA-256:** `fce7228d802a6989deb7eb352423d91ce1f403dde844d8cb24f06d5b5459a89d` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 076 -->
-# Single-PR staging register — VIIRS A02 and GHSL field audit
+# Single-PR staging register: VIIRS A02 and GHSL field audit
 
 Date: 14 November 2026 (revised from 13 November). Target repository: `hoanfg/spatial-app`.
 
@@ -5174,7 +5174,7 @@ No modifications to app `ntl/`, APIs, missing-data policy, model formulas, sourc
 
 The field data and user evidence archives should not be published or copied into the repository without separate approval. Store source GeoTIFFs externally and keep only compact execution summaries and hashes in the eventual major review.
 
-## Review update 14 November 2026 — no new PR
+## Review update 14 November 2026: no new PR
 
 - Hardened the GHSL check against **partial-coverage false positives**: eligible cells must have nearly 100% finite, unmasked raster area in BOTH native and app exports. Ineligible per-cell differences are NaN, not numerically compared.
 - Added guard for GHSL native 100 m product resolution; a wrongly supplied 1 km raster fails preflight.
@@ -5182,7 +5182,7 @@ The field data and user evidence archives should not be published or copied into
 - Negative controls expanded; `python -m pytest -q test_validation_scripts.py` now reports **11 passed**.
 - All field validation gates remain unfulfilled without matching real-data rasters and application exports. Preserve project policy: **one future consolidated PR**, no branch/PR in this stage.
 
-## 15 November 2026 — v4 single-PR carry-forward
+## 15 November 2026: v4 single-PR carry-forward
 
 1. Require **actual per-ID spatial identity** using UTM and WGS84 centroids, not only grid ID/area. The current production app already exports all required fields. Checker code and comparator are staged, not pushed to GitHub.
 2. Reject non-integral valid-month counts in A02 references.
@@ -5200,7 +5200,7 @@ The field data and user evidence archives should not be published or copied into
 **Original bytes:** 9,716 · **SHA-256:** `a0b82b9fd376b4e8c3f96adfb7e8f7f7497e761a9f6dee2cf070c56371c284e9` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 077 -->
-# Spatial App — External field validation tools (no repository changes)
+# Spatial App: External field validation tools (no repository changes)
 
 Review date: **15 November 2026** (incremental v4 of 13–14 November staging). Scope: GHSL native-grid quantity conservation and VIIRS A02 six-band export consistency. This package contains **validation code and a small, reproducible Yanqing 2020 metrics JSON**, but no Earth Engine credentials, private input GeoTIFFs, original GADM boundaries, or large per-cell result tables. The scripts do not import the Spatial App production modules, call live APIs or alter scientific settings.
 
@@ -5211,7 +5211,7 @@ Review date: **15 November 2026** (incremental v4 of 13–14 November staging). 
 - **Not executed on real inputs:** GHSL original JRC GeoTIFF vs Earth Engine-downloaded GeoTIFF; A02 six-band real export vs independently exported masked median/month-count references. Those input combinations are not available in the current accessible files.
 - **Not proven:** GHSL production bias magnitude, A02 performance on genuine missing observations, Shanghai/Bao'an/Qimen V11 completion, economic validity or Streamlit Cloud capacity.
 
-## Tool A — GHSL native-grid versus application export
+## Tool A: GHSL native-grid versus application export
 
 Use **the exact same GHSL product, release, epoch and band** in both rasters. For GHSL R2023A at 100 m, the official native equal-area product is World Mollweide (the raster's CRS metadata is authoritative). Verify that the app raster is an Earth Engine export using the application's existing `fetch_ghsl_raster()` path (EPSG:4326, requested scale 100 m, the first band). The app CSV must be a current Spatial App cell export containing `grid_id`, `area_km2`, `ntl_mean` and four rounded **per-ID centroids** (`centroid_lon`, `centroid_lat`, `centroid_x_epsgNNNN`, `centroid_y_epsgNNNN`) for the same GADM boundary and grid. Area and IDs alone are insufficient to detect identical-size cells reordered geographically.
 
@@ -5230,7 +5230,7 @@ For built-up surface, use `--kind built` and the matching **total built-up surfa
 
 **Do not** sum quantities directly using area-weighted `mean`; `exactextract` `sum` already uses pixel coverage fractions, while the preceding reprojection remains a different operation.
 
-## Tool B — A02 six-band annual VIIRS consistency
+## Tool B: A02 six-band annual VIIRS consistency
 
 Require **three GeoTIFFs on exactly the same raster grid**: (1) six-band Spatial App annual raster, (2) independent monthly-median reference exported *with NoData retained* (nodata must be correctly tagged, e.g. -9999), and (3) independent count of monthly valid observations (`cf_cvg > 0`), with the same year, region, imagery collection and pixel alignment. The existing `validation/cross_location/gee_viirs_2020.js` generates reference median and count rasters, but **does not itself generate the application's six-band product**.
 
@@ -5259,10 +5259,10 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 | Requirement | Field result in this package |
 |---|---|
 | Checker syntax and small fixed-oracle tests | **PASS** (11 tests) |
-| A02 pixel-field comparison on a live six-band export | **NOT RUN — source unavailable** |
-| A02 behavior in an actual missing-observation area | **NOT RUN — source unavailable** |
-| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN — source unavailable** |
-| GHSL population/built-up correlations after corrected aggregation | **NOT RUN — source unavailable** |
+| A02 pixel-field comparison on a live six-band export | **NOT RUN: source unavailable** |
+| A02 behavior in an actual missing-observation area | **NOT RUN: source unavailable** |
+| GHSL native versus app reprojection for actual 2020 tiles | **NOT RUN: source unavailable** |
+| GHSL population/built-up correlations after corrected aggregation | **NOT RUN: source unavailable** |
 | V11 Shanghai/Bao'an/Qimen | **PENDING** |
 
 **Data stewardship:** Store larger source GeoTIFFs and derived per-cell CSVs outside the source repository unless the owner explicitly approves publication; preserve original licenses and SHA-256 values. No new PR is needed for the current exploratory validation step.
@@ -5276,7 +5276,7 @@ A zero discrepancy in a region with no missing pixels checks the numerical ident
 
 See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes and scientific boundaries.
 
-## 15 November addendum — grid identity and negative controls
+## 15 November addendum: grid identity and negative controls
 
 - **GHSL:** per-cell UTM centroids (application exports rounded to 0.1 m) and geographic centroids (six decimal places) must match the independently reconstructed grid at their respective rounding precision. Omitting these four columns is an error, not permission to skip the spatial-identity check.
 - **Cross-location comparator:** the staged `compare_raster_cells.py` now applies the same per-ID geometry gate *before* calculating raster zonal statistics. It is intended to replace the existing script in the **single future consolidated PR**, not to create a micro-PR.
@@ -5294,13 +5294,13 @@ See `REVIEW_FINDINGS_2026-11-14.md` for the checker's identified failure modes a
 **Original bytes:** 4,122 · **SHA-256:** `0ce9c8d7b12bc8066a5b1899516f55587a7e0ec3c9772be84c2611f48b1e69dd` · **Origin:** embedded_in_original_zip
 
 <!-- BEGIN ORIGINAL SOURCE 078 -->
-# Spatial App — Independent checker follow-up (15 November 2026)
+# Spatial App: Independent checker follow-up (15 November 2026)
 
 ## Decision
 
 Continue staging changes for one future major-review PR; no new PR and no changes to production formulas. An area-only comparator can fail to detect a spatial identity mismatch for equal-area cells. Fix the independent checking tools before interpreting later GHSL comparisons.
 
-## Finding S04 — same-area ID swaps bypass the previous area gate
+## Finding S04: same-area ID swaps bypass the previous area gate
 
 - Observed in: both the staged GHSL comparator and the existing `validation/cross_location/compare_raster_cells.py` checked grid IDs, polygon counts and areas, but not **per-ID geographic identity**.
 - Why this matters: two full 500 m grid cells both have `area_km2 = 0.25`; their polygon-to-CSV pairing can be wrong while an area and ID validation still reports success.
@@ -5321,7 +5321,7 @@ Results: **8,333/8,333 cells** passed the raster–polygon NTL comparison within
 
 This is an **independent recomputation using archived field input** from Yanqing, not new field sampling. A controlled same-area swap of two historical full-size cells was correctly rejected by the new check. It does not establish V11 across contrasting locations or GHSL product equality.
 
-## Finding S05 — fractional monthly observation counts
+## Finding S05: fractional monthly observation counts
 
 The staged A02 checker checked count in `[0,12]` but did not reject, for example, `2.5` months of annual valid observation support. Such a value can arise if a reference count raster is improperly interpolated. The checker now requires integral valid-month counts, and the corrupted synthetic example is rejected.
 
@@ -5331,10 +5331,10 @@ Historical annual medians and month-count reference rasters have 30,814 pixels p
 
 ## Acceptance log
 
-- **11 passed** — `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
-- **8,333 passed** — Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
-- **Expected fail** — spatial-identity negative control on two same-area historical cell IDs.
-- **Not run / PENDING** — GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
+- **11 passed**: `python -m pytest -q test_validation_scripts.py` (synthetic oracle and negative-control tests).
+- **8,333 passed**: Yanqing 2020 archived field raster/polygon comparator and per-ID centroid verification.
+- **Expected fail**: spatial-identity negative control on two same-area historical cell IDs.
+- **Not run / PENDING**: GHSL native JRC 100 m versus real Earth Engine reprojected raster; A02 true six-band export; Shanghai/Bao'an/Qimen independent per-cell validation; Cloud benchmark.
 - No new PR, no code modification in `ntl/`, and no large GeoJSON/GeoTIFF committed.
 
 <!-- END ORIGINAL SOURCE 078 -->
