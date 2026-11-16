@@ -2,7 +2,7 @@
 
 [English](README.md) · [Tiếng Việt](README-vi.md) · [Trạng thái kiểm chứng](../README-vi.md) · [Dữ liệu và phương pháp](../../docs/README-vi.md)
 
-Đây là hướng dẫn tiếng Việt duy nhất của thư mục bằng chứng. Tài liệu cho biết repo đang giữ dữ liệu nào, mỗi dữ liệu hỗ trợ kết luận gì và nguồn nguyên bản nằm ở đâu.
+Đây là hướng dẫn tiếng Việt của thư mục bằng chứng. Tài liệu cho biết repo đang giữ dữ liệu nào và mỗi dữ liệu hỗ trợ kết luận gì.
 
 | Bằng chứng | Dữ liệu đã lưu | Phạm vi |
 | --- | --- | --- |
@@ -11,15 +11,11 @@
 | A02 | CSV từng ô và JSON hiệu năng trong [bộ A02](a02_post_pr27/) | Hỗ trợ trường hợp dữ liệu có quan sát và thời gian chạy đã ghi. Chưa bao phủ ca thiếu hỗ trợ thực tế. |
 | Ca kiểm soát nhân tạo | Kết quả kiểm thử trong [thư mục kiểm soát A02](a02/) | Chỉ kiểm tra các hợp đồng số học và cấu trúc dữ liệu cụ thể. |
 
-## Hồ sơ nguồn nguyên bản
+## Hồ sơ nguồn đã khôi phục
 
-Ba hồ sơ lớn được giữ dưới dạng văn bản thuần để GitHub không trình bày tài liệu lịch sử lẫn ngôn ngữ như hướng dẫn hiện hành:
+Các bản văn bản thuần trước đây lặp lại báo cáo đã lỗi thời, trộn hai ngôn ngữ và giữ cả hướng dẫn chuẩn bị PR không có giá trị khoa học. Phần kết luận hữu ích đã được đưa vào cặp README này, hướng dẫn kiểm chứng và [danh mục kiểm chứng đã khôi phục](audit-2026-11-15/recovered-originals/README-vi.md).
 
-- [Hồ sơ thực địa tổng hợp](CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt)
-- [Kho mười ba tài liệu lịch sử](historical_document_sources_2026-11-15.txt), kèm [chỉ mục byte](historical_document_sources_index.json)
-- [Bảy mươi tám báo cáo khôi phục](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt), kèm danh mục JSON và CSV gốc trong cùng thư mục
-
-Các tệp này giữ nguyên ngôn ngữ, dấu câu, công thức và kiểu xuống dòng đã nhận vì mã SHA-256 cùng phạm vi byte là bằng chứng kiểm toán. Kết luận hiện hành được cập nhật trong các cặp README tiếng Anh và tiếng Việt, không nhân bản thành nhiều bản đọc riêng.
+Danh mục JSON, CSV, biên nhận khôi phục và các chỉ mục byte gốc vẫn được giữ làm siêu dữ liệu nguồn. Các bằng chứng CSV, JSON, raster và ZIP được chọn vẫn nằm trong thư mục theo chủ đề. Repo không nhận là đang giữ toàn bộ tệp riêng được nhắc trong danh mục lịch sử; chỉ mục byte được giữ cũng không được coi là có thể chạy khi không còn bản ghép cũ.
 
 ## Kiểm tra
 
@@ -27,8 +23,7 @@ Chạy tại thư mục gốc của repo:
 
 ```sh
 node validation/audit_public_evidence.mjs --check-result
-node validation/audit_docs_archive.mjs
 node validation/check_docs.mjs
 ```
 
-Hai lệnh đầu kiểm tra byte và chỉ mục đã lưu. Lệnh kiểm tra tài liệu bảo đảm đúng cặp README hiện hành, liên kết, tiêu đề theo từng ngôn ngữ, dấu câu và dấu công thức cơ bản.
+Lệnh bằng chứng kiểm tra dữ liệu Bảo An đã nộp và đối chiếu danh mục JSON với CSV. Lệnh tài liệu bảo đảm đúng các cặp README được duy trì, liên kết, tiêu đề theo từng ngôn ngữ, dấu câu và dấu công thức cơ bản.

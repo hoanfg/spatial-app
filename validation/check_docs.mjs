@@ -9,6 +9,8 @@ const files = [
   'docs/README.md', 'docs/README-vi.md',
   'validation/README.md', 'validation/README-vi.md',
   'validation/evidence/README.md', 'validation/evidence/README-vi.md',
+  'validation/evidence/audit-2026-11-15/recovered-originals/README.md',
+  'validation/evidence/audit-2026-11-15/recovered-originals/README-vi.md',
   'validation/cross_location/README.md', 'validation/cross_location/README-vi.md',
   'validation/evidence/yanqing/README.md', 'validation/evidence/yanqing/README-vi.md',
 ];
