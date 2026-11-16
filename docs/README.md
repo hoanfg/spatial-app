@@ -387,18 +387,4 @@ The five checks in Section 4 are the target contract for future extraction. Befo
 
 ## Validation status
 
-| Area | Current result | Remaining scope |
-| --- | --- | --- |
-| Yanqing VIIRS, LISA and two-period calculations | Independent 2014/2020 raster-to-cell and statistical comparisons at the recorded precision | Continuous annual series and other locations |
-| Cross-location V11 | Historical Shanghai, Bao'an and Qimen field comparisons completed at their stated NTL/LISA scope | Original raster and cellwise outputs are absent from this repository; clipped polygons in the edge check were app exports |
-| GHSL | Native-grid quantity correction and independent aggregate Shanghai core comparison after deployment | Per-cell live export, other locations and epochs |
-| A02 observation metadata | Bao'an observed-case CSV has 7,148/7,148 usable rows | A real no-observation/low-support case |
-| Cloud performance | Single-run Bao'an baselines and profiler are available | Repeated runs with deployed commit, multiple sessions and full resource checks |
-
-The [current validation guide](../validation/README.md) separates observed results from untested claims and links to the original evidence. The previous full validation master, GADM specification and correction notes are preserved byte-for-byte in the [historical document archive](../validation/evidence/historical_document_sources_2026-11-15.md).
-
-### Method notes retained from the earlier documents
-
-- Global Moran uses all grid cells and binary Queen weights; Local Moran uses its eligible sample and row-standardized Queen weights. Their values are not interchangeable. PR #10 changed conditional Local Moran sampling to distinct non-focal values without replacement and aligned the observed Local I normalization with ESDA; existing results made before that change need a fresh export before comparison.
-- The Space-Time label **Synchronized Decline** describes a decline in relative standardized position of a cell and its neighbours. It does not assert a fall in absolute radiance or economic output. Directional regimes are descriptive and are not permutation/FDR significance labels.
-- Explicit raster NoData masks are preserved before zonal extraction. The final application policy still fills missing cell values with zero and records quality metadata; that policy requires separate real-missingness evidence before any scientific change.
+The [validation guide](../validation/README.md) is the single current record of verified results, limits and remaining work. Earlier validation masters, GADM specifications and correction notes remain byte-for-byte in the [historical source archive](../validation/evidence/historical_document_sources_2026-11-15.txt); they are evidence, not parallel guidance.

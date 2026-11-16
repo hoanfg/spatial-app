@@ -1,6 +1,6 @@
 # Cross-location Validation for VIIRS 2020
 
-**Status:** Sample selected and tooling verified; NTL/LISA data for the three new locations is **not yet** available. Do not mark V11 as PASS prior to raster–CSV cross-checking.
+**Status:** Historical V11 reports record aggregate NTL/LISA comparisons for all three locations. The repository does not contain the complete source-raster pairs or per-cell outputs, so a fresh public reproduction remains open.
 
 ## 1. Three-case design
 
@@ -50,12 +50,8 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 5. **Generalizability:** mark V11 as complete only when results and attached evidence are available for all three locations; identical HH area share to Yanqing is not required, as structural differences across locations are expected.
 6. **Archiving:** attach raster/CSV, test code, SHA-256 manifest, commit version, per-cell results and reports; update both [validation guides](../README.md) and [the data/method guides](../../docs/README.md) accurately in both languages.
 
-## 5. Execution status
+## 5. Current status
 
-- **Completed:** verified existence of three boundaries in GitHub, GID codes, bbox, approximate area; prepared Earth Engine script and Python comparator; comparator was run on Yanqing 2020, achieving **8,333/8,333** cells (max error ~0.00004999).
-- **Pending:** export 2020 GeoTIFF for three regions, app CSV for three regions, per-cell raster validation and per-region LISA validation, independent GHSL comparison.
-- **Decision:** keep V11 as `PENDING` until evidence is provided for all three locations.
-
-## Audit evidence update: 2026-11-15
-
-See the [current validation status](../README.md). The pending steps above are the original plan; the later V11 field comparison is complete at its stated scope, while the source raster pairs and per-cell outputs remain unavailable in this repository.
+- **Recorded result:** the historical evidence reports aggregate V11 outcomes for Shanghai Core, Bao'an and Qimen with the rounding and seed qualifications listed in the [validation guide](../README.md).
+- **Reproducible here:** the three boundary files, Earth Engine export script and independent Python comparator are deposited. The comparator rejects equal-area cell swaps by checking UTM and WGS84 centroids.
+- **Still required for public rerun:** matched 2020 source rasters and app CSV files for all three locations, per-cell comparison outputs, independent per-location LISA output and an independent GHSL comparison.

@@ -1,26 +1,34 @@
 # Danh mục bằng chứng
 
-[English](README.md) | [Tiếng Việt](README-vi.md)
+[English](README.md) · [Tiếng Việt](README-vi.md) · [Trạng thái kiểm chứng](../README-vi.md) · [Dữ liệu và phương pháp](../../docs/README-vi.md)
 
-**Các kho bằng chứng gốc vẫn được bảo tồn nguyên byte.** Hãy sử dụng các bản đọc biên tập riêng tiếng Anh và tiếng Việt. Xem [kiểm kê ngôn ngữ](LANGUAGE_COVERAGE-vi.md) và [manifest đối chiếu đầy đủ nguồn với bản dịch](reading-editions/translation_manifest.json).
+Đây là hướng dẫn tiếng Việt duy nhất của thư mục bằng chứng. Tài liệu cho biết repo đang giữ dữ liệu nào, mỗi dữ liệu hỗ trợ kết luận gì và nguồn nguyên bản nằm ở đâu.
 
-| Nhóm bằng chứng | Bản tiếng Anh | Bản tiếng Việt | Nguồn gốc |
-| --- | --- | --- | --- |
-| Kiểm toán thực địa tổng hợp, gồm sáu phần lịch sử | [Bản tiếng Anh](CONSOLIDATED_FIELD_EVIDENCE_2026-11-en.md) | [Bản tiếng Việt](CONSOLIDATED_FIELD_EVIDENCE_2026-11-vi.md) | [Văn bản gốc](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) |
-| Mười ba nguồn lịch sử được tổ chức thành mười một cặp theo chủ đề | [Chỉ mục tiếng Anh](reading-editions/historical/README.md) | [Chỉ mục tiếng Việt](reading-editions/historical/README-vi.md) | [Kho gốc](historical_document_sources_2026-11-15.md) |
-| Bảy mươi tám báo cáo khôi phục, tương ứng ba mươi lăm nội dung có mã băm khác nhau | [Chỉ mục tiếng Anh](reading-editions/recovered/README.md) | [Chỉ mục tiếng Việt](reading-editions/recovered/README-vi.md) | [Kho gốc](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) |
-| CSV Bao'an, tệp đo hiệu năng, mã băm và danh mục khôi phục | [Tập bằng chứng](audit-2026-11-15/) | Dùng chung dữ liệu gốc | [Tập bằng chứng](audit-2026-11-15/) |
-| Raster và đối chiếu từng ô Diên Khánh | [Hướng dẫn tiếng Anh](yanqing/README.md) | [Hướng dẫn tiếng Việt](yanqing/README-vi.md) | [Thư mục bằng chứng](yanqing/) |
+| Bằng chứng | Dữ liệu đã lưu | Phạm vi |
+| --- | --- | --- |
+| Bảo An 2020 | CSV 7.148 ô, JSON hiệu năng, danh mục băm và bản tóm tắt đã kiểm tra trong [bộ kiểm chứng](audit-2026-11-15/) | Kiểm tra trực tiếp cấu trúc cột, giá trị, ID và mã băm đã lưu. Không chạy lại Earth Engine hoặc phép trích xuất raster. |
+| Diên Khánh 2014 và 2020 | Dữ liệu từng ô, raster tham chiếu, bảng đối chiếu độc lập và chỉ số trong [thư mục Diên Khánh](yanqing/README-vi.md) | Hỗ trợ kết quả VIIRS, LISA và phép tính hai mốc thời gian đã ghi cho địa bàn này. |
+| A02 sau PR #27 | CSV từng ô và JSON hiệu năng trong [bộ A02](a02_post_pr27/) | Hỗ trợ trường hợp dữ liệu có quan sát và thời gian chạy đã ghi. Chưa bao phủ ca thiếu hỗ trợ thực tế. |
+| Ca kiểm soát nhân tạo | Kết quả kiểm thử trong [thư mục kiểm soát A02](a02/) | Chỉ kiểm tra các hợp đồng số học và cấu trúc dữ liệu cụ thể. |
 
-Các bản đọc đã được tách theo ngôn ngữ và chuẩn hóa dấu câu. Nội dung nguồn lưu trữ chủ ý giữ nguyên ngôn ngữ, dấu câu, kiểu xuống dòng, ngày tháng, công thức và mã SHA-256. Bản dịch và phép kiểm toàn vẹn repository đều không phải phép tính kiểm chứng khoa học độc lập mới.
+## Hồ sơ nguồn nguyên bản
 
-Chạy các lệnh sau tại thư mục gốc repository:
+Ba hồ sơ lớn được giữ dưới dạng văn bản thuần để GitHub không trình bày tài liệu lịch sử lẫn ngôn ngữ như hướng dẫn hiện hành:
+
+- [Hồ sơ thực địa tổng hợp](CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt)
+- [Kho mười ba tài liệu lịch sử](historical_document_sources_2026-11-15.txt), kèm [chỉ mục byte](historical_document_sources_index.json)
+- [Bảy mươi tám báo cáo khôi phục](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt), kèm danh mục JSON và CSV gốc trong cùng thư mục
+
+Các tệp này giữ nguyên ngôn ngữ, dấu câu, công thức và kiểu xuống dòng đã nhận vì mã SHA-256 cùng phạm vi byte là bằng chứng kiểm toán. Kết luận hiện hành được cập nhật trong các cặp README tiếng Anh và tiếng Việt, không nhân bản thành nhiều bản đọc riêng.
+
+## Kiểm tra
+
+Chạy tại thư mục gốc của repo:
 
 ```sh
-node validation/check_evidence_language_editions.mjs --strict
-node validation/audit_bilingual_editions.mjs
 node validation/audit_public_evidence.mjs --check-result
+node validation/audit_docs_archive.mjs
 node validation/check_docs.mjs
 ```
 
-Xem [hướng dẫn kiểm chứng](../README-vi.md) để biết giới hạn và việc còn mở, cùng [hướng dẫn dữ liệu](../../docs/README-vi.md) về GADM và phương pháp phân tích.
+Hai lệnh đầu kiểm tra byte và chỉ mục đã lưu. Lệnh kiểm tra tài liệu bảo đảm đúng cặp README hiện hành, liên kết, tiêu đề theo từng ngôn ngữ, dấu câu và dấu công thức cơ bản.
