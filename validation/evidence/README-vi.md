@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Bảo An 2020 | CSV 7.148 ô, JSON hiệu năng, danh mục băm và bản tóm tắt đã kiểm tra trong [bộ kiểm chứng](audit-2026-11-15/) | Kiểm tra trực tiếp cấu trúc cột, giá trị, ID và mã băm đã lưu. Không chạy lại Earth Engine hoặc phép trích xuất raster. |
 | Diên Khánh 2014 và 2020 | Dữ liệu từng ô, raster tham chiếu, bảng đối chiếu độc lập và chỉ số trong [thư mục Diên Khánh](yanqing/README-vi.md) | Hỗ trợ kết quả VIIRS, LISA và phép tính hai mốc thời gian đã ghi cho địa bàn này. |
-| A02 sau PR #27 | CSV từng ô và JSON hiệu năng trong [bộ A02](a02_post_pr27/) | Hỗ trợ trường hợp dữ liệu có quan sát và thời gian chạy đã ghi. Chưa bao phủ ca thiếu hỗ trợ thực tế. |
+| A02 | CSV từng ô và JSON hiệu năng trong [bộ A02](a02_post_pr27/) | Hỗ trợ trường hợp dữ liệu có quan sát và thời gian chạy đã ghi. Chưa bao phủ ca thiếu hỗ trợ thực tế. |
 | Ca kiểm soát nhân tạo | Kết quả kiểm thử trong [thư mục kiểm soát A02](a02/) | Chỉ kiểm tra các hợp đồng số học và cấu trúc dữ liệu cụ thể. |
 
 ## Hồ sơ nguồn nguyên bản
