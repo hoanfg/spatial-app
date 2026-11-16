@@ -17,23 +17,24 @@ The following six active guide pairs have an English `README.md` and a Vietnames
 
 These guides are separate reading editions. Their existing `validation/check_docs.mjs` check rejects the Unicode em dash in active guides. A filename pair is not itself proof of perfect translation equivalence.
 
-## Historical evidence requiring separate reading translations
+## Bilingual reading edition coverage
 
-| Original evidence | Scope | Translation status |
-| --- | --- | --- |
-| [Consolidated field evidence](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) | Six indexed historical sections plus current audit commentary | No complete Vietnamese reading edition |
-| [Historical document sources](historical_document_sources_2026-11-15.md) | Thirteen indexed original documents, including English and Vietnamese source material | Mixed-language source archive; no complete paired English/Vietnamese reading editions |
-| [Recovered original reports](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) | Seventy-eight original report bodies | Original languages retained; no complete paired translations |
+| Original evidence | Source records | Reading editions |
+| --- | ---: | --- |
+| [Consolidated field evidence](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) | Six indexed historic sections plus contemporary commentary | [English](CONSOLIDATED_FIELD_EVIDENCE_2026-11-en.md) and [Vietnamese](CONSOLIDATED_FIELD_EVIDENCE_2026-11-vi.md) |
+| [Historical document sources](historical_document_sources_2026-11-15.md) | Thirteen source records representing eleven topics | [English index](reading-editions/historical/README.md) and [Vietnamese index](reading-editions/historical/README-vi.md) |
+| [Recovered original reports](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) | Seventy-eight entries representing thirty-five distinct SHA-256 report bodies | [English index](reading-editions/recovered/README.md) and [Vietnamese index](reading-editions/recovered/README-vi.md) |
 
-**These three entries are archives, not normalized editorial documents.** Do not replace original punctuation, remove the Unicode em dash, translate paragraphs in place, normalize CRLF/LF, or change source-text metadata. Doing so would invalidate byte offsets and/or recorded SHA-256 values. Use new English/Vietnamese reading editions for any future translations, preserving unchanged technical values, paths, hashes, qualifiers and status dates.
+All 35 unique recovered report bodies have an English and a Vietnamese reading edition. Repeated archival entries reuse the same edition only when original SHA-256 is identical. The thirteen historical documents are indexed in eleven topic groups. Two topics already had separate English and Vietnamese source documents; **same-topic grouping does not certify that those historical versions are exact line-by-line translations.** The [translation manifest](reading-editions/translation_manifest.json) explicitly maps each original source record to its reading editions.
 
-### Remaining work
+**These original source entries are forensic archives, not normalized editorial documents.** Their punctuation, original languages, formulas, CRLF/LF and byte lengths must remain unchanged, including historical Unicode em dashes. Only the new reading editions use editorial punctuation and language normalization. Historical dates, qualifications and the originals' SHA-256 remain authoritative.
 
-- Translate the full consolidated field report into a separately named Vietnamese reading edition.
-- Produce a source-by-source translation ledger for all thirteen historical documents and complete missing English or Vietnamese reading editions.
-- Produce a report-by-report translation ledger for all seventy-eight recovered originals and translate missing reading editions without changing the archive.
-- Review editorial wording for mixed-language prose and replace Unicode em dashes contextually in those *new reading editions*, not in the originals.
-- Verify translation completeness, every referenced file, and data provenance before marking any edition complete.
+### Remaining quality review
+
+- Compare every reading edition with its linked original for complete preservation of numerical values, tables, equations, caveats, original status dates and claims.
+- Where a historical topic has two independent language-specific originals, check differences between those original versions instead of assuming perfect correspondence.
+- Retain any original code identifiers, file names, hashes and proper nouns as written; they are not language mixing in editorial prose.
+- Use both `node validation/check_evidence_language_editions.mjs --strict` and `node validation/audit_bilingual_editions.mjs` to check canonical coverage, source association, navigation and punctuation. Automated checks do not establish semantic translation equivalence.
 
 ## Forensic consistency
 
