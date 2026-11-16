@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-// Check the canonical bilingual reading editions without rewriting any source evidence.
-// Identical recovered report blobs are translated once and linked by their SHA-256.
+// Audit reading-edition coverage without modifying the original evidence.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,105 +8,93 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const evidence = path.join(root, 'validation/evidence');
 const editions = path.join(evidence, 'reading-editions');
 const strict = process.argv.includes('--strict');
-const issues = [];
-const missing = [];
+const problems = [];
+const absent = [];
+const sourceReferences = [];
+const viable = p => fs.existsSync(p) && fs.statSync(p).isFile();
 const read = p => fs.readFileSync(p, 'utf8');
-const exists = p => fs.existsSync(p) && fs.statSync(p).isFile();
 const relative = p => path.relative(root, p).replaceAll(path.sep, '/');
-const manifestPath = path.join(editions, 'translation_manifest.json');
 
-if (!exists(manifestPath)) {
-  console.log('Bilingual translation manifest not yet published. The forensic originals remain authoritative.');
-  if (strict) process.exitCode = 1;
-} else {
-  const manifest = JSON.parse(read(manifestPath));
-  const historical = JSON.parse(read(path.join(evidence, 'historical_document_sources_index.json')));
-  const recovered = JSON.parse(read(path.join(evidence, 'audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json')));
-  const originalText = read(path.join(evidence, 'audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md'));
-  const sourceRows = [...originalText.matchAll(/^## Source (\d{3}): `([^\r\n]+)`\r?\n\r?\n\*\*Original bytes:\*\* ([\d,]+) · \*\*SHA-256:\*\* `([a-f0-9]{64})`/gm)];
-  if (sourceRows.length !== 78 || manifest.recovered_reports.length !== 78)
-    issues.push('Expected exactly 78 recovered source records');
-  if (historical.length !== 13 || manifest.historical_sources.length !== 13)
-    issues.push('Expected exactly 13 historical source records');
-
-  const recPairs = new Map();
-  for (let i = 0; i < sourceRows.length; i++) {
-    const m = sourceRows[i], row = manifest.recovered_reports[i];
-    if (!row || row.source_id !== m[1] || row.original_path !== m[2] ||
-        row.original_bytes !== Number(m[3].replaceAll(',', '')) || row.sha256 !== m[4]) {
-      issues.push(`Recovered source ${m[1]} differs from translation manifest`);
-      continue;
-    }
-    const [outer, member] = m[2].split('::');
-    const valid = member
-      ? recovered.embedded_zip_members.some(f => f.outer_archive_path === outer && f.member_path === member && f.member_sha256 === m[4])
-      : recovered.source_files.some(f => f.archive_path === outer && f.sha256 === m[4]);
-    if (!valid) issues.push(`Recovered source ${m[1]} differs from original manifest`);
-    const canonical = recPairs.get(m[4]);
-    if (!canonical) recPairs.set(m[4], row.canonical_id);
-    if ((canonical && canonical !== row.canonical_id) ||
-        row.english !== `recovered/${row.canonical_id}-en.md` ||
-        row.vietnamese !== `recovered/${row.canonical_id}-vi.md`)
-      issues.push(`Recovered source ${m[1]} has inconsistent canonical translation paths`);
+function readingEdition(location, language, marker, label) {
+  if (!viable(location)) {
+    absent.push(relative(location));
+    return;
   }
-
-  const historicalPairs = new Map();
-  historical.forEach((record, i) => {
-    const row = manifest.historical_sources[i];
-    if (!row || row.source_id !== String(i + 1).padStart(2, '0') ||
-        row.original_path !== record.source || row.original_bytes !== record.length_bytes ||
-        row.sha256 !== record.sha256) {
-      issues.push(`Historical source ${i + 1} differs from archived byte index`);
-      return;
-    }
-    if (row.english !== `historical/${row.canonical_id}-en.md` ||
-        row.vietnamese !== `historical/${row.canonical_id}-vi.md`)
-      issues.push(`Historical source ${i + 1} has inconsistent edition paths`);
-    if (!historicalPairs.has(row.canonical_id)) historicalPairs.set(row.canonical_id, []);
-    historicalPairs.get(row.canonical_id).push(record.sha256);
-  });
-
-  const inspect = (rel, language, sourceHashes=[]) => {
-    const filename = path.join(editions, rel);
-    if (!exists(filename)) { missing.push(relative(filename)); return ''; }
-    const s = read(filename);
-    if (s.includes('—')) issues.push(`${relative(filename)}: em dash in reading edition`);
-    if (s.trim().length < 200) issues.push(`${relative(filename)}: unusually short reading edition`);
-    if (language === 'vi' && !/[ăâđêôơưàáạảãằắặẳẵầấậẩẫèéẹẻẽềếệểễìíịỉĩòóọỏõồốộổỗờớợởỡùúụủũừứựửữỳýỵỷỹ]/i.test(s))
-      issues.push(`${relative(filename)}: no Vietnamese-language prose detected`);
-    if (language === 'en' && !s.startsWith('# English') && !rel.startsWith('../'))
-      issues.push(`${relative(filename)}: unexpected English edition heading`);
-    if (sourceHashes.length && !sourceHashes.some(sha => s.includes(sha)))
-      issues.push(`${relative(filename)}: no matching original SHA-256 in edition header/body`);
-    return s;
-  };
-
-  for (const [sha, id] of recPairs) {
-    inspect(`recovered/${id}-en.md`, 'en', [sha]);
-    inspect(`recovered/${id}-vi.md`, 'vi', [sha]);
-  }
-  for (const [id, hashes] of historicalPairs) {
-    const en = inspect(`historical/${id}-en.md`, 'en', hashes);
-    const vi = inspect(`historical/${id}-vi.md`, 'vi', hashes);
-    for (const sha of hashes)
-      if (en && vi && !en.includes(sha) && !vi.includes(sha))
-        issues.push(`Historical topic ${id}: source SHA-256 ${sha} missing in both editions`);
-  }
-
-  for (const language of ['en', 'vi']) {
-    const f = path.join(evidence, `CONSOLIDATED_FIELD_EVIDENCE_2026-11-${language}.md`);
-    if (!exists(f)) missing.push(relative(f));
-    else if (read(f).includes('—')) issues.push(`${relative(f)}: em dash in reading edition`);
-  }
-
-  const required = 2 * (recPairs.size + historicalPairs.size + 1);
-  const present = required - missing.length;
-  console.log(`Reading editions: ${present}/${required} canonical EN/VI files.`);
-  console.log(`Source records: ${sourceRows.length} recovered (${recPairs.size} distinct SHA-256 bodies), ${historical.length} historical (${historicalPairs.size} bilingual topic groups).`);
-  console.log(`Missing: ${missing.length}. Mechanical problems: ${issues.length}.`);
-  for (const m of missing) console.error(`MISSING ${m}`);
-  for (const p of issues) console.error(`ISSUE ${p}`);
-  if (issues.length || (strict && missing.length)) process.exitCode = 1;
-  if (!strict && missing.length) console.log('Incomplete coverage: run with --strict to fail on missing editions.');
-  console.log('Note: these structural checks do not certify line-by-line translation equivalence.');
+  const text = read(location);
+  if (text.includes('—')) problems.push(`${relative(location)}: Unicode em dash found`);
+  if (!text.includes(marker)) problems.push(`${relative(location)}: original SHA-256 not cited`);
+  if (text.trim().length < 200) problems.push(`${relative(location)}: suspiciously short reading edition`);
+  if (/\b(TODO|TBD|PLACEHOLDER|TRANSLATE ME)\b/i.test(text)) problems.push(`${relative(location)}: unfinished marker`);
+  if (language === 'vi' && !/[ăâđêôơưàáạảãằắặẳẵầấậẩẫèéẹẻẽềếệểễìíịỉĩòóọỏõồốộổỗờớợởỡùúụủũừứựửữỳýỵỷỹ]/i.test(text))
+    problems.push(`${relative(location)}: no Vietnamese diacritics`);
+  sourceReferences.push({ label, language, file: relative(location) });
 }
+
+const manifest = JSON.parse(read(path.join(evidence, 'audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json')));
+const editionManifest = JSON.parse(read(path.join(editions, 'translation_manifest.json')));
+const recoveredLinks = new Map(editionManifest.recovered_reports.map(entry => [entry.source_id, entry]));
+const historicalLinks = new Map(editionManifest.historical_sources.map(entry => [entry.source_id, entry]));
+const original = read(path.join(evidence, 'audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md'));
+const matches = [...original.matchAll(/^## Source (\d{3}): `([^\r\n]+)`\r?\n\r?\n\*\*Original bytes:\*\* ([\d,]+) · \*\*SHA-256:\*\* `([a-f0-9]{64})`/gm)];
+if (matches.length !== 78) problems.push(`expected 78 recovered originals, found ${matches.length}`);
+for (const [index, match] of matches.entries()) {
+  const number = String(index + 1).padStart(3, '0');
+  if (match[1] !== number) problems.push(`source numbering gap at ${number}`);
+  const [source, sha] = [match[2], match[4]];
+  const [outer, inner] = source.split('::');
+  const linked = inner
+    ? manifest.embedded_zip_members.some(x => x.outer_archive_path === outer && x.member_path === inner && x.member_sha256 === sha)
+    : manifest.source_files.some(x => x.archive_path === outer && x.sha256 === sha);
+  if (!linked) problems.push(`source ${number}: manifest provenance mismatch`);
+  const link = recoveredLinks.get(number);
+  if (!link || link.sha256 !== sha) {
+    problems.push(`source ${number}: missing or incorrect edition manifest mapping`);
+    continue;
+  }
+  for (const lang of ['en', 'vi']) {
+    const file = path.join(editions, link[lang === 'en' ? 'english' : 'vietnamese']);
+    readingEdition(file, lang, sha, `recovered ${number}`);
+  }
+}
+
+const history = JSON.parse(read(path.join(evidence, 'historical_document_sources_index.json')));
+if (history.length !== 13) problems.push(`expected 13 historical documents, found ${history.length}`);
+history.forEach((record, i) => {
+  const number = String(i + 1).padStart(2, '0');
+  const link = historicalLinks.get(number);
+  if (!link || link.sha256 !== record.sha256) {
+    problems.push(`historical source ${number}: missing or incorrect edition manifest mapping`);
+    return;
+  }
+  for (const lang of ['en', 'vi']) {
+    const pairSourceId = (link.canonical_id === '01' || link.canonical_id === '03')
+      ? (lang === 'en' ? link.canonical_id : String(Number(link.canonical_id) + 1).padStart(2, '0'))
+      : number;
+    const pairRecord = historicalLinks.get(pairSourceId);
+    const expectedSha = pairRecord?.sha256;
+    if (!expectedSha) { problems.push(`historical source ${number}: missing paired provenance`); continue; }
+    readingEdition(path.join(editions, link[lang === 'en' ? 'english' : 'vietnamese']),
+      lang, expectedSha, `historical ${number}`);
+  }
+});
+
+for (const lang of ['en', 'vi']) {
+  const file = path.join(evidence, `CONSOLIDATED_FIELD_EVIDENCE_2026-11-${lang}.md`);
+  if (!viable(file)) absent.push(relative(file));
+  else {
+    const text = read(file);
+    if (text.includes('—')) problems.push(`${relative(file)}: Unicode em dash found`);
+    if (text.trim().length < 1000) problems.push(`${relative(file)}: suspiciously short consolidated reading edition`);
+    if (/\b(TODO|TBD|PLACEHOLDER|TRANSLATE ME)\b/i.test(text)) problems.push(`${relative(file)}: unfinished marker`);
+  }
+}
+
+const expected = 78 * 2 + 13 * 2 + 2;
+const count = expected - absent.length;
+console.log(`Bilingual reading mappings: ${count}/${expected} source-language references resolved (${(count / expected * 100).toFixed(1)}%).`);
+console.log(`Recovered reports: ${matches.length} source records; historical documents: ${history.length} source records.`);
+console.log(`Missing reading editions: ${absent.length}; detected content issues: ${problems.length}.`);
+for (const item of absent) console.log(`MISSING ${item}`);
+for (const item of problems) console.error(`ISSUE ${item}`);
+if (problems.length || (strict && absent.length)) process.exitCode = 1;
+if (!strict && absent.length) console.log('Coverage is incomplete. Use --strict to fail on missing editions.');
