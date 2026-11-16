@@ -395,7 +395,7 @@ The five checks in Section 4 are the target contract for future extraction. Befo
 | A02 observation metadata | Bao'an observed-case CSV has 7,148/7,148 usable rows | A real no-observation/low-support case |
 | Cloud performance | Single-run Bao'an baselines and profiler are available | Repeated runs with deployed commit, multiple sessions and full resource checks |
 
-The [current validation guide](../validation/README.md) separates observed results from untested claims and links to the original evidence. The previous full validation master, GADM specification and correction notes are preserved byte-for-byte in the [historical document archive](../validation/evidence/historical_document_sources_2026-11-15.txt).
+The [current validation guide](../validation/README.md) separates observed results from untested claims and links to the original evidence. The previous full validation master, GADM specification and correction notes are preserved byte-for-byte in the [historical document archive](../validation/evidence/historical_document_sources_2026-11-15.md).
 
 ### Method notes retained from the earlier documents
 
