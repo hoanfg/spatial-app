@@ -381,10 +381,10 @@ Cảnh báo nếu một đa giác có diện tích $< 0.25 \text{ km}^2$, tức 
 
 Bốn nhóm quốc gia ở trên là quy tắc thiết kế, không có nghĩa mọi quốc gia đã được trích xuất và kiểm tra. Ứng dụng đọc cây GeoJSON đã biên tập trong `data/`; ứng dụng không chạy toàn bộ quy trình trích xuất toàn cầu mỗi khi người dùng mở trang.
 
-Với Trung Quốc, cấu trúc biên tập cố ý đổi `GID_3` nguồn thành `GID_2`, `NAME_3` thành `NAME_2` và `ENGTYPE_3` thành `TYPE_2`. Tên thư mục là nhóm xử lý, đôi khi ghép tỉnh với địa khu. Khi nối dữ liệu ngoài, dùng GID đã giữ lại thay vì tên hiển thị hoặc tên tệp. Đợt kiểm tra nguồn đã đối chiếu 2.420 quận/huyện với GeoPackage GADM 4.1 đầy đủ; một bản ghi cấp 3 bị bỏ có các thuộc tính hành chính là `NA`. Tên hiển thị của `CHN.14.10.2_1` đã sửa thành **Nan** trong PR #10, còn tên tệp cũ được giữ để tương thích. Kết quả chỉ xác nhận sự tương ứng với bản GADM đó, không khẳng định ranh giới pháp lý hiện nay. Xem [bằng chứng kiểm chứng](../validation/README-vi.md).
+Với Trung Quốc, cấu trúc biên tập cố ý đổi `GID_3` nguồn thành `GID_2`, `NAME_3` thành `NAME_2` và `ENGTYPE_3` thành `TYPE_2`. Tên thư mục là nhóm xử lý, đôi khi ghép tỉnh với địa khu. Khi nối dữ liệu ngoài, dùng GID đã giữ lại thay vì tên hiển thị hoặc tên tệp. Đợt kiểm tra nguồn đã đối chiếu 2.420 quận/huyện với GeoPackage GADM 4.1 đầy đủ; một bản ghi cấp 3 bị bỏ có các thuộc tính hành chính là `NA`. Tên hiển thị của `CHN.14.10.2_1` là **Nan**, còn tên tệp cũ được giữ để tương thích. Kết quả chỉ xác nhận sự tương ứng với bản GADM đó, không khẳng định ranh giới pháp lý hiện nay. Xem [bằng chứng kiểm chứng](../validation/README-vi.md).
 
 Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất tiếp theo. Trước khi mở rộng quốc gia, cần kiểm tra tầng dữ liệu nguồn, cách ánh xạ GID/NAME, hình học lỗi, lớp mặt nước, tên tệp trùng và đa giác nhỏ trên đầu ra thực tế. Cảnh báo diện tích dưới 0,25 km² là cảnh báo về thang đo; không tự động xóa đơn vị hành chính hợp lệ.
 
 ## Tình trạng kiểm chứng
 
-[Hướng dẫn kiểm chứng](../validation/README-vi.md) là nơi duy nhất cập nhật kết quả đã xác nhận, giới hạn và việc còn thiếu. [Danh mục kiểm chứng đã khôi phục](../validation/evidence/audit-2026-11-15/recovered-originals/README-vi.md) giải thích kết luận lịch sử nào còn căn cứ và dữ liệu nguồn nào chưa được công bố.
+[Hướng dẫn kiểm chứng](../validation/README-vi.md) ghi kết quả đã xác nhận, giới hạn và bằng chứng cần bổ sung. [Hướng dẫn bằng chứng](../validation/evidence/README-vi.md) dẫn tới dữ liệu đã lưu và các phép kiểm có thể chạy.

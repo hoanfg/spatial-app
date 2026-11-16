@@ -1,6 +1,6 @@
 # Kiểm chứng VIIRS 2020 tại nhiều địa bàn
 
-**Trạng thái:** Báo cáo V11 lịch sử đã ghi kết quả đối chiếu NTL/LISA tổng hợp cho cả ba địa bàn. Repo chưa có đủ cặp raster nguồn và kết quả từng ô, vì vậy vẫn chưa thể tái lập công khai toàn bộ phép kiểm.
+**Trạng thái:** V11 đã ghi kết quả đối chiếu NTL/LISA tổng hợp cho cả ba địa bàn. Repo chưa có đủ cặp raster nguồn và kết quả từng ô, vì vậy muốn chạy lại đầy đủ vẫn cần bổ sung các đầu vào này.
 
 ## 1. Thiết kế ba trường hợp
 
@@ -52,6 +52,6 @@ Lặp lại cho Bảo An và Kỳ Môn bằng đúng GeoJSON/GeoTIFF/CSV tương
 
 ## 5. Trạng thái hiện tại
 
-- **Kết quả đã ghi:** bằng chứng lịch sử báo cáo kết quả V11 tổng hợp cho nội đô Thượng Hải, Bảo An và Kỳ Môn, kèm giới hạn về làm tròn và hạt ngẫu nhiên trong [hướng dẫn kiểm chứng](../README-vi.md).
+- **Kết quả đã ghi:** V11 báo cáo kết quả tổng hợp cho nội đô Thượng Hải, Bảo An và Kỳ Môn, kèm giới hạn về làm tròn và hạt ngẫu nhiên trong [hướng dẫn kiểm chứng](../README-vi.md).
 - **Có thể chạy từ repo:** ba tệp ranh giới, mã xuất Earth Engine và trình đối chiếu Python độc lập đã được lưu. Trình đối chiếu kiểm tra tâm UTM/WGS84 để phát hiện hai ô cùng diện tích bị tráo ID.
 - **Còn thiếu để tái lập công khai:** raster nguồn năm 2020 khớp với CSV ứng dụng tại cả ba địa bàn, kết quả đối chiếu từng ô, kết quả LISA độc lập theo từng địa bàn và phép so sánh GHSL độc lập.

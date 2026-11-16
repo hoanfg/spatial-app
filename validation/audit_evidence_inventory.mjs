@@ -1,4 +1,4 @@
-// Verify the recovered inventories and the selected public field files.
+// Verify the evidence inventories and the selected public field files.
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
@@ -24,4 +24,4 @@ for (const [local, basename] of [['baoan_ntl_2020_500m.csv', 'bao_an_NTL_2020_50
   const matches = manifest.source_files.filter(f => f.basename === basename);
   assert.ok(matches.some(f => f.size_bytes === bytes.length && f.sha256 === hash(bytes)));
 }
-console.log('PASS: JSON and CSV inventories agree on 118 direct records; two published field files match recorded hashes. 271 ZIP-member records are indexed, but the private archive and removed verbatim report compilation are not verified here.');
+console.log('PASS: JSON and CSV inventories agree on 118 direct records; two published field files match recorded hashes. The inventory lists 271 ZIP members that are not part of this check.');
