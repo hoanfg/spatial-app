@@ -175,7 +175,9 @@ $$
 
 Giá trị rỗng hoặc âm phát sinh từ bước hiệu chỉnh ánh sáng nền của cảm biến được chuẩn hóa về $0.0$. Tổng lượng ánh sáng (sum of lights – SOL) của mỗi ô bằng bức xạ trung bình nhân với diện tích thực tế sau khi cắt:
 
-$$\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$$
+$$
+\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i
+$$
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
@@ -362,7 +364,7 @@ Mô-đun `ntl/lisa_core.py` không dừng ở thống kê mô tả không gian t
 
 | # | Mô-đun | Trả lời câu hỏi | Biến xuất ra |
 | :---: | :--- | :--- | :--- |
-| 1 | Số mũ đuôi Pareto | Các ô sáng nhất tập trung mạnh đến mức nào? | — |
+| 1 | Số mũ đuôi Pareto | Các ô sáng nhất tập trung mạnh đến mức nào? | Không áp dụng |
 | 2 | Độ dốc suy giảm mật độ đô thị | Ánh sáng giảm nhanh ra sao khi rời xa tâm lõi? | `urban_gradient_decay`, `monocentric_r2` |
 | 3 | Tiếp cận thị trường đã khử thiên lệch | Tiềm năng thị trường của một ô là bao nhiêu, sau khi bỏ phần do vị trí địa lý trung tâm? | `recentered_market_access` |
 | 4 | Vành đai lan tỏa & biến chạy có dấu | Ranh giới điểm nóng nằm ở đâu và hiệu ứng lan tỏa ra bao xa? | `signed_dist_hh_km` |
@@ -382,7 +384,9 @@ $$
 
 Ước lượng phương trình cấu trúc không gian đô thị bằng bình phương tối thiểu có trọng số diện tích (WLS) trên tập ô lõi:
 
-$$\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}$$
+$$
+\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}
+$$
 
 Kết quả gồm tốc độ suy giảm mật độ $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số xác định đơn tâm $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
@@ -635,7 +639,7 @@ Triển khai trên hạ tầng đám mây miễn phí (~1GB RAM) giới hạn s�
 
 ## 📚 Tài liệu tham khảo
 
-1. Anselin, L. (1995). Local Indicators of Spatial Association—LISA. *Geographical Analysis*, 27(2), 93–115. https://doi.org/10.1111/j.1538-4632.1995.tb00338.x
+1. Anselin, L. (1995). Local Indicators of Spatial Association: LISA. *Geographical Analysis*, 27(2), 93–115. https://doi.org/10.1111/j.1538-4632.1995.tb00338.x
 
 2. Baston, D. (2023). *exactextract: Fast and accurate raster/polygon zonal statistics* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.11396419
 

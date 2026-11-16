@@ -160,13 +160,13 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 | :---: | :--- | :--- | :--- |
 | `JPN` | Nhật Bản | 47 tỉnh | ~1,741 Shi/Ku/Machi/Mura |
 | `KOR` | Hàn Quốc | 17 tỉnh/thành | ~250 Si/Gun/Gu |
-| `PRK` | Triều Tiên | — | — |
+| `PRK` | Triều Tiên | Chưa chỉ định | Chưa chỉ định |
 | `MNG` | Mông Cổ | 22 tỉnh | 339 Sums |
 | `IND` | Ấn Độ | 36 bang/UT | ~676 Districts |
 | `BGD` | Bangladesh | 8 Divisions | 64 Districts; hoặc `ADM_3` cho 544 Upazilas |
 | `PAK` | Pakistan | 8 đơn vị cấp 1 | ~36 Divisions ở `ADM_2` hoặc ~160 Districts ở `ADM_3` |
 | `LKA` | Sri Lanka | 25 Districts ở `ADM_1` | 331 DS Divisions ở `ADM_2` |
-| `NPL` | Nepal | — | — |
+| `NPL` | Nepal | Chưa chỉ định | Chưa chỉ định |
 
 </details>
 
@@ -185,7 +185,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 | `CHL` | Chile | 16 vùng | 56 tỉnh ở `ADM_2` hoặc 346 Comunas ở `ADM_3` |
 | `COL` | Colombia | 33 vùng | 1,122 Municipios |
 | `PER` | Peru | 26 vùng | 196 Provincias |
-| `VEN`, `CUB` | Venezuela, Cuba | — | — |
+| `VEN`, `CUB` | Venezuela, Cuba | Chưa chỉ định | Chưa chỉ định |
 
 </details>
 
@@ -210,7 +210,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 | `DNK` | Đan Mạch | 5 vùng | 99 Kommuner |
 | `RUS` | Nga | ~85 chủ thể liên bang | ~2,350 Raions/Cities |
 | `TUR` | Thổ Nhĩ Kỳ | 81 tỉnh | 973 Ilçe |
-| `CZE`, `HUN`, `ROU`, `BGR`, `GRC`, `PRT`, `FIN`, `UKR` | — | — | — |
+| `CZE`, `HUN`, `ROU`, `BGR`, `GRC`, `PRT`, `FIN`, `UKR` | Chưa chỉ định | Chưa chỉ định | Chưa chỉ định |
 
 </details>
 
@@ -224,7 +224,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 | `AUS` | Úc | 8 bang/lãnh thổ | 562 Local Government Areas |
 | `NZL` | New Zealand | 16 vùng | 67 Territorial Authorities |
 | `NGA` | Nigeria | 37 bang | 774 LGAs |
-| `SAU`, `EGY`, `ZAF`, `KEN`, `ETH`, `MAR`, `DZA`, `GHA`, `TZA`, `KAZ`, `UZB`, `IRN`, `IRQ` | — | — | — |
+| `SAU`, `EGY`, `ZAF`, `KEN`, `ETH`, `MAR`, `DZA`, `GHA`, `TZA`, `KAZ`, `UZB`, `IRN`, `IRQ` | Chưa chỉ định | Chưa chỉ định | Chưa chỉ định |
 
 </details>
 
@@ -258,8 +258,8 @@ Cách đặt tên này giúp người dùng vừa tìm theo Tỉnh dễ dàng tr
 | Mã | Muốn phân tích ở cấp... | Thay vì... | Cấu hình |
 | :---: | :--- | :--- | :--- |
 | `PAK` | 160 `Districts` tại `ADM_3` | 36 `Divisions` tại `ADM_2` | Thư mục = `NAME_1`, Tệp = `NAME_3` |
-| `BGD` | 544 `Upazilas` tại `ADM_3` | 64 `Districts` tại `ADM_2` | — |
-| `FRA` | 333 `Arrondissements` tại `ADM_3` | — | Thư mục = `NAME_2` (Département) |
+| `BGD` | 544 `Upazilas` tại `ADM_3` | 64 `Districts` tại `ADM_2` | Chưa chỉ định |
+| `FRA` | 333 `Arrondissements` tại `ADM_3` | Chưa chỉ định | Thư mục = `NAME_2` (Département) |
 
 ---
 
@@ -395,7 +395,7 @@ Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất ti�
 | Metadata A02 | CSV Bảo An có 7.148/7.148 ô thuộc trường hợp có quan sát | Ca thực tế không có hoặc ít quan sát |
 | Hiệu năng Cloud | Có số đo một lượt Bảo An và bộ ghi hiệu năng | Nhiều lượt cùng phiên bản triển khai, nhiều người dùng và kiểm tra tài nguyên đầy đủ |
 
-[Hướng dẫn kiểm chứng hiện tại](../validation/README-vi.md) phân biệt kết quả quan sát với điều chưa kiểm tra và dẫn về chứng cứ gốc. Bản validation master, đặc tả GADM và ghi chú sửa lỗi trước đây được giữ nguyên byte trong [bản lưu tài liệu lịch sử](../validation/evidence/historical_document_sources_2026-11-15.md).
+[Hướng dẫn kiểm chứng hiện tại](../validation/README-vi.md) phân biệt kết quả quan sát với điều chưa kiểm tra và dẫn về chứng cứ gốc. Bản validation master, đặc tả GADM và ghi chú sửa lỗi trước đây được giữ nguyên byte trong [bản lưu tài liệu lịch sử](../validation/evidence/historical_document_sources_2026-11-15.txt).
 
 ### Ghi chú phương pháp từ tài liệu trước
 

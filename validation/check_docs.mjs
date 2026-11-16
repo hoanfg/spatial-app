@@ -8,6 +8,7 @@ const files = [
   'README.md', 'README-vi.md',
   'docs/README.md', 'docs/README-vi.md',
   'validation/README.md', 'validation/README-vi.md',
+  'validation/evidence/README.md', 'validation/evidence/README-vi.md',
   'validation/cross_location/README.md', 'validation/cross_location/README-vi.md',
   'validation/evidence/yanqing/README.md', 'validation/evidence/yanqing/README-vi.md',
 ];
@@ -24,6 +25,7 @@ function checkBraces(math, where) {
 }
 for (const file of files) {
   const raw = fs.readFileSync(path.join(root, file), 'utf8');
+  if (raw.includes('—')) problems.push(`${file}: em dash must be replaced with normal punctuation`);
   const lines = raw.split(/\r?\n/);
   let inCode = false;
   let inDisplay = false;
