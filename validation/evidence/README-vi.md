@@ -2,7 +2,7 @@
 
 [English](README.md) · [Tiếng Việt](README-vi.md)
 
-Đọc [hướng dẫn kiểm chứng](../README-vi.md) để xem kết quả có bằng chứng, giới hạn và việc còn mở. [Hướng dẫn dữ liệu](../../docs/README-vi.md) trình bày GADM và phương pháp phân tích.
+Trước khi sử dụng văn bản nguồn, đọc [kiểm kê ngôn ngữ và các bản dịch còn thiếu](LANGUAGE_COVERAGE-vi.md). Đọc [hướng dẫn kiểm chứng](../README-vi.md) để xem kết quả có bằng chứng, giới hạn và việc còn mở. [Hướng dẫn dữ liệu](../../docs/README-vi.md) trình bày GADM và phương pháp phân tích.
 
 | Bằng chứng | Vị trí |
 | --- | --- |

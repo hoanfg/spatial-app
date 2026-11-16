@@ -2,7 +2,7 @@
 
 [English](README.md) · [Tiếng Việt](README-vi.md)
 
-Read the [validation guide](../README.md) for supported results, limits and remaining work. The [data guide](../../docs/README.md) describes GADM and the analysis methods.
+Read the [language coverage and translation backlog](LANGUAGE_COVERAGE.md) before using archived source text. Read the [validation guide](../README.md) for supported results, limits and remaining work. The [data guide](../../docs/README.md) describes GADM and the analysis methods.
 
 | Evidence | Location |
 | --- | --- |
