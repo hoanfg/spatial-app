@@ -1,55 +1,34 @@
-# Evidence language and preservation audit
+# Evidence language coverage and preservation
 
-[English](LANGUAGE_COVERAGE.md) | [Tiếng Việt](LANGUAGE_COVERAGE-vi.md)
+[English](LANGUAGE_COVERAGE.md) | [Tiếng Việt](LANGUAGE_COVERAGE-vi.md) | [Reading-edition overview](reading-editions/README.md)
 
-Audit scope: repository documentation and historical evidence, 16 November 2026.
+Status at 16 November 2026: **paired reading editions have been deposited for every indexed source**. This records edition availability and mechanical consistency, not an independently certified translation-quality review.
 
-## Editorial guides
+## Separate active guides
 
-The following six active guide pairs have an English `README.md` and a Vietnamese `README-vi.md`:
+Six locations have English `README.md` and Vietnamese `README-vi.md` pairs: repository root, `docs/`, `validation/`, `validation/evidence/`, `validation/cross_location/`, and `validation/evidence/yanqing/`. The `validation/check_docs.mjs` check rejects Unicode em dashes in these active guides.
 
-1. Repository root
-2. `docs/`
-3. `validation/`
-4. `validation/evidence/`
-5. `validation/cross_location/`
-6. `validation/evidence/yanqing/`
+## Audit reading editions
 
-These guides are separate reading editions. Their existing `validation/check_docs.mjs` check rejects the Unicode em dash in active guides. A filename pair is not itself proof of perfect translation equivalence.
-
-## Historical evidence requiring separate reading translations
-
-| Original evidence | Scope | Translation status |
+| Original evidence | Coverage of reading editions | Navigable editions |
 | --- | --- | --- |
-| [Consolidated field evidence](CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) | Six indexed historical sections plus current audit commentary | No complete Vietnamese reading edition |
-| [Historical document sources](historical_document_sources_2026-11-15.md) | Thirteen indexed original documents, including English and Vietnamese source material | Mixed-language source archive; no complete paired English/Vietnamese reading editions |
-| [Recovered original reports](audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) | Seventy-eight original report bodies | Original languages retained; no complete paired translations |
+| Consolidated field evidence with six historical sections | One complete English and one complete Vietnamese reading file | [English](CONSOLIDATED_FIELD_EVIDENCE_2026-11-en.md) and [Vietnamese](CONSOLIDATED_FIELD_EVIDENCE_2026-11-vi.md) |
+| Thirteen indexed historical sources | Eleven English/Vietnamese topic pairs; source 01/02 and 03/04 were pre-existing language counterparts | [English index](reading-editions/historical/README.md) and [Vietnamese index](reading-editions/historical/README-vi.md) |
+| Seventy-eight recovered original report records | Thirty-five distinct report bodies identified by SHA-256, each with full English and Vietnamese reading editions; repeated bodies share a pair | [English index](reading-editions/recovered/README.md) and [Vietnamese index](reading-editions/recovered/README-vi.md) |
 
-**These three entries are archives, not normalized editorial documents.** Do not replace original punctuation, remove the Unicode em dash, translate paragraphs in place, normalize CRLF/LF, or change source-text metadata. Doing so would invalidate byte offsets and/or recorded SHA-256 values. Use new English/Vietnamese reading editions for any future translations, preserving unchanged technical values, paths, hashes, qualifiers and status dates.
+The [mapping manifest](reading-editions/translation_manifest.json) records every original path, SHA-256 and language-edition path. The total is **184 source-language mappings** resolved by **94 content files**: 70 recovered-report editions, 22 historical editions and 2 consolidated-report editions. Multiple source entries with identical content do not require duplicate text files.
 
-### Remaining work
+## Source preservation
 
-- Translate the full consolidated field report into a separately named Vietnamese reading edition.
-- Produce a source-by-source translation ledger for all thirteen historical documents and complete missing English or Vietnamese reading editions.
-- Produce a report-by-report translation ledger for all seventy-eight recovered originals and translate missing reading editions without changing the archive.
-- Review editorial wording for mixed-language prose and replace Unicode em dashes contextually in those *new reading editions*, not in the originals.
-- Verify translation completeness, every referenced file, and data provenance before marking any edition complete.
+The three original evidence collections are **forensic archives**. They intentionally retain original languages, formulas, dates, em dashes and byte sequences. Do not change original punctuation, translate paragraphs in place, or normalize line endings: the original byte offsets and hashes are evidence. They remain authoritative for provenance and original scientific qualifications.
 
-## Forensic consistency
-
-The archival Markdown files have byte-offset or checksum records:
-
-- `historical_document_sources_index.json` checks the thirteen original segments.
-- `audit-2026-11-15/consolidation_index.json` checks six consolidated sections.
-- `audit-2026-11-15/recovered-originals/recovery_receipt.json` and the recovered manifest check original report bytes and inventory.
-- The `.gitattributes` rules mark these evidence files as `-text` to prevent automatic newline rewriting.
-
-Run these checks from the repository root:
+## Checks and remaining review
 
 ```sh
 node validation/check_docs.mjs
-node validation/audit_docs_archive.mjs
+node validation/check_evidence_language_editions.mjs --strict
+node validation/audit_bilingual_editions.mjs
 node validation/audit_public_evidence.mjs --check-result
 ```
 
-The last command also runs the recovered-originals and historical-source verifiers. These checks validate deposited evidence, not independent Earth Engine extraction or live scientific replication. Original source claims and their time-specific limitations remain unchanged.
+These checks target edition presence, source-to-edition relationships, minimum length, source hashes, editorial em dashes and navigation. They **do not** certify sentence-level translation fidelity, scientific equivalence, correctness of historical claims or new Earth Engine/Cloud reproducibility. A bilingual subject reviewer should inspect quantitative details, historical status and qualifications against each protected original before scientific publication. No GeoTIFF, GeoJSON or private raw Cloud logs have been added to the reading-edition set.
