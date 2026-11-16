@@ -34,6 +34,8 @@ for (const file of files) {
     const line = lines[i];
     if (/^\s*```/.test(line)) { inCode = !inCode; continue; }
     if (inCode) continue;
+    if (line.includes('$$') && line.trim() !== '$$')
+      problems.push(`${file}:${i + 1}: display-math delimiter must be on its own line`);
     const displays = (line.match(/\$\$/g) || []).length;
     for (const match of line.matchAll(/\$\$([^$]+)\$\$/g))
       checkBraces(match[1], `${file}:${i + 1}`);
