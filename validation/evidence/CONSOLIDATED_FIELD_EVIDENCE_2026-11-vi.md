@@ -110,3 +110,185 @@ Một nhật ký Streamlit Cloud (nguồn được lưu ngoài repository này) 
 4. Xem thông báo tương thích là việc bảo trì cần theo dõi trong rà soát; chỉ cập nhật tham số chiều rộng do mã dự án gọi khi đã kiểm tra phiên bản Streamlit hỗ trợ, xác định nguồn gọi iframe và xác minh trực quan bản đồ nền không cần khóa. Không đánh đồng cảnh báo giao diện với sai hỏng khoa học.
 
 **Trạng thái:** đã phân loại nhật ký; kiểm chứng trên môi trường vận hành còn chờ. Báo cáo bằng chứng này không chứa định danh người dùng, thông tin xác thực, toàn bộ nhật ký thô hay bí mật Cloud.
+
+---
+
+## Nguồn: `validation/GHSL_NATIVE_CRS_REGRESSION_2026-11-15.md`
+
+# Kiểm chứng ngoài GHSL: kiểm thử hồi quy về hệ tọa độ của raster và vector gốc
+
+Ngày: 15/11/2026. Phạm vi: GHSL về diện tích xây dựng và dân số Thượng Hải năm 2020, không bao gồm NTL/Moran/LISA.
+
+## Quan sát trên ứng dụng đã triển khai
+
+Sau các bản sửa bảo toàn đại lượng trên lưới gốc, giao diện kiểm chứng ngoài hiển thị `Spearman rho = nan`, `AUC = nan`, 100% ô proxy bằng không và không có biểu đồ. Đây không phải kết quả kiểm chứng có thể diễn giải về mặt khoa học.
+
+## Nguyên nhân gốc
+
+Raster GHSL được giữ đúng trên lưới Mollweide `ESRI:54009` của nguồn. Tuy nhiên, `ntl/quality_ui.py` vẫn truyền GeoDataFrame vector ở `EPSG:4326` cho `zonal_stat(..., "sum", fill_missing=0.0)`. `exactextract` không tự chuyển hệ tọa độ của hình học khi CRS khác nhau; thư viện phát cảnh báo và trích xuất các giao không tồn tại. Việc điền các kết quả rỗng bằng không tạo ra proxy giả có phương sai bằng không.
+
+GeoTIFF tham chiếu độc lập của Thượng Hải có phạm vi raster `[11030200, 3780000, 11063300, 3800200]` trong `ESRI:54009`. Các đa giác ô được chọn trong WGS84 có kinh độ khoảng 121.x và vĩ độ khoảng 31.x. Những giá trị tọa độ thô này không thể giao nhau. Chuyển hệ tọa độ của đa giác sang `ESRI:54009` đưa chúng vào phạm vi GHSL.
+
+## Bản sửa và biện pháp kiểm soát
+
+- Chỉ chuyển **đa giác vector** sang CRS của raster nguồn trước khi gọi `exact_extract`, đồng thời giữ nguyên giá trị và căn chỉnh pixel raster 100 m.
+- Từ chối báo cáo thành công khi thiếu CRS, hình học hoàn toàn không giao nhau hoặc phép trích xuất không có giao pixel quan sát được, thay vì tạo ra các số không giả.
+- Phân biệt giá trị GHSL bằng không thực sự được quan sát với trường hợp không có giao hình học.
+- Không lưu đệm một phép so sánh có proxy vùng lõi toàn số không như thể kết quả `nan` Spearman/AUC là thành công. Phải hiển thị phản hồi rõ ràng.
+- Thêm kiểm thử tích hợp địa lý sử dụng raster Mollweide tổng hợp và đa giác WGS84, có cả trường hợp bằng không thật và không chồng lấn.
+
+## Giới hạn
+
+Bản sửa có kiểm thử hồi quy với dữ liệu tổng hợp. Nó chưa chứng minh phản hồi `computePixels` hiện tại của Earth Engine trên Streamlit Cloud có giá trị khác không, cũng chưa chứng minh Spearman/AUC cập nhật phù hợp với phân phối tham chiếu. Cần một lần chạy sau triển khai để hoàn thành điều kiện này.
+
+Nguồn: https://isciences.github.io/exactextract/_modules/exactextract/exact_extract.html
+
+Các raster tham chiếu GHSL do chủ dự án cung cấp riêng vẫn nằm ngoài GitHub.
+
+---
+
+## Nguồn: `validation/A02_MULTIBAND_OPTIMIZATION_2026-11-15.md`
+
+# Tối ưu hiệu năng thống kê vùng đa băng A02: biên bản rà soát
+
+Ngày: 15/11/2026. Phạm vi chỉ gồm trích xuất chất lượng quan trắc A02. Không thay đổi NTL, Global Moran, LISA, FDR, GHSL hay bộ ước lượng theo chính sách `legacy_zero_fill`.
+
+## Mốc ban đầu (Streamlit Cloud thật, Bao'an 2020, ô 500 m, 7.148 ô)
+
+- Thời gian thực thi pipeline phân tích: **46,6687 giây**.
+- Trích xuất năm băng A02: **25,0028 giây** (53,6% thời gian pipeline).
+- Tạo lưới: **9,7399 giây**; trung bình vùng NTL: **9,6193 giây**.
+- Đỉnh RSS tiến trình được lấy mẫu: **728,531 MiB**.
+- Nguồn: `BAOAN_A02_PERFORMANCE_POST_MERGE_AUDIT_2026-11-15.md` lưu riêng và `spatial_app_performance.json` trong Library của chủ dự án tại `/Spatial-App/audit-evidence-2026-11-15/`.
+- Đây là kết quả của một lần chạy, không phải cam kết về độ trễ hay bộ nhớ.
+
+## Nút thắt trước đây
+
+`ntl/semantics.py::cell_quality` gọi riêng `ntl/zonal.py::zonal_stat` cho từng băng chất lượng từ 2 đến 6. Mỗi lời gọi tạo một GeoTIFF một băng tạm thời rồi quét lại cùng tập đa giác ô bằng `exact_extract`.
+
+## Phương án tối ưu đề xuất
+
+- Đọc một lần năm băng chất lượng bằng Rasterio, bảo toàn mặt nạ nguồn và thay giá trị không hữu hạn bằng NaN đúng như cách cũ.
+- Viết một GeoTIFF `float32` năm băng **trong bộ nhớ**, với `nodata=NaN`.
+- Gọi `exact_extract` một lần cho năm băng `RasterioRasterSource` có tên tường minh, sử dụng **cùng phép trung bình có trọng số theo phần diện tích**.
+- Ghép kết quả theo thứ tự `grid_id` ban đầu; trường hợp thiếu dữ liệu vẫn là NaN.
+- Giữ nguyên kiểm tra lược đồ A02 nghiêm ngặt và cơ chế chuyển trạng thái `unknown` khi không đủ tin cậy.
+- Bổ sung hồi quy số học tự động so sánh cách cũ với cách mới, bao gồm đa giác bị cắt một phần, pixel bị che/không hữu hạn, đa giác ngoài raster và ID bị đổi thứ tự.
+
+## Điều kiện nghiệm thu
+
+1. Toàn bộ kiểm thử repository hiện có và các kiểm thử tương đương mới phải PASS.
+2. Đo dữ liệu tổng hợp mà không đặt khẳng định bắt buộc về tốc độ; giữ thời gian làm bằng chứng, không xem là cam kết cho Cloud.
+3. Sau triển khai, so sánh mọi giá trị chất lượng A02 của Bao'an năm 2020 với ô 500 m với CSV 7.148 ô trước đó, sai số không quá `1e-7` trên kết quả thô (hoặc độ chính xác CSV nếu chỉ còn dạng đó).
+4. Kiểm tra `ntl_mean`, số lượng, Moran/LISA không thay đổi, đồng thời không xuất hiện trạng thái `unknown` sai.
+5. Ghi thời gian từ đầu đến cuối và RSS tiến trình được lấy mẫu với cùng địa điểm và cấu hình. Không hợp nhất PR này với tuyên bố đã tăng tốc trước khi có đo hiệu năng trực tiếp.
+
+## Nguồn gốc
+
+Bộ bằng chứng đầy đủ do chủ dự án lưu giữ: `/Spatial-App/audit-evidence-2026-11-15/`. PR này cố ý loại trừ ảnh nguồn riêng, shapefile lớn, nhật ký Cloud thô và thông tin tài khoản độc quyền.
+
+---
+
+## Nguồn khôi phục: `SPATIAL_APP_AUDIT_EVIDENCE_README_2026-11-15.md`
+
+# Spatial App: toàn bộ bằng chứng kiểm toán gốc, ngày 15/11/2026
+
+Đây là **kho bằng chứng riêng**, được tập hợp *trước* bất kỳ PR tối ưu hiệu năng nào. Việc tập hợp không làm thay đổi tệp vận hành hoặc nhánh GitHub.
+
+## Phạm vi được lưu giữ thực tế
+
+- **118 tệp vật lý gốc**, gồm cả **30 tệp** có mặt trong ảnh chụp Library `/Spatial-App/major-review-staging/` tại thời điểm đó.
+- **23 tệp ZIP gốc** được giữ nguyên, với **271 tệp có chỉ mục VÀ được giải nén riêng** để có thể truy cập CSV/JSON/chương trình mà không cần giải nén hai lần.
+- **16 CSV trực tiếp** cùng **28 CSV được tham chiếu trong các ZIP gốc**.
+- **5 JSON trực tiếp** cùng **49 JSON được tham chiếu trong các ZIP gốc**.
+- **3 GeoJSON trực tiếp**, **14 GeoTIFF trực tiếp** và **10 ảnh chụp màn hình**.
+- **78 tài liệu hoặc phiên bản nguồn Markdown đầy đủ**, gộp vào `SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md` mà không rút gọn hoặc bỏ văn bản. Mỗi bản gốc vẫn có trong kho lưu trữ.
+
+## Vị trí bằng chứng
+
+- `01_ORIGINAL_FIELD_INPUTS`: CSV/GeoJSON đầu ra ứng dụng gốc (Bao'an, Thượng Hải, Qimen) và CSV đầu vào kiểm toán cũ.
+- `02_EARTH_ENGINE_AND_GHSL_RASTERS`: GeoTIFF NOAA VIIRS, sáu băng A02 và GHSL trên lưới gốc/dạng ứng dụng.
+- `03_CELL_AND_METRIC_RESULTS`: đối chiếu ô rìa V11, JSON định lượng và số đo hiệu năng.
+- `04_SCRIPTS_FOR_REPRODUCIBILITY`: chương trình xác minh độc lập và mã nguồn xuất Earth Engine.
+- `05_NOTES_REPORTS_AND_HISTORY`: ghi chú và văn bản kiểm toán độc lập gốc.
+- `06_LIBRARY_STAGING_EXACT_ORIGINALS`: **bản sao chính xác của mọi tệp Library đã chuẩn bị tại lúc đóng gói**, gồm toàn bộ báo cáo, chương trình và kho nén.
+- `07_ARCHIVES_AND_PRIOR_SNAPSHOTS`: các ZIP lịch sử khác của Diên Khánh, GADM Trung Quốc và các đợt rà soát trước.
+- `08_PRIVATE_RAW_LOGS_AND_SCREENSHOTS`: nhật ký Streamlit gốc và ảnh do chủ dự án cung cấp, **không công bố bừa bãi**.
+- `10_WORKING_HISTORY_AND_ADDITIONAL_INPUTS`: không gian làm việc kiểm toán cũ và các trích đoạn dữ liệu cũ, giữ để truy xuất nguồn gốc.
+- `11_EXPANDED_ORIGINAL_ARCHIVE_CONTENTS`: bản sao của **toàn bộ** tệp trong ZIP lịch sử, không thay đổi byte; các ZIP gốc cũng được lưu.
+- `00_INDEX`: manifest tự đầy đủ, danh sách SHA-256, khoảng byte Markdown và nguồn gốc GitHub bất biến.
+
+## Hợp nhất Markdown và bảo tồn 100%
+
+Markdown hợp nhất là một **bản xem** các văn bản gốc, không thay thế những tệp thô. Mỗi tài liệu gốc được chèn bằng **toàn bộ byte không thay đổi**. Vị trí byte bắt đầu, độ dài và SHA-256 được ghi trong `00_INDEX/MARKDOWN_BYTE_RANGES.json`. Chương trình ghép đã kiểm tra từng phần đối với nguồn thô; `verify_spatial_app_audit_archive.py` có thể xác minh lại các mã SHA-256 và vị trí byte. Các phiên bản lịch sử khác nhau và báo cáo lặp được giữ có chủ đích, không tự hòa giải nội dung mâu thuẫn.
+
+## Diễn giải kiểm toán và các giới hạn còn lại
+
+- **V11**: 17.177 ô ở ba địa điểm mới đã được đối chiếu với VIIRS tham chiếu; một trường hợp ô rìa Bao'an sát ngưỡng làm tròn được ghi trong báo cáo bằng chứng gốc. Các CSV chi tiết và chỉ số đều có trong gói gốc được mô tả.
+- **A02**: CSV Bao'an sau triển khai báo cáo siêu dữ liệu quan trắc hợp lệ cho 7.148 ô và giữ lại giá trị NTL; các tệp trước/sau và báo cáo gốc được mô tả là có trong gói.
+- **GHSL**: các raster Thượng Hải gốc và dạng lưới ứng dụng cùng chỉ số Spearman/AUC độc lập sau triển khai nằm trong gói được mô tả; ảnh chụp của Thượng Hải, Qimen và Bao'an được bảo tồn. Bốn ảnh bổ sung chỉ là kết quả giao diện quan sát, không phải dựng lại độc lập từng ô cho Qimen/Bao'an.
+- **Hiệu năng**: JSON bộ ghi nhận Streamlit Cloud thật có thời gian các giai đoạn và RAM tiến trình được lấy mẫu. Đây không phải kiểm thử sức chịu tải Cloud.
+- **Phạm vi ngoài còn thiếu**: không phải mọi tệp của repository vận hành đều được sao chép vào gói này. `GITHUB_CANONICAL_PROVENANCE.json` liên kết đến tài liệu kiểm chứng bất biến của commit kiểm toán mới nhất đúng thời điểm đó.
+
+## Biện pháp bảo vệ khoa học và công bố
+
+Không đưa **ZIP riêng đầy đủ** này vào một commit GitHub. GeoJSON lớn, GeoTIFF raster, nhật ký Cloud thô và ảnh chụp phải nằm ngoài repository nguồn công khai trừ khi đã được cân nhắc kỹ để công bố. Với một PR sau này, sử dụng báo cáo tổng hợp, JSON chỉ số nhỏ, CSV chọn lọc từng ô và chương trình tái lập khi thích hợp. PR cần tham chiếu mã băm của đầu vào thô lớn còn lưu riêng. Không tệp nào bị xóa hay viết tắt trong kho gốc; những mâu thuẫn lịch sử, nếu có, vẫn hiển thị như đã ghi.
+
+---
+
+## Nguồn khôi phục: `SPATIAL_APP_NEXT_PERFORMANCE_BASELINE_2026-11-15.md`
+
+# Spatial App: mốc hiệu năng kế tiếp sau A02 PR #27
+
+Ngày: 15/11/2026. Chỉ là hồ sơ rà soát. Không mở PR thứ hai, thay đổi môi trường vận hành hoặc hợp nhất.
+
+## Trạng thái PR #27
+
+- Đường dẫn: https://github.com/hoanfg/spatial-app/pull/27
+- Commit đầu nhánh khi rà soát: `58f38fd381ffa005a31832e0d3fdd5841d5882c0`.
+- Trạng thái: bản nháp, chưa hợp nhất tại thời điểm kiểm tra.
+- Cả luồng CI `push` và `pull_request` đều đạt (bộ kiểm thử lõi và toàn bộ AppTest, gồm hồi quy A02 năm băng).
+- A02 mới trích xuất năm băng chất lượng bằng một lần gọi `exact_extract`. Việc giữ nguyên CSV thực địa theo chính sách cũ và hiệu năng Streamlit Cloud thật vẫn **chưa được xác nhận** cho đến khi triển khai và đo. Kho kiểm toán riêng: `/Spatial-App/audit-evidence-2026-11-15/`.
+
+## Mốc Cloud thật hiện có (Bao'an, 2020, 500 m, 7.148 ô)
+
+Từ JSON bộ đo hiệu năng do chủ dự án cung cấp trước lần tối ưu này:
+
+- `pipeline_wall_time_s`: 46.6687 s
+- `a02.cell_quality`: 25.0028 s
+- `grid.build`: 9.7399 s
+- `ntl.zonal_mean`: 9.6193 s
+- Đỉnh RSS tiến trình được lấy mẫu: 728.531 MiB
+
+Chưa có phép đo hiệu năng Cloud sau tối ưu hóa.
+
+## Ưu tiên tiếp theo: tạo lưới, chỉ ở mức điều tra
+
+Nguồn: `app.py::build_grid` trong repository tại thời điểm ghi hồ sơ. Quy trình:
+
+1. Tạo đa giác ô ứng viên đều nhau kích thước 500 m trên hộp bao mở rộng.
+2. Dùng `gpd.clip(..., keep_geom_type=True)` để cắt theo ranh giới quận/huyện.
+3. Bỏ phần rỗng hoặc có diện tích không dương, gán `grid_id` theo thứ tự đầu ra.
+
+Phép đo thăm dò cục bộ trên hình học Bao'an **được dựng lại** (hợp của 7.148 ô GeoJSON đầu ra do chủ dự án cung cấp, chuyển sang `EPSG:32650`; không phải ranh giới GADM gốc):
+
+- `gpd.read_file` đọc 7.148 dòng: 0,586 s.
+- Chuyển sang UTM: 0,028 s.
+- Hợp nhất đa giác bằng Shapely để xấp xỉ ranh giới quận/huyện: 0,272 s.
+- Số ô chữ nhật ứng viên đều nhau: 20.116.
+- Giai đoạn `gpd.clip`: 3,491 s; kết quả là 7.148 ô.
+
+**Giới hạn:** Môi trường chạy cục bộ khác phần cứng và phiên bản Streamlit Cloud. Ranh giới được dựng lại từ ô đầu ra, không phải đa giác GADM nguồn ban đầu. Đây là phép xác định sơ bộ nút thắt, không phải phép đo hợp lệ để khẳng định tốc độ cách cũ và mới, và không thể so trực tiếp với 9,7399 giây của `grid.build` trên Cloud.
+
+## Điều kiện an toàn và chính xác khi tối ưu việc tạo lưới
+
+- Bảo toàn chính xác hình học, `grid_id`, thứ tự, `area_km2` và trạng thái ô rìa, gồm trường hợp cắt ranh giới và đa giác nhiều phần.
+- So sánh các thuật toán ứng viên trên cùng ranh giới GADM gốc của quận/huyện và kích thước ô 500 m; đánh giá mức tương đương hình học/sai số diện tích và thuộc tính không phụ thuộc thứ tự hoán vị.
+- So sánh bộ nhớ và tính đúng đắn toàn lưới, không chỉ thời gian.
+- Không tối ưu `ntl.zonal_mean` trong cùng PR với tạo lưới. Chủ dự án ưu tiên các phạm vi nhỏ, giới hạn và mỗi lần chỉ một PR có thể rà soát.
+
+## Những bước tiếp theo
+
+1. Chỉ rà soát/hợp nhất PR #27 sau khi đạt các điều kiện phê duyệt; CI tại thời điểm ghi hồ sơ có trạng thái xanh, nhưng chưa có bằng chứng tăng tốc thật trên Cloud.
+2. Một JSON hiệu năng và CSV thực địa Bao'an 2020/500 m sau triển khai sẽ đo thời gian A02 và xác lập tính nhất quán số học so với mốc cũ.
+3. Chỉ điều tra việc tạo lưới như **một đợt tối ưu riêng, tiếp theo** nếu hiệu quả cải thiện A02 đã được xác minh.
