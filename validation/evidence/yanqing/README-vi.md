@@ -1,6 +1,6 @@
-# Bằng chứng kiểm định cho Yanqing, gói tài liệu tái lập
+# Bằng chứng kiểm định cho Diên Khánh, gói tài liệu tái lập
 
-Thư mục này chứa dữ liệu xuất nguồn và các sản phẩm so sánh độc lập cho quá trình kiểm định **quận Yanqing, Bắc Kinh, Trung Quốc** của `spatial-app`. Đây là bằng chứng, không phải lời khẳng định rằng mọi tuyên bố về thống kê hay kinh tế đều đã được xác minh.
+Thư mục này chứa dữ liệu xuất nguồn và các sản phẩm so sánh độc lập cho quá trình kiểm định **quận Diên Khánh, Bắc Kinh, Trung Quốc** của `spatial-app`. Đây là bằng chứng, không phải lời khẳng định rằng mọi tuyên bố về thống kê hay kinh tế đều đã được xác minh.
 
 ## Nội dung kho lưu trữ hiện tại
 
