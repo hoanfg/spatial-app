@@ -395,7 +395,7 @@ Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất ti�
 | Metadata A02 | CSV Bảo An có 7.148/7.148 ô thuộc trường hợp có quan sát | Ca thực tế không có hoặc ít quan sát |
 | Hiệu năng Cloud | Có số đo một lượt Bảo An và bộ ghi hiệu năng | Nhiều lượt cùng phiên bản triển khai, nhiều người dùng và kiểm tra tài nguyên đầy đủ |
 
-[Hướng dẫn kiểm chứng hiện tại](../validation/README-vi.md) phân biệt kết quả quan sát với điều chưa kiểm tra và dẫn về chứng cứ gốc. Bản validation master, đặc tả GADM và ghi chú sửa lỗi trước đây được giữ nguyên byte trong [bản lưu tài liệu lịch sử](../validation/evidence/historical_document_sources_2026-11-15.txt).
+[Hướng dẫn kiểm chứng hiện tại](../validation/README-vi.md) phân biệt kết quả quan sát với điều chưa kiểm tra và dẫn về chứng cứ gốc. Bản validation master, đặc tả GADM và ghi chú sửa lỗi trước đây được giữ nguyên byte trong [bản lưu tài liệu lịch sử](../validation/evidence/historical_document_sources_2026-11-15.md).
 
 ### Ghi chú phương pháp từ tài liệu trước
 
