@@ -5,7 +5,6 @@
 Thư mục này chứa dữ liệu và kết quả dùng để kiểm tra ứng dụng. Mỗi kết quả chỉ áp dụng cho đúng địa bàn, năm, lưới và tệp đầu vào đã nêu.
 
 ## Bằng chứng hiện có
-
 | Bằng chứng | Tệp | Kết quả có căn cứ | Giới hạn |
 | --- | --- | --- | --- |
 | Bảo An 2020 | [CSV 7.148 ô, JSON hiệu năng và bản tóm tắt đã kiểm tra](audit-2026-11-15/) | Mã ô không trùng; toàn bộ dòng có trạng thái đã quan sát và đủ năm trường chất lượng A02 hữu hạn. Toàn quy trình mất 46,6687 giây, trong đó A02 mất 25,0028 giây. | Một lượt có dữ liệu quan sát; chưa bao phủ ca thật sự thiếu hoặc ít quan sát. |
@@ -63,7 +62,6 @@ Ca nhân tạo 36 ô che sáu ô. So với dữ liệu đầy đủ, chính sác
 Đây là phản ví dụ chẩn đoán, không phải ước lượng sai lệch ngoài thực địa. Kết quả giải thích vì sao phải xuất trường hỗ trợ quan sát và vì sao ca thiếu hỗ trợ thực vẫn là bước tiếp theo.
 
 ## Cách kiểm tra
-
 Chạy từ thư mục gốc của repo:
 
 ```sh

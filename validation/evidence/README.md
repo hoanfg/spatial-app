@@ -5,7 +5,6 @@
 This folder contains the datasets and outputs used to check the application. Each result applies only to the stated location, year, grid and input files.
 
 ## Available evidence
-
 | Evidence | Files | Supported result | Limit |
 | --- | --- | --- | --- |
 | Bao'an 2020 | [7,148-cell CSV, performance JSON and verified summary](audit-2026-11-15/) | Cell IDs are unique; every row has observed status and five finite A02 quality fields. The recorded pipeline took 46.6687 s, including 25.0028 s for A02. | One observed-data run. It does not cover genuine missing or low-support observations. |
@@ -61,7 +60,6 @@ Both runs report success, but they are single measurements and the earlier profi
 The deposited 36-cell synthetic case masks six cells. Relative to the complete baseline, legacy zero filling changes mean NTL from 10.9444 to 9.1944, zero-cell share from 0.0278 to 0.1944, Gini from 0.3054 to 0.4289 and binary-Queen Global Moran from 0.7319 to 0.6210. Six LISA labels and 33 Space-Time regimes change in the constructed example.
 
 This is a diagnostic counterexample, not an estimate of field bias. It explains why observation support must be exported and why a real missing-support case remains a next step.
-
 ## Checks
 
 Run from the repository root:

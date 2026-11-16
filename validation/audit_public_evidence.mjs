@@ -50,7 +50,6 @@ const result = {rows: rows.length, unique_grid_ids: rows.length, observed_rows: 
   limitations: ['CSV integrity/semantics check only; no fresh Earth Engine or raster-overlay run.', 'No pre-fix CSV available for unchanged-NTL comparison.', 'Profiler has no commit identity; this is the historical pre-optimization baseline, not a measured PR #27 speedup.']};
 if (process.argv.includes('--check-result')) assert.deepEqual(result, JSON.parse(fs.readFileSync(path.join(dir, 'verified_summary.json'), 'utf8')));
 console.log(JSON.stringify(result, null, 2));
-
 const postDir = path.join(root, 'evidence/a02_post_pr27');
 const postRows = parseCSV(fs.readFileSync(path.join(postDir, 'CHN_guangdong_shenzhen_bao_an_2020_500m_lisa_cells.csv'), 'utf8'));
 assert.equal(postRows.length, rows.length);
