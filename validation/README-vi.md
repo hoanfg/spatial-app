@@ -9,8 +9,8 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | Cần xem | Nơi đọc |
 | --- | --- |
 | Trạng thái và việc còn mở | [Bảng dưới đây](#tinh-trang-hien-tai) |
-| Bằng chứng thực địa gốc và giới hạn | [Hồ sơ thực địa tổng hợp](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt) |
-| Nguyên văn báo cáo cũ | [Nguồn 78 báo cáo](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt) và [bản lưu 13 tài liệu](evidence/historical_document_sources_2026-11-15.txt) |
+| Bằng chứng thực địa gốc và giới hạn | [Hồ sơ thực địa tổng hợp](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) |
+| Nguyên văn báo cáo cũ | [Nguồn 78 báo cáo](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) và [bản lưu 13 tài liệu](evidence/historical_document_sources_2026-11-15.md) |
 | Dữ liệu và phép kiểm có thể chạy | [Yanqing, Bắc Kinh](evidence/yanqing/README-vi.md), [Bảo An](evidence/audit-2026-11-15/), [quy trình nhiều địa bàn](cross_location/README-vi.md) |
 
 ## Tình trạng hiện tại
@@ -24,7 +24,7 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | GHSL Thượng Hải | PR #24–26 đã sửa phép cộng lượng trên lưới nguồn. Rho, khoảng bootstrap và AUC độc lập tại 715 ô lõi khớp mức làm tròn UI | Chưa có GHSL từng ô do app live xuất; biểu đồ Kỳ Môn/Bảo An không thay phép kiểm từng ô độc lập |
 | Hiệu năng A02 | Một profiler Bảo An sau PR #27 ghi A02 26,4623 giây, so với mốc trước 25,0028 giây; PR #29 thêm substep và `source_commit` | Chưa chứng minh tăng tốc; cần nhiều lượt Cloud cùng cấu hình |
 
-[Hồ sơ thực địa](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt) giữ chi tiết đầu vào, ngoại lệ số học và SHA-256. Các dòng “chưa thực hiện” trong phần lịch sử là trạng thái tại thời điểm viết. Manifest 78 báo cáo liệt kê 118 tệp trực tiếp và 271 thành viên ZIP; repo có báo cáo và một số CSV/JSON, **không có** toàn bộ raster, mã kiểm, biểu đồ hay thành viên ZIP đã liệt kê.
+[Hồ sơ thực địa](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) giữ chi tiết đầu vào, ngoại lệ số học và SHA-256. Các dòng “chưa thực hiện” trong phần lịch sử là trạng thái tại thời điểm viết. Manifest 78 báo cáo liệt kê 118 tệp trực tiếp và 271 thành viên ZIP; repo có báo cáo và một số CSV/JSON, **không có** toàn bộ raster, mã kiểm, biểu đồ hay thành viên ZIP đã liệt kê.
 
 ## Phát hiện audit và việc còn mở
 
@@ -40,7 +40,7 @@ Kết quả kiểm chứng chỉ áp dụng cho địa bàn, năm, dữ liệu v
 | A08, A10, A11 | Kiểm tra kỳ GHSL/mask khác, lượt Earth Engine→app→CSV live, hiệu năng/RSS Cloud lặp lại và nhiều phiên | Dịch vụ có quyền truy cập và số đo gắn commit triển khai |
 | V12, V13 | Xem chuỗi VIIRS nhiều năm và đối chứng kinh tế độc lập cùng thời gian/địa bàn | So sánh hai mốc và GHSL không tự chứng minh hai điều này |
 
-A01 về CI đã sửa trong PR #19. PR #10 sửa Local Moran, mask NoData và một tên nguồn GADM; #20–22 thêm A02 và các phép kiểm số; #24–27 sửa production A02/GHSL và gộp reducer nhiều band; #28 công bố bằng chứng khôi phục được; #29 thêm chẩn đoán A02. [Bản lưu 13 tài liệu](evidence/historical_document_sources_2026-11-15.txt) giữ nguyên các báo cáo từng nằm rải trong `docs/` và thư mục này.
+A01 về CI đã sửa trong PR #19. PR #10 sửa Local Moran, mask NoData và một tên nguồn GADM; #20–22 thêm A02 và các phép kiểm số; #24–27 sửa production A02/GHSL và gộp reducer nhiều band; #28 công bố bằng chứng khôi phục được; #29 thêm chẩn đoán A02. [Bản lưu 13 tài liệu](evidence/historical_document_sources_2026-11-15.md) giữ nguyên các báo cáo từng nằm rải trong `docs/` và thư mục này.
 
 ## Phương pháp và khả năng tái lập
 
