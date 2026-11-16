@@ -11,9 +11,9 @@ A result applies only to the stated location, year, input and precision. The tab
 | Topic | Result | Limit |
 | --- | --- | --- |
 | GADM China | 2,420 curated units matched the full-resolution GADM 4.1 source at the documented precision. | This does not verify current official boundaries or every country. |
-| Yanqing VIIRS and LISA | Independent 2014 and 2020 comparisons cover 8,333 cells for each year; the recorded formulas, FDR and two-date calculations were checked. | Two dates do not establish a continuous annual trend. |
+| Yanqing VIIRS and LISA | The deposited 2020 polygon table has 8,332/8,333 cells within 0.00005; the single exceedance is a border cell at 0.0000643242. The independent LISA table matches 8,154/8,333 final classes and records all 179 differences. | LISA uses rounded exported NTL and an independent permutation seed, so label differences must be reported rather than treated as exact arithmetic failures. Two dates do not establish an annual trend. |
 | Shanghai, Bao'an and Qimen | V11 reports 15,330/15,330 full cells within the four-decimal CSV bound; 1,846/1,847 clipped cells were within 0.00005 and all were within 0.0000501. | Complete source rasters, cellwise outputs and plots are not deposited. |
-| A02 observation metadata | The 7,148-cell Bao'an CSV has observed status and five finite quality fields in every row. The later NTL CSV is byte-identical to the deposited reference. | No real missing or low-support field case has been checked. |
+| A02 observation metadata | The 7,148-cell Bao'an CSV has observed status and five finite quality fields in every row. Across the earlier and later exports, all values in the 32 shared columns match; the later file adds LISA columns. | No real missing or low-support field case has been checked. |
 | GHSL Shanghai | The native-grid quantity calculation and independent aggregate comparison reproduce the displayed rho, bootstrap interval and AUC rounding on 715 eligible cells. | There is no deposited live per-cell GHSL export; Bao'an and Qimen charts are not independent cellwise checks. |
 | A02 performance | The later Bao'an run records 37.6479 s for the pipeline and 26.4623 s for A02, compared with 46.6687 s and 25.0028 s in the earlier run. | The total run was shorter, but A02 itself was not faster. Repeated comparable runs are needed. |
 

@@ -11,9 +11,9 @@ Mỗi kết quả chỉ áp dụng cho đúng địa bàn, năm, dữ liệu và
 | Hạng mục | Kết quả | Giới hạn |
 | --- | --- | --- |
 | GADM Trung Quốc | 2.420 đơn vị biên tập khớp nguồn GADM 4.1 đầy đủ trong sai số đã ghi. | Không xác nhận ranh giới pháp lý hiện nay hoặc mọi quốc gia. |
-| VIIRS và LISA tại Diên Khánh | Đối chiếu độc lập năm 2014 và 2020 bao phủ 8.333 ô cho mỗi năm; công thức, FDR và phép tính hai mốc đã được kiểm tra trong phạm vi báo cáo. | Hai mốc năm không chứng minh xu thế hằng năm liên tục. |
+| VIIRS và LISA tại Diên Khánh | Bảng đối chiếu đa giác năm 2020 có 8.332/8.333 ô trong ngưỡng 0,00005; ô vượt ngưỡng duy nhất là ô biên với sai số 0,0000643242. Bảng LISA độc lập khớp 8.154/8.333 nhãn cuối và ghi đủ 179 trường hợp khác. | Phép LISA dùng NTL đã làm tròn trong CSV và hạt hoán vị độc lập, nên phải báo cáo khác biệt thay vì coi mọi nhãn khác là lỗi số học. Hai mốc năm không chứng minh xu thế hằng năm. |
 | Thượng Hải, Bảo An và Kỳ Môn | V11 ghi 15.330/15.330 ô đầy đủ trong giới hạn làm tròn CSV bốn chữ số; 1.846/1.847 ô cắt biên trong ngưỡng 0,00005 và toàn bộ trong 0,0000501. | Chưa có đủ raster nguồn, kết quả từng ô và biểu đồ. |
-| Siêu dữ liệu A02 | CSV Bảo An 7.148 ô có trạng thái đã quan sát và năm trường chất lượng hữu hạn ở mọi dòng. CSV NTL lần sau trùng từng byte với bản tham chiếu đã lưu. | Chưa kiểm tra ca thực địa thật sự thiếu hoặc ít quan sát. |
+| Siêu dữ liệu A02 | CSV Bảo An 7.148 ô có trạng thái đã quan sát và năm trường chất lượng hữu hạn ở mọi dòng. Mọi giá trị trong 32 cột chung của hai lần xuất đều khớp; tệp sau có thêm các cột LISA. | Chưa kiểm tra ca thực địa thật sự thiếu hoặc ít quan sát. |
 | GHSL tại Thượng Hải | Phép tính lượng trên lưới nguồn và đối chiếu tổng hợp độc lập tái lập mức làm tròn rho, khoảng bootstrap và AUC trên 715 ô đủ điều kiện. | Chưa có bản xuất GHSL trực tiếp theo từng ô; biểu đồ Bảo An và Kỳ Môn không phải phép kiểm từng ô độc lập. |
 | Hiệu năng A02 | Lượt Bảo An sau ghi 37,6479 giây cho toàn quy trình và 26,4623 giây cho A02, so với 46,6687 giây và 25,0028 giây ở lượt trước. | Tổng thời gian ngắn hơn nhưng riêng A02 không nhanh hơn; cần nhiều lượt chạy cùng cấu hình. |
 
