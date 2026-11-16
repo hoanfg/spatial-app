@@ -60,4 +60,3 @@ node validation/check_docs.mjs
 python -m pytest -q tests
 ```
 
-Lệnh bằng chứng kiểm tra dữ liệu đã nộp và tóm tắt CSV công khai; `check_docs.mjs` kiểm tra liên kết và dấu công thức cơ bản. Bộ Python kiểm tra hợp đồng mã; không tự chạy lại Earth Engine, GHSL thực địa hoặc phép đo hiệu năng đám mây. Chỉ ghi đạt sau khi có kết quả chạy thực tế.
