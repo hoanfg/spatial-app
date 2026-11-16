@@ -268,7 +268,7 @@ $$
 
 với $k_i = \lvert N(i) \cap S \rvert$ là số láng giềng hợp lệ của ô $i$. Chỉ các ô $i \in S$ có $k_i \ge k_{\min}$ (mặc định $k_{\min} = 1$) mới vào tập kiểm định $\mathrm{Focal}$.
 
-> Cập nhật phương pháp (11/11/2026): Local I dùng chuẩn hóa ESDA và hoán vị có điều kiện không hoàn lại. Cần tính lại các kết quả LISA/panel cũ; xem [ghi chú phương pháp và chuyển đổi](docs/README-vi.md#ghi-chu-phuong-phap-tu-tai-lieu-truoc) cùng bản ghi gốc trong hồ sơ lịch sử.
+> Cập nhật phương pháp (11/11/2026): Local I dùng chuẩn hóa ESDA và hoán vị có điều kiện không hoàn lại. Cần tính lại các kết quả LISA hoặc panel cũ trước khi so với kết quả hiện tại; xem [hướng dẫn kiểm chứng](validation/README-vi.md).
 
 ### 3.3. Kiểm định Local Moran's I (LISA) và hoán vị có điều kiện
 
@@ -428,7 +428,7 @@ Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa c
 
 **Đại lượng GHSL.** Diện tích xây dựng và dân số là lượng trên từng điểm ảnh gốc. Ứng dụng hiện giữ lưới GHSL nguồn và chuyển đa giác ô sang CRS đó trước khi cộng theo tỷ lệ diện tích giao. Phép tính độc lập tái lập rho Spearman, khoảng bootstrap theo khối và AUC nội đô Thượng Hải đúng mức làm tròn giao diện. Kết quả này chưa xác nhận từng ô hoặc Kỳ Môn/Bảo An.
 
-**Bằng chứng và hiệu năng.** V11 đã đối chiếu NTL/LISA tại Thượng Hải, Bảo An, Kỳ Môn theo phạm vi trong [hướng dẫn kiểm chứng](validation/README-vi.md); repo chưa có toàn bộ cặp raster và kết quả chi tiết. JSON hiệu năng ghi thời gian từng bước và RSS tiến trình; PR #29 thêm mã commit triển khai khi có thể cùng thời gian các bước A02. Một lượt đo sau tối ưu chưa cho thấy A02 chạy nhanh hơn. Phép thử nhiều phiên trên đám mây và luồng Earth Engine đến CSV trực tiếp vẫn còn mở.
+**Bằng chứng và hiệu năng.** Kết quả đối chiếu NTL/LISA tại Thượng Hải, Bảo An và Kỳ Môn được tóm tắt trong [hướng dẫn kiểm chứng](validation/README-vi.md); repo chưa có toàn bộ cặp raster và kết quả chi tiết. JSON hiệu năng ghi thời gian từng bước, RSS tiến trình, mã commit triển khai khi có và thời gian các bước A02. Một lượt Bảo An sau thay đổi xử lý nhiều dải chưa cho thấy A02 chạy nhanh hơn. Vẫn cần nhiều lượt đo cùng cấu hình và một phép kiểm đầy đủ từ dịch vụ đến CSV.
 
 Mã nguồn: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`, `ntl/ghsl_native.py`, `ntl/performance.py`. [Hướng dẫn kiểm chứng](validation/README-vi.md) tách rõ test nhân tạo, kết quả thực địa đã ghi và việc còn thiếu.
 

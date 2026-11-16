@@ -4,6 +4,15 @@
 
 This folder contains the public inputs and independent comparison outputs for Yanqing District, Beijing. Results apply to the stated files, years and tolerances.
 
+## Questions and reasons
+
+| Check | Why it is needed |
+| --- | --- |
+| VIIRS raster to grid | Confirms that projection, polygon coverage and CSV rounding produce the expected NTL value for each cell. |
+| Local Moran and FDR | Confirms that neighbor construction, Local I, permutation significance and multiple-testing labels can be recalculated outside the application. |
+| 2014 to 2020 Space-Time output | Confirms that the exported two-date fields and regime codes are internally consistent. |
+| File integrity | Prevents a later file replacement from being mistaken for the input used by the reported check. |
+
 | File | Contents | Use |
 | --- | ---: | --- |
 | [2020 LISA export](CHN_beijing_yanqing_2020_500m_lisa_cells.csv) | 8,333 cells | Application output for neighbor, Local Moran and FDR checks |
@@ -14,6 +23,24 @@ This folder contains the public inputs and independent comparison outputs for Ya
 | [Independent LISA bundle](archives/yanqing_validation_evidence.zip) | ZIP | Python checker, result table, summary and execution log |
 | [2014 VIIRS reference](rasters/yanqing_viirs_2014_reference.tif) | GeoTIFF, 217 × 142 | Earth Engine reference raster |
 
+## How the comparisons work
+
+The VIIRS table compares the application `ntl_mean` with an independently calculated polygon mean `ntl_ref_polygon` for the same `grid_id`. The strict tolerance is 0.00005, matching four-decimal CSV rounding. Border cells are retained rather than removed.
+
+The LISA table reconstructs Queen neighbors, recalculates Local I from the rounded exported NTL values, runs an independent permutation sequence and applies BH-FDR. It compares intermediate values as well as the final class. Because the input is rounded and the permutation seed is independent, the table is expected to report any label differences rather than force equality.
+
+The Space-Time CSV is checked by row count and by the exported regime codes for all 8,333 cells.
+
+## Results
+
+| Check | Result | Interpretation |
+| --- | --- | --- |
+| VIIRS 2020 polygon comparison | 8,332/8,333 cells are within 0.00005. Mean absolute error is 0.0000250270. Maximum absolute error is 0.0000643242 at border cell `grid_id=349`. | The comparison agrees at CSV precision except for one retained border-cell exceedance. |
+| LISA final class | 8,154/8,333 classes match; 7,733 cells are active and 600 are edge-masked. | All 179 differences are visible: 80 Not Significant to Low-Low, 74 Low-Low to Not Significant, 15 High-High to Not Significant and 10 Not Significant to High-High. |
+| Local I | Maximum absolute difference among populated Local I pairs is 0.0001680453. | The table uses rounded NTL and is not a full-precision identity test. |
+| Space-Time regimes | 1,456 Synergistic Growth; 75 Agglomeration Shadow; 194 Emergent Pioneer; 4,711 Synchronized Decline; 1,897 Excluded or Static. | These are descriptive two-date categories, not causal or permutation-significance results. |
+| 2014 reference raster metadata | 30,814 finite pixels, one negative pixel and no zero pixels are recorded for the deposited raster. | The legacy raster has no observation-count bands, so monthly support is unknown. |
+
 ## Integrity
 
 | File | SHA-256 |
@@ -23,8 +50,12 @@ This folder contains the public inputs and independent comparison outputs for Ya
 
 The transferred CSV files preserve their numerical values but may have normalized UTF-8 line encoding. Do not describe them as bit-for-bit copies unless their recorded hash agrees.
 
-## Supported result and limit
+## Limits
 
-The deposited files support the recorded 2014 and 2020 VIIRS comparisons, the 2020 LISA comparison and the two-date Space-Time calculation for Yanqing. They do not provide a continuous annual trend, a complete independent GHSL reproduction or every artifact from the larger 73-file validation campaign. Missing source rasters and detailed rerun products remain absent from this repository.
+- The raw 2020 reference raster used to build the deposited polygon-comparison table is not included.
+- The 2014 raster lacks monthly observation-count bands, so it cannot test A02 support semantics.
+- Independent LISA values are based on rounded CSV input and an independent permutation sequence.
+- Two dates do not provide a continuous annual trend.
+- These files do not reproduce GHSL or establish that NTL is a valid economic outcome.
 
 The application methods are documented in the [data and method guide](../../../docs/README.md). Current acceptance status is maintained in the [validation guide](../../README.md).
