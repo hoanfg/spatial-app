@@ -3,14 +3,14 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 const dir = new URL('./evidence/audit-2026-11-15/recovered-originals/', import.meta.url);
-const read = n => fs.readFileSync(new URL(n, dir));
+const read = n => fs.readFileSync(new URL(n === 'SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md' ? n.replace(/\.md$/, '.txt') : n, dir));
 const hash = b => crypto.createHash('sha256').update(b).digest('hex');
 const receipt = JSON.parse(read('recovery_receipt.json'));
 for (const f of receipt.files) {
   const b = read(f.name); assert.equal(b.length, f.bytes); assert.equal(hash(b), f.sha256);
 }
 const manifest = JSON.parse(read('SPATIAL_APP_AUDIT_EVIDENCE_MANIFEST_2026-11-15.json'));
-const md = read('SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md');
+const md = read('SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt');
 assert.equal(hash(md), manifest.markdown_verbatim_sha256);
 assert.equal(manifest.source_files.length, 118); assert.equal(manifest.embedded_zip_members.length, 271);
 assert.equal(new Set(manifest.source_files.map(f => f.archive_path)).size, 118);

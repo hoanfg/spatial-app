@@ -8,6 +8,7 @@ const files = [
   'README.md', 'README-vi.md',
   'docs/README.md', 'docs/README-vi.md',
   'validation/README.md', 'validation/README-vi.md',
+  'validation/evidence/README.md', 'validation/evidence/README-vi.md',
   'validation/cross_location/README.md', 'validation/cross_location/README-vi.md',
   'validation/evidence/yanqing/README.md', 'validation/evidence/yanqing/README-vi.md',
 ];
@@ -24,6 +25,7 @@ function checkBraces(math, where) {
 }
 for (const file of files) {
   const raw = fs.readFileSync(path.join(root, file), 'utf8');
+  if (raw.includes('—')) problems.push(`${file}: em dash must be replaced with normal punctuation`);
   const lines = raw.split(/\r?\n/);
   let inCode = false;
   let inDisplay = false;
@@ -32,6 +34,8 @@ for (const file of files) {
     const line = lines[i];
     if (/^\s*```/.test(line)) { inCode = !inCode; continue; }
     if (inCode) continue;
+    if (line.includes('$$') && line.trim() !== '$$')
+      problems.push(`${file}:${i + 1}: display-math delimiter must be on its own line`);
     const displays = (line.match(/\$\$/g) || []).length;
     for (const match of line.matchAll(/\$\$([^$]+)\$\$/g))
       checkBraces(match[1], `${file}:${i + 1}`);

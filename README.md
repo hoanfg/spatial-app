@@ -175,7 +175,9 @@ $$
 
 Missing or negative values arising from sensor stray-light correction are clamped to $0.0$. The sum of lights (SOL) of each cell is the product of mean radiance and true clipped area:
 
-$$\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$$
+$$
+\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i
+$$
 
 <sub>[↑ Back to top](#top)</sub>
 
@@ -362,7 +364,7 @@ $$
 
 | # | Module | Question it answers | Output variable |
 | :---: | :--- | :--- | :--- |
-| 1 | Top-lights Pareto tail exponent | How strongly are the brightest cells concentrated? | — |
+| 1 | Top-lights Pareto tail exponent | How strongly are the brightest cells concentrated? | Not applicable |
 | 2 | Urban density decay gradient | How fast does light fall off away from the core? | `urban_gradient_decay`, `monocentric_r2` |
 | 3 | Recentered market access | What is a cell's market potential once the part due to a central location is removed? | `recentered_market_access` |
 | 4 | Spillover rings & signed boundary distance | Where is the hotspot boundary, and how far do spillovers reach? | `signed_dist_hh_km` |
@@ -382,7 +384,9 @@ $$
 
 Estimates the structural spatial decay equation by area-weighted WLS across core cells:
 
-$$\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}$$
+$$
+\ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}
+$$
 
 It exports both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and the monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
 
@@ -483,7 +487,7 @@ The cell-level CSV exports **100% of observations** in the locality, including u
 | Group | Variables | What they are for |
 | :--- | :--- | :--- |
 | **Radiance intensity and light volume** | `ntl_mean`, `ntl_sol`, `ntl_log` | Measure how bright a cell is and how much light it emits in total, on both the raw and the log scale. |
-| **Spatial lag and relative location** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Directly provide the spatial lag of raw radiance ($$\mathrm{Lag}(\mathrm{NTL}_i)$$), the spatial lag of standardized scores ($$\mathrm{Lag}(z_i)$$) and the distance to the economic core, for estimating spatial spillovers and urban density decay gradients. |
+| **Spatial lag and relative location** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Directly provide the spatial lag of raw radiance ($\mathrm{Lag}(\mathrm{NTL}_i)$), the spatial lag of standardized scores ($\mathrm{Lag}(z_i)$) and the distance to the economic core, for estimating spatial spillovers and urban density decay gradients. |
 | **LISA cluster classification** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Build categorical dummy variables, or analyze urban boundary effects with spatial regression discontinuity designs (Spatial RDD). |
 
 > [!NOTE]
@@ -627,7 +631,7 @@ Deployment on free cloud infrastructure (~1GB RAM) caps simultaneous polygon pro
 
 ## 📚 References
 
-1. Anselin, L. (1995). Local Indicators of Spatial Association—LISA. *Geographical Analysis*, 27(2), 93–115. https://doi.org/10.1111/j.1538-4632.1995.tb00338.x
+1. Anselin, L. (1995). Local Indicators of Spatial Association: LISA. *Geographical Analysis*, 27(2), 93–115. https://doi.org/10.1111/j.1538-4632.1995.tb00338.x
 
 2. Baston, D. (2023). *exactextract: Fast and accurate raster/polygon zonal statistics* [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.11396419
 

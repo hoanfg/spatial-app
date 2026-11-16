@@ -56,6 +56,6 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 - **Pending:** export 2020 GeoTIFF for three regions, app CSV for three regions, per-cell raster validation and per-region LISA validation, independent GHSL comparison.
 - **Decision:** keep V11 as `PENDING` until evidence is provided for all three locations.
 
-## Audit evidence update — 2026-11-15
+## Audit evidence update: 2026-11-15
 
 See the [current validation status](../README.md). The pending steps above are the original plan; the later V11 field comparison is complete at its stated scope, while the source raster pairs and per-cell outputs remain unavailable in this repository.

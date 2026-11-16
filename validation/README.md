@@ -9,8 +9,8 @@ The result of a test applies to its stated location, year, input and precision. 
 | Read this for… | Location |
 | --- | --- |
 | Current status and remaining work | [Status below](#current-status) |
-| Original field evidence and limitations | [Consolidated field record](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) |
-| Exact historical report text | [78-report source](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.md) and [13-document archive](evidence/historical_document_sources_2026-11-15.md) |
+| Original field evidence and limitations | [Consolidated field record](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt) |
+| Exact historical report text | [78-report source](evidence/audit-2026-11-15/recovered-originals/SPATIAL_APP_AUDIT_ALL_MARKDOWN_VERBATIM_2026-11-15.txt) and [13-document archive](evidence/historical_document_sources_2026-11-15.txt) |
 | Reusable datasets and checks | [Yanqing](evidence/yanqing/README.md), [Bao'an](evidence/audit-2026-11-15/), [cross-location protocol](cross_location/README.md) |
 
 ## Current status
@@ -24,7 +24,7 @@ The result of a test applies to its stated location, year, input and precision. 
 | GHSL Shanghai | Native-grid quantity conservation defect corrected in PRs #24–26. Independent Shanghai core rho, bootstrap interval and AUC reproduce deployed UI rounding on 715 eligible cells | No live per-cell GHSL export; Qimen/Bao'an UI charts are not independent cellwise validation |
 | A02 performance | One post-PR-27 Bao'an profiler records A02 at 26.4623 s versus the earlier 25.0028 s; PR #29 added substep timings and `source_commit` | A02 speedup is not established; new comparable Cloud runs are needed |
 
-See the [field record](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for exact inputs, numerical qualifications and SHA-256 values. Its older pending and merge instructions are retained as dated evidence, not current tasks. The 78-report manifest indexes 118 direct files and 271 ZIP members; the repository holds the reports and selected CSV/JSON evidence, **not** every indexed original raster, script, plot or ZIP member.
+See the [field record](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.txt) for exact inputs, numerical qualifications and SHA-256 values. Its older pending and merge instructions are retained as dated evidence, not current tasks. The 78-report manifest indexes 118 direct files and 271 ZIP members; the repository holds the reports and selected CSV/JSON evidence, **not** every indexed original raster, script, plot or ZIP member.
 
 ## Audit findings and work still open
 
@@ -40,7 +40,7 @@ See the [field record](evidence/CONSOLIDATED_FIELD_EVIDENCE_2026-11.md) for exac
 | A08, A10, A11 | Check other GHSL epochs/masks, live Earth Engine→app→CSV execution, repeated Cloud runtime/RSS and multiple sessions | Authenticated service and measured runs with deployed commit |
 | V12, V13 | Examine a continuous annual VIIRS series and compare with independently sourced, aligned economic outcomes | Neither two-year dynamics nor GHSL agreement proves these claims |
 
-A01 CI discovery was fixed in PR #19. PR #10 corrected Local Moran's conditional sampling, observed-I normalization, explicit NoData masks and one GADM source label. PRs #20–22 added A02 and numerical controls; #24–27 addressed A02/GHSL production issues and the multiband reducer; #28 published recoverable audit evidence; #29 added A02 diagnostics. The [13-document archive](evidence/historical_document_sources_2026-11-15.md) retains the dated standalone reports that previously occupied `docs/` and this folder.
+A01 CI discovery was fixed in PR #19. PR #10 corrected Local Moran's conditional sampling, observed-I normalization, explicit NoData masks and one GADM source label. PRs #20–22 added A02 and numerical controls; #24–27 addressed A02/GHSL production issues and the multiband reducer; #28 published recoverable audit evidence; #29 added A02 diagnostics. The [13-document archive](evidence/historical_document_sources_2026-11-15.txt) retains the dated standalone reports that previously occupied `docs/` and this folder.
 
 ## Methods and reproducibility
 
