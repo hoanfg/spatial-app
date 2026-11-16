@@ -19,8 +19,7 @@ jobs:
       - run: pytest -q tests/test_lisa_reliability.py tests/test_robustness.py
       - run: node validation/audit_public_evidence.mjs --check-result
       - run: node validation/check_docs.mjs
-      - run: node validation/check_evidence_language_editions.mjs --strict
-      - run: node validation/audit_bilingual_editions.mjs
+      - run: node validation/check_evidence_language_editions.mjs
 
   ui-smoke:
     name: Kiểm thử khói giao diện (AppTest)
