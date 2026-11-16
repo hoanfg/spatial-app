@@ -50,4 +50,4 @@ const result = {rows: rows.length, unique_grid_ids: rows.length, observed_rows: 
   limitations: ['CSV integrity/semantics check only; no fresh Earth Engine or raster-overlay run.', 'No pre-fix CSV available for unchanged-NTL comparison.', 'Profiler has no commit identity; this is the historical pre-optimization baseline, not a measured PR #27 speedup.']};
 if (process.argv.includes('--check-result')) assert.deepEqual(result, JSON.parse(fs.readFileSync(path.join(dir, 'verified_summary.json'), 'utf8')));
 console.log(JSON.stringify(result, null, 2));
-await import('./audit_recovered_originals.mjs');
+await import('./audit_evidence_inventory.mjs');

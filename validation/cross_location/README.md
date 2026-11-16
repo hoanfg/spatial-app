@@ -1,6 +1,6 @@
 # Cross-location Validation for VIIRS 2020
 
-**Status:** Historical V11 reports record aggregate NTL/LISA comparisons for all three locations. The repository does not contain the complete source-raster pairs or per-cell outputs, so a fresh public reproduction remains open.
+**Status:** V11 records aggregate NTL/LISA comparisons for all three locations. The repository does not contain the complete source-raster pairs or per-cell outputs, so a full rerun still requires those inputs.
 
 ## 1. Three-case design
 
@@ -52,6 +52,6 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## 5. Current status
 
-- **Recorded result:** the historical evidence reports aggregate V11 outcomes for Shanghai Core, Bao'an and Qimen with the rounding and seed qualifications listed in the [validation guide](../README.md).
+- **Recorded result:** V11 reports aggregate outcomes for Shanghai Core, Bao'an and Qimen with the rounding and seed qualifications listed in the [validation guide](../README.md).
 - **Reproducible here:** the three boundary files, Earth Engine export script and independent Python comparator are deposited. The comparator rejects equal-area cell swaps by checking UTM and WGS84 centroids.
 - **Still required for public rerun:** matched 2020 source rasters and app CSV files for all three locations, per-cell comparison outputs, independent per-location LISA output and an independent GHSL comparison.
