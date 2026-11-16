@@ -2,7 +2,7 @@
 
 [English](README.md) | [Tiếng Việt](README-vi.md) | [Tổng quan](../README-vi.md) | [Danh mục nguồn và bản dịch đầy đủ](../translation_manifest.json)
 
-Đã đối chiếu đủ **13 tài liệu nguồn lịch sử** vào **11 cặp bản đọc hai ngôn ngữ**. Nguồn 01/02 là cặp đặc tả GADM gốc Anh/Việt; nguồn 03/04 là cặp Validation Master gốc tương ứng. Mỗi cặp dùng chung một mã chuẩn vì các tài liệu đã được viết thành phiên bản ngôn ngữ tương ứng. Chín tài liệu nguồn còn lại đã được dịch sang ngôn ngữ trước đây còn thiếu. Kho byte nguồn và chỉ mục SHA-256 được giữ nguyên.
+Đã đối chiếu đủ **13 tài liệu nguồn lịch sử** vào **11 cặp bản đọc hai ngôn ngữ**. Nguồn 01/02 là cặp đặc tả GADM gốc Anh/Việt; nguồn 03/04 là cặp Validation Master gốc tương ứng. Mỗi cặp dùng chung một mã chủ đề chuẩn vì các tài liệu vốn có hai phiên bản theo ngôn ngữ. Chúng vẫn là hai văn bản nguồn được lập chỉ mục độc lập, không chứng minh rằng nội dung tương đương hoàn toàn từng câu. Chín tài liệu nguồn còn lại đã được dịch sang ngôn ngữ trước đây còn thiếu. Kho byte nguồn và chỉ mục SHA-256 được giữ nguyên.
 
 | Mã nguồn | Đường dẫn nguồn lịch sử | Bản tiếng Anh | Bản tiếng Việt |
 |---|---|---|---|
