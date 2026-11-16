@@ -59,5 +59,3 @@ node validation/audit_public_evidence.mjs --check-result
 node validation/check_docs.mjs
 python -m pytest -q tests
 ```
-
-The evidence command checks the deposited data and public CSV summary; `check_docs.mjs` checks active links and basic math delimiters. The Python suite checks code contracts; it does not perform a fresh Earth Engine, GHSL field or Cloud benchmark. Do not mark a command as passed without its actual run result.
