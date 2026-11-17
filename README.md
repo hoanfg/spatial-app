@@ -39,10 +39,10 @@ The app covers three stages: it turns irregular administrative boundaries into u
 
 | If you are... | Read |
 | :--- | :--- |
-| 🧑‍💼 A policymaker or a non-technical reader | The TL;DR above, [Section I](#s1) and [Section VI](#s6) |
-| 📈 An economist who needs variables for regressions | [Section V](#s5), then [Section III](#s3) to see where the indicators come from |
-| 🔬 A researcher checking the methodology | [Section II](#s2) and [Section III](#s3) |
-| 🛠️ Deploying or operating the system | [Section I](#s1), [Section IV](#s4) and [Section VI](#s6) |
+| 🧑‍💼 A policymaker or a non-technical reader | [Section 0](#s0), especially the questions the app can answer and the interpretation guardrails |
+| 📈 An economist who needs variables for regressions | [Section 0](#s0), [Section V](#s5), then [Section III](#s3) to see where the indicators come from |
+| 🔬 A researcher checking the methodology | [Section 0](#s0), [Section II](#s2) and [Section III](#s3) |
+| 🛠️ Deploying or operating the system | [Quick start](#quick-start), [Section I](#s1), [Section IV](#s4) and [Section VI](#s6) |
 
 <details>
 <summary><b>📖 Quick glossary (click to expand)</b></summary>
@@ -66,6 +66,147 @@ The app covers three stages: it turns irregular administrative boundaries into u
 | **OOM** | Out-Of-Memory: RAM runs out and the operating system forcibly kills the process. |
 
 </details>
+
+---
+
+<a id="s0"></a>
+
+## 🧭 0. Spatial econometrics and what this app actually does
+
+### 0.1. What is spatial econometrics?
+
+Ordinary econometrics often starts from the idea that, after conditioning on the explanatory variables, one observation is independent of another. Geographic data rarely fit that assumption. A bright commercial center can affect nearby land, a transport investment can cross an administrative border, and neighboring districts can share infrastructure, labor markets and unobserved shocks.
+
+**Spatial econometrics** extends econometrics so that location and connections between locations enter the analysis explicitly. It focuses on two recurring features:
+
+1. **Spatial dependence:** the value or disturbance at location $i$ is related to values or disturbances at nearby locations.
+2. **Spatial heterogeneity:** relationships, variances or regimes can differ from one place to another.
+
+The central object is a spatial weights matrix $W$. Each element $w_{ij}$ represents whether, or how strongly, location $j$ is connected to location $i$. The spatial lag
+
+$$
+(Wy)_i = \sum_j w_{ij}y_j
+$$
+
+is therefore a summary of the values around location $i$. On a regular grid, this project mainly uses Queen contiguity, where cells sharing an edge or a corner are neighbors. Robustness checks also use Rook contiguity, where only shared edges count.
+
+Spatial dependence matters because it changes both the substantive question and the statistical inference. A conventional regression may answer how $X_i$ is associated with $y_i$. A spatial model may additionally ask whether $y_j$ in neighboring places affects $y_i$, whether a shock propagates across space, and whether the remaining errors still cluster geographically.
+
+> [!IMPORTANT]
+> This application is primarily a **measurement, exploratory spatial data analysis and data-preparation system**. It computes NTL indicators, Global Moran's I, Local Moran's I, diagnostics, robustness summaries and panel-ready exports. It does **not** estimate a complete SAR, SEM or SDM causal model inside the interface. Those models require an outcome, covariates and an identification strategy supplied by the researcher.
+
+### 0.2. From spatial exploration to spatial regression
+
+Spatial statistics and spatial econometrics overlap, but they do not answer the same question. Exploratory spatial data analysis asks **what pattern is present and where**. Spatial econometrics adds an explicit outcome model and asks **which dependence mechanism is consistent with the research design, how parameters should be estimated, and how uncertainty and spillovers should be interpreted**.
+
+| Stage | Typical question | Tool or model | Relation to this app |
+| :--- | :--- | :--- | :--- |
+| **Description** | How bright, unequal or concentrated is the locality? | Maps, quantiles, Gini, Lorenz and radial profiles | Computed directly |
+| **Global ESDA** | Is there overall spatial autocorrelation? | Global Moran's I | Computed directly |
+| **Local ESDA** | Where are clusters and spatial outliers? | Local Moran's I / LISA | Computed directly |
+| **Model diagnosis** | Does spatial structure remain after accounting for covariates? | Moran test on fitted residuals and specification tests | Diagnostic inputs are exported; the substantive regression is external |
+| **Spatial regression** | Is dependence in the outcome, covariates, disturbances or several channels? | SLX, SAR, SEM, SDM and related models | Not estimated in the interface |
+| **Causal design** | What is the effect of an intervention, including interference across locations? | A design-specific estimator with exposure and spillover assumptions | The app supplies measurements, distances, rings and sensitivity evidence, not identification by itself |
+
+The common linear model families are useful as a map of the field:
+
+| Model | Compact form | Main idea |
+| :--- | :--- | :--- |
+| **OLS baseline** | $y = X\beta + \varepsilon$ | No explicit spatial channel after conditioning on $X$ |
+| **SLX** | $y = X\beta + WX\theta + \varepsilon$ | Neighboring covariates may affect the local outcome |
+| **SAR / spatial lag** | $y = \rho Wy + X\beta + \varepsilon$ | Outcomes interact simultaneously across connected locations |
+| **SEM / spatial error** | $y = X\beta + u$, $u = \lambda Wu + \varepsilon$ | Unobserved shocks are spatially correlated |
+| **SDM / Spatial Durbin** | $y = \rho Wy + X\beta + WX\theta + \varepsilon$ | Combines outcome interaction with neighboring covariate effects |
+
+These equations are not interchangeable labels. In a SAR or SDM model, coefficients are not usually the final marginal effects because feedback through $(I-\rho W)^{-1}$ creates direct and indirect impacts. A significant Moran statistic alone does not select a model. Model choice should follow the substantive mechanism, the construction of $W$, residual diagnostics and the identification assumptions.
+
+### 0.3. From a research question to an app output
+
+| Research question | App output | Why it helps | What it does not prove |
+| :--- | :--- | :--- | :--- |
+| Where is nighttime light concentrated? | NTL map, SOL, Lorenz curve, Gini, brightest 10% share and rank-size plot | Describes the level and concentration of observed radiance | Household income, GDP or welfare without an external model |
+| Is brightness spatially clustered across the whole locality? | Global Moran's I with a permutation pseudo p-value | Tests whether nearby grid cells are more similar than expected under the permutation reference | The cause of clustering or spatial dependence in regression residuals |
+| Which cells form local clusters or spatial outliers? | LISA classes `HH`, `LL`, `HL`, `LH`, `NS`, `DARK` and `EDGE` | Locates local clusters and contrasting cells after significance testing | A causal treatment effect or an official urban boundary |
+| Is the result sensitive to analytical choices? | Rook/Queen, threshold, transform, FDR, seed, coarser-grid and adjacent-year checks | Shows whether the High-High pattern survives reasonable alternatives | Universal stability outside the tested specifications |
+| How does relative spatial position change between two years? | Space-Time regimes, extensive/intensive margins and conditional Markov matrices | Separates own-cell change from change in the surrounding spatial lag | Absolute economic growth or a multi-period causal panel result |
+| Does NTL agree with a separate urban proxy? | GHSL built-up or population Spearman correlation, block-bootstrap interval and AUC | Provides an external agreement check on the same grid | Validation against GDP, prices or household outcomes |
+| What can be taken into another econometric workflow? | Cell CSV, LISA cell CSV, one-row region-year panel CSV, Space-Time CSV and optional GeoJSON | Preserves identifiers, quality fields, methods and derived variables | A ready-made empirical specification that can replace research design |
+
+### 0.4. Complete app tour
+
+The interface follows the same order as a defensible research workflow. Features that take substantial time, such as robustness runs, GHSL validation and the second-year extraction, run only when requested.
+
+| Screen or control | Main functions | Outputs to inspect |
+| :--- | :--- | :--- |
+| **Place and resolution selector** | Search or browse country, first-level unit and locality; choose a year from 2014 to 2025 and a grid size from 500 to 5,000 m; estimate workload before execution | Boundary area, expected cell count, dynamic UTM CRS and a warning or block for oversized jobs |
+| **Extraction pipeline** | Build a globally aligned square grid, create the annual median VIIRS composite, extract area-weighted cell means and record stage performance | Grid geometry, `ntl_mean`, `area_km2`, cell centroid and pipeline provenance |
+| **Map tab** | Switch between continuous NTL, global economic classes and within-locality standing; select linear, square-root or logarithmic color scaling; toggle unlit cells, Top 10 outlines, cell borders and the outside mask | Interactive cell tooltips with rank, percentile, SOL share, standardized score, class and coordinates |
+| **Data tab: overview** | Report weighted and unweighted summaries, percentiles, dispersion, skewness, Gini, lit share and the brightest cells | Quick findings, descriptive table, Top 10 table and the complete preview table |
+| **Data tab: spatial structure** | Compute Global Moran's I with Queen neighbors and permutation inference | Observed $I$, expected $I$, pseudo p-value and average neighbor count |
+| **Data tab: distribution** | Compare cell share with light share; draw Lorenz, rank-size and radial distance profiles | Gini, Pareto-tail view and evidence of monocentric or polycentric light patterns |
+| **Data quality panel** | Flag missing, negative, zero and low-observation support; optionally compare clipped and unclipped negatives and retrieve valid-month support | `dq_*` fields, automatic warnings and the assumptions used by the NTL composite |
+| **External validation panel** | Compare NTL with GHSL built-up surface or population on the preserved native GHSL grid | Spearman $\rho$, spatial block-bootstrap interval, AUC and the GHSL epoch used |
+| **LISA and Panel tab** | Set permutations, $\alpha$, FDR, log transform, light threshold, minimum cluster size and minimum neighbors; classify local clusters and derive the urban core | LISA map, area composition, region-year KPIs, cell and panel exports |
+| **LISA map modes** | View local clusters, spillover rings or recentered market access; inspect distance to the core and signed distance to the hotspot boundary | Inputs for density-gradient, market-access and spatial-boundary research designs |
+| **Diagnostics and robustness** | Check dark share, residual spatial pattern, Pareto tail, seed stability, transform/weight/threshold alternatives, MAUP and adjacent years | Warnings, Jaccard overlap, stable-HH area and downloadable robustness table |
+| **Dynamic Space-Time panel** | Re-extract a comparison year, calculate changes in standardized own-cell and neighbor positions, and build spatially conditioned transition matrices | Four relative-change regimes, Shorrocks mobility, extensive/intensive margins and a Space-Time CSV |
+| **Performance panel** | Record elapsed time and process memory for extraction, zonal statistics, LISA, GHSL and Space-Time stages when available | Stage-level timing, sampled peak RSS, deployment revision when known and downloadable JSON/CSV |
+| **Guide and downloads** | Explain map layers, thresholds, MAUP and fields; export regression-ready CSV or optional GeoJSON | Reusable data plus a data dictionary and method metadata |
+
+### 0.5. A recommended analysis sequence
+
+1. **State the unit and question.** Decide whether the observation is a grid cell or a region-year and whether the task is description, prediction, association or causal inference.
+2. **Choose the boundary and year.** Record the GADM identifier and source year rather than relying on the displayed place name alone.
+3. **Choose spatial support.** Start at 1,000 m for many econometric uses, then treat 500 m and coarser grids as sensitivity checks. The best size still depends on the process being studied.
+4. **Inspect measurement support.** Read the `dq_*` fields and the quality panel before interpreting a zero as absence of activity.
+5. **Explore levels and concentration.** Use the map, histogram, Lorenz curve, Gini and radial profile before running local tests.
+6. **Test global structure.** Global Moran's I answers whether clustering exists at the locality level, not where it occurs.
+7. **Locate local patterns.** Run LISA with a declared neighbor rule, permutation count, significance level and FDR choice.
+8. **Challenge the result.** Change weights, transforms, thresholds, grid size, random seed and year where substantively justified.
+9. **Seek external agreement.** GHSL checks whether rankings agree with built surface or population, while domain-specific outcomes remain the researcher's responsibility.
+10. **Export with provenance.** Keep raw NTL, quality flags, parameter fields and identifiers. Do not keep only the final cluster label.
+
+### 0.6. How to interpret results without overclaiming
+
+A result is strongest when four questions have separate answers:
+
+| Layer | Question | Example |
+| :--- | :--- | :--- |
+| **Measurement** | Was the signal observed and processed as intended? | Valid-month support is adequate and missing cells are flagged |
+| **Statistical evidence** | Is the pattern unlikely under the stated reference procedure? | Local pseudo p-values are corrected with BH-FDR |
+| **Robustness** | Does the conclusion survive plausible analytical alternatives? | High-High cells overlap under Queen/Rook and coarser grids |
+| **External meaning** | Does the measure agree with another relevant construct? | NTL ranks agree with GHSL built-up surface, with uncertainty reported |
+
+Statistical significance is not economic magnitude. A High-High cell is not automatically a central business district, a low-light cell is not automatically poor, and a strong GHSL correlation is not proof that NTL measures GDP. Causal language requires a design that explains treatment assignment, spillovers, confounding and the estimand.
+
+<a id="quick-start"></a>
+
+### 0.7. Quick start
+
+The fastest route is the [live app](https://spatial-app.streamlit.app/?). For a local run:
+
+```bash
+python -m venv .venv
+python -m pip install -r requirements.txt
+streamlit run app.py
+```
+
+The extraction buttons require valid Google Earth Engine credentials. The app accepts service-account fields under `ee_credentials` in Streamlit secrets, or credentials already available to `ee.Initialize()` in the local environment. Do not commit private keys. Boundary files are discovered from the repository's `data/` hierarchy.
+
+### 0.8. Suggested learning path
+
+| Level | Read or use | Best for |
+| :--- | :--- | :--- |
+| **Start visually** | [GeoDa: An Introduction to Spatial Data Science](https://geodacenter.github.io/) and its [learning resources](https://geodacenter.github.io/documentation/) | Weights, Moran scatterplots, local clusters and exploratory spatial reasoning without starting from matrix algebra |
+| **Start with Python** | [Geographic Data Science with Python](https://geographicdata.science/book/) by Rey, Arribas-Bel and Wolf | Reproducible geospatial data handling, visualization, weights, ESDA and spatial modeling |
+| **Applied work in R** | Bivand, Pebesma and Gómez-Rubio, [*Applied Spatial Data Analysis with R*, 2nd ed.](https://link.springer.com/book/10.1007/978-1-4614-7618-4) | Spatial objects, import/export, visualization and applied areal-data analysis |
+| **Foundations** | Anselin, [*Spatial Econometrics: Methods and Models*](https://link.springer.com/book/10.1007/978-94-015-7799-1) | The conceptual foundations of spatial dependence, heterogeneity, specification and inference |
+| **Spatial regression and impacts** | LeSage and Pace, [*Introduction to Spatial Econometrics*](https://www.routledge.com/Introduction-to-Spatial-Econometrics/LeSage-Pace/p/book/9781032477749) | SAR/SEM/SDM-type models, estimation and interpretation of direct and indirect effects |
+| **Spatial panels** | Elhorst, [*Spatial Econometrics: From Cross-Sectional Data to Spatial Panels*](https://link.springer.com/book/10.1007/978-3-642-40340-8) | Static and dynamic spatial panel specifications after the cross-sectional foundations are clear |
+
+A practical order is: map and weights, Global Moran, Local Moran and multiple testing, regression diagnostics, spatial lag/error/Durbin models, impacts, then spatial panels. Reading advanced panel models before understanding $W$, spatial lags and the difference between exploratory clusters and regression effects usually creates more confusion than progress.
+
+<sub>[↑ Back to top](#top)</sub>
 
 ---
 
@@ -689,3 +830,9 @@ Deployment on free cloud infrastructure (~1GB RAM) caps simultaneous polygon pro
 29. Rey, S. J., Arribas-Bel, D., & Wolf, L. J. (2023). *Geographic Data Science with Python*. Chapman and Hall/CRC. https://doi.org/10.1201/9780429292507
 
 30. Vazquez-Bare, G. (2023). Identification and estimation of spillover effects in randomized experiments. *Journal of Econometrics*, 237(1), 105237. https://doi.org/10.1016/j.jeconom.2021.10.014
+
+31. Anselin, L. (1988). *Spatial Econometrics: Methods and Models*. Springer. https://doi.org/10.1007/978-94-015-7799-1
+
+32. Bivand, R. S., Pebesma, E., & Gómez-Rubio, V. (2013). *Applied Spatial Data Analysis with R* (2nd ed.). Springer. https://doi.org/10.1007/978-1-4614-7618-4
+
+33. Elhorst, J. P. (2014). *Spatial Econometrics: From Cross-Sectional Data to Spatial Panels*. Springer. https://doi.org/10.1007/978-3-642-40340-8
