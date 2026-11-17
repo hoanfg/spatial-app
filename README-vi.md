@@ -282,7 +282,7 @@ Local Moran phân rã trực giác này theo ô, thường có dạng tỷ lệ 
 **Hoán vị trả lời điều gì.** App giữ giá trị của ô tiêu điểm và tráo các giá trị láng giềng phù hợp để tạo ra phân phối tham chiếu. Với $R$ lần hoán vị, pseudo p-value thường được tính theo nguyên tắc cộng một:
 
 $$
-p_i = \frac{1 + \#\{ |I_i^{(r)}| \ge |I_i^{obs}| \}}{R+1}.
+p_i = \frac{1 + \sum_{r=1}^{R} \mathbb{I}\left(|I_i^{(r)}| \ge |I_i^{obs}|\right)}{R+1}
 $$
 
 Do đó, số hoán vị quyết định độ phân giải của p-value. Nếu ngưỡng sau FDR nhỏ hơn mức p-value nhỏ nhất có thể đạt, không ô nào có thể được bác bỏ dù mẫu hình nhìn bằng mắt rất nổi bật.
