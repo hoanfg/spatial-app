@@ -73,11 +73,15 @@ Dự án này là một hệ thống dành cho **kinh tế lượng không gian*
 
 ## 🧭 0. Kinh tế lượng không gian và phạm vi thực sự của ứng dụng
 
+![Quy trình kinh tế lượng không gian từ đo lường tới suy luận](docs/assets/spatial-econometrics-workflow-vi.png)
+
+<p align="center"><em>Hình 1. Ứng dụng nối đo lường, quan hệ không gian, suy luận khám phá, kiểm định độ vững và đầu ra có thể tái sử dụng. Cụm không gian là bằng chứng về mẫu hình, không phải bằng chứng nhân quả.</em></p>
+
 ### 0.1. Kinh tế lượng không gian là gì?
 
 Kinh tế lượng thông thường thường bắt đầu từ giả định rằng, sau khi đã kiểm soát các biến giải thích, một quan sát không phụ thuộc vào quan sát khác. Dữ liệu địa lý hiếm khi thỏa mãn giả định đó. Một trung tâm thương mại sáng mạnh có thể ảnh hưởng tới đất đai xung quanh, một dự án giao thông có thể tạo tác động vượt ranh giới hành chính, còn các huyện lân cận có thể dùng chung hạ tầng, thị trường lao động và các cú sốc chưa quan sát được.
 
-**Kinh tế lượng không gian** mở rộng kinh tế lượng để đưa vị trí và quan hệ giữa các vị trí vào phân tích một cách tường minh. Hai hiện tượng cốt lõi là:
+**Kinh tế lượng không gian** mở rộng kinh tế lượng để đưa vị trí và quan hệ giữa các vị trí vào phân tích một cách tường minh (Anselin, 1988; LeSage & Pace, 2009). Hai hiện tượng cốt lõi là:
 
 1. **Phụ thuộc không gian:** giá trị hoặc nhiễu tại vị trí $i$ có liên hệ với giá trị hoặc nhiễu ở các vị trí lân cận.
 2. **Dị biệt không gian:** quan hệ, phương sai hoặc chế độ có thể khác nhau giữa các địa điểm.
@@ -88,16 +92,16 @@ $$
 (Wy)_i = \sum_j w_{ij}y_j
 $$
 
-vì vậy là một tóm tắt các giá trị xung quanh vị trí $i$. Trên lưới đều, dự án chủ yếu dùng tiếp giáp Queen, tức ô chung cạnh hoặc chung góc đều là láng giềng. Kiểm định độ vững còn dùng tiếp giáp Rook, chỉ tính các ô chung cạnh.
+vì vậy là một tóm tắt các giá trị xung quanh vị trí $i$. Trên lưới đều, dự án chủ yếu dùng tiếp giáp Queen, tức ô chung cạnh hoặc chung góc đều là láng giềng. Kiểm định độ vững còn dùng tiếp giáp Rook, chỉ tính các ô chung cạnh (Anselin, 1988; Rey và cộng sự, 2023).
 
-Phụ thuộc không gian quan trọng vì nó làm thay đổi cả câu hỏi nghiên cứu lẫn suy luận thống kê. Hồi quy thông thường có thể hỏi $X_i$ liên hệ với $y_i$ như thế nào. Mô hình không gian còn có thể hỏi $y_j$ ở vùng lân cận ảnh hưởng tới $y_i$ hay không, một cú sốc lan truyền qua không gian ra sao, và phần dư có còn tụ cụm theo địa lý hay không.
+Phụ thuộc không gian quan trọng vì nó làm thay đổi cả câu hỏi nghiên cứu lẫn suy luận thống kê. Hồi quy thông thường có thể hỏi $X_i$ liên hệ với $y_i$ như thế nào. Mô hình không gian còn có thể hỏi $y_j$ ở vùng lân cận ảnh hưởng tới $y_i$ hay không, một cú sốc lan truyền qua không gian ra sao, và phần dư có còn tụ cụm theo địa lý hay không (LeSage & Pace, 2009; Elhorst, 2014).
 
 > [!IMPORTANT]
 > Ứng dụng này trước hết là một **hệ thống đo lường, phân tích dữ liệu không gian khám phá và chuẩn bị dữ liệu**. App tính chỉ số NTL, Global Moran's I, Local Moran's I, chẩn đoán, độ vững và xuất dữ liệu sẵn sàng cho panel. Giao diện **không** tự ước lượng trọn vẹn mô hình nhân quả SAR, SEM hoặc SDM. Các mô hình đó cần biến kết quả, biến giải thích và chiến lược nhận dạng do nhà nghiên cứu cung cấp.
 
 ### 0.2. Từ khám phá không gian tới hồi quy không gian
 
-Thống kê không gian và kinh tế lượng không gian có phần giao nhau, nhưng không trả lời cùng một câu hỏi. Phân tích dữ liệu không gian khám phá hỏi **mẫu hình nào đang tồn tại và nằm ở đâu**. Kinh tế lượng không gian bổ sung một mô hình tường minh cho biến kết quả và hỏi **cơ chế phụ thuộc nào phù hợp với thiết kế nghiên cứu, tham số cần được ước lượng ra sao, và bất định cùng tác động lan tỏa nên được diễn giải thế nào**.
+Thống kê không gian và kinh tế lượng không gian có phần giao nhau, nhưng không trả lời cùng một câu hỏi. Phân tích dữ liệu không gian khám phá hỏi **mẫu hình nào đang tồn tại và nằm ở đâu**. Kinh tế lượng không gian bổ sung một mô hình tường minh cho biến kết quả và hỏi **cơ chế phụ thuộc nào phù hợp với thiết kế nghiên cứu, tham số cần được ước lượng ra sao, và bất định cùng tác động lan tỏa nên được diễn giải thế nào** (Anselin, 1988; Rey và cộng sự, 2023).
 
 | Giai đoạn | Câu hỏi điển hình | Công cụ hoặc mô hình | Quan hệ với app này |
 | :--- | :--- | :--- | :--- |
@@ -118,18 +122,18 @@ Các họ mô hình tuyến tính phổ biến giúp hình dung cấu trúc củ
 | **SEM / sai số không gian** | $y = X\beta + u$, $u = \lambda Wu + \varepsilon$ | Các cú sốc chưa quan sát có tương quan không gian |
 | **SDM / Spatial Durbin** | $y = \rho Wy + X\beta + WX\theta + \varepsilon$ | Kết hợp tương tác kết quả với tác động của biến giải thích lân cận |
 
-Các phương trình này không phải những nhãn có thể thay thế tùy ý. Trong SAR hoặc SDM, hệ số thường chưa phải tác động biên cuối cùng vì phản hồi qua $(I-\rho W)^{-1}$ tạo ra tác động trực tiếp và gián tiếp. Moran có ý nghĩa không tự chọn mô hình. Cần chọn đặc tả dựa trên cơ chế nội dung, cách dựng $W$, chẩn đoán phần dư và các giả định nhận dạng.
+Các phương trình này không phải những nhãn có thể thay thế tùy ý. Trong SAR hoặc SDM, hệ số thường chưa phải tác động biên cuối cùng vì phản hồi qua $(I-\rho W)^{-1}$ tạo ra tác động trực tiếp và gián tiếp. Moran có ý nghĩa không tự chọn mô hình. Cần chọn đặc tả dựa trên cơ chế nội dung, cách dựng $W$, chẩn đoán phần dư và các giả định nhận dạng (LeSage & Pace, 2009).
 
 ### 0.3. Từ câu hỏi nghiên cứu tới đầu ra của app
 
 | Câu hỏi nghiên cứu | Đầu ra của app | Giá trị sử dụng | Điều chưa thể kết luận |
 | :--- | :--- | :--- | :--- |
-| Ánh sáng ban đêm tập trung ở đâu? | Bản đồ NTL, SOL, đường Lorenz, Gini, tỷ trọng của 10% ô sáng nhất và biểu đồ hạng-quy mô | Mô tả mức độ và độ tập trung của bức xạ quan sát được | Thu nhập hộ, GDP hoặc phúc lợi nếu chưa có mô hình kiểm chứng ngoài |
-| Độ sáng có tụ cụm trên toàn địa phương không? | Global Moran's I với p-value giả từ hoán vị | Kiểm tra các ô gần nhau có giống nhau hơn mức kỳ vọng theo thủ tục hoán vị hay không | Nguyên nhân của tụ cụm hoặc phụ thuộc không gian trong phần dư hồi quy |
-| Ô nào tạo thành cụm cục bộ hoặc ngoại lệ không gian? | Các lớp LISA `HH`, `LL`, `HL`, `LH`, `NS`, `DARK` và `EDGE` | Định vị cụm cục bộ và các ô trái chiều sau kiểm định ý nghĩa | Tác động nhân quả hoặc ranh giới đô thị chính thức |
+| Ánh sáng ban đêm tập trung ở đâu? | Bản đồ NTL, SOL, đường Lorenz, Gini, tỷ trọng của 10% ô sáng nhất và biểu đồ hạng-quy mô | Mô tả mức độ và độ tập trung của bức xạ quan sát được (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016) | Thu nhập hộ, GDP hoặc phúc lợi nếu chưa có mô hình kiểm chứng ngoài |
+| Độ sáng có tụ cụm trên toàn địa phương không? | Global Moran's I với p-value giả từ hoán vị | Kiểm tra các ô gần nhau có giống nhau hơn mức kỳ vọng theo thủ tục hoán vị hay không (Moran, 1950) | Nguyên nhân của tụ cụm hoặc phụ thuộc không gian trong phần dư hồi quy |
+| Ô nào tạo thành cụm cục bộ hoặc ngoại lệ không gian? | Các lớp LISA `HH`, `LL`, `HL`, `LH`, `NS`, `DARK` và `EDGE` | Định vị cụm cục bộ và các ô trái chiều sau kiểm định ý nghĩa (Anselin, 1995; Caldas de Castro & Singer, 2006) | Tác động nhân quả hoặc ranh giới đô thị chính thức |
 | Kết quả có nhạy với lựa chọn phân tích không? | Kiểm tra Rook/Queen, ngưỡng, phép biến đổi, FDR, seed, lưới thô và năm kề | Cho biết mẫu High-High có tồn tại qua các đặc tả hợp lý hay không | Độ ổn định phổ quát ngoài các đặc tả đã thử |
 | Vị thế không gian tương đối thay đổi thế nào giữa hai năm? | Chế độ Không-Thời gian, biên độ rộng/sâu và ma trận Markov có điều kiện | Tách thay đổi của bản thân ô khỏi thay đổi của biến trễ láng giềng | Tăng trưởng kinh tế tuyệt đối hoặc kết quả nhân quả panel đa kỳ |
-| NTL có đồng thuận với một đại lượng đô thị độc lập không? | Tương quan Spearman, khoảng bootstrap theo khối và AUC với diện tích xây dựng hoặc dân số GHSL | Kiểm tra mức đồng thuận ngoài trên cùng hệ lưới | Kiểm chứng bằng GDP, giá nhà hoặc kết quả cấp hộ |
+| NTL có đồng thuận với một đại lượng đô thị độc lập không? | Tương quan Spearman, khoảng bootstrap theo khối và AUC với diện tích xây dựng hoặc dân số GHSL | Kiểm tra mức đồng thuận ngoài trên cùng hệ lưới (Pesaresi & Politis, 2023; Schiavina và cộng sự, 2023) | Kiểm chứng bằng GDP, giá nhà hoặc kết quả cấp hộ |
 | Có thể đưa gì sang quy trình kinh tế lượng khác? | CSV cấp ô, CSV LISA, CSV một dòng vùng-năm, CSV Không-Thời gian và GeoJSON tùy chọn | Giữ định danh, cờ chất lượng, phương pháp và biến dẫn xuất | Một đặc tả thực nghiệm có thể thay thế thiết kế nghiên cứu |
 
 ### 0.4. Bản đồ đầy đủ các công năng trong app
@@ -205,6 +209,65 @@ Các nút trích xuất cần thông tin xác thực Google Earth Engine hợp l
 | **Panel không gian** | Elhorst, [*Spatial Econometrics: From Cross-Sectional Data to Spatial Panels*](https://link.springer.com/book/10.1007/978-3-642-40340-8) | Đặc tả panel không gian tĩnh và động sau khi đã nắm vững nền tảng cắt ngang |
 
 Trình tự thực tế nên là: bản đồ và trọng số, Global Moran, Local Moran và kiểm định nhiều lần, chẩn đoán hồi quy, mô hình trễ/sai số/Durbin không gian, tác động, rồi mới tới panel không gian. Đọc mô hình panel nâng cao trước khi hiểu $W$, biến trễ không gian và sự khác biệt giữa cụm khám phá với tác động hồi quy thường làm vấn đề khó hiểu hơn.
+
+### 0.9. Liên kết khoa học giữa các mô-đun nâng cao và thiết kế nghiên cứu
+
+Các mô-đun nâng cao hữu ích nhất khi mỗi đầu ra được xem là câu trả lời cho một câu hỏi khoa học cụ thể, không phải một chỉ số dùng cho mọi mục đích.
+
+#### A. NTL là proxy được đo lường, không phải bản thân nền kinh tế tiềm ẩn
+
+Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ đo được. Có thể hình dung $y_i = g(a_i, z_i) + u_i$, trong đó $z_i$ chứa công nghệ chiếu sáng, sử dụng đất, điều kiện khí quyển và các yếu tố khác, còn $u_i$ chứa sai số đo lường còn lại. App cải thiện cách xây dựng và ghi chép $y_i$; app không tự nhận dạng $g(\cdot)$ hoặc khôi phục $a_i$ nếu thiếu giả định và biến kết quả bên ngoài (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
+
+Đó là lý do khối Chất lượng dữ liệu tách hỗ trợ quan sát, dữ liệu thiếu, số 0 đo được và bức xạ âm bị cắt. Một giá trị 0 được ghi nhận, một điểm ảnh không có quan sát và một bức xạ âm sau hiệu chỉnh được đưa về 0 có thể cho cùng NTL hiển thị nhưng mang ý nghĩa bằng chứng khác nhau. Nghiên cứu nên giữ các cột `dq_*` và công bố chính sách xử lý số 0/số âm trong phần phương pháp.
+
+#### B. Ma trận trọng số là một giả định khoa học
+
+$W$ không chỉ là một tùy chọn phần mềm. Tiếp giáp Queen giả định tiếp xúc cạnh hoặc góc đều có thể truyền tương tác; Rook loại tiếp xúc chỉ qua góc; ma trận khoảng cách hoặc mạng lưới sẽ biểu diễn một cơ chế khác. Chuẩn hóa theo hàng biến trễ không gian từ tổng láng giềng thành trung bình láng giềng, trong khi ma trận nhị phân đối xứng giữ một thang đo khác (Anselin, 1988; LeSage & Pace, 2009).
+
+App cho phép thử độ nhạy Queen/Rook và kích thước lưới vì một kết luận biến mất sau thay đổi hợp lý của $W$ cần được trình bày là phụ thuộc đặc tả. Khi công bố, cần báo quy tắc láng giềng, cách chuẩn hóa, xử lý ô cô lập, số ô được kiểm định, số láng giềng trung bình và lý do $W$ đại diện cho cơ chế tương tác được đề xuất.
+
+#### C. Suy luận cục bộ cần một giao thức kiểm định
+
+LISA chạy một kiểm định cục bộ cho mỗi ô đủ điều kiện. p-value giả phụ thuộc thủ tục hoán vị có điều kiện, seed và số hoán vị. Độ phân giải nhỏ nhất của p-value bị giới hạn bởi số hoán vị. Kiểm định hàng nghìn ô còn tạo ra vấn đề kiểm định nhiều lần, vì vậy app cung cấp hiệu chỉnh FDR Benjamini-Hochberg và cảnh báo khi tổ hợp số hoán vị/FDR không thể bác bỏ ô nào (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
+
+Một kết quả LISA có thể bảo vệ được cần báo phép biến đổi, ngưỡng sáng, mặt nạ biên, số láng giềng tối thiểu, số hoán vị, seed, $\alpha$, lựa chọn FDR và cỡ cụm liên thông tối thiểu. Các nhãn `HH`, `LL`, `HL` và `LH` phải luôn được đọc cùng cờ ý nghĩa và cờ đủ điều kiện.
+
+#### D. Chuyển cụm thành biến nghiên cứu
+
+App dẫn xuất một số biến từ bề mặt ánh sáng mô tả:
+
+- **Chẩn đoán đuôi Pareto** tóm tắt độ tập trung của nhóm ô sáng nhất và cần đi kèm tỷ lệ đuôi được chọn, sai số chuẩn cùng kiểm định KS (Bluhm & Krause, 2022).
+- **Độ dốc mật độ đô thị** mô tả bức xạ thay đổi theo khoảng cách tới lõi được phát hiện. Lõi này do thuật toán xác định, không phải CBD chính thức hay ranh giới can thiệp nhân quả.
+- **Tiếp cận thị trường đã khử lệch** loại phần được dự đoán bởi vị trí trung tâm, tránh coi tiếp cận là phơi nhiễm ngẫu nhiên một cách cơ học (Borusyak & Hull, 2023).
+- **Khoảng cách có dấu tới biên điểm nóng và các vành đai lan tỏa** chuẩn bị biến chạy và nhóm phơi nhiễm cho thiết kế quanh ranh giới hoặc có tương tác. Nhận dạng vẫn cần tính liên tục, không sắp xếp chính xác và mô hình lan tỏa có cơ sở (Vazquez-Bare, 2023; Butts, 2024).
+
+Các đầu ra này là ứng viên cho biến giải thích, biến kết quả, thước đo phơi nhiễm hoặc chẩn đoán. Vai trò đúng phụ thuộc vào đại lượng cần ước lượng và thứ tự thời gian của thiết kế thực nghiệm.
+
+#### E. Động học hai kỳ là thay đổi tương đối, không phải tăng trưởng tuyệt đối
+
+Mô-đun Không-Thời gian chuẩn hóa $\ln(1+\mathrm{NTL})$ riêng trong từng năm, sau đó so thay đổi vị thế của bản thân ô với thay đổi biến trễ láng giềng. Bốn chế độ có hướng vì vậy mô tả **dịch chuyển tương đối trong phân phối của từng năm**. Chúng không tương đương với tăng trưởng bức xạ tuyệt đối, tăng trưởng GDP hoặc chuyển dịch nhân quả (Rey và cộng sự, 2023).
+
+Mô-đun báo riêng số ô chuyển từ tối sang sáng, từ sáng sang tối và thay đổi log trung bình của các ô sáng ở cả hai kỳ. Cần đọc phần tách biên độ rộng/sâu này cùng các chế độ tương đối. Với chỉ hai kỳ, bảng chuyển dịch vẫn mang tính mô tả; suy luận panel không gian đa kỳ cần thêm giả định và chẩn đoán (Elhorst, 2014; Müller & Watson, 2024).
+
+#### F. Kiểm chứng ngoài đo sự đồng thuận với cấu trúc được chọn
+
+GHSL built-up surface ghi số mét vuông bề mặt xây dựng trong mỗi điểm ảnh nguồn 100 m, còn GHS-POP ghi số cư dân trong mỗi điểm ảnh nguồn theo epoch 5 năm. App giữ lưới nguồn, cộng lượng vào ô phân tích và so thứ hạng với NTL bằng Spearman $\rho$, khoảng bootstrap theo khối không gian và AUC của nhóm phân vị trên (Pesaresi & Politis, 2023; Schiavina và cộng sự, 2023).
+
+Mức đồng thuận cao hỗ trợ phát biểu rằng NTL phù hợp với cấu trúc định cư cụ thể đó tại địa điểm và thời kỳ được chọn. Nó không kiểm chứng NTL cho mọi kết quả kinh tế. Đồng thuận thấp có thể phản ánh cấu trúc kinh tế thật, lệch thời điểm, nhiều số 0 đồng hạng, sai số proxy hoặc lỗi trích xuất; cần điều tra nguyên nhân trước khi loại proxy.
+
+#### G. Bộ thông tin tối thiểu khi báo cáo một ứng dụng có thể tái lập
+
+| Thành phần | Tối thiểu cần báo |
+| :--- | :--- |
+| Hỗ trợ nghiên cứu | Mã GADM, năm, kích thước lưới, CRS, số ô và quy tắc xử lý ô biên |
+| Xây dựng NTL | Bộ dữ liệu, cách tổng hợp tháng thành năm, hỗ trợ mây/quan sát, chính sách số âm và dữ liệu thiếu |
+| Quan hệ không gian | Quy tắc $W$, chuẩn hóa, ô cô lập, số láng giềng trung bình và lý do khoa học |
+| Suy luận toàn cục | Moran's $I$, giá trị kỳ vọng, số hoán vị, p-value giả và mẫu phân tích |
+| Suy luận cục bộ | Phép biến đổi, ngưỡng, mặt nạ biên, số hoán vị, seed, $\alpha$, FDR và cỡ cụm tối thiểu |
+| Độ vững | Trọng số, phép biến đổi, ngưỡng, cỡ lưới, năm thay thế và thước đo độ trùng |
+| Kiểm chứng ngoài | Biến và epoch GHSL, số ô dùng được, $\rho$, khoảng bootstrap theo khối, AUC và tỷ lệ số 0 đồng hạng |
+| Động học | Hai năm, quy tắc chuẩn hóa, thống kê biên độ rộng/sâu và tính chất mô tả của chế độ |
+| Tái lập | Mã phiên bản nguồn, trường tham số/nguồn gốc được xuất và đúng tệp ô/panel đã sử dụng |
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
@@ -844,3 +907,7 @@ Triển khai trên hạ tầng đám mây miễn phí (~1GB RAM) giới hạn s�
 32. Bivand, R. S., Pebesma, E., & Gómez-Rubio, V. (2013). *Applied Spatial Data Analysis with R* (2nd ed.). Springer. https://doi.org/10.1007/978-1-4614-7618-4
 
 33. Elhorst, J. P. (2014). *Spatial Econometrics: From Cross-Sectional Data to Spatial Panels*. Springer. https://doi.org/10.1007/978-3-642-40340-8
+
+34. Pesaresi, M., & Politis, P. (2023). *GHS-BUILT-S R2023A: GHS built-up surface grid, derived from Sentinel-2 composite and Landsat, multitemporal (1975-2030)*. European Commission, Joint Research Centre. https://doi.org/10.2905/9F06F36F-4B11-47EC-ABB0-4F8B7B1D72EA
+
+35. Schiavina, M., Freire, S., Carioli, A., & MacManus, K. (2023). *GHS-POP R2023A: GHS population grid multitemporal (1975-2030)*. European Commission, Joint Research Centre. https://doi.org/10.2905/2FF68A52-5B5B-4A22-8F40-C41DA8332CFE
