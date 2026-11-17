@@ -281,9 +281,7 @@ Local Moran decomposes this intuition by cell and is commonly proportional to $I
 
 **What permutation answers.** The app holds the focal value fixed and rearranges suitable neighbor values to form a reference distribution. With $R$ permutations, a pseudo p-value commonly follows the plus-one rule
 
-$$
-p_i = \frac{1 + \#\{ |I_i^{(r)}| \ge |I_i^{obs}| \}}{R+1}.
-$$
+$$p_i = \frac{1 + \#\{ \vert{}I_i^{(r)}\vert{} \ge \vert{}I_i^{obs}\vert{} \}}{R+1}$$
 
 The number of permutations therefore determines p-value resolution. If an FDR-adjusted threshold falls below the smallest attainable p-value, no cell can be rejected even when a map looks visually striking.
 
