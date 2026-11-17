@@ -73,10 +73,6 @@ Dự án này là một hệ thống dành cho **kinh tế lượng không gian*
 
 ## 🧭 0. Kinh tế lượng không gian và phạm vi thực sự của ứng dụng
 
-![Quy trình kinh tế lượng không gian từ đo lường tới suy luận](docs/assets/spatial-econometrics-workflow-vi.png)
-
-<p align="center"><em>Hình 1. Ứng dụng nối đo lường, quan hệ không gian, suy luận khám phá, kiểm định độ vững và đầu ra có thể tái sử dụng. Cụm không gian là bằng chứng về mẫu hình, không phải bằng chứng nhân quả.</em></p>
-
 ### 0.1. Kinh tế lượng không gian là gì?
 
 Kinh tế lượng thông thường thường bắt đầu từ giả định rằng, sau khi đã kiểm soát các biến giải thích, một quan sát không phụ thuộc vào quan sát khác. Dữ liệu địa lý hiếm khi thỏa mãn giả định đó. Một trung tâm thương mại sáng mạnh có thể ảnh hưởng tới đất đai xung quanh, một dự án giao thông có thể tạo tác động vượt ranh giới hành chính, còn các huyện lân cận có thể dùng chung hạ tầng, thị trường lao động và các cú sốc chưa quan sát được.
@@ -216,23 +212,113 @@ Các mô-đun nâng cao hữu ích nhất khi mỗi đầu ra được xem là c
 
 #### A. NTL là proxy được đo lường, không phải bản thân nền kinh tế tiềm ẩn
 
+![Từ bức xạ VIIRS tới bảng dữ liệu ô-năm](docs/assets/ntl-measurement-vi.jpg)
+
+<p align="center"><em>Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.</em></p>
+
 Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ đo được. Có thể hình dung $y_i = g(a_i, z_i) + u_i$, trong đó $z_i$ chứa công nghệ chiếu sáng, sử dụng đất, điều kiện khí quyển và các yếu tố khác, còn $u_i$ chứa sai số đo lường còn lại. App cải thiện cách xây dựng và ghi chép $y_i$; app không tự nhận dạng $g(\cdot)$ hoặc khôi phục $a_i$ nếu thiếu giả định và biến kết quả bên ngoài (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
 
 Đó là lý do khối Chất lượng dữ liệu tách hỗ trợ quan sát, dữ liệu thiếu, số 0 đo được và bức xạ âm bị cắt. Một giá trị 0 được ghi nhận, một điểm ảnh không có quan sát và một bức xạ âm sau hiệu chỉnh được đưa về 0 có thể cho cùng NTL hiển thị nhưng mang ý nghĩa bằng chứng khác nhau. Nghiên cứu nên giữ các cột `dq_*` và công bố chính sách xử lý số 0/số âm trong phần phương pháp.
 
+**Từ ảnh vệ tinh đến một con số trong bảng.** VIIRS quan sát bức xạ hướng lên cảm biến, không quan sát trực tiếp GDP, thu nhập hay phúc lợi. Các ảnh tháng phải được ghép thành một đại diện năm, sau đó cắt theo ranh giới GADM và quy về lưới phân tích. Với ô phân tích $i$ giao nhiều điểm ảnh nguồn $p$, trung bình có trọng số diện tích có thể được hình dung như:
+
+$$
+\bar r_i = \frac{\sum_p a_{ip}r_p}{\sum_p a_{ip}},
+$$
+
+trong đó $r_p$ là bức xạ của điểm ảnh nguồn và $a_{ip}$ là diện tích giao giữa điểm ảnh đó với ô $i$. Công thức này giải thích vì sao ô ở biên không nên được đối xử như ô đầy đủ: chỉ phần diện tích thực sự nằm trong vùng nghiên cứu mới có quyền đóng góp. Cách trích xuất theo tỷ lệ phủ giúp tránh việc một điểm ảnh chỉ chạm rất ít vào ô nhưng lại được tính như phủ toàn bộ ô (Baston, 2023).
+
+**Ba tầng không chắc chắn cần nhớ.** Thứ nhất là sai số cảm biến và xử lý ảnh, gồm mây, ánh trăng, ánh sáng tạm thời và số tháng quan sát hợp lệ. Thứ hai là sai số biểu diễn không gian do ranh giới, phép chiếu, cỡ lưới và quy tắc xử lý ô biên. Thứ ba là sai số khái niệm: ngay cả bức xạ được đo hoàn hảo vẫn chỉ là proxy cho một phần hoạt động con người (Elvidge và cộng sự, 2017, 2021; Gibson và cộng sự, 2021). Do đó, tăng độ chính xác hình học không tự động giải quyết được khoảng cách giữa ánh sáng và khái niệm kinh tế cần nghiên cứu.
+
+**Cách đọc trong app.** Trước khi xem cụm hoặc chạy LISA, hãy kiểm tra năm, ranh giới, CRS, kích thước lưới, tỷ lệ ô tối, hỗ trợ số tháng và các cờ `dq_*`. Nếu thay đổi ở tầng đo lường làm bản đồ thay đổi mạnh, đó là vấn đề cần giải quyết trước khi diễn giải thống kê.
+
+> **Gợi nhớ:** dữ liệu NTL trong app là kết quả của một chuỗi đo lường. Mỗi ô không phải là "nền kinh tế của ô", mà là bức xạ đã được quan sát, tổng hợp và gắn vào một đơn vị không gian cụ thể.
+
 #### B. Ma trận trọng số là một giả định khoa học
+
+![Từ ô lưới tới ma trận trọng số và độ trễ không gian](docs/assets/spatial-weights-vi.jpg)
+
+<p align="center"><em>Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận $W$, rồi ma trận thành độ trễ không gian $Wy$.</em></p>
 
 $W$ không chỉ là một tùy chọn phần mềm. Tiếp giáp Queen giả định tiếp xúc cạnh hoặc góc đều có thể truyền tương tác; Rook loại tiếp xúc chỉ qua góc; ma trận khoảng cách hoặc mạng lưới sẽ biểu diễn một cơ chế khác. Chuẩn hóa theo hàng biến trễ không gian từ tổng láng giềng thành trung bình láng giềng, trong khi ma trận nhị phân đối xứng giữ một thang đo khác (Anselin, 1988; LeSage & Pace, 2009).
 
 App cho phép thử độ nhạy Queen/Rook và kích thước lưới vì một kết luận biến mất sau thay đổi hợp lý của $W$ cần được trình bày là phụ thuộc đặc tả. Khi công bố, cần báo quy tắc láng giềng, cách chuẩn hóa, xử lý ô cô lập, số ô được kiểm định, số láng giềng trung bình và lý do $W$ đại diện cho cơ chế tương tác được đề xuất.
 
+**Trực giác đồ thị.** Hãy coi mỗi ô là một nút và mỗi quan hệ láng giềng là một cạnh. Khi đó hàng $i$ của $W$ là danh sách những nút mà ô $i$ được phép "nhìn thấy". Với chuẩn hóa theo hàng, $\sum_j w_{ij}=1$ cho ô có láng giềng, nên
+
+$$
+(Wy)_i = \sum_j w_{ij}y_j
+$$
+
+là trung bình có trọng số của vùng xung quanh. Nếu $y_i$ cao và $(Wy)_i$ cũng cao, ô nằm trong một môi trường sáng tương đối. Nếu $y_i$ cao nhưng $(Wy)_i$ thấp, ô giống một ngoại lệ sáng giữa vùng tối. Đây là quan hệ tương đối theo $W$, không phải khoảng cách vật lý tự thân.
+
+**Vì sao Queen và Rook có thể cho kết quả khác.** Trên lưới vuông, Rook thường cho tối đa bốn láng giềng trực giao, còn Queen có thể cho tám láng giềng khi tính cả tiếp xúc góc. Queen làm mượt một vùng rộng hơn và thường nối các cụm qua góc. Rook nghiêm ngặt hơn về tiếp xúc hình học. Không quy tắc nào luôn đúng: câu hỏi là kiểu tiếp xúc nào hợp lý với cơ chế như giao thông, thị trường lao động, lan truyền ánh sáng hoặc tương tác hành chính.
+
+**Ô biên và ô cô lập.** Ô ở biên thường có ít láng giềng hơn. Sau chuẩn hóa theo hàng, mỗi láng giềng của chúng có trọng số lớn hơn. Ô không có láng giềng không thể có độ trễ được định nghĩa theo cùng cách. App ghi nhận số láng giềng và điều kiện đủ để tránh biến một vấn đề cấu trúc đồ thị thành một nhãn thống kê có vẻ chắc chắn.
+
+> **Gợi nhớ:** $W$ là một mô hình nhỏ nằm bên trong mọi thống kê không gian. Đổi $W$ là đổi câu hỏi "xung quanh" có nghĩa là gì.
+
 #### C. Suy luận cục bộ cần một giao thức kiểm định
+
+![Từ đồ thị Moran tới LISA sau hiệu chỉnh FDR](docs/assets/lisa-inference-vi.jpg)
+
+<p align="center"><em>Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.</em></p>
 
 LISA chạy một kiểm định cục bộ cho mỗi ô đủ điều kiện. p-value giả phụ thuộc thủ tục hoán vị có điều kiện, seed và số hoán vị. Độ phân giải nhỏ nhất của p-value bị giới hạn bởi số hoán vị. Kiểm định hàng nghìn ô còn tạo ra vấn đề kiểm định nhiều lần, vì vậy app cung cấp hiệu chỉnh FDR Benjamini-Hochberg và cảnh báo khi tổ hợp số hoán vị/FDR không thể bác bỏ ô nào (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
 Một kết quả LISA có thể bảo vệ được cần báo phép biến đổi, ngưỡng sáng, mặt nạ biên, số láng giềng tối thiểu, số hoán vị, seed, $\alpha$, lựa chọn FDR và cỡ cụm liên thông tối thiểu. Các nhãn `HH`, `LL`, `HL` và `LH` phải luôn được đọc cùng cờ ý nghĩa và cờ đủ điều kiện.
 
-#### D. Chuyển cụm thành biến nghiên cứu
+**Từ toàn cục tới cục bộ.** Global Moran's $I$ tóm tắt mức đồng biến giữa giá trị chuẩn hóa $z_i$ và độ trễ $\sum_j w_{ij}z_j$ trên toàn vùng:
+
+$$
+I = \frac{n}{S_0}\frac{\sum_i\sum_j w_{ij}z_i z_j}{\sum_i z_i^2},
+\qquad S_0=\sum_i\sum_j w_{ij}.
+$$
+
+$I$ dương thường gợi ý các giá trị tương tự nằm gần nhau theo $W$; $I$ âm gợi ý quan hệ tương phản; nhưng giá trị quan sát chỉ có ý nghĩa khi được so với phân phối tham chiếu thích hợp (Moran, 1950). Global Moran cho biết toàn vùng có cấu trúc, không cho biết ô nào tạo nên cấu trúc đó.
+
+Local Moran phân rã trực giác này theo ô, thường có dạng tỷ lệ với $I_i=z_i\sum_j w_{ij}z_j$. Dấu của $z_i$ và dấu của độ trễ chia đồ thị Moran thành bốn góc. `HH` và `LL` là những ô tương tự môi trường xung quanh; `HL` và `LH` là ngoại lệ tương phản. Nhãn góc chỉ mô tả vị trí trên đồ thị. Nó chưa phải kết luận có ý nghĩa thống kê.
+
+**Hoán vị trả lời điều gì.** App giữ giá trị của ô tiêu điểm và tráo các giá trị láng giềng phù hợp để tạo ra phân phối tham chiếu. Với $R$ lần hoán vị, pseudo p-value thường được tính theo nguyên tắc cộng một:
+
+$$
+p_i = \frac{1 + \#\{ |I_i^{(r)}| \ge |I_i^{obs}| \}}{R+1}.
+$$
+
+Do đó, số hoán vị quyết định độ phân giải của p-value. Nếu ngưỡng sau FDR nhỏ hơn mức p-value nhỏ nhất có thể đạt, không ô nào có thể được bác bỏ dù mẫu hình nhìn bằng mắt rất nổi bật.
+
+**FDR không phải bộ lọc trang trí.** Khi kiểm định hàng nghìn ô, một số p-value nhỏ sẽ xuất hiện ngẫu nhiên. Benjamini-Hochberg kiểm soát tỷ lệ kỳ vọng của phát hiện sai trong tập phát hiện, với điều kiện và cách diễn giải được nêu rõ (Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006). Kết quả nên phân biệt ít nhất ba trạng thái: không đủ điều kiện kiểm định, đã kiểm định nhưng không có ý nghĩa, và có ý nghĩa sau quy tắc hiệu chỉnh đã chọn.
+
+> **Gợi nhớ:** màu `HH` hoặc `LL` trả lời "mẫu hình thuộc góc nào"; p-value và FDR trả lời "bằng chứng có vượt thủ tục tham chiếu hay không". Cả hai đều không tự trả lời "vì sao mẫu hình xuất hiện".
+
+#### D. Độ vững là thử thách kết luận, không phải lặp lại cùng một phép tính
+
+![Các trục kiểm tra độ vững và kiểm chứng ngoài](docs/assets/robustness-validation-vi.jpg)
+
+<p align="center"><em>Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.</em></p>
+
+Một kết quả có thể tái lập chưa chắc đã có độ vững. Tái lập nghĩa là cùng dữ liệu, mã và tham số cho lại cùng kết quả. Độ vững hỏi một câu khó hơn: kết luận có còn giữ được khi thay đổi những lựa chọn phân tích khác nhưng vẫn hợp lý về khoa học hay không. Có thể hình dung đầu ra là $R(s)$, trong đó $s$ là một đặc tả gồm cỡ lưới, $W$, phép biến đổi, ngưỡng, seed, FDR và năm. Độ vững nghiên cứu sự biến thiên của $R(s)$ trên một tập đặc tả có thể biện minh, không phải trên mọi tổ hợp tùy ý.
+
+App thử bốn nhóm rủi ro chính:
+
+1. **Rủi ro hỗ trợ không gian:** đổi kích thước hoặc cách căn lưới để xem MAUP có làm cụm dịch chuyển hay không (Openshaw, 1984; Fotheringham & Wong, 1991).
+2. **Rủi ro quan hệ láng giềng:** so Queen và Rook để kiểm tra kết luận có phụ thuộc việc nối qua góc hay không.
+3. **Rủi ro thời gian và tham số:** đổi năm liền kề, seed, phép biến đổi hoặc ngưỡng để phân biệt tín hiệu bền với cấu hình đơn lẻ.
+4. **Rủi ro giá trị khái niệm:** so NTL với GHSL built-up hoặc population để kiểm tra đồng thuận với một cấu trúc đô thị khác, không coi GHSL là chân lý tuyệt đối.
+
+Với hai tập ô `HH` là $A$ và $B$, hệ số Jaccard
+
+$$
+J(A,B)=\frac{|A\cap B|}{|A\cup B|}
+$$
+
+tóm tắt mức trùng từ 0 đến 1. Tuy nhiên, một con số Jaccard không nói hết câu chuyện. Cần xem cả diện tích ổn định, vị trí phần mất/thêm, mức thay đổi của chỉ số toàn cục và liệu các khác biệt tập trung ở biên hay ở lõi.
+
+**Cách diễn giải.** "Ổn định" nghĩa là kết luận chính tồn tại qua các thay đổi đã thử, trong phạm vi địa điểm, thời kỳ và proxy đó. "Nhạy cảm" không đồng nghĩa với sai; nó cho biết kết luận cần được ràng buộc vào đặc tả hoặc cần thêm dữ liệu. Nếu chỉ một cấu hình cho kết quả nổi bật, cấu hình đó cần lý do khoa học mạnh hơn, không phải ngôn ngữ khẳng định mạnh hơn.
+
+> **Gợi nhớ:** kiểm định ý nghĩa hỏi kết quả có hiếm dưới một mô hình tham chiếu hay không. Kiểm tra độ vững hỏi kết quả có phụ thuộc quá nhiều vào quyết định của nhà phân tích hay không. Đây là hai câu hỏi khác nhau.
+
+#### E. Chuyển cụm thành biến nghiên cứu
 
 App dẫn xuất một số biến từ bề mặt ánh sáng mô tả:
 
@@ -243,19 +329,19 @@ App dẫn xuất một số biến từ bề mặt ánh sáng mô tả:
 
 Các đầu ra này là ứng viên cho biến giải thích, biến kết quả, thước đo phơi nhiễm hoặc chẩn đoán. Vai trò đúng phụ thuộc vào đại lượng cần ước lượng và thứ tự thời gian của thiết kế thực nghiệm.
 
-#### E. Động học hai kỳ là thay đổi tương đối, không phải tăng trưởng tuyệt đối
+#### F. Động học hai kỳ là thay đổi tương đối, không phải tăng trưởng tuyệt đối
 
 Mô-đun Không-Thời gian chuẩn hóa $\ln(1+\mathrm{NTL})$ riêng trong từng năm, sau đó so thay đổi vị thế của bản thân ô với thay đổi biến trễ láng giềng. Bốn chế độ có hướng vì vậy mô tả **dịch chuyển tương đối trong phân phối của từng năm**. Chúng không tương đương với tăng trưởng bức xạ tuyệt đối, tăng trưởng GDP hoặc chuyển dịch nhân quả (Rey và cộng sự, 2023).
 
 Mô-đun báo riêng số ô chuyển từ tối sang sáng, từ sáng sang tối và thay đổi log trung bình của các ô sáng ở cả hai kỳ. Cần đọc phần tách biên độ rộng/sâu này cùng các chế độ tương đối. Với chỉ hai kỳ, bảng chuyển dịch vẫn mang tính mô tả; suy luận panel không gian đa kỳ cần thêm giả định và chẩn đoán (Elhorst, 2014; Müller & Watson, 2024).
 
-#### F. Kiểm chứng ngoài đo sự đồng thuận với cấu trúc được chọn
+#### G. Kiểm chứng ngoài đo sự đồng thuận với cấu trúc được chọn
 
 GHSL built-up surface ghi số mét vuông bề mặt xây dựng trong mỗi điểm ảnh nguồn 100 m, còn GHS-POP ghi số cư dân trong mỗi điểm ảnh nguồn theo epoch 5 năm. App giữ lưới nguồn, cộng lượng vào ô phân tích và so thứ hạng với NTL bằng Spearman $\rho$, khoảng bootstrap theo khối không gian và AUC của nhóm phân vị trên (Pesaresi & Politis, 2023; Schiavina và cộng sự, 2023).
 
 Mức đồng thuận cao hỗ trợ phát biểu rằng NTL phù hợp với cấu trúc định cư cụ thể đó tại địa điểm và thời kỳ được chọn. Nó không kiểm chứng NTL cho mọi kết quả kinh tế. Đồng thuận thấp có thể phản ánh cấu trúc kinh tế thật, lệch thời điểm, nhiều số 0 đồng hạng, sai số proxy hoặc lỗi trích xuất; cần điều tra nguyên nhân trước khi loại proxy.
 
-#### G. Bộ thông tin tối thiểu khi báo cáo một ứng dụng có thể tái lập
+#### H. Bộ thông tin tối thiểu khi báo cáo một ứng dụng có thể tái lập
 
 | Thành phần | Tối thiểu cần báo |
 | :--- | :--- |

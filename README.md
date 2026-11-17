@@ -73,10 +73,6 @@ The app covers three stages: it turns irregular administrative boundaries into u
 
 ## 🧭 0. Spatial econometrics and what this app actually does
 
-![Spatial econometrics workflow from measurement to inference](docs/assets/spatial-econometrics-workflow.png)
-
-<p align="center"><em>Figure 1. The app connects measurement, spatial relations, exploratory inference, robustness checks and reusable outputs. A detected spatial cluster is evidence of pattern, not causality.</em></p>
-
 ### 0.1. What is spatial econometrics?
 
 Ordinary econometrics often starts from the idea that, after conditioning on the explanatory variables, one observation is independent of another. Geographic data rarely fit that assumption. A bright commercial center can affect nearby land, a transport investment can cross an administrative border, and neighboring districts can share infrastructure, labor markets and unobserved shocks.
@@ -216,23 +212,113 @@ The advanced modules are most useful when each output is treated as an answer to
 
 #### A. NTL as a measured proxy, not a latent economic truth
 
+![From VIIRS radiance to a cell-year table](docs/assets/ntl-measurement.jpg)
+
+<p align="center"><em>Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.</em></p>
+
 Let $a_i$ denote an unobserved economic construct and $y_i$ the observed radiance. A useful mental model is $y_i = g(a_i, z_i) + u_i$, where $z_i$ contains lighting technology, land use, atmospheric conditions and other factors, while $u_i$ contains remaining measurement error. The app improves the construction and documentation of $y_i$; it does not identify $g(\cdot)$ or recover $a_i$ without external assumptions and outcomes (Henderson et al., 2012; Donaldson & Storeygard, 2016; Gibson et al., 2021).
 
 This is why the Data Quality panel keeps observation support, missingness, measured zeros and clipped negatives separate. A recorded zero, an unobserved pixel and a negative corrected radiance mapped to zero can have the same displayed NTL but different evidential meanings. Researchers should retain the `dq_*` fields and state the zero/negative policy in the methods section.
 
+**From a satellite image to one number in a table.** VIIRS observes radiance directed toward the sensor, not GDP, income or welfare themselves. Monthly images must first be combined into an annual representation, then clipped by the GADM boundary and transferred to the analysis grid. If analysis cell $i$ intersects several source pixels $p$, an area-weighted mean can be understood as
+
+$$
+\bar r_i = \frac{\sum_p a_{ip}r_p}{\sum_p a_{ip}},
+$$
+
+where $r_p$ is source-pixel radiance and $a_{ip}$ is the area shared by pixel $p$ and cell $i$. This expression explains why a boundary cell should not be treated like a fully covered interior cell: only the area actually inside the study region should contribute. Fractional coverage prevents a source pixel that barely touches a cell from being counted as if it covered the whole cell (Baston, 2023).
+
+**Three layers of uncertainty are worth remembering.** First is sensor and image-processing uncertainty, including clouds, moonlight, temporary light and valid-month support. Second is spatial representation uncertainty from the boundary, projection, grid size and border-cell rule. Third is conceptual uncertainty: even perfectly measured radiance remains a proxy for only part of human activity (Elvidge et al., 2017, 2021; Gibson et al., 2021). Better geometric precision does not automatically close the gap between light and the economic construct of interest.
+
+**How to read this in the app.** Before inspecting clusters or running LISA, check the year, boundary, CRS, grid size, dark-cell share, valid-month support and `dq_*` flags. If a measurement choice materially changes the map, that issue should be resolved or reported before statistical interpretation begins.
+
+> **Memory aid:** NTL in the app is the product of a measurement chain. A cell is not "the economy of the cell"; it is observed radiance that has been aggregated and attached to a particular spatial support.
+
 #### B. The weights matrix is a scientific assumption
+
+![From grid cells to a weights matrix and spatial lag](docs/assets/spatial-weights.jpg)
+
+<p align="center"><em>Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.</em></p>
 
 $W$ is not merely a software setting. Queen contiguity asks whether immediate edge or corner contact carries relevant interaction; Rook excludes corner-only contact; a distance or network matrix would encode a different mechanism. Row standardization changes a spatial lag from a neighbor sum into a neighbor average, while a binary symmetric matrix preserves a different scale (Anselin, 1988; LeSage & Pace, 2009).
 
 The app exposes Queen/Rook sensitivity and grid-scale sensitivity because conclusions that disappear after a defensible change in $W$ should be presented as specification-dependent. For published work, report the neighbor rule, normalization, treatment of islands, tested cells, average neighbor count and why that $W$ represents the proposed interaction mechanism.
 
+**Graph intuition.** Treat every cell as a node and every neighbor relation as an edge. Row $i$ of $W$ then lists the nodes that cell $i$ is allowed to "see." Under row standardization, $\sum_j w_{ij}=1$ for a cell with neighbors, so
+
+$$
+(Wy)_i = \sum_j w_{ij}y_j
+$$
+
+is a weighted neighborhood average. If $y_i$ is high and $(Wy)_i$ is also high, the cell sits in a relatively bright environment. If $y_i$ is high but $(Wy)_i$ is low, it resembles a bright spatial outlier. These are relations defined by $W$, not physical distance by itself.
+
+**Why Queen and Rook can disagree.** On a square grid, Rook commonly provides up to four orthogonal neighbors, while Queen can provide eight by including corner contact. Queen smooths over a broader immediate neighborhood and can connect components through corners. Rook imposes a stricter geometric contact rule. Neither is universally correct. The scientific question is which contact pattern plausibly represents transport, labor-market, light-spill, or administrative interaction.
+
+**Borders and islands.** Border cells generally have fewer neighbors. After row standardization, each remaining neighbor therefore receives more weight. A cell with no neighbors has no spatial lag defined in the same way. The app records neighbor counts and eligibility so that a graph-structure problem is not silently converted into a confident statistical label.
+
+> **Memory aid:** $W$ is a small model embedded inside every spatial statistic. Changing $W$ changes what the word "surrounding" means.
+
 #### C. Local inference requires a testing protocol
+
+![From the Moran scatterplot to FDR-corrected LISA results](docs/assets/lisa-inference.jpg)
+
+<p align="center"><em>Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.</em></p>
 
 LISA runs one local test for each eligible cell. The pseudo p-value depends on the conditional permutation procedure, random seed and number of permutations. Its finest attainable resolution is bounded by the permutation count. Testing thousands of cells also creates a multiple-testing problem, so the app provides Benjamini-Hochberg FDR control and reports when the requested permutation/FDR combination cannot reject any cell (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
 A defensible LISA result therefore reports the transformation, light threshold, edge mask, minimum neighbors, permutations, seed, $\alpha$, FDR choice and minimum connected-cluster size. The `HH`, `LL`, `HL` and `LH` labels should always be read together with significance and eligibility flags.
 
-#### D. Turning clusters into research variables
+**From global to local.** Global Moran's $I$ summarizes the cross-product between standardized values $z_i$ and their lag $\sum_j w_{ij}z_j$ over the full region:
+
+$$
+I = \frac{n}{S_0}\frac{\sum_i\sum_j w_{ij}z_i z_j}{\sum_i z_i^2},
+\qquad S_0=\sum_i\sum_j w_{ij}.
+$$
+
+A positive $I$ commonly indicates that similar values lie near one another under $W$, while a negative $I$ indicates contrast. The observed statistic is meaningful only relative to an appropriate reference distribution (Moran, 1950). Global Moran tells us that the region has structure, not which cells produce it.
+
+Local Moran decomposes this intuition by cell and is commonly proportional to $I_i=z_i\sum_j w_{ij}z_j$. The signs of $z_i$ and its lag divide the Moran scatterplot into four quadrants. `HH` and `LL` cells resemble their surroundings; `HL` and `LH` cells are spatial contrasts. A quadrant label describes position in the scatterplot. It is not yet a statement of statistical significance.
+
+**What permutation answers.** The app holds the focal value fixed and rearranges suitable neighbor values to form a reference distribution. With $R$ permutations, a pseudo p-value commonly follows the plus-one rule
+
+$$
+p_i = \frac{1 + \#\{ |I_i^{(r)}| \ge |I_i^{obs}| \}}{R+1}.
+$$
+
+The number of permutations therefore determines p-value resolution. If an FDR-adjusted threshold falls below the smallest attainable p-value, no cell can be rejected even when a map looks visually striking.
+
+**FDR is not a decorative filter.** When thousands of cells are tested, some small p-values arise by chance. Benjamini-Hochberg controls the expected false-discovery proportion among discoveries under its stated conditions and interpretation (Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006). Results should distinguish at least three states: ineligible for testing, tested but nonsignificant, and significant under the chosen correction rule.
+
+> **Memory aid:** an `HH` or `LL` color answers "which quadrant describes the pattern"; the p-value and FDR answer "does the evidence exceed the stated reference procedure." Neither answers "why did the pattern arise."
+
+#### D. Robustness challenges a conclusion rather than repeating one calculation
+
+![Robustness axes and external comparison](docs/assets/robustness-validation.jpg)
+
+<p align="center"><em>Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.</em></p>
+
+A reproducible result is not necessarily robust. Reproducibility means that the same data, code and parameters reproduce the same result. Robustness asks a harder question: does the conclusion remain when defensible analytical choices change? Write the output conceptually as $R(s)$, where $s$ is a specification containing grid size, $W$, transformation, threshold, seed, FDR rule and year. Robustness studies how $R(s)$ varies across a scientifically defensible specification set, not across every arbitrary combination.
+
+The app challenges four main risk classes:
+
+1. **Spatial-support risk:** change grid size or alignment to see whether MAUP moves the detected pattern (Openshaw, 1984; Fotheringham & Wong, 1991).
+2. **Relationship risk:** compare Queen and Rook to see whether corner contact drives the result.
+3. **Temporal risk:** compare an adjacent year to separate a persistent feature from a one-year realization.
+4. **Construct risk:** compare NTL with GHSL built surface or population to test agreement with another urban construct, not with universal ground truth.
+
+For two `HH` cell sets $A$ and $B$, Jaccard overlap
+
+$$
+J(A,B)=\frac{|A\cap B|}{|A\cup B|}
+$$
+
+summarizes agreement from 0 to 1. One Jaccard number is not the whole result. Inspect stable area, where removed or added cells occur, how the global statistic changes, and whether disagreement is concentrated around cluster borders or in the core.
+
+**How to interpret it.** "Stable" means the main conclusion persisted across the alternatives actually tested, within the selected place, period and proxy. "Sensitive" does not mean wrong. It means that the conclusion must be conditioned on the specification or supported with more data. If only one configuration yields a striking result, that configuration needs a stronger scientific rationale, not stronger wording.
+
+> **Memory aid:** significance asks whether a result is unusual under a reference procedure. Robustness asks whether it depends too heavily on the analyst's defensible choices. These are different questions.
+
+#### E. Turning clusters into research variables
 
 The app derives several variables from the descriptive light surface:
 
@@ -243,19 +329,19 @@ The app derives several variables from the descriptive light surface:
 
 These exports are candidate regressors, outcomes, exposure measures or diagnostics. Their correct role depends on the estimand and the timing of the empirical design.
 
-#### E. Two-period dynamics are relative, not absolute growth
+#### F. Two-period dynamics are relative, not absolute growth
 
 The Space-Time module standardizes $ln(1+\mathrm{NTL})$ separately within each year and compares changes in own-cell position with changes in the neighboring spatial lag. Its four directional regimes therefore describe **relative movement within each year's distribution**. They are not equivalent to absolute radiance growth, GDP growth or a causal transition (Rey et al., 2023).
 
 The module separately reports entry from dark to lit, exit from lit to dark and mean log change among cells lit in both periods. This extensive/intensive split should be read alongside the relative regimes. With only two periods, transition tables remain descriptive; multi-period spatial-panel inference requires additional assumptions and diagnostics (Elhorst, 2014; Müller & Watson, 2024).
 
-#### F. External validation measures agreement with a chosen construct
+#### G. External validation measures agreement with a chosen construct
 
 GHSL built-up surface records square metres of built surface per 100 m source cell, while GHS-POP records inhabitants per source cell at five-year epochs. The app preserves the native source grid, aggregates amounts to analysis cells and compares their rankings with NTL using Spearman $\rho$, a spatial block-bootstrap interval and top-quartile AUC (Pesaresi & Politis, 2023; Schiavina et al., 2023).
 
 High agreement supports the statement that NTL is aligned with that particular settlement construct in the selected place and period. It does not validate NTL against every economic outcome. Low agreement may reflect genuine economic structure, temporal mismatch, many tied zeros, proxy error or extraction problems; the reason must be investigated before the proxy is rejected.
 
-#### G. Minimum reporting set for a reproducible application
+#### H. Minimum reporting set for a reproducible application
 
 | Component | Report at minimum |
 | :--- | :--- |
