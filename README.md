@@ -22,7 +22,6 @@
 > - **The problem.** Satellite nighttime lights (NTL) are a standard stand-in for GDP in economics. **But** the data is huge. Processing it usually crashes an ordinary computer (RAM runs out), and doing it by hand takes weeks.
 > - **What the app does.** You pick a region $\rightarrow$ the app fetches the data from *Google Earth Engine* $\rightarrow$ a C/C++ backend crushes millions of pixels into grid cells $\rightarrow$ **resource guards limit the workload; reliable operation within 1GB still requires a full deployment benchmark.**
 > - **What you get.** One click gives you a CSV of ready-to-use economic indicators: where is the true urban core? where are the economic hotspots (LISA)? how unequal is the distribution (Gini)? Download it and drop it straight into your regression models.
-> - 👉 **[TRY THE LIVE DEMO](https://spatial-app.streamlit.app/?)**
 
 ```mermaid
 flowchart LR
