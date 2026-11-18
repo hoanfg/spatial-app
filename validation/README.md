@@ -49,14 +49,6 @@ The original source review used identifiers A01 to A12. Their current status is 
 | Application contracts | `python -m pytest -q tests` | Checks numerical, schema, masking and interface behavior with deposited or synthetic inputs. |
 | Three-location raster comparison | [Cross-location workflow](cross_location/README.md) and recovered audit manifest | Records the completed V11 method, inputs, edge-cell artifacts, tolerances and results. The current checkout is not a newly expanded binary rerun bundle. |
 
-## Next steps
-
-1. Test A02 with a real missing or low-observation case without changing the `legacy_zero_fill` policy silently.
-2. Compare block aggregation with a fresh coarse-grid raster extraction for A07.
-3. Repeat performance measurements with the same deployed commit, location, year and grid size.
-4. Extend the two-date analysis to a continuous annual series before making temporal claims.
-5. Compare NTL with an independently sourced and aligned economic outcome before drawing economic conclusions.
-
 ## Method boundaries
 
 - NTL per cell is the fractional-coverage mean of valid VIIRS radiance. Negative valid radiance is clipped to zero for the legacy output; observation-support fields remain separate.
