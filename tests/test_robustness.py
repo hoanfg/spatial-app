@@ -274,6 +274,33 @@ def test_T27_ee_extra_pure_helpers():
     with pytest.raises(ValueError):
         ee_extra.fetch_ntl_variant(MagicMock(), "X", (0, 0, 1, 1), 2020, 463.83, reducer="max")
 
+    large = (20.0, 60.0, 30.0, 70.0)
+    tiles = ee_extra.tile_bboxes(large, 463.83, band_count=6, max_request_bytes=2_000_000)
+    assert len(tiles) > 1
+    assert min(t[0] for t in tiles) == large[0] and max(t[2] for t in tiles) == large[2]
+    assert min(t[1] for t in tiles) == large[1] and max(t[3] for t in tiles) == large[3]
+
+
+def test_T27c_tiled_download_retries_request_size_errors(monkeypatch):
+    fake_ee = MagicMock()
+    fake_ee.Geometry.Rectangle.side_effect = lambda coords: tuple(coords)
+    calls = []
+
+    def fake_download(_img, roi, _scale, timeout=180):
+        calls.append(roi)
+        if (roi[2] - roi[0]) * (roi[3] - roi[1]) > 0.3:
+            raise RuntimeError("Total request size must be less than or equal to 50331648 bytes")
+        return b"II-tile"
+
+    monkeypatch.setattr(ee_extra, "_download", fake_download)
+    monkeypatch.setattr(ee_extra, "merge_geotiffs", lambda parts: b"merged:" + str(len(parts)).encode())
+    result = ee_extra.download_tiled_geotiff(
+        fake_ee, object(), (0.0, 0.0, 1.0, 1.0), 100_000,
+        band_count=1, max_request_bytes=10**9,
+    )
+    assert result.startswith(b"merged:")
+    assert len(calls) > 1
+
 
 def test_T27b_ee_extra_builds_expected_calls(monkeypatch):
     monkeypatch.setattr(ee_extra, "_download", lambda img, roi, scale, timeout=180: b"II*\x00")

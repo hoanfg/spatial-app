@@ -1,14 +1,12 @@
 import html as html_lib
 import inspect  # noqa: F401
 import gettext
-import io
 import json
 import math
 import os
 import re
 import tempfile
 import unicodedata
-import zipfile
 from datetime import datetime, timezone
 
 import altair as alt
@@ -19,9 +17,9 @@ import geopandas as gpd
 import numpy as np
 from ntl.zonal import read_valid_band
 from ntl.semantics import annual_image_with_quality, cell_quality
+from ntl.ee_extra import download_tiled_geotiff
 from ntl.performance import PerformanceRecorder, measured_call, render_performance_panel
 import pandas as pd
-import requests
 import shapely
 import streamlit as st
 from branca.element import MacroElement
@@ -1395,7 +1393,7 @@ def boundary_stats(path: str, mtime: float):
 
 
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
-def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 3) -> bytes:
+def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 4) -> bytes:
     """Download a cloud-screened annual-median NTL GeoTIFF for a WGS84 bounding box."""
     minx, miny, maxx, maxy = bbox
     roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
@@ -1412,26 +1410,7 @@ def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 3) -> b
         return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
 
     img = annual_image_with_quality(col.map(_mask_cloud_free), roi)
-    url = img.getDownloadUrl(
-        {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
-    )
-    resp = requests.get(url, timeout=180)
-    if resp.status_code != 200:
-        raise ConnectionError(f"HTTP:{resp.status_code}")
-
-    content = resp.content
-
-    if content[:2] == b"PK":
-        with zipfile.ZipFile(io.BytesIO(content)) as z:
-            tif_names = [n for n in z.namelist() if n.lower().endswith(".tif")]
-            if not tif_names:
-                raise ValueError("ZIP without .tif")
-            content = z.read(tif_names[0])
-
-    if content[:2] not in (b"II", b"MM"):
-        raise ValueError(L["err_tiff"])
-
-    return content
+    return download_tiled_geotiff(ee, img, bbox, GEE_SCALE_M, band_count=6)
 
 
 def class_codes(values: np.ndarray) -> np.ndarray:
