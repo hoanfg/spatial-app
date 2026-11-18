@@ -398,9 +398,9 @@ class _LisaIntro(MacroElement):
 
 def _popover(brief, title, body):
     try:
-        pop = st.popover("", help=brief)
+        pop = st.popover("❓", help=brief)
     except TypeError:
-        pop = st.popover("")
+        pop = st.popover("❓")
     with pop:
         st.markdown(f"**{title}**")
         st.markdown(body)
@@ -414,6 +414,7 @@ def _pin(cfg_cls, **kw):
 
 
 _LEVEL_LABEL = {"ok": ("Tốt", "OK"), "warn": ("Cần lưu ý", "Warning"), "info": ("Thông tin", "Info")}
+_LEVEL_ICON = {"ok": "✅", "warn": "⚠️", "info": "ℹ️"}
 _DIAG_FIFO = 5
 
 
@@ -433,7 +434,7 @@ def _num(v, fmt="{:.3f}"):
 def _diag_line(it, vi):
 
     k, v = it["key"], it["vals"]
-    prefix = f"**{_LEVEL_LABEL[it['level']][0 if vi else 1]}:**"
+    prefix = f"{_LEVEL_ICON[it['level']]} **{_LEVEL_LABEL[it['level']][0 if vi else 1]}:**"
     if k == "perm":
         if not v["applies"]:
             return f"{prefix} " + ("**Số hoán vị / FDR:** FDR đang tắt nên không áp dụng." if vi
@@ -531,7 +532,9 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
     n_warn = auto["n_warn"]
     title = "Kiểm định độ tin cậy" if vi else "Reliability diagnostics"
     if n_warn:
-        title += f" · {n_warn} " + ("cảnh báo" if vi else "warning(s)")
+        title += f" · ⚠️ {n_warn} " + ("cảnh báo" if vi else "warning(s)")
+    else:
+        title += " · ✅"
 
     with st.expander(title, expanded=bool(n_warn)):
         st.caption("Các kiểm tra nhẹ chạy tự động theo từng lần cập nhật LISA; kiểm định nặng chỉ chạy khi bạn bấm nút."
@@ -573,9 +576,7 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             return (ckey, kind) in hcache
 
         def _lbl(txt, kind):
-            if not _done(kind):
-                return txt
-            return f"{txt} ({'đã có kết quả' if vi else 'cached'})"
+            return ("✅ " if _done(kind) else "▶ ") + txt
 
         b1, b2, b3 = st.columns(3)
         run_seed = b1.button(_lbl(f"Ổn định theo seed ({n_seed} lần)" if vi else f"Seed stability ({n_seed} runs)", "seed"),
@@ -602,12 +603,12 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
         def _go(kind, label_vi, label_en, fn):
 
             if (ckey, kind) in hcache:
-                st.toast(("Đã có kết quả lưu đệm cho: " if vi else "Cached result already available: ") + (label_vi if vi else label_en))
+                st.toast(("Đã có kết quả lưu đệm cho: " if vi else "Cached result already available: ") + (label_vi if vi else label_en), icon="✅")
                 return
             prog = _progress(label_vi if vi else label_en)
             _fifo_put(hcache, (ckey, kind), fn(prog), 12)
             prog.bar.empty()
-            st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en))
+            st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en), icon="✅")
             st.rerun()
 
         if run_seed:

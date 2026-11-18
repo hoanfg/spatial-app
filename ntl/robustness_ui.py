@@ -82,11 +82,11 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
                 help=("Tải NTL của năm kề từ Earth Engine và chạy lại LISA cùng tham số. Chậm hơn." if vi
                       else "Fetches NTL for adjacent years from Earth Engine and re-runs LISA with the same parameters. Slower."))
 
-        run = st.button("Chạy kiểm định độ vững" if vi else "Run robustness checks",
+        run = st.button(("✅ " if done else "▶ ") + ("Chạy kiểm định độ vững" if vi else "Run robustness checks"),
                         key="rob_btn_run", disabled=too_big, use_container_width=True)
         if run:
             if done and not (with_years and ckey not in ycache):
-                st.toast("Đã có kết quả lưu đệm" if vi else "Cached result available")
+                st.toast("Đã có kết quả lưu đệm" if vi else "Cached result available", icon="✅")
             else:
                 try:
                     if not done:
@@ -106,7 +106,7 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
                                     arrs[y] = a
                             if arrs:
                                 _put(ycache, ckey, adjacent_years(base_kw, base_hh, arrs))
-                    st.toast("Hoàn tất kiểm định độ vững" if vi else "Robustness checks done")
+                    st.toast("Hoàn tất kiểm định độ vững" if vi else "Robustness checks done", icon="✅")
                     st.rerun()
                 except Exception as e:  # noqa: BLE001
                     st.error(f"{'Lỗi' if vi else 'Error'}: {e}")
