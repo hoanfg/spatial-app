@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+from ntl.ntl_distribution import gini
 
 try:
     from scipy.spatial import cKDTree as _cKDTree
@@ -200,16 +201,6 @@ def cluster_labels(mask, nbr, max_iter: int = 5000) -> np.ndarray:
             break
         lab = new
     return lab
-
-
-def gini(x) -> float:
-    x = np.asarray(x, dtype=float)
-    x = x[np.isfinite(x) & (x >= 0.0)]
-    if x.size == 0 or x.sum() <= 0:
-        return 0.0
-    x = np.sort(x)
-    n = x.size
-    return float(2 * np.sum(np.arange(1, n + 1) * x) / (n * x.sum()) - (n + 1) / n)
 
 
 def _min_euclidean_dist_m(src_x, src_y, dst_x, dst_y) -> np.ndarray:

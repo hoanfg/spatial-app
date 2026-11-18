@@ -29,7 +29,7 @@ from streamlit_folium import st_folium
 
 from ntl.data_quality import PIPELINE_PROVENANCE, cell_report, raster_report
 from ntl.formatting import fmt_p
-from ntl.ntl_distribution import hist_share_df, lorenz_df, radial_df, ranksize_df
+from ntl.ntl_distribution import gini, hist_share_df, lorenz_df, radial_df, ranksize_df
 
 try:
     import pycountry
@@ -1419,15 +1419,6 @@ def class_codes(values: np.ndarray) -> np.ndarray:
 
     t1, t2, t3 = THRESHOLDS
     return np.select([values >= t1, values >= t2, values >= t3, values > 0], [0, 1, 2, 3], default=4)
-
-
-def gini(x: np.ndarray) -> float:
-    x = np.sort(np.asarray(x, dtype=float))
-    n, total = len(x), x.sum()
-    if n == 0 or total <= 0:
-        return 0.0
-    idx = np.arange(1, n + 1)
-    return float((2 * np.sum(idx * x)) / (n * total) - (n + 1) / n)
 
 
 def morans_i(grid: gpd.GeoDataFrame, values: np.ndarray, size: int, perms: int = MORAN_PERMS):

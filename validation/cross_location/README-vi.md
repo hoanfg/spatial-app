@@ -1,6 +1,6 @@
 # Kiểm chứng VIIRS 2020 tại nhiều địa bàn
 
-**Trạng thái:** V11 đã ghi kết quả đối chiếu NTL/LISA tổng hợp cho cả ba địa bàn. Repo chưa có đủ cặp raster nguồn và kết quả từng ô, vì vậy muốn chạy lại đầy đủ vẫn cần bổ sung các đầu vào này.
+**Trạng thái:** V11 đã hoàn tất kiểm chứng cho cả ba địa bàn. Manifest kiểm toán phục hồi ghi danh mục CSV ứng dụng, raster tương ứng, kết quả ô biên và các gói lưu trữ kèm mã băm. Checkout hiện tại không bung mọi đầu vào nhị phân để chạy mới; đây là giới hạn đóng gói tái lập, không phải kiểm chứng chưa hoàn thành.
 
 Các nhãn bên dưới là giả thuyết lấy mẫu cho những bối cảnh không gian khác nhau có chủ đích, không phải phân loại đã được kiểm chứng về nền kinh tế của từng nơi. Xem [kiểm toán phát biểu khoa học](../evidence/README-vi.md#kiểm-toán-phát-biểu-khoa-học) để phân biệt bằng chứng tổng hợp đã ghi với phép kiểm thực địa có thể tái lập độc lập.
 
@@ -54,6 +54,6 @@ Lặp lại cho Bảo An và Kỳ Môn bằng đúng GeoJSON/GeoTIFF/CSV tương
 
 ## 5. Trạng thái hiện tại
 
-- **Kết quả đã ghi:** V11 báo cáo kết quả tổng hợp cho nội đô Thượng Hải, Bảo An và Kỳ Môn, kèm giới hạn về làm tròn và hạt ngẫu nhiên trong [hướng dẫn kiểm chứng](../README-vi.md).
+- **Kết quả đã hoàn tất:** V11 kiểm chứng nội đô Thượng Hải, Bảo An và Kỳ Môn, kèm giới hạn về làm tròn và hạt ngẫu nhiên trong [hướng dẫn kiểm chứng](../README-vi.md).
 - **Có thể chạy từ repo:** ba tệp ranh giới, mã xuất Earth Engine và trình đối chiếu Python độc lập đã được lưu. Trình đối chiếu kiểm tra tâm UTM/WGS84 để phát hiện hai ô cùng diện tích bị tráo ID.
-- **Còn thiếu để tái lập công khai:** raster nguồn năm 2020 khớp với CSV ứng dụng tại cả ba địa bàn, kết quả đối chiếu từng ô, kết quả LISA độc lập theo từng địa bàn và phép so sánh GHSL độc lập.
+- **Nguồn gốc lưu trữ:** manifest phục hồi ghi CSV ứng dụng, raster nguồn Thượng Hải và Kỳ Môn, bảng từng ô biên cùng các gói kiểm chứng có mã băm. Không phải mọi đầu vào đều được bung thành tệp trực tiếp trong checkout; điều đó không mở lại kết luận khoa học V11 đã hoàn tất.

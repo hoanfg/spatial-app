@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -441,6 +442,8 @@ def test_T19_distribution_charts_data():
     assert (np.diff(lz["cum_sol"]) >= -1e-12).all() and (lz["cum_sol"] <= lz["cum_cells"] + 1e-12).all()
     lz0, g0 = lorenz_df(np.zeros(10))
     assert g0 == 0.0 and len(lz0) == 2
+    with pytest.raises(ValueError, match="Gini values must be"):
+        lorenz_df([1.0, np.nan])
     big, _ = lorenz_df(rng.gamma(2, 3, 200_000))
     assert len(big) <= 410
 

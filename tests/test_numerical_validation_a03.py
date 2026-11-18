@@ -33,6 +33,12 @@ def test_a03_gini_hand_oracle(observations, expected):
         assert gini(observations) == pytest.approx(_pairwise_gini(observations), abs=1e-12)
 
 
+@pytest.mark.parametrize("observations", [[1.0, -0.1, 2.0], [1.0, np.nan], [1.0, np.inf]])
+def test_a04_gini_rejects_values_outside_contract(observations):
+    with pytest.raises(ValueError, match="Gini values must be"):
+        gini(observations)
+
+
 def _chain_neighbors():
     """Four spatial units, binary undirected 1--2--3--4, padded by -1."""
     out = np.full((4, 8), -1, dtype=np.int64)

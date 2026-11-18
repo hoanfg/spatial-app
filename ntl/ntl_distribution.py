@@ -15,6 +15,27 @@ import pandas as pd
 
 MAX_POINTS = 400
 
+
+def gini(values) -> float:
+    """Return the Gini coefficient for a finite, nonnegative sample.
+
+    Invalid values are rejected instead of being silently removed because
+    dropping observations changes the population represented by the result.
+    Empty and all-zero samples retain the application's documented value 0.
+    """
+    x = np.asarray(values, dtype=float)
+    if not np.isfinite(x).all():
+        raise ValueError("Gini values must be finite")
+    if np.any(x < 0.0):
+        raise ValueError("Gini values must be nonnegative")
+    total = float(x.sum())
+    if x.size == 0 or total <= 0.0:
+        return 0.0
+    x = np.sort(x)
+    n = x.size
+    idx = np.arange(1, n + 1, dtype=float)
+    return float(2.0 * np.sum(idx * x) / (n * total) - (n + 1.0) / n)
+
 def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
 
     if n <= max_points:
@@ -25,13 +46,14 @@ def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
 
 def lorenz_df(sol_cell) -> tuple[pd.DataFrame, float]:
 
-    x = np.sort(np.asarray(sol_cell, float))
+    x = np.asarray(sol_cell, dtype=float)
+    gini_v = gini(x)
+    x = np.sort(x)
     n, total = x.size, float(x.sum())
     if n == 0 or total <= 0:
         return pd.DataFrame({"cum_cells": [0.0, 1.0], "cum_sol": [0.0, 1.0]}), 0.0
     cum = np.concatenate([[0.0], np.cumsum(x) / total])
     frac = np.arange(n + 1) / n
-    gini_v = float(1.0 - np.sum((cum[1:] + cum[:-1]) / n))
     keep = _thin_indices(n + 1)
     return pd.DataFrame({"cum_cells": frac[keep], "cum_sol": cum[keep]}), gini_v
 
