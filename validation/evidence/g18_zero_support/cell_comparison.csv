@@ -3,142 +3,142 @@ grid_id,synthetic_support,ntl_legacy_zero_fill,positive_only__unadjusted_class,p
 1,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00600,5,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00600,5
 2,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00400,5,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00400,5
 3,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.01400,5,Low-Low,0.04000,5,Dark (NTL=0),,0,Low-Low,0.01400,5,Not Significant,0.04000,5
-4,observed_positive,3.555265,Not Significant,0.10400,3,Not Significant,0.05600,5,Not Significant,0.08400,5,Not Significant,0.10400,3,Not Significant,0.05600,5,Not Significant,0.08400,5
-5,observed_positive,2.597153,Low-Low,0.04200,5,Not Significant,0.28200,5,Not Significant,0.35000,5,Not Significant,0.04200,5,Not Significant,0.28200,5,Not Significant,0.35000,5
-6,observed_positive,2.760947,Not Significant,0.08800,5,Not Significant,0.33200,5,Not Significant,0.45000,5,Not Significant,0.08800,5,Not Significant,0.33200,5,Not Significant,0.45000,5
-7,observed_positive,3.854783,Not Significant,0.06800,5,Not Significant,0.33000,5,Not Significant,0.39600,5,Not Significant,0.06800,5,Not Significant,0.33000,5,Not Significant,0.39600,5
-8,observed_positive,2.675129,Not Significant,0.05600,5,Not Significant,0.27200,5,Not Significant,0.33400,5,Not Significant,0.05600,5,Not Significant,0.27200,5,Not Significant,0.33400,5
-9,observed_positive,2.41848,Low-Low,0.01800,5,Not Significant,0.15800,5,Not Significant,0.20400,5,Low-Low,0.01800,5,Not Significant,0.15800,5,Not Significant,0.20400,5
-10,observed_positive,1.794466,Low-Low,0.00200,5,Not Significant,0.06600,5,Not Significant,0.12600,5,Low-Low,0.00200,5,Not Significant,0.06600,5,Not Significant,0.12600,5
-11,observed_positive,1.868552,Low-Low,0.00800,3,Not Significant,0.19200,3,Not Significant,0.28000,3,Low-Low,0.00800,3,Not Significant,0.19200,3,Not Significant,0.28000,3
+4,observed_positive,3.5552650895367117,Not Significant,0.10400,3,Not Significant,0.05600,5,Not Significant,0.08400,5,Not Significant,0.10400,3,Not Significant,0.05600,5,Not Significant,0.08400,5
+5,observed_positive,2.5971530242358036,Low-Low,0.04200,5,Not Significant,0.28200,5,Not Significant,0.35000,5,Not Significant,0.04200,5,Not Significant,0.28200,5,Not Significant,0.35000,5
+6,observed_positive,2.7609474946464325,Not Significant,0.08800,5,Not Significant,0.33200,5,Not Significant,0.45000,5,Not Significant,0.08800,5,Not Significant,0.33200,5,Not Significant,0.45000,5
+7,observed_positive,3.854783398572987,Not Significant,0.06800,5,Not Significant,0.33000,5,Not Significant,0.39600,5,Not Significant,0.06800,5,Not Significant,0.33000,5,Not Significant,0.39600,5
+8,observed_positive,2.6751292048714266,Not Significant,0.05600,5,Not Significant,0.27200,5,Not Significant,0.33400,5,Not Significant,0.05600,5,Not Significant,0.27200,5,Not Significant,0.33400,5
+9,observed_positive,2.4184795299447717,Low-Low,0.01800,5,Not Significant,0.15800,5,Not Significant,0.20400,5,Low-Low,0.01800,5,Not Significant,0.15800,5,Not Significant,0.20400,5
+10,observed_positive,1.7944656526243075,Low-Low,0.00200,5,Not Significant,0.06600,5,Not Significant,0.12600,5,Low-Low,0.00200,5,Not Significant,0.06600,5,Not Significant,0.12600,5
+11,observed_positive,1.868551575564413,Low-Low,0.00800,3,Not Significant,0.19200,3,Not Significant,0.28000,3,Low-Low,0.00800,3,Not Significant,0.19200,3,Not Significant,0.28000,3
 12,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00400,5,Low-Low,0.00400,5,Dark (NTL=0),,0,Low-Low,0.00400,5,Low-Low,0.00400,5
 13,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8
 14,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8
 15,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00800,8,Low-Low,0.01200,8,Dark (NTL=0),,0,Low-Low,0.00800,8,Not Significant,0.01200,8
-16,observed_positive,3.866076,Not Significant,0.13200,4,Low-Low,0.04200,7,Low-Low,0.02800,8,Not Significant,0.13200,4,Not Significant,0.04200,7,Not Significant,0.02800,8
-17,observed_positive,5.132727,Not Significant,0.05600,7,Not Significant,0.32400,7,Not Significant,0.26400,8,Not Significant,0.05600,7,Not Significant,0.32400,7,Not Significant,0.26400,8
-18,observed_positive,6.671364,Not Significant,0.11200,7,Not Significant,0.39400,7,Not Significant,0.29800,8,Not Significant,0.11200,7,Not Significant,0.39400,7,Not Significant,0.29800,8
-19,observed_positive,6.274842,Not Significant,0.14000,8,Not Significant,0.47400,8,Not Significant,0.59200,8,Not Significant,0.14000,8,Not Significant,0.47400,8,Not Significant,0.59200,8
-20,observed_positive,5.602811,Not Significant,0.05800,8,Not Significant,0.31600,8,Not Significant,0.41400,8,Not Significant,0.05800,8,Not Significant,0.31600,8,Not Significant,0.41400,8
-21,observed_positive,3.952445,Low-Low,0.01400,8,Not Significant,0.14200,8,Not Significant,0.19000,8,Low-Low,0.01400,8,Not Significant,0.14200,8,Not Significant,0.19000,8
-22,observed_positive,2.969569,Low-Low,0.00200,8,Low-Low,0.04800,8,Not Significant,0.10000,8,Low-Low,0.00200,8,Not Significant,0.04800,8,Not Significant,0.10000,8
-23,observed_positive,1.92734,Low-Low,0.00800,5,Not Significant,0.10600,5,Not Significant,0.17200,5,Low-Low,0.00800,5,Not Significant,0.10600,5,Not Significant,0.17200,5
+16,observed_positive,3.866075956679572,Not Significant,0.13200,4,Low-Low,0.04200,7,Low-Low,0.02800,8,Not Significant,0.13200,4,Not Significant,0.04200,7,Not Significant,0.02800,8
+17,observed_positive,5.132726635635938,Not Significant,0.05600,7,Not Significant,0.32400,7,Not Significant,0.26400,8,Not Significant,0.05600,7,Not Significant,0.32400,7,Not Significant,0.26400,8
+18,observed_positive,6.6713643802481295,Not Significant,0.11200,7,Not Significant,0.39400,7,Not Significant,0.29800,8,Not Significant,0.11200,7,Not Significant,0.39400,7,Not Significant,0.29800,8
+19,observed_positive,6.274841906712441,Not Significant,0.14000,8,Not Significant,0.47400,8,Not Significant,0.59200,8,Not Significant,0.14000,8,Not Significant,0.47400,8,Not Significant,0.59200,8
+20,observed_positive,5.60281148426859,Not Significant,0.05800,8,Not Significant,0.31600,8,Not Significant,0.41400,8,Not Significant,0.05800,8,Not Significant,0.31600,8,Not Significant,0.41400,8
+21,observed_positive,3.9524452090110884,Low-Low,0.01400,8,Not Significant,0.14200,8,Not Significant,0.19000,8,Low-Low,0.01400,8,Not Significant,0.14200,8,Not Significant,0.19000,8
+22,observed_positive,2.9695686669238572,Low-Low,0.00200,8,Low-Low,0.04800,8,Not Significant,0.10000,8,Low-Low,0.00200,8,Not Significant,0.04800,8,Not Significant,0.10000,8
+23,observed_positive,1.9273404345792318,Low-Low,0.00800,5,Not Significant,0.10600,5,Not Significant,0.17200,5,Low-Low,0.00800,5,Not Significant,0.10600,5,Not Significant,0.17200,5
 24,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00400,5,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00400,5
 25,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8
 26,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8
 27,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.03200,8,Not Significant,0.08200,8,Dark (NTL=0),,0,Not Significant,0.03200,8,Not Significant,0.08200,8
-28,observed_positive,7.290035,Not Significant,0.47800,3,Not Significant,0.12000,6,Low-Low,0.04400,8,Not Significant,0.47800,3,Not Significant,0.12000,6,Not Significant,0.04400,8
+28,observed_positive,7.290034601422821,Not Significant,0.47800,3,Not Significant,0.12000,6,Low-Low,0.04400,8,Not Significant,0.47800,3,Not Significant,0.12000,6,Not Significant,0.04400,8
 29,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.88000,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.88000,8
-30,observed_positive,11.99497,Not Significant,0.94000,6,Not Significant,0.62800,6,Not Significant,0.93400,8,Not Significant,0.94000,6,Not Significant,0.62800,6,Not Significant,0.93400,8
-31,observed_positive,11.449404,Not Significant,0.99200,8,Not Significant,0.52800,8,Not Significant,0.41600,8,Not Significant,0.99200,8,Not Significant,0.52800,8,Not Significant,0.41600,8
-32,observed_positive,9.893746,Not Significant,0.55600,7,Not Significant,0.86400,7,Not Significant,0.99000,8,Not Significant,0.55600,7,Not Significant,0.86400,7,Not Significant,0.99000,8
-33,observed_positive,7.022702,Not Significant,0.23400,6,Not Significant,0.62200,6,Not Significant,0.32400,8,Not Significant,0.23400,6,Not Significant,0.62200,6,Not Significant,0.32400,8
-34,observed_positive,4.740391,Low-Low,0.02400,6,Not Significant,0.17400,6,Not Significant,0.08600,8,Not Significant,0.02400,6,Not Significant,0.17400,6,Not Significant,0.08600,8
-35,observed_positive,2.94455,Low-Low,0.02800,4,Not Significant,0.26400,4,Not Significant,0.11200,5,Not Significant,0.02800,4,Not Significant,0.26400,4,Not Significant,0.11200,5
+30,observed_positive,11.994970256970932,Not Significant,0.94000,6,Not Significant,0.62800,6,Not Significant,0.93400,8,Not Significant,0.94000,6,Not Significant,0.62800,6,Not Significant,0.93400,8
+31,observed_positive,11.449403815934836,Not Significant,0.99200,8,Not Significant,0.52800,8,Not Significant,0.41600,8,Not Significant,0.99200,8,Not Significant,0.52800,8,Not Significant,0.41600,8
+32,observed_positive,9.893746491383252,Not Significant,0.55600,7,Not Significant,0.86400,7,Not Significant,0.99000,8,Not Significant,0.55600,7,Not Significant,0.86400,7,Not Significant,0.99000,8
+33,observed_positive,7.022701501660291,Not Significant,0.23400,6,Not Significant,0.62200,6,Not Significant,0.32400,8,Not Significant,0.23400,6,Not Significant,0.62200,6,Not Significant,0.32400,8
+34,observed_positive,4.740390782809074,Low-Low,0.02400,6,Not Significant,0.17400,6,Not Significant,0.08600,8,Not Significant,0.02400,6,Not Significant,0.17400,6,Not Significant,0.08600,8
+35,observed_positive,2.944550303377079,Low-Low,0.02800,4,Not Significant,0.26400,4,Not Significant,0.11200,5,Not Significant,0.02800,4,Not Significant,0.26400,4,Not Significant,0.11200,5
 36,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.01000,5,Low-Low,0.01600,5,Dark (NTL=0),,0,Low-Low,0.01000,5,Not Significant,0.01600,5
 37,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.01200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Not Significant,0.01200,8
 38,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.01600,8,Not Significant,0.05000,8,Dark (NTL=0),,0,Not Significant,0.01600,8,Not Significant,0.05000,8
 39,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.44200,8,Not Significant,0.61600,8,Dark (NTL=0),,0,Not Significant,0.44200,8,Not Significant,0.61600,8
-40,observed_positive,12.733281,Not Significant,0.99400,3,Not Significant,0.62800,5,Not Significant,0.26400,8,Not Significant,0.99400,3,Not Significant,0.62800,5,Not Significant,0.26400,8
+40,observed_positive,12.733280800994077,Not Significant,0.99400,3,Not Significant,0.62800,5,Not Significant,0.26400,8,Not Significant,0.99400,3,Not Significant,0.62800,5,Not Significant,0.26400,8
 41,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.41800,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.41800,8
-42,observed_positive,19.493852,Not Significant,0.13200,5,Not Significant,0.05200,5,Not Significant,0.35400,8,Not Significant,0.13200,5,Not Significant,0.05200,5,Not Significant,0.35400,8
-43,observed_positive,19.03946,Not Significant,0.06600,8,High-High,0.03200,8,High-High,0.02800,8,Not Significant,0.06600,8,Not Significant,0.03200,8,Not Significant,0.02800,8
-44,observed_positive,16.468773,Not Significant,0.32000,6,Not Significant,0.11200,6,Not Significant,0.30400,8,Not Significant,0.32000,6,Not Significant,0.11200,6,Not Significant,0.30400,8
+42,observed_positive,19.49385218323148,Not Significant,0.13200,5,Not Significant,0.05200,5,Not Significant,0.35400,8,Not Significant,0.13200,5,Not Significant,0.05200,5,Not Significant,0.35400,8
+43,observed_positive,19.039460332252403,Not Significant,0.06600,8,High-High,0.03200,8,High-High,0.02800,8,Not Significant,0.06600,8,Not Significant,0.03200,8,Not Significant,0.02800,8
+44,observed_positive,16.46877327447717,Not Significant,0.32000,6,Not Significant,0.11200,6,Not Significant,0.30400,8,Not Significant,0.32000,6,Not Significant,0.11200,6,Not Significant,0.30400,8
 45,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.76400,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.76400,8
 46,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.07200,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.07200,8
-47,observed_positive,4.864026,Not Significant,0.21000,3,Not Significant,0.50600,3,Not Significant,0.16800,5,Not Significant,0.21000,3,Not Significant,0.50600,3,Not Significant,0.16800,5
-48,observed_positive,1.685136,Low-Low,0.03600,3,Low-Low,0.02400,5,Low-Low,0.04200,5,Not Significant,0.03600,3,Not Significant,0.02400,5,Not Significant,0.04200,5
-49,observed_positive,3.416264,Not Significant,0.05800,5,Low-Low,0.02000,8,Not Significant,0.06800,8,Not Significant,0.05800,5,Not Significant,0.02000,8,Not Significant,0.06800,8
-50,observed_positive,6.371274,Not Significant,0.41000,5,Not Significant,0.22000,8,Not Significant,0.29800,8,Not Significant,0.41000,5,Not Significant,0.22000,8,Not Significant,0.29800,8
-51,observed_positive,11.508213,Not Significant,0.73800,6,Not Significant,0.85000,8,Not Significant,0.76400,8,Not Significant,0.73800,6,Not Significant,0.85000,8,Not Significant,0.76400,8
-52,observed_positive,17.024497,Not Significant,0.52800,4,Not Significant,0.59600,5,Not Significant,0.77800,8,Not Significant,0.52800,4,Not Significant,0.59600,5,Not Significant,0.77800,8
+47,observed_positive,4.86402588662562,Not Significant,0.21000,3,Not Significant,0.50600,3,Not Significant,0.16800,5,Not Significant,0.21000,3,Not Significant,0.50600,3,Not Significant,0.16800,5
+48,observed_positive,1.68513585170031,Low-Low,0.03600,3,Low-Low,0.02400,5,Low-Low,0.04200,5,Not Significant,0.03600,3,Not Significant,0.02400,5,Not Significant,0.04200,5
+49,observed_positive,3.4162635753044968,Not Significant,0.05800,5,Low-Low,0.02000,8,Not Significant,0.06800,8,Not Significant,0.05800,5,Not Significant,0.02000,8,Not Significant,0.06800,8
+50,observed_positive,6.37127444503431,Not Significant,0.41000,5,Not Significant,0.22000,8,Not Significant,0.29800,8,Not Significant,0.41000,5,Not Significant,0.22000,8,Not Significant,0.29800,8
+51,observed_positive,11.508212686299474,Not Significant,0.73800,6,Not Significant,0.85000,8,Not Significant,0.76400,8,Not Significant,0.73800,6,Not Significant,0.85000,8,Not Significant,0.76400,8
+52,observed_positive,17.02449692420575,Not Significant,0.52800,4,Not Significant,0.59600,5,Not Significant,0.77800,8,Not Significant,0.52800,4,Not Significant,0.59600,5,Not Significant,0.77800,8
 53,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.06000,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.06000,8
-54,observed_positive,28.237769,High-High,0.00600,5,High-High,0.00200,5,Not Significant,0.05000,8,High-High,0.00600,5,High-High,0.00200,5,Not Significant,0.05000,8
-55,observed_positive,28.162703,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-56,observed_positive,23.952675,High-High,0.01000,5,High-High,0.00400,5,Not Significant,0.06000,8,High-High,0.01000,5,High-High,0.00400,5,Not Significant,0.06000,8
+54,observed_positive,28.23776868337083,High-High,0.00600,5,High-High,0.00200,5,Not Significant,0.05000,8,High-High,0.00600,5,High-High,0.00200,5,Not Significant,0.05000,8
+55,observed_positive,28.16270271698288,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+56,observed_positive,23.952675266025842,High-High,0.01000,5,High-High,0.00400,5,Not Significant,0.06000,8,High-High,0.01000,5,High-High,0.00400,5,Not Significant,0.06000,8
 57,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.97000,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.97000,8
 58,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Low-Low,0.04400,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.04400,8
-59,observed_positive,6.220141,Not Significant,0.53600,2,Not Significant,0.81800,2,Not Significant,0.10800,5,Not Significant,0.53600,2,Not Significant,0.81800,2,Not Significant,0.10800,5
-60,observed_positive,1.626955,Low-Low,0.01400,5,Not Significant,0.13000,5,Not Significant,0.16200,5,Low-Low,0.01400,5,Not Significant,0.13000,5,Not Significant,0.16200,5
-61,observed_positive,3.6808,Low-Low,0.01200,8,Not Significant,0.15800,8,Not Significant,0.21400,8,Low-Low,0.01200,8,Not Significant,0.15800,8,Not Significant,0.21400,8
-62,observed_positive,8.363998,Not Significant,0.28600,8,Not Significant,0.78800,8,Not Significant,0.92800,8,Not Significant,0.28600,8,Not Significant,0.78800,8,Not Significant,0.92800,8
-63,observed_positive,14.142569,Not Significant,0.52800,8,Not Significant,0.24000,8,Not Significant,0.13600,8,Not Significant,0.52800,8,Not Significant,0.24000,8,Not Significant,0.13600,8
-64,observed_positive,22.227665,Not Significant,0.08200,6,High-High,0.02600,6,Not Significant,0.15400,8,Not Significant,0.08200,6,Not Significant,0.02600,6,Not Significant,0.15400,8
+59,observed_positive,6.220141171986281,Not Significant,0.53600,2,Not Significant,0.81800,2,Not Significant,0.10800,5,Not Significant,0.53600,2,Not Significant,0.81800,2,Not Significant,0.10800,5
+60,observed_positive,1.6269546300976185,Low-Low,0.01400,5,Not Significant,0.13000,5,Not Significant,0.16200,5,Low-Low,0.01400,5,Not Significant,0.13000,5,Not Significant,0.16200,5
+61,observed_positive,3.680800472045953,Low-Low,0.01200,8,Not Significant,0.15800,8,Not Significant,0.21400,8,Low-Low,0.01200,8,Not Significant,0.15800,8,Not Significant,0.21400,8
+62,observed_positive,8.363998484785403,Not Significant,0.28600,8,Not Significant,0.78800,8,Not Significant,0.92800,8,Not Significant,0.28600,8,Not Significant,0.78800,8,Not Significant,0.92800,8
+63,observed_positive,14.142568543130094,Not Significant,0.52800,8,Not Significant,0.24000,8,Not Significant,0.13600,8,Not Significant,0.52800,8,Not Significant,0.24000,8,Not Significant,0.13600,8
+64,observed_positive,22.22766493944959,Not Significant,0.08200,6,High-High,0.02600,6,Not Significant,0.15400,8,Not Significant,0.08200,6,Not Significant,0.02600,6,Not Significant,0.15400,8
 65,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Low-High,0.00200,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Low-High,0.00200,8
-66,observed_positive,36.050802,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00200,8,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00200,8
-67,observed_positive,35.181856,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-68,observed_positive,29.8379,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00400,8,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00400,8
+66,observed_positive,36.05080167359485,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00200,8,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00200,8
+67,observed_positive,35.18185554993918,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+68,observed_positive,29.83790036143381,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00400,8,High-High,0.00200,6,High-High,0.00200,6,High-High,0.00400,8
 69,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.05200,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.05200,8
 70,no_observation,0.0,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.83200,8,EXCLUDED_UNOBSERVED,,,EXCLUDED_UNOBSERVED,,,Not Significant,0.83200,8
-71,observed_positive,7.994622,Not Significant,0.83200,3,Not Significant,0.90600,3,Not Significant,0.53400,5,Not Significant,0.83200,3,Not Significant,0.90600,3,Not Significant,0.53400,5
-72,observed_positive,2.192496,Low-Low,0.00800,5,Not Significant,0.14200,5,Not Significant,0.18800,5,Low-Low,0.00800,5,Not Significant,0.14200,5,Not Significant,0.18800,5
-73,observed_positive,4.517383,Low-Low,0.01200,8,Not Significant,0.19000,8,Not Significant,0.24400,8,Low-Low,0.01200,8,Not Significant,0.19000,8,Not Significant,0.24400,8
-74,observed_positive,8.797894,Not Significant,0.39800,8,Not Significant,0.90600,8,Not Significant,0.94600,8,Not Significant,0.39800,8,Not Significant,0.90600,8,Not Significant,0.94600,8
-75,observed_positive,15.188776,Not Significant,0.40600,8,Not Significant,0.15600,8,Not Significant,0.09800,8,Not Significant,0.40600,8,Not Significant,0.15600,8,Not Significant,0.09800,8
-76,observed_positive,24.363494,High-High,0.01800,7,High-High,0.00400,7,High-High,0.02600,8,High-High,0.01800,7,High-High,0.00400,7,Not Significant,0.02600,8
-77,observed_positive,32.463762,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8
-78,observed_positive,38.189006,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8
-79,observed_positive,38.403687,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-80,observed_positive,32.744393,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8
-81,observed_positive,25.439935,High-High,0.00400,6,High-High,0.00400,6,High-High,0.01400,8,High-High,0.00400,6,High-High,0.00400,6,Not Significant,0.01400,8
-82,observed_positive,15.39352,Not Significant,0.55400,6,Not Significant,0.26600,6,Not Significant,0.55600,8,Not Significant,0.55400,6,Not Significant,0.26600,6,Not Significant,0.55600,8
-83,observed_positive,8.701508,Not Significant,0.87000,4,Not Significant,0.70200,4,Not Significant,0.88000,5,Not Significant,0.87000,4,Not Significant,0.70200,4,Not Significant,0.88000,5
-84,observed_positive,2.038356,Low-Low,0.01200,5,Not Significant,0.15200,5,Not Significant,0.20200,5,Low-Low,0.01200,5,Not Significant,0.15200,5,Not Significant,0.20200,5
-85,observed_positive,3.752145,Low-Low,0.02200,8,Not Significant,0.17400,8,Not Significant,0.19200,8,Not Significant,0.02200,8,Not Significant,0.17400,8,Not Significant,0.19200,8
-86,observed_positive,7.880656,Not Significant,0.26200,8,Not Significant,0.82000,8,Not Significant,0.92800,8,Not Significant,0.26200,8,Not Significant,0.82000,8,Not Significant,0.92800,8
-87,observed_positive,14.114173,Not Significant,0.58600,8,Not Significant,0.20400,8,Not Significant,0.15400,8,Not Significant,0.58600,8,Not Significant,0.20400,8,Not Significant,0.15400,8
-88,observed_positive,22.300523,High-High,0.01800,8,High-High,0.01400,8,High-High,0.00800,8,High-High,0.01800,8,High-High,0.01400,8,High-High,0.00800,8
-89,observed_positive,29.691752,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-90,observed_positive,34.846925,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-91,observed_positive,35.230246,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-92,observed_positive,29.731751,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
-93,observed_positive,22.073643,High-High,0.01600,8,High-High,0.00200,8,High-High,0.00400,8,High-High,0.01600,8,High-High,0.00200,8,High-High,0.00400,8
-94,observed_positive,14.276722,Not Significant,0.50400,8,Not Significant,0.20600,8,Not Significant,0.15800,8,Not Significant,0.50400,8,Not Significant,0.20600,8,Not Significant,0.15800,8
-95,observed_positive,7.946057,Not Significant,0.92000,5,Not Significant,0.71000,5,Not Significant,0.57000,5,Not Significant,0.92000,5,Not Significant,0.71000,5,Not Significant,0.57000,5
-96,observed_positive,2.545574,Low-Low,0.01000,5,Not Significant,0.11800,5,Not Significant,0.16200,5,Low-Low,0.01000,5,Not Significant,0.11800,5,Not Significant,0.16200,5
-97,observed_positive,3.889614,Low-Low,0.00400,8,Not Significant,0.09400,8,Not Significant,0.15000,8,Low-Low,0.00400,8,Not Significant,0.09400,8,Not Significant,0.15000,8
-98,observed_positive,6.435236,Not Significant,0.12600,8,Not Significant,0.51800,8,Not Significant,0.65000,8,Not Significant,0.12600,8,Not Significant,0.51800,8,Not Significant,0.65000,8
-99,observed_positive,10.969591,Not Significant,0.93200,8,Not Significant,0.52800,8,Not Significant,0.42400,8,Not Significant,0.93200,8,Not Significant,0.52800,8,Not Significant,0.42400,8
-100,observed_positive,17.896861,Not Significant,0.18000,8,Not Significant,0.05600,8,High-High,0.04600,8,Not Significant,0.18000,8,Not Significant,0.05600,8,Not Significant,0.04600,8
-101,observed_positive,24.080534,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8
-102,observed_positive,28.256533,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8
-103,observed_positive,28.012286,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,8
-104,observed_positive,24.584543,High-High,0.00800,6,High-High,0.02000,8,High-High,0.01000,8,High-High,0.00800,6,Not Significant,0.02000,8,High-High,0.01000,8
-105,observed_positive,18.304119,Not Significant,0.11000,5,Not Significant,0.39200,8,Not Significant,0.29000,8,Not Significant,0.11000,5,Not Significant,0.39200,8,Not Significant,0.29000,8
-106,observed_positive,11.437756,Not Significant,0.67200,5,Not Significant,0.81800,8,Not Significant,0.99200,8,Not Significant,0.67200,5,Not Significant,0.81800,8,Not Significant,0.99200,8
-107,observed_positive,6.508829,Not Significant,0.93800,3,Not Significant,0.57800,5,Not Significant,0.70200,5,Not Significant,0.93800,3,Not Significant,0.57800,5,Not Significant,0.70200,5
-108,observed_positive,2.020479,Low-Low,0.00800,5,Not Significant,0.08000,5,Not Significant,0.11400,5,Low-Low,0.00800,5,Not Significant,0.08000,5,Not Significant,0.11400,5
-109,observed_positive,2.630415,Low-Low,0.00400,8,Not Significant,0.06000,8,Not Significant,0.09800,8,Low-Low,0.00400,8,Not Significant,0.06000,8,Not Significant,0.09800,8
-110,observed_positive,4.775105,Low-Low,0.03800,8,Not Significant,0.20600,8,Not Significant,0.36000,8,Not Significant,0.03800,8,Not Significant,0.20600,8,Not Significant,0.36000,8
-111,observed_positive,8.843043,Not Significant,0.35000,8,Not Significant,0.84800,8,Not Significant,0.98000,8,Not Significant,0.35000,8,Not Significant,0.84800,8,Not Significant,0.98000,8
-112,observed_positive,12.443059,Not Significant,0.88200,8,Not Significant,0.40200,8,Not Significant,0.29000,8,Not Significant,0.88200,8,Not Significant,0.40200,8,Not Significant,0.29000,8
-113,observed_positive,16.442941,Not Significant,0.24600,8,Not Significant,0.06800,8,Not Significant,0.06600,8,Not Significant,0.24600,8,Not Significant,0.06800,8,Not Significant,0.06600,8
-114,observed_positive,19.812094,Not Significant,0.09400,8,High-High,0.02400,8,High-High,0.01400,8,Not Significant,0.09400,8,Not Significant,0.02400,8,Not Significant,0.01400,8
-115,observed_positive,18.95839,High-High,0.03800,6,Not Significant,0.15000,8,Not Significant,0.10200,8,Not Significant,0.03800,6,Not Significant,0.15000,8,Not Significant,0.10200,8
+71,observed_positive,7.994621562757671,Not Significant,0.83200,3,Not Significant,0.90600,3,Not Significant,0.53400,5,Not Significant,0.83200,3,Not Significant,0.90600,3,Not Significant,0.53400,5
+72,observed_positive,2.1924963787353744,Low-Low,0.00800,5,Not Significant,0.14200,5,Not Significant,0.18800,5,Low-Low,0.00800,5,Not Significant,0.14200,5,Not Significant,0.18800,5
+73,observed_positive,4.517382708232068,Low-Low,0.01200,8,Not Significant,0.19000,8,Not Significant,0.24400,8,Low-Low,0.01200,8,Not Significant,0.19000,8,Not Significant,0.24400,8
+74,observed_positive,8.797893974441294,Not Significant,0.39800,8,Not Significant,0.90600,8,Not Significant,0.94600,8,Not Significant,0.39800,8,Not Significant,0.90600,8,Not Significant,0.94600,8
+75,observed_positive,15.188775516598747,Not Significant,0.40600,8,Not Significant,0.15600,8,Not Significant,0.09800,8,Not Significant,0.40600,8,Not Significant,0.15600,8,Not Significant,0.09800,8
+76,observed_positive,24.363493709638714,High-High,0.01800,7,High-High,0.00400,7,High-High,0.02600,8,High-High,0.01800,7,High-High,0.00400,7,Not Significant,0.02600,8
+77,observed_positive,32.46376248278454,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8
+78,observed_positive,38.18900625121534,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8
+79,observed_positive,38.40368739293635,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+80,observed_positive,32.74439285688944,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,7,High-High,0.00200,8
+81,observed_positive,25.439935174070264,High-High,0.00400,6,High-High,0.00400,6,High-High,0.01400,8,High-High,0.00400,6,High-High,0.00400,6,Not Significant,0.01400,8
+82,observed_positive,15.393520288153114,Not Significant,0.55400,6,Not Significant,0.26600,6,Not Significant,0.55600,8,Not Significant,0.55400,6,Not Significant,0.26600,6,Not Significant,0.55600,8
+83,observed_positive,8.701508406771607,Not Significant,0.87000,4,Not Significant,0.70200,4,Not Significant,0.88000,5,Not Significant,0.87000,4,Not Significant,0.70200,4,Not Significant,0.88000,5
+84,observed_positive,2.038356292980664,Low-Low,0.01200,5,Not Significant,0.15200,5,Not Significant,0.20200,5,Low-Low,0.01200,5,Not Significant,0.15200,5,Not Significant,0.20200,5
+85,observed_positive,3.7521453725200273,Low-Low,0.02200,8,Not Significant,0.17400,8,Not Significant,0.19200,8,Not Significant,0.02200,8,Not Significant,0.17400,8,Not Significant,0.19200,8
+86,observed_positive,7.8806560335529445,Not Significant,0.26200,8,Not Significant,0.82000,8,Not Significant,0.92800,8,Not Significant,0.26200,8,Not Significant,0.82000,8,Not Significant,0.92800,8
+87,observed_positive,14.11417330776787,Not Significant,0.58600,8,Not Significant,0.20400,8,Not Significant,0.15400,8,Not Significant,0.58600,8,Not Significant,0.20400,8,Not Significant,0.15400,8
+88,observed_positive,22.300523036728585,High-High,0.01800,8,High-High,0.01400,8,High-High,0.00800,8,High-High,0.01800,8,High-High,0.01400,8,High-High,0.00800,8
+89,observed_positive,29.69175245626923,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+90,observed_positive,34.84692482063446,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+91,observed_positive,35.23024645755096,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+92,observed_positive,29.731751357990174,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,8
+93,observed_positive,22.073643441845732,High-High,0.01600,8,High-High,0.00200,8,High-High,0.00400,8,High-High,0.01600,8,High-High,0.00200,8,High-High,0.00400,8
+94,observed_positive,14.276721992949806,Not Significant,0.50400,8,Not Significant,0.20600,8,Not Significant,0.15800,8,Not Significant,0.50400,8,Not Significant,0.20600,8,Not Significant,0.15800,8
+95,observed_positive,7.946056968213053,Not Significant,0.92000,5,Not Significant,0.71000,5,Not Significant,0.57000,5,Not Significant,0.92000,5,Not Significant,0.71000,5,Not Significant,0.57000,5
+96,observed_positive,2.5455739597856994,Low-Low,0.01000,5,Not Significant,0.11800,5,Not Significant,0.16200,5,Low-Low,0.01000,5,Not Significant,0.11800,5,Not Significant,0.16200,5
+97,observed_positive,3.889613650800931,Low-Low,0.00400,8,Not Significant,0.09400,8,Not Significant,0.15000,8,Low-Low,0.00400,8,Not Significant,0.09400,8,Not Significant,0.15000,8
+98,observed_positive,6.435235824023898,Not Significant,0.12600,8,Not Significant,0.51800,8,Not Significant,0.65000,8,Not Significant,0.12600,8,Not Significant,0.51800,8,Not Significant,0.65000,8
+99,observed_positive,10.969591306025672,Not Significant,0.93200,8,Not Significant,0.52800,8,Not Significant,0.42400,8,Not Significant,0.93200,8,Not Significant,0.52800,8,Not Significant,0.42400,8
+100,observed_positive,17.896861321751558,Not Significant,0.18000,8,Not Significant,0.05600,8,High-High,0.04600,8,Not Significant,0.18000,8,Not Significant,0.05600,8,Not Significant,0.04600,8
+101,observed_positive,24.080534190083483,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8
+102,observed_positive,28.256532820657466,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00400,8,High-High,0.00200,8,High-High,0.00200,8
+103,observed_positive,28.01228556538714,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,8,High-High,0.00200,7,High-High,0.00200,8,High-High,0.00200,8
+104,observed_positive,24.584543081106883,High-High,0.00800,6,High-High,0.02000,8,High-High,0.01000,8,High-High,0.00800,6,Not Significant,0.02000,8,High-High,0.01000,8
+105,observed_positive,18.304119331673867,Not Significant,0.11000,5,Not Significant,0.39200,8,Not Significant,0.29000,8,Not Significant,0.11000,5,Not Significant,0.39200,8,Not Significant,0.29000,8
+106,observed_positive,11.437756494115277,Not Significant,0.67200,5,Not Significant,0.81800,8,Not Significant,0.99200,8,Not Significant,0.67200,5,Not Significant,0.81800,8,Not Significant,0.99200,8
+107,observed_positive,6.508829078637369,Not Significant,0.93800,3,Not Significant,0.57800,5,Not Significant,0.70200,5,Not Significant,0.93800,3,Not Significant,0.57800,5,Not Significant,0.70200,5
+108,observed_positive,2.020478919790456,Low-Low,0.00800,5,Not Significant,0.08000,5,Not Significant,0.11400,5,Low-Low,0.00800,5,Not Significant,0.08000,5,Not Significant,0.11400,5
+109,observed_positive,2.6304150994151967,Low-Low,0.00400,8,Not Significant,0.06000,8,Not Significant,0.09800,8,Low-Low,0.00400,8,Not Significant,0.06000,8,Not Significant,0.09800,8
+110,observed_positive,4.7751046853821855,Low-Low,0.03800,8,Not Significant,0.20600,8,Not Significant,0.36000,8,Not Significant,0.03800,8,Not Significant,0.20600,8,Not Significant,0.36000,8
+111,observed_positive,8.843042907223918,Not Significant,0.35000,8,Not Significant,0.84800,8,Not Significant,0.98000,8,Not Significant,0.35000,8,Not Significant,0.84800,8,Not Significant,0.98000,8
+112,observed_positive,12.443058713971428,Not Significant,0.88200,8,Not Significant,0.40200,8,Not Significant,0.29000,8,Not Significant,0.88200,8,Not Significant,0.40200,8,Not Significant,0.29000,8
+113,observed_positive,16.442940639371123,Not Significant,0.24600,8,Not Significant,0.06800,8,Not Significant,0.06600,8,Not Significant,0.24600,8,Not Significant,0.06800,8,Not Significant,0.06600,8
+114,observed_positive,19.81209395359975,Not Significant,0.09400,8,High-High,0.02400,8,High-High,0.01400,8,Not Significant,0.09400,8,Not Significant,0.02400,8,Not Significant,0.01400,8
+115,observed_positive,18.95839003277157,High-High,0.03800,6,Not Significant,0.15000,8,Not Significant,0.10200,8,Not Significant,0.03800,6,Not Significant,0.15000,8,Not Significant,0.10200,8
 116,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.41200,8,Not Significant,0.36400,8,Dark (NTL=0),,0,Not Significant,0.41200,8,Not Significant,0.36400,8
 117,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.48000,8,Not Significant,0.57800,8,Dark (NTL=0),,0,Not Significant,0.48000,8,Not Significant,0.57800,8
 118,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.15000,8,Not Significant,0.18000,8,Dark (NTL=0),,0,Not Significant,0.15000,8,Not Significant,0.18000,8
 119,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.16200,5,Not Significant,0.22800,5,Dark (NTL=0),,0,Not Significant,0.16200,5,Not Significant,0.22800,5
-120,observed_positive,1.810452,Low-Low,0.00200,5,Low-Low,0.03000,5,Not Significant,0.07000,5,Low-Low,0.00200,5,Not Significant,0.03000,5,Not Significant,0.07000,5
-121,observed_positive,2.059091,Low-Low,0.00200,8,Low-Low,0.01600,8,Low-Low,0.02800,8,Low-Low,0.00200,8,Not Significant,0.01600,8,Not Significant,0.02800,8
-122,observed_positive,3.190044,Low-Low,0.00200,8,Not Significant,0.06800,8,Not Significant,0.10000,8,Low-Low,0.00200,8,Not Significant,0.06800,8,Not Significant,0.10000,8
-123,observed_positive,4.903281,Not Significant,0.05000,8,Not Significant,0.26800,8,Not Significant,0.36000,8,Not Significant,0.05000,8,Not Significant,0.26800,8,Not Significant,0.36000,8
-124,observed_positive,7.76289,Not Significant,0.21400,8,Not Significant,0.70800,8,Not Significant,0.85800,8,Not Significant,0.21400,8,Not Significant,0.70800,8,Not Significant,0.85800,8
-125,observed_positive,9.065299,Not Significant,0.65000,8,Not Significant,0.77000,8,Not Significant,0.68400,8,Not Significant,0.65000,8,Not Significant,0.77000,8,Not Significant,0.68400,8
-126,observed_positive,11.497631,Not Significant,0.88400,8,Not Significant,0.57400,8,Not Significant,0.48400,8,Not Significant,0.88400,8,Not Significant,0.57400,8,Not Significant,0.48400,8
-127,observed_positive,11.357813,Not Significant,0.95400,5,Not Significant,0.60000,8,Not Significant,0.79400,8,Not Significant,0.95400,5,Not Significant,0.60000,8,Not Significant,0.79400,8
+120,observed_positive,1.8104517273315575,Low-Low,0.00200,5,Low-Low,0.03000,5,Not Significant,0.07000,5,Low-Low,0.00200,5,Not Significant,0.03000,5,Not Significant,0.07000,5
+121,observed_positive,2.0590913628839953,Low-Low,0.00200,8,Low-Low,0.01600,8,Low-Low,0.02800,8,Low-Low,0.00200,8,Not Significant,0.01600,8,Not Significant,0.02800,8
+122,observed_positive,3.1900439168747767,Low-Low,0.00200,8,Not Significant,0.06800,8,Not Significant,0.10000,8,Low-Low,0.00200,8,Not Significant,0.06800,8,Not Significant,0.10000,8
+123,observed_positive,4.903280651979106,Not Significant,0.05000,8,Not Significant,0.26800,8,Not Significant,0.36000,8,Not Significant,0.05000,8,Not Significant,0.26800,8,Not Significant,0.36000,8
+124,observed_positive,7.762889725007751,Not Significant,0.21400,8,Not Significant,0.70800,8,Not Significant,0.85800,8,Not Significant,0.21400,8,Not Significant,0.70800,8,Not Significant,0.85800,8
+125,observed_positive,9.06529947041859,Not Significant,0.65000,8,Not Significant,0.77000,8,Not Significant,0.68400,8,Not Significant,0.65000,8,Not Significant,0.77000,8,Not Significant,0.68400,8
+126,observed_positive,11.497631248644653,Not Significant,0.88400,8,Not Significant,0.57400,8,Not Significant,0.48400,8,Not Significant,0.88400,8,Not Significant,0.57400,8,Not Significant,0.48400,8
+127,observed_positive,11.357813099942925,Not Significant,0.95400,5,Not Significant,0.60000,8,Not Significant,0.79400,8,Not Significant,0.95400,5,Not Significant,0.60000,8,Not Significant,0.79400,8
 128,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.12600,8,Not Significant,0.19600,8,Dark (NTL=0),,0,Not Significant,0.12600,8,Not Significant,0.19600,8
 129,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8
 130,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8,Dark (NTL=0),,0,Low-Low,0.00200,8,Low-Low,0.00200,8
 131,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00400,5,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00400,5
-132,observed_positive,1.353134,Low-Low,0.00400,3,Not Significant,0.12000,3,Not Significant,0.21200,3,Low-Low,0.00400,3,Not Significant,0.12000,3,Not Significant,0.21200,3
-133,observed_positive,1.626982,Low-Low,0.00200,5,Not Significant,0.07200,5,Not Significant,0.05800,5,Low-Low,0.00200,5,Not Significant,0.07200,5,Not Significant,0.05800,5
-134,observed_positive,1.434694,Low-Low,0.00400,5,Not Significant,0.08000,5,Not Significant,0.12200,5,Low-Low,0.00400,5,Not Significant,0.08000,5,Not Significant,0.12200,5
-135,observed_positive,2.269931,Low-Low,0.03200,5,Not Significant,0.26600,5,Not Significant,0.23400,5,Not Significant,0.03200,5,Not Significant,0.26600,5,Not Significant,0.23400,5
-136,observed_positive,4.404154,Not Significant,0.14400,5,Not Significant,0.42800,5,Not Significant,0.57600,5,Not Significant,0.14400,5,Not Significant,0.42800,5,Not Significant,0.57600,5
-137,observed_positive,4.784548,Not Significant,0.37400,5,Not Significant,0.76600,5,Not Significant,0.87200,5,Not Significant,0.37400,5,Not Significant,0.76600,5,Not Significant,0.87200,5
-138,observed_positive,5.830169,Not Significant,0.43800,5,Not Significant,0.84800,5,Not Significant,0.96800,5,Not Significant,0.43800,5,Not Significant,0.84800,5,Not Significant,0.96800,5
-139,observed_positive,5.397746,Not Significant,0.71000,3,Not Significant,0.41600,5,Not Significant,0.53600,5,Not Significant,0.71000,3,Not Significant,0.41600,5,Not Significant,0.53600,5
+132,observed_positive,1.353134023822585,Low-Low,0.00400,3,Not Significant,0.12000,3,Not Significant,0.21200,3,Low-Low,0.00400,3,Not Significant,0.12000,3,Not Significant,0.21200,3
+133,observed_positive,1.6269824656142895,Low-Low,0.00200,5,Not Significant,0.07200,5,Not Significant,0.05800,5,Low-Low,0.00200,5,Not Significant,0.07200,5,Not Significant,0.05800,5
+134,observed_positive,1.4346938531237954,Low-Low,0.00400,5,Not Significant,0.08000,5,Not Significant,0.12200,5,Low-Low,0.00400,5,Not Significant,0.08000,5,Not Significant,0.12200,5
+135,observed_positive,2.269931179201586,Low-Low,0.03200,5,Not Significant,0.26600,5,Not Significant,0.23400,5,Not Significant,0.03200,5,Not Significant,0.26600,5,Not Significant,0.23400,5
+136,observed_positive,4.4041544949699585,Not Significant,0.14400,5,Not Significant,0.42800,5,Not Significant,0.57600,5,Not Significant,0.14400,5,Not Significant,0.42800,5,Not Significant,0.57600,5
+137,observed_positive,4.784548478275958,Not Significant,0.37400,5,Not Significant,0.76600,5,Not Significant,0.87200,5,Not Significant,0.37400,5,Not Significant,0.76600,5,Not Significant,0.87200,5
+138,observed_positive,5.830169362860937,Not Significant,0.43800,5,Not Significant,0.84800,5,Not Significant,0.96800,5,Not Significant,0.43800,5,Not Significant,0.84800,5,Not Significant,0.96800,5
+139,observed_positive,5.3977461541370815,Not Significant,0.71000,3,Not Significant,0.41600,5,Not Significant,0.53600,5,Not Significant,0.71000,3,Not Significant,0.41600,5,Not Significant,0.53600,5
 140,observed_zero,0.0,Dark (NTL=0),,0,Not Significant,0.15800,5,Not Significant,0.20400,5,Dark (NTL=0),,0,Not Significant,0.15800,5,Not Significant,0.20400,5
 141,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00200,5,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00200,5
 142,observed_zero,0.0,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00600,5,Dark (NTL=0),,0,Low-Low,0.00200,5,Low-Low,0.00600,5
