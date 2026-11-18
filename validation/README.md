@@ -55,3 +55,37 @@ The original source review used identifiers A01 to A12. Their current status is 
 - Local Moran uses eligible core or lit cells and row-standardized weights. Global Moran uses all cells and binary Queen weights; the two statistics are not interchangeable.
 - GHSL source-pixel quantities are summed by polygon intersection fraction on the native grid, then divided by cell area for density.
 - Automated tests, stored numeric comparisons and live service checks answer different questions. Each published result should state its input, revision, location, year, grid and tolerance.
+
+## Remaining scientific gaps: G01-G18 (18 November 2026)
+
+This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai GHSL records above. A corrected label is **not** a new external validation. Existing numerical evidence, archival manifests, data and historic CSV schemas remain authoritative within their recorded scope. Codes such as `spatial_ar1_persistence`, `signed_dist_hh_km` and `0_Treated_HH` are preserved for downstream compatibility; their original names do not establish model identification.
+
+| Gap | Priority | Current status and scientific risk | Next evidence required |
+| --- | --- | --- | --- |
+| G01 | P0 | Causal spillover/RDD claims replaced with descriptive HH-distance wording. Causality remains **unverified**. | External intervention or boundary identification, continuity checks and credible comparison design. |
+| G02 | P0 | The UI now identifies `spatial_ar1_persistence` as cross-sectional `Corr(z, Wz)`. It is **not** a spatial AR estimate or unit-root test. | Estimate an explicit spatial model and define a separate stationarity test if needed. |
+| G03 | P1 | Fixed NTL thresholds 5/15/40 now have descriptive radiance labels; economic calibration is **open**. | Cross-location land-use and independent socioeconomic calibration. |
+| G04 | P1 | Permutation-centered NTL access identity is tested; its economic market-access meaning and exogeneity are **open**. | Compare with independent jobs, population or accessibility measures and sensitivity to distance decay. |
+| G05 | P1 | The NTL-derived CBD can bias the estimated distance gradient and fit. | Compare against independently located activity centers; quantify slope and R² shifts. |
+| G06 | P1 | Hill/KS arithmetic is tested; a fitted Pareto law is not independently established. | Bootstrap fit after re-estimating parameters; compare tail cutoffs and rival distributions. |
+| G07 | P1 | The UI and handbook now clarify signed **cell-center** distance; geometric hotspot-border distance remains **unverified**. | Compare with polygon-boundary distances for complex HH shapes and grids. |
+| G08 | P1 | Chronological comparison is guarded: `year_t0 < year_t1` in core and UI; new regression tests cover invalid years. | Existing two-year observational validation remains intact; no repeat required. |
+| G09 | P1 | Two-period quartile transitions are descriptive, not a stationary long-run Markov process. | Multi-year continuous panel, ties/quantile sensitivity and transition stability. |
+| G10 | P1 | Observed-month count is not observation-count weighting. A02's observed Bao'an result remains closed within scope. | Real low-support case with monthly `cf_cvg` heterogeneity and month-wise sensitivity. |
+| G11 | P1 | Single UTM zone from bbox center may distort wide, polar or antimeridian regions. | Geodesic control and projected-area/distance comparison at geographic extremes. |
+| G12 | P2 | Residual Moran flag changes from permutation p-value to a fixed I cutoff on large grids. | Align inference statuses or label the noninferential shortcut explicitly. |
+| G13 | P2 | GHSL epoch may differ from VIIRS target year; Shanghai validation is unaffected. | Time-lag sensitivity with independently dated proxy data. |
+| G14 | P2 | Jaccard, core-frequency, seed SD and space-time movement thresholds are descriptive rules of thumb. | Empirical sensitivity plots rather than universal scientific cutoffs. |
+| G15 | P2 | `moran_I_lit` is a mean of local statistics, not Global Moran I. | Ensure all current CSV/UI explanations preserve that distinction. |
+| G16 | P2 | The evidence guide's VIIRS catalog link must match the application's `VCMSLCFG` product. | Check source/version provenance; no V11 rerun. |
+| G17 | P1 | BH arithmetic is tested, but spatial dependence does not guarantee nominal FDR in every setting. | Simulated spatial nulls: empirical FDR and power for BH versus BY, across weights and autocorrelation levels. |
+| G18 | P1 | Default LISA omits zero-radiance cells from both inference and neighborhood graph. | Compare HH/LL classifications with zeros included, distinguishing observed zeros from missing observations. |
+
+### New validation acceptance criteria
+
+- **G04/G05/G06:** retain independent input sources, spatial units, model definitions, seed, comparison metrics, cell-level results and sensitivity tables. Distinguish mathematical identity from economic construct validation.
+- **G17:** preregister null-generating processes and nominal alpha; report empirical false discoveries, realized FDR, power and uncertainty over simulations. Do not treat a correct BH function as proof of FDR control for all spatial dependence structures. Background: [Benjamini and Yekutieli (2001)](https://doi.org/10.1214/aos/1013699998).
+- **G18:** distinguish truly observed zero from no observation using verified A02 support fields; repeat only the alternative zero-inclusion specification, not the previously completed A03 reference tests.
+- **A02/A07 remaining:** test a real incomplete-coverage scene and directly extracted coarse-grid raster respectively. Never re-open the completed Bao'an observed case or V11 raster comparison merely because a neighboring question remains.
+
+**Change boundary for this update:** code changes affect scientific descriptions and chronology validation; the radiance thresholds, VIIRS/ GHSL extraction formulas, Local Moran permutation mathematics, BH step-up logic, Gini, historical files and numeric cell-class codes remain unchanged. The human-readable `ntl_class_label` now describes radiance rather than uncalibrated economic land-use categories.
