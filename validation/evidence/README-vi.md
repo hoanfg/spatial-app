@@ -202,11 +202,3 @@ python -m pytest -q tests
 ```
 
 Lệnh đầu kiểm tra CSV Bảo An, bản tóm tắt hiệu năng và các danh mục bằng chứng đã lưu. Lệnh tài liệu kiểm tra các cặp hướng dẫn Anh–Việt cùng liên kết. Bộ Python kiểm tra hợp đồng của ứng dụng; không tải dữ liệu vệ tinh mới.
-
-## Bằng chứng cần bổ sung
-
-- một ca A02 thực tế không có hoặc có ít quan sát;
-- đầy đủ cặp raster nguồn và kết quả từng ô cho đối chiếu V11 ba địa bàn;
-- bản xuất GHSL trực tiếp theo từng ô để đối chiếu độc lập;
-- nhiều lượt đo hiệu năng với cùng phiên bản triển khai và cấu hình;
-- chuỗi VIIRS nhiều năm liên tục và biến kinh tế độc lập để mở rộng diễn giải.
