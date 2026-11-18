@@ -24,25 +24,23 @@ from .lisa_diagnostics import (
     method_sensitivity, perm_power, seed_stability, tail_sensitivity,
 )
 
-COLORS = {  # quy ước màu GeoDa
+COLORS = {
     "High-High": "#d7191c", "Low-Low": "#2c7bb6", "High-Low": "#fdae61", "Low-High": "#abd9e9",
     NS: "#d9d9d9", EDGE: "#8c8c8c", DARK: "#2a2a33",
 }
 KEY_COLS = ("iso3", "region_id", "year", "cell_size_m")
 
-# =====================================================================
-# VĂN BẢN
-# =====================================================================
+
 T = {
     "vi": {
-        "title": "🧭 LISA & Data bridge cho hồi quy panel",
+        "title": "LISA & Data bridge cho hồi quy panel",
         "intro": "Phát hiện cụm ánh sáng nóng/lạnh bằng Local Moran's I và xuất biến sẵn sàng cho hồi quy panel.",
-        "params": "⚙️ Tham số kiểm định LISA",
+        "params": "Tham số kiểm định LISA",
         "p_stat": "Kiểm định thống kê", "p_data": "Xử lý dữ liệu", "p_cluster": "Điều kiện cụm",
         "perms": "Số hoán vị", "alpha": "Mức ý nghĩa α", "fdr": "Hiệu chỉnh FDR (Benjamini–Hochberg)",
         "log": "Dùng ln(NTL) trước khi chuẩn hóa", "thr": "Ngưỡng 'ô sáng' (nW/cm²/sr)",
         "clu": "Số ô tối thiểu của cụm HH", "nbr": "Số láng giềng tối thiểu để kiểm định",
-        "submit": "🔄 Cập nhật tham số LISA",
+        "submit": "Cập nhật tham số LISA",
         "h_perms": "Số lần xáo trộn ngẫu nhiên để tạo phân phối tham chiếu. Số càng cao (999) p-value càng chính xác nhưng chạy chậm hơn.",
         "h_alpha": "Ngưỡng ý nghĩa p-value để quyết định cụm không gian có thực sự tồn tại hay do ngẫu nhiên (thường dùng 0.05).",
         "h_fdr": "Cơ chế siêu khắt khe (FDR) chặn đứng việc máy tính báo động giả khi kiểm định hàng ngàn ô lưới cùng lúc.",
@@ -66,7 +64,7 @@ T = {
         "st_s2": "Chuẩn hóa z-score (chỉ ô sáng, loại ô biên)",
         "st_s3": "Chạy {p} hoán vị có điều kiện cho từng ô",
         "st_s4": "Hiệu chỉnh đa kiểm định và gom cụm HH",
-        "st_done": "Hoàn tất LISA ✅",
+        "st_done": "Hoàn tất LISA ",
         "degrade": "Lưới có {n:,} ô (> {c:,}). Bản đồ tự ẩn các ô NTL = 0 để tránh tràn RAM trình duyệt. "
                    "CSV vẫn giữ 100% quan sát.",
         "degrade2": "Sau khi ẩn ô tối còn {m:,} ô (> {c:,}): bản đồ chỉ vẽ {c:,} ô, ưu tiên ô có ý nghĩa LISA rồi NTL cao nhất. "
@@ -80,40 +78,40 @@ T = {
         "h_k_gini": "Bất bình đẳng ánh sáng giữa các ô đủ (gồm ô tối). 0 = đều, gần 1 = tập trung.",
         "h_k_dum": "1 nếu có ít nhất một cụm HH liên thông đạt số ô tối thiểu.",
         "h_k_mi": "Trung bình Local I của các ô được kiểm định; > 0 nghĩa là có xu hướng tụ cụm.",
-        "kpi_title": "📊 Kết quả chính",
+        "kpi_title": "Kết quả chính",
         "fdr_warn": "Với {m:,} phép kiểm định và {p} hoán vị, p nhỏ nhất = {pf:.4f}. FDR chỉ bác bỏ được nếu có "
                     "≥ {k:,} ô đạt p tối thiểu. Hãy tăng số hoán vị nếu kết quả HH bằng 0.",
         "note_t": "Lưu ý phương pháp",
-        "map_t": "🗺️ Bản đồ cụm LISA",
-        "comp_t": "🧮 Cơ cấu trạng thái & Moran scatterplot",
+        "map_t": "Bản đồ cụm LISA",
+        "comp_t": "Cơ cấu trạng thái & Moran scatterplot",
         "comp": "Cơ cấu trạng thái không gian", "cls": "Trạng thái", "cells": "Số ô", "area": "% diện tích vùng",
         "scat": "Biểu đồ phân tán Moran (Moran scatterplot)",
         "scat_help": "Trục x: z-score của ô; trục y: trung bình z của láng giềng. Độ dốc đường xu hướng ≈ Moran's I toàn cục.",
         "sx": "Z-score NTL (bản thân)", "sy": "Spatial lag z-score (hàng xóm)", "slegend": "Trạng thái",
         "no_scat": "Không đủ dữ liệu ô sáng để vẽ biểu đồ.",
-        "bridge_t": "📤 Data bridge: xuất dữ liệu cho hồi quy",
+        "bridge_t": "Data bridge: xuất dữ liệu cho hồi quy",
         "bridge_cap": "CSV theo ô giữ 100% quan sát. CSV panel gồm 1 dòng cho mỗi (vùng, năm, độ phân giải).",
-        "dl_cell": "⬇️ CSV theo ô (100% quan sát + LISA)", "dl_panel": "⬇️ CSV panel (1 dòng/vùng-năm)",
+        "dl_cell": "CSV theo ô (100% quan sát + LISA)", "dl_panel": "CSV panel (1 dòng/vùng-năm)",
         "h_dl_cell": "Mỗi dòng là một ô lưới, gồm biến NTL gốc và kết quả LISA.",
         "h_dl_panel": "Một dòng tổng hợp cho vùng-năm hiện tại, dùng làm quan sát trong hồi quy panel.",
-        "add": "➕ Thêm vùng-năm này vào bảng panel",
+        "add": "Thêm vùng-năm này vào bảng panel",
         "h_add": "Nếu trùng (iso3, vùng, năm, độ phân giải) thì dòng cũ sẽ được thay bằng dòng mới.",
         "added": "Đã thêm vào bảng panel.",
         "panel": "Bảng panel tích lũy", "panel_empty": "Chưa có dòng nào. Bấm “Thêm vùng-năm” để bắt đầu tích lũy.",
-        "dl_all": " — toàn bộ",
+        "dl_all": "— toàn bộ",
         "note": "Ô tối không tham gia đồ thị láng giềng (listwise deletion); ô biên bị loại khỏi cả vai trò tâm lẫn láng giềng. "
                 "Ô sáng cô lập (không có láng giềng sáng) không được kiểm định.",
         "tt": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái", "Cách lõi (km)"],
     },
     "en": {
-        "title": "🧭 LISA & Data bridge for panel regression",
+        "title": "LISA & Data bridge for panel regression",
         "intro": "Detect **light hot/cold spots** with Local Moran's I and export panel-regression-ready variables.",
-        "params": "⚙️ LISA test parameters",
+        "params": "LISA test parameters",
         "p_stat": "Statistical test", "p_data": "Data handling", "p_cluster": "Cluster rules",
         "perms": "Permutations", "alpha": "Significance α", "fdr": "FDR correction (Benjamini–Hochberg)",
         "log": "Use ln(NTL) before standardising", "thr": "'Lit' threshold (nW/cm²/sr)",
         "clu": "Min cells per HH cluster", "nbr": "Min neighbours to be tested",
-        "submit": "🔄 Update LISA parameters",
+        "submit": "Update LISA parameters",
         "h_perms": "Number of random permutations for pseudo p-value. 999 gives the most precise p-value but takes longer.",
         "h_alpha": "Significance level (p-value threshold) to determine if structural clusters exist.",
         "h_fdr": "Strict multiple testing correction (Benjamini-Hochberg) to minimize False Positives.",
@@ -137,7 +135,7 @@ T = {
         "st_s2": "Standardising z-scores (lit cells only, edge cells removed)",
         "st_s3": "Running {p} conditional permutations per cell",
         "st_s4": "Multiple-testing correction and HH clustering",
-        "st_done": "LISA complete ✅",
+        "st_done": "LISA complete ",
         "degrade": "Grid has {n:,} cells (> {c:,}). The map hides NTL = 0 cells to protect browser RAM. "
                    "The CSV keeps 100% of observations.",
         "degrade2": "After hiding dark cells {m:,} remain (> {c:,}): the map draws {c:,}, LISA-significant first, "
@@ -151,27 +149,27 @@ T = {
         "h_k_gini": "Light inequality across core cells (incl. dark). 0 = even, near 1 = concentrated.",
         "h_k_dum": "1 if at least one connected HH cluster reaches the minimum cell count.",
         "h_k_mi": "Mean Local I over tested cells; > 0 indicates clustering.",
-        "kpi_title": "📊 Key results",
+        "kpi_title": "Key results",
         "fdr_warn": "With {m:,} tests and {p} permutations the minimum pseudo p is {pf:.4f}. BH can reject only if "
                     "≥ {k:,} cells reach that floor. Raise permutations if HH is empty.",
         "note_t": "Methodology note",
-        "map_t": "🗺️ LISA cluster map",
-        "comp_t": "🧮 Class composition & Moran scatterplot",
+        "map_t": "LISA cluster map",
+        "comp_t": "Class composition & Moran scatterplot",
         "comp": "Spatial class composition", "cls": "Class", "cells": "Cells", "area": "% of region area",
         "scat": "Moran scatterplot",
         "scat_help": "x: cell z-score; y: mean z-score of neighbours. The trend-line slope ≈ global Moran's I.",
         "sx": "NTL z-score (self)", "sy": "Spatial lag z-score (neighbours)", "slegend": "Class",
         "no_scat": "Not enough lit-cell data to draw the chart.",
-        "bridge_t": "📤 Data bridge: export for regression",
+        "bridge_t": "Data bridge: export for regression",
         "bridge_cap": "The cell CSV keeps 100% of observations. The panel CSV has one row per (region, year, resolution).",
-        "dl_cell": "⬇️ Cell-level CSV (100% obs + LISA)", "dl_panel": "⬇️ Panel CSV (1 row / region-year)",
+        "dl_cell": "Cell-level CSV (100% obs + LISA)", "dl_panel": "Panel CSV (1 row / region-year)",
         "h_dl_cell": "One row per grid cell: raw NTL variables plus LISA results.",
         "h_dl_panel": "One summary row for the current region-year, ready to use as a panel observation.",
-        "add": "➕ Add this region-year to the panel table",
+        "add": "Add this region-year to the panel table",
         "h_add": "If (iso3, region, year, resolution) already exists, the old row is replaced.",
         "added": "Added to the panel table.",
         "panel": "Accumulated panel table", "panel_empty": "No rows yet. Click “Add region-year” to start accumulating.",
-        "dl_all": " — all",
+        "dl_all": "— all",
         "note": "Dark cells are excluded from the neighbour graph (listwise deletion); edge cells are removed as both centres "
                 "and neighbours. Isolated lit cells (no lit neighbour) are not tested.",
         "tt": ["Cell", "NTL", "z (lit)", "pseudo p", "Class", "Dist to core (km)"],
@@ -183,12 +181,12 @@ T["vi"].update({
     "verdict_t": "Nhận định nhanh:",
     "v_hot": "  Phát hiện **cụm điểm nóng (High-High)** liên thông từ {k} ô trở lên, chiếm **{hh:.2f}%** diện tích vùng.",
     "v_nohot": "  **Chưa có cụm điểm nóng đủ lớn** (cần ≥ {k} ô liên thông).",
-    "v_frag": " Có {hh:.2f}% diện tích HH có ý nghĩa thống kê nhưng rời rạc.",
+    "v_frag": "Có {hh:.2f}% diện tích HH có ý nghĩa thống kê nhưng rời rạc.",
     "v_mi_pos": "  Moran's I (ô sáng) = **{mi:.3f}** > 0: các ô sáng có xu hướng **tụ cụm** trong không gian.",
     "v_mi_neg": "  Moran's I (ô sáng) = **{mi:.3f}** ≤ 0: chưa thấy xu hướng tụ cụm (ngẫu nhiên hoặc xen kẽ).",
     "v_gini": "  Gini ánh sáng = **{g:.3f}**, ánh sáng {gd}.",
     "gini_desc": ["phân bố tương đối đều", "tập trung ở mức vừa phải", "tập trung rất cao vào vài ô"],
-    "guide_t": "📖 Cách đọc bản đồ LISA",
+    "guide_t": "Cách đọc bản đồ LISA",
     "map_hint": "Rê chuột vào ô để xem NTL, z-score, p giả, trạng thái và khoảng cách tới lõi cụm. Ô không có ý nghĩa (NS) và ô tối được vẽ mờ.",
     "legend_desc": {
         "HH": "Ô sáng cao nằm giữa các ô sáng cao: **điểm nóng (Hotspot)** thực sự.",
@@ -205,12 +203,12 @@ T["en"].update({
     "verdict_t": "Quick take:",
     "v_hot": "  Found **High-High hotspot clusters** of {k}+ connected cells, covering **{hh:.2f}%** of the region's area.",
     "v_nohot": "  **No hotspot cluster large enough** (needs ≥ {k} connected cells).",
-    "v_frag": " {hh:.2f}% of the area is significant HH but fragmented.",
+    "v_frag": "{hh:.2f}% of the area is significant HH but fragmented.",
     "v_mi_pos": "  Moran's I (lit cells) = **{mi:.3f}** > 0: bright cells tend to **cluster** in space.",
     "v_mi_neg": "  Moran's I (lit cells) = **{mi:.3f}** ≤ 0: no clustering tendency (random or alternating).",
     "v_gini": "  Light Gini = **{g:.3f}**, light is {gd}.",
     "gini_desc": ["fairly evenly spread", "moderately concentrated", "highly concentrated in a few cells"],
-    "guide_t": "📖 How to read the LISA map",
+    "guide_t": "How to read the LISA map",
     "map_hint": "Hover a cell for NTL, z-score, pseudo p, class and distance to the cluster core. Non-significant (NS) and dark cells are drawn faint.",
     "legend_desc": {
         "HH": "High-radiance cell surrounded by high-radiance cells: a true **hotspot**.",
@@ -324,7 +322,7 @@ def _legend(lang):
 
 
 def _legend_guide_html(L):
-    def _b(t):  
+    def _b(t):
         return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
     cards = "".join(
         f'<div class="lisa-li" style="animation-delay:{0.05 * i:.2f}s"><i style="background:{COLORS[k]}"></i>'
@@ -400,9 +398,9 @@ class _LisaIntro(MacroElement):
 
 def _popover(brief, title, body):
     try:
-        pop = st.popover("❓", help=brief)
-    except TypeError:  
-        pop = st.popover("❓")
+        pop = st.popover("", help=brief)
+    except TypeError:
+        pop = st.popover("")
     with pop:
         st.markdown(f"**{title}**")
         st.markdown(body)
@@ -415,7 +413,7 @@ def _pin(cfg_cls, **kw):
         return cfg_cls(**kw)
 
 
-_LVL_ICON = {"ok": "✅", "warn": "⚠️", "info": "ℹ️"}
+_LEVEL_LABEL = {"ok": ("Tốt", "OK"), "warn": ("Cần lưu ý", "Warning"), "info": ("Thông tin", "Info")}
 _DIAG_FIFO = 5
 
 
@@ -433,12 +431,12 @@ def _num(v, fmt="{:.3f}"):
 
 
 def _diag_line(it, vi):
-    """Một dòng kết quả kiểm tra nhẹ (markdown)."""
+
     k, v = it["key"], it["vals"]
-    ic = _LVL_ICON[it["level"]]
+    prefix = f"**{_LEVEL_LABEL[it['level']][0 if vi else 1]}:**"
     if k == "perm":
         if not v["applies"]:
-            return f"{ic} " + ("**Số hoán vị / FDR:** FDR đang tắt nên không áp dụng." if vi
+            return f"{prefix} " + ("**Số hoán vị / FDR:** FDR đang tắt nên không áp dụng." if vi
                                else "**Permutations / FDR:** FDR is off, not applicable.")
         base = (f"**Số hoán vị / FDR:** {v['m']:,} ô kiểm định, p nhỏ nhất = {v['p_floor']:.4f}; FDR cần ≥ "
                 f"{v['min_hits']:,} ô chạm mức sàn ({v['ratio'] * 100:.0f}% số ô kiểm định)." if vi else
@@ -452,10 +450,10 @@ def _diag_line(it, vi):
                      else f" Raise permutations to {v['suggested_perms']} or relax α.")
         elif v["infeasible"] or v["risky"]:
             base += (" Hãy nới α hoặc tắt FDR." if vi else " Relax α or turn FDR off.")
-        return f"{ic} {base}"
+        return f"{prefix} {base}"
     if k == "hill":
         if not np.isfinite(v["alpha"]):
-            return f"{ic} " + ("**Đuôi Pareto:** không đủ ô sáng (cần ≥ 15) hoặc đuôi không phân tán để ước lượng." if vi
+            return f"{prefix} " + ("**Đuôi Pareto:** không đủ ô sáng (cần ≥ 15) hoặc đuôi không phân tán để ước lượng." if vi
                                else "**Pareto tail:** not enough lit cells (≥ 15 needed) or no tail dispersion.")
         t = (f"**Đuôi Pareto:** α = {v['alpha']:.2f} ± {v['se']:.2f} (CI95 {v['ci_lo']:.2f}–{v['ci_hi']:.2f}, k = {v['k']}); "
              f"KS p = {v['ks_p']:.3f}." if vi else
@@ -465,40 +463,40 @@ def _diag_line(it, vi):
             t += " Đuôi không giống luật lũy thừa, hãy diễn giải α thận trọng." if vi else " The tail does not look like a power law; interpret α with care."
         if v["k"] < 20:
             t += " Mẫu đuôi nhỏ (k < 20), sai số rất lớn." if vi else " Small tail sample (k < 20), very wide error."
-        return f"{ic} {t}"
+        return f"{prefix} {t}"
     if k == "primacy":
         if not np.isfinite(v["primacy"]):
-            return f"{ic} " + ("**Thống trị cụm đầu:** chưa có cụm HH đủ lớn." if vi else "**Cluster primacy:** no sufficiently large HH cluster.")
+            return f"{prefix} " + ("**Thống trị cụm đầu:** chưa có cụm HH đủ lớn." if vi else "**Cluster primacy:** no sufficiently large HH cluster.")
         t = (f"**Thống trị cụm đầu:** {v['n_clusters']} cụm HH, tỷ số = {v['primacy']:.2f}." if vi
              else f"**Cluster primacy:** {v['n_clusters']} HH clusters, ratio = {v['primacy']:.2f}.")
         if v["multipolar"]:
             t += (" Địa phương đa cực: tâm CBD có thể nhảy giữa các lần chạy; hãy cố định tâm theo năm gốc t₀ khi phân tích chuỗi thời gian."
                   if vi else " Multipolar locality: the CBD centre may jump between runs; fix it at base year t₀ for time series.")
-        return f"{ic} {t}"
+        return f"{prefix} {t}"
     if k == "resid":
         if not np.isfinite(v["I"]):
-            return f"{ic} " + ("**Phần dư độ dốc đô thị:** không đủ dữ liệu." if vi else "**Urban-gradient residuals:** not enough data.")
+            return f"{prefix} " + ("**Phần dư độ dốc đô thị:** không đủ dữ liệu." if vi else "**Urban-gradient residuals:** not enough data.")
         pt = fmt_p(v["p"], v.get("perms"), prefix=True) if v["perm_done"] else ("(không tính p-value vì lưới lớn)" if vi else "(no p-value: large grid)")
         t = f"**Phần dư độ dốc đô thị:** Moran's I = {v['I']:.3f}, {pt}." if vi else f"**Urban-gradient residuals:** Moran's I = {v['I']:.3f}, {pt}."
         if v["flag"]:
             t += (" Phần dư còn tự tương quan không gian: R² của độ dốc có thể bị thổi phồng." if vi
                   else " Residuals are still spatially autocorrelated: the gradient R² may be inflated.")
-        return f"{ic} {t}"
+        return f"{prefix} {t}"
     # dark
     t = (f"**Ô tối:** {v['share'] * 100:.0f}% số ô lõi có NTL = 0." if vi else f"**Dark cells:** {v['share'] * 100:.0f}% of core cells have NTL = 0.")
     if v["flag"]:
         t += (" Tỷ lệ cao: ln(1+NTL) nhạy với đơn vị đo; nên chạy thêm PPML (Chen & Roth, 2024)." if vi
               else " High share: ln(1+NTL) is scale-sensitive; also run PPML (Chen & Roth, 2024).")
-    return f"{ic} {t}"
+    return f"{prefix} {t}"
 
 
-# st.fragment: bấm nút trong khối này chỉ chạy lại khối này, không dựng lại bản đồ và cả trang.
-# (Streamlit cũ chưa có st.fragment thì chạy như hàm thường.)
+
+
 _fragment = getattr(st, "fragment", None) or (lambda f: f)
 
 
 def _collect_export(ckey):
-    """Các cột kiểm định đưa vào dòng panel, đọc từ cache theo ckey (fragment không trả giá trị về trang chính)."""
+
     ss = st.session_state
     a = ss.get("_diag_cache", {}).get(ckey)
     export = dict(a["export"]) if a else {}
@@ -519,7 +517,7 @@ def _collect_export(ckey):
 @_fragment
 def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use_log, thr,
                         min_clu, min_nbr, perm_auto_from):
-    """Expander kiểm định độ tin cậy (fragment). Cột xuất thêm vào dòng panel lấy qua _collect_export()."""
+
     vi = lang != "en"
     cdf, rm = out.cell_df, out.region_metrics
 
@@ -531,17 +529,18 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             grid_utm["area_km2"].to_numpy(float), size, cdf, rm, perms, alpha, fdr, perm_auto_from), _DIAG_FIFO)
     auto = acache[ckey]
     n_warn = auto["n_warn"]
-    title = ("🔬 Kiểm định độ tin cậy" if vi else "🔬 Reliability diagnostics") + \
-        (f"  ·  ⚠️ {n_warn}" if n_warn else "  ·  ✅")
+    title = "Kiểm định độ tin cậy" if vi else "Reliability diagnostics"
+    if n_warn:
+        title += f" · {n_warn} " + ("cảnh báo" if vi else "warning(s)")
 
     with st.expander(title, expanded=bool(n_warn)):
         st.caption("Các kiểm tra nhẹ chạy tự động theo từng lần cập nhật LISA; kiểm định nặng chỉ chạy khi bạn bấm nút."
                    if vi else "Light checks run automatically on every LISA update; heavy tests run only when you press a button.")
         st.subheader("Kiểm tra tự động" if vi else "Automatic checks",
                      help=("Năm kiểm tra nhẹ: đủ hoán vị cho FDR, độ tin cậy đuôi Pareto (SE Hill, KS), thống trị cụm đầu, "
-                           "tự tương quan phần dư độ dốc, tỷ lệ ô tối. ✅ ổn, ⚠️ cần lưu ý." if vi else
+                           "tự tương quan phần dư độ dốc và tỷ lệ ô tối." if vi else
                            "Five light checks: permutation adequacy for FDR, Pareto tail reliability (Hill SE, KS), cluster primacy, "
-                           "gradient-residual autocorrelation, dark-cell share. ✅ fine, ⚠️ needs attention."))
+                           "gradient-residual autocorrelation and dark-cell share."))
         st.markdown("\n\n".join(_diag_line(it, vi) for it in auto["items"]))
 
         st.markdown("---")
@@ -574,7 +573,9 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             return (ckey, kind) in hcache
 
         def _lbl(txt, kind):
-            return ("✅ " if _done(kind) else "▶ ") + txt
+            if not _done(kind):
+                return txt
+            return f"{txt} ({'đã có kết quả' if vi else 'cached'})"
 
         b1, b2, b3 = st.columns(3)
         run_seed = b1.button(_lbl(f"Ổn định theo seed ({n_seed} lần)" if vi else f"Seed stability ({n_seed} runs)", "seed"),
@@ -599,15 +600,15 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             return cb
 
         def _go(kind, label_vi, label_en, fn):
-            """Bấm lần đầu: tính + báo xong. Bấm lại: báo đang dùng kết quả lưu đệm (không tính lại)."""
+
             if (ckey, kind) in hcache:
-                st.toast(("Đã có kết quả lưu đệm cho: " if vi else "Cached result already available: ") + (label_vi if vi else label_en), icon="✅")
+                st.toast(("Đã có kết quả lưu đệm cho: " if vi else "Cached result already available: ") + (label_vi if vi else label_en))
                 return
             prog = _progress(label_vi if vi else label_en)
             _fifo_put(hcache, (ckey, kind), fn(prog), 12)
             prog.bar.empty()
-            st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en), icon="✅")
-            st.rerun()  # chạy xong lần đầu: chạy lại cả trang một lần để dòng panel/CSV nhận cột mới (bấm lại chỉ chạy fragment)
+            st.toast(("Hoàn tất: " if vi else "Done: ") + (label_vi if vi else label_en))
+            st.rerun()
 
         if run_seed:
             _go("seed", "ổn định theo seed", "seed stability", lambda pg: seed_stability(base_kw, progress=pg))
@@ -638,9 +639,9 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
             c1, c2, c3 = st.columns(3)
             _jh = ("Jaccard = |giao| / |hợp| của hai tập ô HH; 1 = trùng hoàn toàn." if vi
                    else "Jaccard = |intersection| / |union| of two HH sets; 1 = identical.")
-            c1.metric("Jaccard thô ↔ P99" if vi else "Jaccard raw ↔ P99", f"{r['jaccard_raw_winsor']:.3f}", help=_jh)
-            c2.metric("Jaccard thô ↔ ln" if vi else "Jaccard raw ↔ ln", f"{r['jaccard_raw_log']:.3f}", help=_jh)
-            c3.metric("Jaccard P99 ↔ ln" if vi else "Jaccard P99 ↔ ln", f"{r['jaccard_winsor_log']:.3f}", help=_jh)
+            c1.metric("Jaccard thô so với P99" if vi else "Jaccard raw vs. P99", f"{r['jaccard_raw_winsor']:.3f}", help=_jh)
+            c2.metric("Jaccard thô so với ln" if vi else "Jaccard raw vs. ln", f"{r['jaccard_raw_log']:.3f}", help=_jh)
+            c3.metric("Jaccard P99 so với ln" if vi else "Jaccard P99 vs. ln", f"{r['jaccard_winsor_log']:.3f}", help=_jh)
             st.caption((f"Số ô HH: thô {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
                         "Jaccard thấp nghĩa là cụm HH nhạy với ô dị thường."
                         if vi else f"HH cells: raw {r['n_hh']['raw']:,} · P99 {r['n_hh']['winsor']:,} · ln {r['n_hh']['log']:,}. "
@@ -679,7 +680,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.markdown(f'<div class="lisa-hero">{L["intro"]}</div>', unsafe_allow_html=True)
     st.caption(L["flow"])
 
-    # ---------- tham số ----------
+
     with st.expander(L["params"], expanded=True):
         with st.form(key="lisa_params_form"):
             c1, c2, c3, c4 = st.columns(4)
@@ -687,16 +688,16 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             alpha = c2.selectbox(L["alpha"], [0.05, 0.01], index=0, help=L["h_alpha"])
             fdr = c3.toggle(L["fdr"], value=True, help=L["h_fdr"])
             use_log = c4.toggle(L["log"], value=False, help=L["h_log"])
-            
+
             c5, c6, c7 = st.columns(3)
             thr = c5.number_input(L["thr"], min_value=0.0, max_value=5.0, value=0.0, step=0.1, help=L["h_thr"])
-            min_clu = c6.slider(L["clu"], 1, 30, 4, help=L["h_clu"]) 
+            min_clu = c6.slider(L["clu"], 1, 30, 4, help=L["h_clu"])
             min_nbr = c7.slider(L["nbr"], 1, 4, 1, help=L["h_nbr"])
-            
+
             submit_lisa = st.form_submit_button(L["submit"], type="primary", help=L["h_submit"])
 
-    # ---------- tính (cache trong session theo kết quả + tham số) ----------
-    # Kiểm tra điều kiện đủ của số hoán vị TRƯỚC khi tính: tổ hợp bất khả thi (FDR không thể bác bỏ gì) bị tự nâng lên 999
+
+
     perm_auto_from = None
     _ar0 = grid_utm["area_km2"].to_numpy(float)
     _nt0 = grid_utm["ntl_mean"].to_numpy(float)
@@ -711,15 +712,15 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     cache = st.session_state.setdefault("_lisa_cache", {})
     just_computed = ckey not in cache
     if ckey not in cache:
-        if len(cache) >= 5:  # Giới hạn tối đa 5 bộ tham số trong RAM
+        if len(cache) >= 5:
             cache.pop(next(iter(cache)))
         cent = grid_utm.geometry.centroid
         meta = {"iso3": res["iso3"], "region_id": region_id, "region_label": region_label, "year": yr}
         with st.status(L["st_title"].format(n=n, p=perms), expanded=True) as status:
-            st.write("① " + L["st_s1"])
-            st.write("② " + L["st_s2"])
-            st.write("③ " + L["st_s3"].format(p=perms))
-            st.write("④ " + L["st_s4"])
+            st.write("1. " + L["st_s1"])
+            st.write("2. " + L["st_s2"])
+            st.write("3. " + L["st_s3"].format(p=perms))
+            st.write("4. " + L["st_s4"])
             with profile_stage(res.get("perf_monitor"), "lisa.local_moran"):
                 cache[ckey] = run_lisa(
                     cent.x.to_numpy(), cent.y.to_numpy(), grid_utm["ntl_mean"].to_numpy(float),
@@ -730,8 +731,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
 
     out = cache[ckey]
     cdf, rm = out.cell_df, out.region_metrics
-                        
-    # ---------- KPI ----------
+
     st.divider()
     st.markdown(f"#### {L['kpi_title']}", help=L["h_kpi_title"])
     k1, k2, k3, k4 = st.columns(4)
@@ -779,7 +779,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         dq_cols = {}
     rm_full = {**rm, **_collect_export(ckey), **rob_cols, **dq_cols}
 
-    # ---------- Bản đồ ----------
+
     st.divider()
     st.markdown(f"#### {L['map_t']}", help=L["h_map_t"])
     forced = n > render_cap
@@ -885,7 +885,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with st.expander(L["guide_t"], expanded=False):
         st.markdown(_legend_guide_html(L), unsafe_allow_html=True)
 
-    # ---------- Cơ cấu trạng thái & Moran Scatterplot ----------
+
     st.divider()
     st.markdown(f"#### {L['comp_t']}", help=L["h_comp_t"])
     area = grid_utm["area_km2"].to_numpy(float)
@@ -939,12 +939,12 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.divider()
     is_vi = (lang != "en")
     st.markdown(
-        "#### 🚀 Chỉ số kinh tế lượng Không gian biên"
+        "####  Chỉ số kinh tế lượng Không gian biên"
         if is_vi else
-        "#### 🚀 Frontier spatial econometric indicators",
+        "####  Frontier spatial econometric indicators",
         help=L["h_fq_title"],
     )
-                        
+
     fq1, fq2, fq3, fq4 = st.columns(4)
     _pa = rm.get("pareto_alpha_top10", float("nan"))
     _ug = rm.get("urban_gradient_decay", float("nan"))
@@ -980,9 +980,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with col_ring:
         with st.container(border=True):
             st.markdown(
-                "**🎯 Vành đai lan tỏa nhân quả**"
+                "** Vành đai lan tỏa nhân quả**"
                 if is_vi else
-                "**🎯 Causal spillover rings**",
+                "** Causal spillover rings**",
                 help=L["h_ring_tbl"],
             )
             ring_arr = cdf["spillover_ring"].to_numpy()
@@ -1003,9 +1003,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     with col_rdd:
         with st.container(border=True):
             st.markdown(
-                "**📉 Đường cong suy giảm & Gián đoạn ranh giới đô thị**"
+                "** Đường cong suy giảm & Gián đoạn ranh giới đô thị**"
                 if is_vi else
-                "**📉 Urban boundary discontinuity & Spillover decay (Spatial RDD)**",
+                "** Urban boundary discontinuity & Spillover decay (Spatial RDD)**",
                 help=L["h_rdd_chart"],
             )
             donut_on = st.toggle(L["donut_rdd"], value=False, key="lisa_donut_rdd", help=L["h_donut_rdd"])
@@ -1041,14 +1041,13 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
             else:
                 st.info("Chưa đủ quan sát để vẽ đường cong Spatial RDD." if is_vi else "Not enough observations for Spatial RDD curve.")
 
-    # ---------- MODULE 5: DYNAMIC SPACE-TIME LISA & SPATIAL MARKOV (t0 -> t1) ----------
     if fetch_year_ntl_fn is not None and available_years:
         other_years = [int(y) for y in available_years if int(y) != yr]
         if other_years:
             with st.expander(
-                f"⚡ Động học Không – Thời gian & Ma trận Spatial Markov (So sánh năm đối chiếu t₀ → {yr})"
+                f"Động học Không – Thời gian & Ma trận Spatial Markov (So sánh năm đối chiếu t₀ → {yr})"
                 if is_vi else
-                f"⚡ Dynamic Space-Time LISA & Spatial Markov Matrix (Compare base year t₀ → {yr})",
+                f"Dynamic Space-Time LISA & Spatial Markov Matrix (Compare base year t₀ → {yr})",
                 expanded=False,
             ):
                 st.caption(
@@ -1067,7 +1066,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     other_years, index=default_idx, key="st_lisa_year_t0", help=L["h_st_year_t0"],
                 )
                 run_st_btn = sc2.button(
-                    f"⚡ Chạy Động học ({year_t0} → {yr})" if is_vi else f"⚡ Run Dynamics ({year_t0} → {yr})",
+                    f"Chạy Động học ({year_t0} → {yr})" if is_vi else f"Run Dynamics ({year_t0} → {yr})",
                     type="primary", use_container_width=True, key="btn_run_spacetime", help=L["h_st_run_btn"],
                 )
                 st_cache = st.session_state.setdefault("_spacetime_cache", {})
@@ -1158,15 +1157,14 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                                     "Markov matrix row sums deviate from 100% by more than 0.2%: ") + ", ".join(_bad_rows))
                     st_full_csv = pd.concat([export_df.reset_index(drop=True), cdf.reset_index(drop=True), st_out.st_cell_df.reset_index(drop=True)], axis=1)
                     st.download_button(
-                        f"⬇️ Tải CSV Sai phân Không – Thời gian ({year_t0}_{yr}_spacetime_cells.csv)"
-                        if is_vi else f"⬇️ Download Space-Time First-Difference CSV ({year_t0}_{yr})",
+                        f"Tải CSV Sai phân Không – Thời gian ({year_t0}_{yr}_spacetime_cells.csv)"
+                        if is_vi else f"Download Space-Time First-Difference CSV ({year_t0}_{yr})",
                         st_full_csv.to_csv(index=False).encode("utf-8-sig"),
                         file_name=f"{region_id}_{year_t0}_{yr}_{size}m_spacetime_cells.csv",
                         mime="text/csv",
                         use_container_width=True,
                     )
-                        
-    # ---------- Data Bridge ----------
+
     st.divider()
     st.markdown(f"#### {L['bridge_t']}", help=L["h_bridge_t"])
     st.caption(L["bridge_cap"])
@@ -1184,7 +1182,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         rows = st.session_state.setdefault("panel_rows", [])
         key = tuple(rm[c] for c in KEY_COLS)
         rows[:] = [r for r in rows if tuple(r[c] for c in KEY_COLS) != key] + [dict(rm_full)]
-        st.toast(L["added"], icon="✅")
+        st.toast(L["added"])
 
     rows = st.session_state.get("panel_rows", [])
     with st.container(border=True):

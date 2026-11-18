@@ -18,10 +18,11 @@ def read_valid_band(src, clip_negative: bool = True):
 def zonal_stat(tif_bytes: bytes, grid_wgs, stat: str = "mean", clip_negative: bool = True,
                id_col: str = "grid_id", fill_missing: float | None = 0.0,
                band: int = 1) -> pd.Series:
-    """Giá trị `stat` ('mean' hoặc 'sum') của raster trên từng ô, trả Series theo thứ tự grid_wgs[id_col].
+    """Compute a raster mean or sum for each grid cell in ``id_col`` order.
 
-    Missing/masked/nonfinite pixels are excluded; clip_negative clips valid negatives only.
-    fill_missing: giá trị thay cho ô không có kết quả; None để giữ NaN."""
+    Missing, masked, and nonfinite pixels are excluded. ``clip_negative`` only
+    clips valid negative observations; ``fill_missing=None`` preserves NaN.
+    """
     from exactextract import exact_extract
     import rasterio
     from rasterio.io import MemoryFile

@@ -1,4 +1,4 @@
-"""Kiểm thử zonal_stat trên GeoTIFF nhỏ dựng trong bộ nhớ (bỏ qua nếu thiếu thư viện địa không gian)."""
+
 import numpy as np
 import pytest
 
@@ -25,7 +25,7 @@ def _tif(arr, nodata=None, mask=None):
 
 
 def _grid():
-    # hai ô, mỗi ô phủ đúng 2x2 pixel
+
     return gpd.GeoDataFrame({"grid_id": [0, 1]}, geometry=[box(0, 0, 2, 2), box(2, 0, 4, 2)], crs="EPSG:4326")
 
 

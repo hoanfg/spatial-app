@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import numpy as np
 
-# Ngưỡng cảnh báo. Đây là quy ước thực hành, không phải ngưỡng thống kê chặt chẽ.
-NEG_SHARE_WARN = 0.10     # quá 10% pixel âm: kết quả nhạy với cách xử lý giá trị âm
-NODATA_SHARE_WARN = 0.0   # có pixel NaN/inf là cảnh báo
-ZERO_CELL_INFO = 0.50     # quá nửa số ô bằng 0: ln(1+NTL) nhạy với đơn vị đo
-NO_OBS_WARN = 0.01        # quá 1% pixel không có tháng quan sát không mây nào
-LOW_OBS_MONTHS = 3        # dưới số tháng này thì trung vị năm kém ổn định
-LOW_OBS_WARN = 0.20       # quá 20% pixel dưới LOW_OBS_MONTHS tháng
+
+NEG_SHARE_WARN = 0.10
+NODATA_SHARE_WARN = 0.0
+ZERO_CELL_INFO = 0.50
+NO_OBS_WARN = 0.01
+LOW_OBS_MONTHS = 3
+LOW_OBS_WARN = 0.20
 
 PIPELINE_PROVENANCE = {
     "ntl_composite": "median_of_monthly_cf_cvg_gt0",
@@ -19,7 +19,7 @@ PIPELINE_PROVENANCE = {
 
 
 def raster_report(arr) -> dict:
-    """Thống kê pixel của raster gốc, tính TRƯỚC khi thay NaN và cắt giá trị âm."""
+
     a = np.asarray(arr, dtype=float).ravel()
     n = int(a.size)
     if n == 0:
@@ -40,7 +40,7 @@ def raster_report(arr) -> dict:
 
 
 def cell_report(n_cells: int, n_stat_nan: int, n_merge_miss: int, ntl) -> dict:
-    """Số ô mà bước trích xuất không trả giá trị (sẽ bị đổi thành 0) và tỷ lệ ô bằng 0."""
+
     v = np.asarray(ntl, dtype=float)
     return {
         "n_cells": int(n_cells),
@@ -52,7 +52,7 @@ def cell_report(n_cells: int, n_stat_nan: int, n_merge_miss: int, ntl) -> dict:
 
 
 def obs_report(n_obs, min_months: int = LOW_OBS_MONTHS) -> dict:
-    """Từ raster 'số tháng có quan sát không mây' của mỗi pixel."""
+
     a = np.asarray(n_obs, dtype=float).ravel()
     a = a[np.isfinite(a)]
     if a.size == 0:
@@ -67,7 +67,7 @@ def obs_report(n_obs, min_months: int = LOW_OBS_MONTHS) -> dict:
 
 
 def quality_flags(raster: dict | None, cells: dict | None, obs: dict | None = None) -> list[dict]:
-    """Danh sách {key, level, vals}; level là 'ok', 'warn' hoặc 'info'."""
+
     items = []
     if raster and raster.get("n_pixels"):
         bad_nodata = raster["nodata_share"] > NODATA_SHARE_WARN

@@ -15,8 +15,8 @@ try:
 except Exception:  # pragma: no cover
     _cKDTree = None
 
-QUADRANTS = ("High-High", "Low-Low", "High-Low", "Low-High")   # mã 0..3
-ROOK_DROP_COLS = (0, 2, 5, 7)   # các cột láng giềng chéo trong ma trận Queen (n, 8)
+QUADRANTS = ("High-High", "Low-Low", "High-Low", "Low-High")
+ROOK_DROP_COLS = (0, 2, 5, 7)
 NS = "Not Significant"
 DARK = "Dark (NTL=0)"
 EDGE = "Edge-Masked"
@@ -39,14 +39,14 @@ SPACETIME_REGIMES = (
 
 
 def edge_cell_mask(area_km2, cell_size_m: float, tol: float = 0.99) -> np.ndarray:
-    """True nếu diện tích thực của ô nhỏ hơn tol * (cell_size_m / 1000)^2."""
+
     return np.asarray(area_km2, dtype=float) < tol * (cell_size_m / 1000.0) ** 2
 
 
 def zscore_lit_only(ntl, lit_threshold: float = 0.0, ref_mask=None,
                     log_transform: bool = False, ddof: int = 1,
                     include_zeros: bool = False, return_stats: bool = False):
-    """Chuẩn hóa Z-score với ddof=1"""
+
     x = np.asarray(ntl, dtype=float)
     valid = np.isfinite(x) & (x >= 0.0 if include_zeros else x > lit_threshold)
     with np.errstate(divide="ignore", invalid="ignore"):
@@ -66,7 +66,7 @@ def zscore_lit_only(ntl, lit_threshold: float = 0.0, ref_mask=None,
 
 def build_queen_neighbors(cx, cy, cell_size_m: float, active,
                           grid_ix=None, grid_iy=None) -> np.ndarray:
-    """Ma trận (n, 8) chỉ số láng giềng Queen trên lưới đều cho các ô `active`."""
+
     cx, cy = np.asarray(cx, float), np.asarray(cy, float)
     active = np.asarray(active, dtype=bool)
     n = len(cx)
@@ -174,7 +174,7 @@ def local_moran(z, nbr, focal, members, perms: int = 499, seed: int = 42,
 
 
 def bh_reject(p, alpha: float = 0.05) -> np.ndarray:
-    """Quy trình Benjamini–Hochberg (1995) kiểm soát FDR."""
+
     p = np.asarray(p, float)
     m = len(p)
     rej = np.zeros(m, dtype=bool)
@@ -188,7 +188,7 @@ def bh_reject(p, alpha: float = 0.05) -> np.ndarray:
 
 
 def cluster_labels(mask, nbr, max_iter: int = 5000) -> np.ndarray:
-    """Tìm các thành phần liên thông (Connected Components) trên đồ thị láng giềng Queen."""
+
     mask = np.asarray(mask, dtype=bool)
     n = len(mask)
     lab = np.where(mask, np.arange(n), n)
@@ -213,14 +213,14 @@ def gini(x) -> float:
 
 
 def _min_euclidean_dist_m(src_x, src_y, dst_x, dst_y) -> np.ndarray:
-    """Khoảng cách Euclid ngắn nhất từ mỗi điểm (src_x, src_y) tới tập (dst_x, dst_y)."""
+
     if len(dst_x) == 0 or len(src_x) == 0:
         return np.full(len(src_x), np.nan)
     if _cKDTree is not None:
         tree = _cKDTree(np.column_stack([dst_x, dst_y]))
         d, _ = tree.query(np.column_stack([src_x, src_y]), k=1)
         return np.asarray(d, dtype=float)
-    # Dự phòng thuần NumPy theo khối
+
     out = np.empty(len(src_x), dtype=float)
     chunk = 512
     for s in range(0, len(src_x), chunk):
@@ -233,7 +233,7 @@ def _min_euclidean_dist_m(src_x, src_y, dst_x, dst_y) -> np.ndarray:
 
 def compute_pareto_top_lights(ntl: np.ndarray, area: np.ndarray, core: np.ndarray,
                               lit: np.ndarray, tail_frac: float = 0.10):
-    """Mô-đun 1: Hill Tail Exponent (Pareto alpha) trên Top 10% ô sáng (Bluhm & Krause, 2022 JDE)."""
+
     n = len(ntl)
     top_dummy = np.zeros(n, dtype=int)
     sol = ntl * area
@@ -256,7 +256,7 @@ def compute_pareto_top_lights(ntl: np.ndarray, area: np.ndarray, core: np.ndarra
 
 def compute_urban_density_gradient(ntl: np.ndarray, dist_core_km: np.ndarray,
                                    area: np.ndarray, core: np.ndarray):
-    """Mô-đun 2: Độ dốc suy giảm mật độ đô thị WLS ln(1+NTL) = a - gamma*d (Duranton & Puga, 2023)."""
+
     d_c = dist_core_km[core]
     y_c = np.log1p(np.maximum(ntl[core], 0.0))
     w_c = np.maximum(area[core], 1e-9)
@@ -275,7 +275,7 @@ def compute_urban_density_gradient(ntl: np.ndarray, dist_core_km: np.ndarray,
 
 def compute_spillover_rings_and_rdd(cx: np.ndarray, cy: np.ndarray, is_hh: np.ndarray,
                                     core: np.ndarray, edge: np.ndarray):
-    """Mô-đun 3: Vành đai lan tỏa đồng tâm (Butts, 2024) & Khoảng cách có dấu (Spatial RDD)."""
+
     n = len(cx)
     hh_idx = np.flatnonzero(is_hh)
     non_hh_idx = np.flatnonzero(core & ~is_hh)
@@ -287,8 +287,8 @@ def compute_spillover_rings_and_rdd(cx: np.ndarray, cy: np.ndarray, is_hh: np.nd
             d_in_m = _min_euclidean_dist_m(cx[hh_idx], cy[hh_idx], cx[non_hh_idx], cy[non_hh_idx])
             signed_dist_hh_km[hh_idx] = -d_in_m / 1000.0
         else:
-            # Không có ô lõi non-HH => không tồn tại ranh giới nội bộ điều trị/đối chứng:
-            # biến chạy có dấu của Spatial RDD không xác định (NaN, không phải 0.0).
+
+
             signed_dist_hh_km = np.full(n, np.nan)
         ring = np.select(
             [edge, is_hh, dist_to_hh_km <= 2.0, dist_to_hh_km <= 5.0, dist_to_hh_km <= 10.0],
@@ -306,10 +306,10 @@ def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.nda
                                      core: np.ndarray, cell_size_m: float,
                                      radius_steps: int = 5, tau_km: float = 0.5,
                                      dense_limit: int = 1_200_000):
-    """Mô-đun 4: Tiếp cận thị trường đã khử thiên lệch vị trí trung tâm (Borusyak & Hull, 2023 Econometrica).
+    """Compute recentered market access following Borusyak and Hull (2023).
 
-    Tính MA_i = Σ_{j != i} exp(-tau * d_ij) * SOL_j trong bán kính `radius_steps` ô lưới,
-    và kỳ vọng giải tích dưới hoán vị không gian E_pi[MA_i] = mean(SOL_core) * Σ_{j != i} exp(-tau * d_ij).
+    Raw access uses distance-decayed SOL within ``radius_steps`` cells. The
+    analytical spatial-permutation expectation removes central-location bias.
     """
     n = len(cx)
     raw_ma = np.full(n, np.nan)
@@ -355,8 +355,8 @@ def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.nda
         exp_ma[core] = om_acc[core] * mean_sol_core
         rec_ma[core] = raw_ma[core] - exp_ma[core]
     elif _cKDTree is not None:
-        # Dự phòng cho hộp bao thưa (đảo xa bờ, địa phương kéo dài): không cấp phát lưới W*H,
-        # dùng cKDTree với cùng bán kính (R + 0.01 bước lưới) và cùng trọng số exp(-tau * d_km).
+
+
         c_idx = np.flatnonzero(core)
         pts = np.column_stack([cx[c_idx], cy[c_idx]])
         tree = _cKDTree(pts)
@@ -402,7 +402,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     members = (~edge) & np.isfinite(z) & (np.isfinite(ntl) if include_zeros else lit)
     nbr = build_queen_neighbors(cx, cy, cell_size_m, members)
     if weights == "rook":
-        # chỉ giữ 4 láng giềng chung cạnh (cột 1, 3, 4, 6 trong thứ tự dx, dy của build_queen_neighbors)
+
         nbr = nbr.copy()
         nbr[:, ROOK_DROP_COLS] = -1
     elif weights != "queen":
@@ -429,7 +429,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     for code, name in enumerate(QUADRANTS):
         label[sig & (q == code)] = name
 
-    # ---- Cụm HH liên thông & xác định tâm CBD vững (Robust CBD Centroid) ----
+
     is_hh = label == "High-High"
     cluster_id = np.full(n, -1, dtype=np.int64)
     n_clusters, largest_km2, cl_area = 0, 0.0, 0.0
@@ -471,7 +471,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     sol = ntl * area
     top_dummy, pareto_alpha, top10_sol_share = compute_pareto_top_lights(ntl, area, core, lit)
     urban_gradient_decay, monocentric_r2 = compute_urban_density_gradient(ntl, dist_to_core_km, area, core)
-    # Ưu tiên cụm HH (FDR/alpha); nếu rỗng do FDR khắt khe thì lùi về HH (p < alpha) hoặc Top 10% Lights
+
     unadj_hh = (q == 0) & np.isfinite(p) & (p < alpha)
     if is_hh.any():
         core_treat_mask = is_hh
@@ -487,14 +487,14 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     )
     raw_ma, exp_ma, rec_ma = compute_recentered_market_access(cx, cy, sol, core, cell_size_m)
 
-    # Hệ số tự hồi quy không gian bậc 1 (Spatial Unit Root / Persistence diagnostic - Müller & Watson, 2024)
+
     valid_ar = focal & np.isfinite(z) & np.isfinite(lagz)
     if int(valid_ar.sum()) >= 10 and float(np.std(z[valid_ar])) > 1e-6:
         spatial_ar1_rho = float(np.corrcoef(z[valid_ar], lagz[valid_ar])[0, 1])
     else:
         spatial_ar1_rho = float("nan")
 
-    # ---- Biến tổng hợp cấp vùng cho Panel ----
+
     tot = max(float(area.sum()), 1e-12)
     core_area = max(float(area[core].sum()), 1e-12)
     ana = max(float(area[members].sum()), 1e-12)
@@ -534,7 +534,6 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
         "mean_ntl_treated_hh": round(float(ntl[core_treat_mask].mean()), 3) if core_treat_mask.any() else float("nan"),
         "mean_ntl_spillover_0_2km": round(float(ntl[sp02_mask].mean()), 3) if sp02_mask.any() else float("nan"),
         "mean_ntl_pure_control": round(float(ntl[ctrl_mask].mean()), 3) if ctrl_mask.any() else float("nan"),
-        # --- Hyperparameters ---
         "lisa_method_version": "conditional-wor-esda-v2",
         "p_cfg_perms": perms, "p_cfg_alpha": alpha, "p_cfg_fdr": int(fdr),
         "p_cfg_log": int(log_transform), "p_cfg_lit_thr": lit_threshold,
@@ -570,9 +569,7 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     return LisaResult(cell_df=cell_df, region_metrics=row, sig_mask=sig)
 
 
-# ===========================================================================
 # DYNAMIC SPACE-TIME LISA & SPATIAL MARKOV (Rey et al., 2023)
-# ===========================================================================
 @dataclass
 class SpaceTimeResult:
     st_cell_df: pd.DataFrame
@@ -585,7 +582,7 @@ class SpaceTimeResult:
 
 def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
                        year_t0: int, year_t1: int, edge_tol: float = 0.99) -> SpaceTimeResult:
-    """Phân tích Động học Không – Thời gian (Directional LISA & Spatial Markov Matrix t0 -> t1)."""
+
     cx, cy = np.asarray(cx, dtype=float), np.asarray(cy, dtype=float)
     ntl0 = np.asarray(ntl_t0, dtype=float)
     ntl1 = np.asarray(ntl_t1, dtype=float)
@@ -627,11 +624,11 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
     regime[moved & (dz >= 0) & (dlag < 0)] = SPACETIME_REGIMES[2]
     regime[moved & (dz < 0) & (dlag < 0)] = SPACETIME_REGIMES[3]
 
-    # Tính Recentered Market Access cho cả t0 và t1 để xuất biến sai phân chuẩn Borusyak & Hull (2023)
+
     _, _, rec_ma0 = compute_recentered_market_access(cx, cy, ntl0 * area, core, cell_size_m)
     _, _, rec_ma1 = compute_recentered_market_access(cx, cy, ntl1 * area, core, cell_size_m)
 
-    # Spatial Markov Transition Matrix trên 4 Quartiles (Q1..Q4)
+
     q_labels = ["Q1 (Lowest)", "Q2 (Low-Mid)", "Q3 (High-Mid)", "Q4 (Highest)"]
     if int(ok.sum()) >= 12:
         r0 = pd.Series(v0[ok]).rank(pct=True, method="average").to_numpy()
@@ -687,12 +684,12 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
         "spacetime_regime": regime,
     })
 
-    # Tách biên độ rộng / sâu (Chen & Roth, 2024): ln(1+NTL) trộn hai kênh này khi dữ liệu nhiều số 0
+
     lit0, lit1 = core & (ntl0 > 0), core & (ntl1 > 0)
     dark0 = core & ~(ntl0 > 0)
     both = lit0 & lit1
-    entry = dark0 & lit1                      # tối -> sáng (extensive margin)
-    exit_ = lit0 & ~lit1                      # sáng -> tối
+    entry = dark0 & lit1
+    exit_ = lit0 & ~lit1
     margin = np.full(n, "excluded", dtype=object)
     margin[core & ~lit0 & ~lit1] = "dark_both"
     margin[both] = "intensive"

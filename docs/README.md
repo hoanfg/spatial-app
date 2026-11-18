@@ -18,24 +18,24 @@ This guide keeps the GADM v4.1 extraction rules and the validation record in one
 ---
 <a id="s1"></a>
 
-## 🔍 1. Diagnosing the root causes of garbage data in GADM v4.1
+## 1. Diagnosing the root causes of garbage data in GADM v4.1
 
 When GeoPackage files (`gadm41_XXX.gpkg`) are processed automatically, there are 5 technical pitfalls that make conventional extraction scripts generate garbage data or distort spatial regression results.
 
-### 🪤 Pitfall 1: the `"NA"` string (literal string `"NA"` vs. SQL `NULL`)
+### Pitfall 1: the `"NA"` string (literal string `"NA"` vs. SQL `NULL`)
 
 The GADM v4.1 database was exported from an R environment (`terra` / `sf`). There, many missing values in the `NAME_1`, `NAME_2`, `NAME_3`, `TYPE_2`, and `ENGTYPE_2` columns are not `NULL` (`NaN`) but are stored as the **text string `"NA"`** (or `"?"`, `"Unknown"`). Pandas' `.dropna()` therefore misses these rows completely, which leads to:
 
 - A garbage folder named `NA` (when `NAME_1 == "NA"`).
 - Dozens of unrelated urban districts (all sharing `NAME_2 == "NA"`) merged into one giant multipolygon weighing tens of MB.
 
-### 🪤 Pitfall 2: inland water polygons (`Water body` / `Lake`)
+### Pitfall 2: inland water polygons (`Water body` / `Lake`)
 
 In GADM v4.1, many large lakes, bays, or inland waters are cut into separate polygons in the `ADM_2` and `ADM_3` layers. Their `ENGTYPE_2` / `ENGTYPE_3` columns hold values such as `"Water body"`, `"Lake"`, and `"Inland water"`.
 
 If these rows are not filtered out before exporting the files, the econometric model will put entire lakes into the analysis sample with a nighttime light radiance of $\mathrm{NTL} = 0$. The result is a severe bias in the light Gini coefficient and in economic density.
 
-### 🪤 Pitfall 3: the administrative-unit name collision (when `GID_x` is not used)
+### Pitfall 3: the administrative-unit name collision (when `GID_x` is not used)
 
 If the extraction loop only calls `.unique()` on the `NAME_2` or `NAME_3` column, different administrative units that share the same Latin-transliterated name within one state/province get merged into a single `.geojson` file.
 
@@ -52,7 +52,7 @@ If the extraction loop only calls `.unique()` on the `NAME_2` or `NAME_3` column
 > [!IMPORTANT]
 > **Mandatory rule:** always group (`groupby`) by the unique identifier key `GID_x` (such as `GID_2`, `GID_3`), never by `NAME_x`. If two different `GID_x` values in the same folder have the same `NAME_x`, automatically append a suffix built from `ENGTYPE_x` or the `GID_x` code.
 
-### 🪤 Pitfall 4: micro-fragmentation
+### Pitfall 4: micro-fragmentation
 
 | Parameter | Value |
 | :--- | :--- |
@@ -64,7 +64,7 @@ If the extraction loop only calls `.unique()` on the `NAME_2` or `NAME_3` column
 
 If a script automatically reads the deepest layer (`ADM_3` or `ADM_4`) for every country, countries such as Vietnam, France, Thailand, and Indonesia get pushed down to the commune/ward level. At that scale each unit is so small that LISA testing is crippled.
 
-### 🪤 Pitfall 5: the urban-rural administrative hierarchy asymmetry
+### Pitfall 5: the urban-rural administrative hierarchy asymmetry
 
 Some countries have large metropolitan areas directly under the central government, or urban counties with a missing intermediate level:
 
@@ -79,16 +79,16 @@ Some countries have large metropolitan areas directly under the central governme
 
 <a id="s2"></a>
 
-## ⚖️ 2. Architectural trade-off analysis
+## 2. Architectural trade-off analysis
 
-The table below compares 3 architectural approaches for the data pipeline (🔴 weak, 🟡 acceptable, 🟢 strong):
+The table below compares 3 architectural approaches for the data pipeline (weak, acceptable, strong):
 
-| Evaluation criterion | Approach 1: Blind dynamic self-healing<br><sub>(automatically read the deepest layer + skip columns when encountering `'NA'`)</sub> | Approach 2: Simple strict extractor + front-end alias JSON<br><sub>(hard-coded extraction + name mapping in the UI)</sub> | ⭐ Approach 3 (recommended): Declarative rule-driven ETL<br><sub>(extraction controlled by a country rules table)</sub> |
+| Evaluation criterion | Approach 1: Blind dynamic self-healing<br><sub>(automatically read the deepest layer + skip columns when encountering `'NA'`)</sub> | Approach 2: Simple strict extractor + front-end alias JSON<br><sub>(hard-coded extraction + name mapping in the UI)</sub> | Approach 3 (recommended): Declarative rule-driven ETL<br><sub>(extraction controlled by a country rules table)</sub> |
 | :--- | :--- | :--- | :--- |
-| **Geometry quality** | 🔴 **Low:** large county-level polygons can easily be mixed with small commune/district-level polygons within the same country when only some rows have `NAME_2 == 'NA'`. | 🔴 **Low (if the source data is asymmetric):** the JSON file in the front end can only change display labels; it cannot split an incorrectly merged 37MB `NA` polygon already written to disk. | 🟢 **Complete:** fully resolves geometry merging/splitting (`dissolve` by `GID`) at the moment the `.geojson` file is created. |
-| **Econometric consistency** | 🔴 **Poor:** causes *cross-level mixing* (rows in the panel are not at the same administrative level, violating the assumption of homogeneous observational units). | 🟡 **Good** for homogeneous countries (`CHN`, `VNM`), but **fails** for hybrid cases (`GBR`, `TWN`). | 🟢 **Optimal:** ensures that 100% of `.geojson` files within a country represent economically equivalent units. |
-| **Runtime performance on Streamlit Cloud (~1GB RAM)** | 🔴 **Risk of memory overflow:** generates tens of thousands of commune/ward-level files for countries with `ADM_3`/`ADM_4`. | 🟡 **Fast:** the front end is lightweight, but a huge JSON file with tens of thousands of rows must be maintained if each district name needs to be corrected. | 🟢 **Optimal:** all computationally intensive processing is done offline, once. `app.py` keeps its current, very light folder-reading structure. |
-| **Maintainability** | 🔴 Hard to control hidden errors when adding new countries. | 🟡 Both the extraction script and the JSON file in the front end must be modified. | 🟢 Only one rule declaration (5 attributes) needs to be added to the `COUNTRY_RULES` dictionary in the ETL script. |
+| **Geometry quality** | **Low:** large county-level polygons can easily be mixed with small commune/district-level polygons within the same country when only some rows have `NAME_2 == 'NA'`. | **Low (if the source data is asymmetric):** the JSON file in the front end can only change display labels; it cannot split an incorrectly merged 37MB `NA` polygon already written to disk. | **Complete:** fully resolves geometry merging/splitting (`dissolve` by `GID`) at the moment the `.geojson` file is created. |
+| **Econometric consistency** | **Poor:** causes *cross-level mixing* (rows in the panel are not at the same administrative level, violating the assumption of homogeneous observational units). | **Good** for homogeneous countries (`CHN`, `VNM`), but **fails** for hybrid cases (`GBR`, `TWN`). | **Optimal:** ensures that 100% of `.geojson` files within a country represent economically equivalent units. |
+| **Runtime performance on Streamlit Cloud (~1GB RAM)** | **Risk of memory overflow:** generates tens of thousands of commune/ward-level files for countries with `ADM_3`/`ADM_4`. | **Fast:** the front end is lightweight, but a huge JSON file with tens of thousands of rows must be maintained if each district name needs to be corrected. | **Optimal:** all computationally intensive processing is done offline, once. `app.py` keeps its current, very light folder-reading structure. |
+| **Maintainability** | Hard to control hidden errors when adding new countries. | Both the extraction script and the JSON file in the front end must be modified. | Only one rule declaration (5 attributes) needs to be added to the `COUNTRY_RULES` dictionary in the ETL script. |
 
 > [!IMPORTANT]
 > **Architectural conclusion.** Do not place geometry-fixing logic in the front end, and do not let the extractor blindly guess the deepest layer. Use a **declarative rule-driven extractor** specifying 5 attributes for each country group:
@@ -107,7 +107,7 @@ The table below compares 3 architectural approaches for the data pipeline (🔴 
 
 <a id="s3"></a>
 
-## 🌍 3. GADM v4.1 country classification table
+## 3. GADM v4.1 country classification table
 
 All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) are classified into **4 structural groups**:
 
@@ -118,7 +118,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 | **3** | `ASYMMETRIC_HYBRID` | Missing intermediate level `NAME_2 = "NA"` (`GBR`, `TWN`) | `ADM_ADM_3` (for `GBR`; `TWN` has its own setup) | `NAME_1` (for `GBR`) | `COALESCE(NAME_3, NAME_2)` (for `GBR`) |
 | **4** | `SHALLOW_ADM1_CITY_STATE` | City-states and small countries that only use level 1 | `ADM_ADM_1` | Country name or a larger region | `NAME_1` |
 
-### 🟦 Group 1: `STANDARD_ADM2` (standard Level 2, covering ~85% of countries)
+### Group 1: `STANDARD_ADM2` (standard Level 2, covering ~85% of countries)
 
 **Characteristics:** Level 1 (`NAME_1`) is a state/province/centrally administered city. Level 2 (`NAME_2`) is a district/county/county-equivalent/city within a province, covers 100% of the territory, and has an ideal area scale for the NTL grid (grid resolution $500 \text{ m}$ - $2000 \text{ m}$).
 
@@ -133,7 +133,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 **Applicable countries:**
 
 <details open>
-<summary><b>🌏 Southeast Asia</b></summary>
+<summary><b>Southeast Asia</b></summary>
 
 <br>
 
@@ -152,7 +152,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 </details>
 
 <details>
-<summary><b>🏯 East Asia & South Asia</b></summary>
+<summary><b>East Asia & South Asia</b></summary>
 
 <br>
 
@@ -171,7 +171,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 </details>
 
 <details>
-<summary><b>🗽 The Americas</b></summary>
+<summary><b>The Americas</b></summary>
 
 <br>
 
@@ -190,7 +190,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 </details>
 
 <details>
-<summary><b>🏰 Europe</b></summary>
+<summary><b>Europe</b></summary>
 
 <br>
 
@@ -215,7 +215,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 </details>
 
 <details>
-<summary><b>🦘 Oceania, the Middle East & Africa</b></summary>
+<summary><b>Oceania, the Middle East & Africa</b></summary>
 
 <br>
 
@@ -232,7 +232,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 
 <a id="group2"></a>
 
-### 🟧 Group 2: `SHIFTED_ADM3_PREFECTURE` (shifted Level 3: prefecture-level unit as folder, district/county as file)
+### Group 2: `SHIFTED_ADM3_PREFECTURE` (shifted Level 3: prefecture-level unit as folder, district/county as file)
 
 **Characteristics:**
 
@@ -240,7 +240,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 - `ADM_2` consists of prefecture-level cities (such as Shenzhen, Guangzhou, Wuhan, Suzhou) or large subdivisions.
 - The core urban districts and counties (`Qu` / `Xian` / `Xianjishi`) are located at **`ADM_3`**.
 
-#### 🇨🇳 Most representative case: China (`CHN`)
+#### Most representative case: China (`CHN`)
 
 If exported at `ADM_2`, the entire city of Shenzhen or Guangzhou would be represented by a single file. It would then be impossible to analyze differences between core districts (Nanshan, Futian, Tianhe) and peripheral areas.
 
@@ -253,7 +253,7 @@ If exported at `ADM_2`, the entire city of Shenzhen or Guangzhou would be repres
 
 This naming convention lets users search by province easily in the Streamlit selector while keeping each prefecture-level city separate. The files inside contain all districts/counties in `NAME_3` (grouped by `GID_3`).
 
-#### 🌐 Other countries that may use Group 2 (or an `ADM_3` configuration)
+#### Other countries that may use Group 2 (or an `ADM_3` configuration)
 
 | Code | To analyze at the level of... | Instead of... | Setup |
 | :---: | :--- | :--- | :--- |
@@ -263,11 +263,11 @@ This naming convention lets users search by province easily in the Streamlit sel
 
 ---
 
-### 🟨 Group 3: `ASYMMETRIC_HYBRID` (asymmetric / missing intermediate level `NAME_2 = "NA"`)
+### Group 3: `ASYMMETRIC_HYBRID` (asymmetric / missing intermediate level `NAME_2 = "NA"`)
 
 **Characteristics:** a hybrid administrative system that combines the two-tier shire county model with the single-tier model (Single-tier Unitary Authorities / Metropolitan Boroughs).
 
-#### 🇬🇧 Case 1: United Kingdom (`GBR`)
+#### Case 1: United Kingdom (`GBR`)
 
 **Actual structure in `gadm41_GBR.gpkg`:**
 
@@ -288,7 +288,7 @@ This naming convention lets users search by province easily in the Streamlit sel
 > [!NOTE]
 > **Result:** no London or Manchester districts are lost, no 37MB `NA` polygons are generated, and 100% of the exported files represent local authority districts at the same administrative level.
 
-#### 🇹🇼 Case 2: Taiwan (`TWN`)
+#### Case 2: Taiwan (`TWN`)
 
 In GADM v4.1, some counties/cities have a level mismatch between `NAME_1` and `NAME_2` (because `NAME_1` holds the two nominal provinces `Fujian` and `Taiwan` alongside the centrally administered cities).
 
@@ -301,7 +301,7 @@ In GADM v4.1, some counties/cities have a level mismatch between `NAME_1` and `N
 
 ---
 
-### 🟥 Group 4: `SHALLOW_ADM1_CITY_STATE` (city-states & small countries using Level 1 only)
+### Group 4: `SHALLOW_ADM1_CITY_STATE` (city-states & small countries using Level 1 only)
 
 **Characteristics:** the country is small, or is an urban city-state. The `ADM_ADM_2` layer either does not exist in the `.gpkg`, or, if it does, contains only tiny neighborhood-level units of a few hundred square meters.
 
@@ -332,33 +332,33 @@ In GADM v4.1, some counties/cities have a level mismatch between `NAME_1` and `N
 
 <a id="s4"></a>
 
-## ✅ 4. Output data quality assurance procedure
+## 4. Output data quality assurance procedure
 
 Before being written to disk for use in `app.py`, every `.geojson` file must pass **5 automated validation checks** in the extraction script:
 
 ```mermaid
 flowchart LR
-    S["📥 Data from<br/>.gpkg"] --> C1["1️⃣ Garbage<br/>strings"]
-    C1 --> C2["2️⃣ Hydrological<br/>filter"]
-    C2 --> C3["3️⃣ Merge<br/>by GID"]
-    C3 --> C4["4️⃣ No duplicate-name<br/>overwrites"]
-    C4 --> C5["5️⃣ Minimum<br/>area"]
-    C5 --> G["📄 Valid<br/>.geojson"]
+    S["Data from<br/>.gpkg"] --> C1["1. Garbage<br/>strings"]
+    C1 --> C2["2. Hydrological<br/>filter"]
+    C2 --> C3["3. Merge<br/>by GID"]
+    C3 --> C4["4. No duplicate-name<br/>overwrites"]
+    C4 --> C5["5. Minimum<br/>area"]
+    C5 --> G["Valid<br/>.geojson"]
 ```
 
-### 1️⃣ Check 1: garbage strings
+### 1. Check 1: garbage strings
 
 Every value in the set `{"NA", "N/A", "NULL", "NONE", "UNKNOWN", "?", "", "NAN"}` (case-insensitive, with surrounding whitespace trimmed) is converted to an actual `None` before processing. Every row with `NAME_1 is None` (such as the `NA` state in `gadm41_GBR.gpkg`) is removed, or reassigned from a child level if that is valid.
 
-### 2️⃣ Check 2: hydrological filter
+### 2. Check 2: hydrological filter
 
 Completely remove polygons whose `TYPE_x` or `ENGTYPE_x` contains any of the keywords `Water body`, `Lake`, `Inland water`, `Sea`, or `Estuary`.
 
-### 3️⃣ Check 3: geometry merging by identifier
+### 3. Check 3: geometry merging by identifier
 
 Fix self-intersections with `shapely.make_valid()`, then merge (`dissolve`) by the correct target `GID`, so that one administrative unit corresponds to exactly one `.geojson` file.
 
-### 4️⃣ Check 4: prevent overwriting files with duplicate names
+### 4. Check 4: prevent overwriting files with duplicate names
 
 If two units with different `GID` codes but the same display name exist in the same province/state folder (e.g., *Fairfax County* and *Fairfax City*), the system automatically appends a distinguishing suffix taken from `ENGTYPE_x`:
 
@@ -369,7 +369,7 @@ USA_Virginia_Fairfax_Independent_City.geojson
 
 This naming is compatible with the `list_counties()` and `split_county()` functions in `app.py`.
 
-### 5️⃣ Check 5: minimum area check for VIIRS
+### 5. Check 5: minimum area check for VIIRS
 
 Issue a warning if a polygon has an area of $< 0.25 \text{ km}^2$, which is smaller than one $500 \times 500 \text{ m}$ grid cell.
 

@@ -8,14 +8,14 @@
 
 **Nighttime lights (NTL) data extractor & spatial econometrics engine**
 
-[ 🇬🇧 English ](README.md) &nbsp;|&nbsp; [ 🇻🇳 Tiếng Việt ](README-vi.md) &nbsp;|&nbsp; [ 🚀 Live demo ](https://spatial-app.streamlit.app/?)
+[English](README.md) &nbsp;|&nbsp; [Tiếng Việt](README-vi.md) &nbsp;|&nbsp; [Live demo](https://spatial-app.streamlit.app/?)
 
 </div>
 
 ---
 
 > [!TIP]
-> **⚡ TL;DR: got 30 seconds?**
+> **TL;DR: got 30 seconds?**
 >
 > No time for a 10-page academic manual? Here is what this engine does, in plain words.
 >
@@ -25,27 +25,27 @@
 
 ```mermaid
 flowchart LR
-    A["🗺️ Pick a region<br/>(GADM boundaries)"] --> B["🛰️ Google Earth Engine<br/>(VIIRS imagery)"]
-    B --> C["⚙️ exactextract (C/C++)<br/>pixels into grid cells"]
-    C --> D["📍 LISA & Moran's I<br/>hotspots, urban core, Gini"]
-    D --> E["📄 CSV at cell level<br/>and region–year level"]
+    A["Pick a region<br/>(GADM boundaries)"] --> B["Google Earth Engine<br/>(VIIRS imagery)"]
+    B --> C["exactextract (C/C++)<br/>pixels into grid cells"]
+    C --> D["LISA & Moran's I<br/>hotspots, urban core, Gini"]
+    D --> E["CSV at cell level<br/>and region–year level"]
 ```
 
 This project is a system for **spatial econometrics**. It combines a spatial grid infrastructure with a nighttime lights (NTL) extraction pipeline.
 
 The app covers three stages: it turns irregular administrative boundaries into uniform square grids; it connects directly to Google Earth Engine (GEE) to pull raster data (SNPP-VIIRS); and it automatically computes micro-level spatial statistics (LISA) and exports panel datasets for macroeconomic models.
 
-### 🧭 Where should you start?
+### Where should you start?
 
 | If you are... | Read |
 | :--- | :--- |
-| 🧑‍💼 A policymaker or a non-technical reader | [Section 0](#s0), especially the questions the app can answer and the interpretation guardrails |
-| 📈 An economist who needs variables for regressions | [Section 0](#s0), [Section V](#s5), then [Section III](#s3) to see where the indicators come from |
-| 🔬 A researcher checking the methodology | [Section 0](#s0), [Section II](#s2) and [Section III](#s3) |
-| 🛠️ Deploying or operating the system | [Quick start](#quick-start), [Section I](#s1), [Section IV](#s4) and [Section VI](#s6) |
+| A policymaker or a non-technical reader | [Section 0](#s0), especially the questions the app can answer and the interpretation guardrails |
+| An economist who needs variables for regressions | [Section 0](#s0), [Section V](#s5), then [Section III](#s3) to see where the indicators come from |
+| A researcher checking the methodology | [Section 0](#s0), [Section II](#s2) and [Section III](#s3) |
+| Deploying or operating the system | [Quick start](#quick-start), [Section I](#s1), [Section IV](#s4) and [Section VI](#s6) |
 
 <details>
-<summary><b>📖 Quick glossary (click to expand)</b></summary>
+<summary><b>Quick glossary (click to expand)</b></summary>
 
 <br>
 
@@ -71,7 +71,7 @@ The app covers three stages: it turns irregular administrative boundaries into u
 
 <a id="s0"></a>
 
-## 🧭 0. Spatial econometrics and what this app actually does
+## 0. Spatial econometrics and what this app actually does
 
 ### 0.1. What is spatial econometrics?
 
@@ -214,7 +214,7 @@ The advanced modules are most useful when each output is treated as an answer to
 
 ![From VIIRS radiance to a cell-year table](docs/assets/ntl-measurement.jpg)
 
-<p align="center"><em>Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.</em></p>
+*Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.*
 
 Let $a_i$ denote an unobserved economic construct and $y_i$ the observed radiance. A useful mental model is $y_i = g(a_i, z_i) + u_i$, where $z_i$ contains lighting technology, land use, atmospheric conditions and other factors, while $u_i$ contains remaining measurement error. The app improves the construction and documentation of $y_i$; it does not identify $g(\cdot)$ or recover $a_i$ without external assumptions and outcomes (Henderson et al., 2012; Donaldson & Storeygard, 2016; Gibson et al., 2021).
 
@@ -238,7 +238,7 @@ where $r_p$ is source-pixel radiance and $a_{ip}$ is the area shared by pixel $p
 
 ![From grid cells to a weights matrix and spatial lag](docs/assets/spatial-weights.jpg)
 
-<p align="center"><em>Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.</em></p>
+*Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.*
 
 $W$ is not merely a software setting. Queen contiguity asks whether immediate edge or corner contact carries relevant interaction; Rook excludes corner-only contact; a distance or network matrix would encode a different mechanism. Row standardization changes a spatial lag from a neighbor sum into a neighbor average, while a binary symmetric matrix preserves a different scale (Anselin, 1988; LeSage & Pace, 2009).
 
@@ -262,7 +262,7 @@ is a weighted neighborhood average. If $y_i$ is high and $(Wy)_i$ is also high, 
 
 ![From the Moran scatterplot to FDR-corrected LISA results](docs/assets/lisa-inference.jpg)
 
-<p align="center"><em>Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.</em></p>
+*Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.*
 
 LISA runs one local test for each eligible cell. The pseudo p-value depends on the conditional permutation procedure, random seed and number of permutations. Its finest attainable resolution is bounded by the permutation count. Testing thousands of cells also creates a multiple-testing problem, so the app provides Benjamini-Hochberg FDR control and reports when the requested permutation/FDR combination cannot reject any cell (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
@@ -295,7 +295,7 @@ The number of permutations therefore determines p-value resolution. If an FDR-ad
 
 ![Robustness axes and external comparison](docs/assets/robustness-validation.jpg)
 
-<p align="center"><em>Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.</em></p>
+*Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.*
 
 A reproducible result is not necessarily robust. Reproducibility means that the same data, code and parameters reproduce the same result. Robustness asks a harder question: does the conclusion remain when defensible analytical choices change? Write the output conceptually as $R(s)$, where $s$ is a specification containing grid size, $W$, transformation, threshold, seed, FDR rule and year. Robustness studies how $R(s)$ varies across a scientifically defensible specification set, not across every arbitrary combination.
 
@@ -361,7 +361,7 @@ High agreement supports the statement that NTL is aligned with that particular s
 
 <a id="s1"></a>
 
-## 🏗️ I. System architecture overview and resource management
+## I. System architecture overview and resource management
 
 The system is more than a remote sensing data extractor. It is a web-based spatial processing engine that links geographic preprocessing (GIS) workflows directly to spatial econometric models.
 
@@ -371,13 +371,13 @@ The job mixes three very different kinds of data: **vector** (administrative bou
 
 | Tier | What it does | Key techniques / tools |
 | :--- | :--- | :--- |
-| **Tier 1**<br>📂 Data discovery | Recursively scans the local GADM directory structure, infers ISO3 identifiers, standardizes administrative names and loads them into the user interface (UI), without relying on a static database. | Pattern recognition, Unicode normalization (NFC/NFD), the `pycountry` library |
-| **Tier 2**<br>📐 Geometry | Handles polygon geometry: projects all vector data into a dynamic flat UTM (Universal Transverse Mercator) coordinate system chosen from the centroid longitude and latitude of the bounding box, then builds a regular spatial grid. | Vectorization with `numpy.meshgrid` and `shapely.box` |
-| **Tier 3**<br>🛰️ Raster | Sends a spatial query to the Google Earth Engine (GEE) API to filter clouds, compute the annual median composite and clip the raster image to the analysis boundary. The GeoTIFF byte stream is loaded into temporary memory so the **C/C++ engine** can compute area-weighted fractional zonal statistics between the vector grid and the raster. | GEE API, the **C/C++ engine** `exactextract` |
-| **Tier 4**<br>📊 Econometrics & rendering | Runs the spatial econometrics core (Global Moran's I, Local Moran's I / LISA, connected hotspot cluster detection, distance to the economic core, Gini inequality coefficient) and renders the multi-layer interactive map. Output is packaged through the data bridge as cell-level and region–year panel CSV files. | Folium/Leaflet |
+| **Tier 1**<br>Data discovery | Recursively scans the local GADM directory structure, infers ISO3 identifiers, standardizes administrative names and loads them into the user interface (UI), without relying on a static database. | Pattern recognition, Unicode normalization (NFC/NFD), the `pycountry` library |
+| **Tier 2**<br>Geometry | Handles polygon geometry: projects all vector data into a dynamic flat UTM (Universal Transverse Mercator) coordinate system chosen from the centroid longitude and latitude of the bounding box, then builds a regular spatial grid. | Vectorization with `numpy.meshgrid` and `shapely.box` |
+| **Tier 3**<br>Raster | Sends a spatial query to the Google Earth Engine (GEE) API to filter clouds, compute the annual median composite and clip the raster image to the analysis boundary. The GeoTIFF byte stream is loaded into temporary memory so the **C/C++ engine** can compute area-weighted fractional zonal statistics between the vector grid and the raster. | GEE API, the **C/C++ engine** `exactextract` |
+| **Tier 4**<br>Econometrics & rendering | Runs the spatial econometrics core (Global Moran's I, Local Moran's I / LISA, connected hotspot cluster detection, distance to the economic core, Gini inequality coefficient) and renders the multi-layer interactive map. Output is packaged through the data bridge as cell-level and region–year panel CSV files. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 Country classification and GADM source rules are in the [data and validation guide](docs/README.md).
+> Country classification and GADM source rules are in the [data and validation guide](docs/README.md).
 
 ### 1.2. Hardware constraints and out-of-memory (OOM) safeguards on Cloud
 
@@ -411,15 +411,15 @@ Streamlit runs on a **stateless** model: every time a user touches any UI contro
 
 <a id="s2"></a>
 
-## 🗺️ II. Spatial geoprocessing methodology
+## II. Spatial geoprocessing methodology
 
 ### 2.1. Addressing the modifiable areal unit problem (MAUP)
 
 In empirical spatial economics, using administrative boundaries (provinces, districts, communes) directly introduces statistical bias, because the units differ enormously in area and shape. This is known as the **modifiable areal unit problem (MAUP)** (Openshaw, 1984; Fotheringham & Wong, 1991). The system deals with it by standardizing the study area into a uniform square grid matrix (Donaldson & Storeygard, 2016).
 
-> 💡 **In plain words:** comparing the brightness of a district as large as a small province with that of an inner-city ward of a few dozen km² is not a fair fight. Cut everything into equal squares and every place starts from the same line.
+> **In plain words:** comparing the brightness of a district as large as a small province with that of an inner-city ward of a few dozen km² is not a fair fight. Cut everything into equal squares and every place starts from the same line.
 
-#### 🧭 Dynamic coordinate projection algorithm
+#### Dynamic coordinate projection algorithm
 
 The Phase 1 prototype hardcoded a local EPSG code (`EPSG:32648`). The current version instead works out the optimal **UTM (Universal Transverse Mercator)** zone from the centroid longitude and latitude $(\lambda_{\mathrm{center}}, \phi_{\mathrm{center}})$ of the study area's bounding box.
 
@@ -435,13 +435,13 @@ $$
 \mathrm{EPSG} = \begin{cases} 32600 + \mathrm{Zone} & \text{if } \phi_{\mathrm{center}} \ge 0 \text{ (Northern hemisphere)} \\ 32700 + \mathrm{Zone} & \text{if } \phi_{\mathrm{center}} < 0 \text{ (Southern hemisphere)} \end{cases}
 $$
 
-> 🧪 **Quick example:** a study area centered at longitude $105^\circ\mathrm{E}$ in the Northern hemisphere gives $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ and $\mathrm{EPSG} = 32648$, which is exactly the code the Phase 1 prototype hardcoded.
+> **Quick example:** a study area centered at longitude $105^\circ\mathrm{E}$ in the Northern hemisphere gives $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ and $\mathrm{EPSG} = 32648$, which is exactly the code the Phase 1 prototype hardcoded.
 
 **Grid alignment.** All grid origin coordinates $(x_0, y_0)$ are snapped to integer multiples of the cell side length $\mathrm{size}$ in flat UTM space. Grids of adjacent districts therefore fit together without gaps or overlaps when merged.
 
 ### 2.2. Cloud masking on GEE and zonal statistics extraction via fractional coverage
 
-#### ☁️ Step 1: mask clouds before taking the median
+#### Step 1: mask clouds before taking the median
 
 | Item | Value |
 | :--- | :--- |
@@ -452,7 +452,7 @@ $$
 
 Why the mask is needed: in monsoon tropical regions, heavy cloud cover during rainy months can leave a pixel with no valid observation at all (`cf_cvg` $= 0$), and the radiance gets recorded as an artificial $0$. The cloud-free mask removes this downward bias before the median is taken.
 
-#### 🎯 Step 2: zonal statistics via fractional coverage
+#### Step 2: zonal statistics via fractional coverage
 
 Traditional center-of-pixel raster stats introduce substantial error when the grid cell size approaches the native VIIRS pixel size. The system therefore uses the C/C++ library `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}_{i}$ of grid cell $i$ is a weighted average, with weights given by the fractional pixel area $w_{ip} \in [0, 1]$ that actually falls inside polygon cell $i$:
 
@@ -460,7 +460,7 @@ $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
 $$
 
-> 💡 **In plain words:** each pixel counts only for the part that lies inside the cell. A pixel with 60% of its area inside the cell carries a weight of $0.6$; a pixel that merely clips the edge barely matters.
+> **In plain words:** each pixel counts only for the part that lies inside the cell. A pixel with 60% of its area inside the cell carries a weight of $0.6$; a pixel that merely clips the edge barely matters.
 
 Missing or negative values arising from sensor stray-light correction are clamped to $0.0$. The sum of lights (SOL) of each cell is the product of mean radiance and true clipped area:
 
@@ -474,11 +474,11 @@ $$
 
 <a id="s3"></a>
 
-## 📍 III. Spatial econometrics core (LISA core algorithm)
+## III. Spatial econometrics core (LISA core algorithm)
 
 The `ntl/lisa_core.py` module is built entirely with array algebra on `numpy` and `pandas`. It needs no heavy GIS packages such as `libpysal` or `esda`, and it brings the complexity of contiguity graph construction down to $\mathcal{O}(N \log N)$.
 
-> 💡 **LISA in one sentence:** instead of a single number for the whole region, LISA gives *each grid cell* a label saying whether that cell and its surroundings are bright together, dim together, or at odds with each other.
+> **LISA in one sentence:** instead of a single number for the whole region, LISA gives *each grid cell* a label saying whether that cell and its surroundings are bright together, dim together, or at odds with each other.
 
 ### 3.1. Handling zero-inflated data and border cells
 
@@ -521,9 +521,9 @@ When unlit cells ($\mathrm{NTL}_i \le \mathrm{threshold}$, labeled `DARK`) are e
 
 | Label | Meaning in `lit_only` mode |
 | :--- | :--- |
-| 🔴 **High-High (HH)** | Contiguous urban and commercial cores with exceptionally high radiance. |
-| 🔵 **Low-Low (LL)** | Contiguous areas of low-intensity illumination (below the lit-area mean, such as peri-urban fringes or sparse settlements). Completely unlit areas are separated into the `DARK` state. |
-| 🟠 **High-Low (HL)** and 🟣 **Low-High (LH)** | Spatial outliers within the illuminated urban structure. |
+| **High-High (HH)** | Contiguous urban and commercial cores with exceptionally high radiance. |
+| **Low-Low (LL)** | Contiguous areas of low-intensity illumination (below the lit-area mean, such as peri-urban fringes or sparse settlements). Completely unlit areas are separated into the `DARK` state. |
+| **High-Low (HL)** and  **Low-High (LH)** | Spatial outliers within the illuminated urban structure. |
 
 ### 3.2. Queen contiguity graph
 
@@ -531,11 +531,11 @@ The spatial weight matrix $W$ is built with **Queen** contiguity on the regular 
 
 ```text
 ┌───┬───┬───┐
-│ ↖ │ ↑ │ ↗ │
+│ NW │ N  │ NE │
 ├───┼───┼───┤
-│ ← │ ■ │ → │      ■ = the cell being examined; the 8 cells around it are its neighbors
+│ W  │ ■  │ E  │      ■ = the cell being examined; the 8 cells around it are its neighbors
 ├───┼───┼───┤
-│ ↙ │ ↓ │ ↘ │
+│ SW │ S  │ SE │
 └───┴───┴───┘
 ```
 
@@ -547,7 +547,7 @@ $$
 
 Here $\epsilon = 10^{-6}\text{ m}$ compensates for IEEE-754 floating-point rounding near cell boundaries, and $H = \max(iy) - \min(iy) + 4$.
 
-> 💡 **In plain words:** every cell gets a unique "house number". The algorithm sorts the house numbers, then uses vectorized binary search via `numpy.searchsorted` to look up all 8 neighbors $(dx, dy) \in \{-1, 0, 1\}^2 \setminus \{(0,0)\}$ of every cell at once, instead of comparing cells pair by pair. That is why the complexity stays at $\mathcal{O}(N \log N)$.
+> **In plain words:** every cell gets a unique "house number". The algorithm sorts the house numbers, then uses vectorized binary search via `numpy.searchsorted` to look up all 8 neighbors $(dx, dy) \in \{-1, 0, 1\}^2 \setminus \{(0,0)\}$ of every cell at once, instead of comparing cells pair by pair. That is why the complexity stays at $\mathcal{O}(N \log N)$.
 
 Spatial weights $w_{ij}$ are row-standardized:
 
@@ -567,9 +567,9 @@ $$
 I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert - 1} \sum_{r \in S} z_r^2
 $$
 
-> 💡 **In plain words:** the spatial lag $\mathrm{Lag}(z_i)$ is the "average" brightness of the neighboring cells. A large positive $I_i$ means the cell and its neighbors move together (both bright or both dim). A negative $I_i$ means they pull in opposite directions.
+> **In plain words:** the spatial lag $\mathrm{Lag}(z_i)$ is the "average" brightness of the neighboring cells. A large positive $I_i$ means the cell and its neighbors move together (both bright or both dim). A negative $I_i$ means they pull in opposite directions.
 
-#### 🎲 Vectorized conditional permutation
+#### Vectorized conditional permutation
 
 Nighttime light radiance does not follow a normal distribution, so the statistical significance of $I_i$ is evaluated by Monte Carlo simulation with $R$ conditional permutations:
 
@@ -596,7 +596,7 @@ $$
 
 At 500m resolution, one run can test $m = \lvert \mathrm{Focal} \rvert$ grid cells, often tens of thousands of them. Applying an unadjusted threshold $\alpha = 0.05$ to each cell inflates Type I errors (the multiple testing problem) (Caldas de Castro & Singer, 2006).
 
-> 💡 **In plain words:** test 10,000 cells at a 5% threshold and, even if the region has no real clusters at all, you would still expect about 500 cells to be flagged as "significant" by pure chance.
+> **In plain words:** test 10,000 cells at a 5% threshold and, even if the region has no real clusters at all, you would still expect about 500 cells to be flagged as "significant" by pure chance.
 
 The system implements the false discovery rate (FDR) procedure of Benjamini & Hochberg (1995):
 
@@ -610,7 +610,7 @@ $$
 
 3. If such $k$ exists, reject the null hypothesis $H_0$ (declare statistically significant spatial clustering) for all cells with $p_i \le p_{(k)}$.
 
-#### 🚧 The minimum requirement for catching any cluster at all
+#### The minimum requirement for catching any cluster at all
 
 The minimum attainable two-sided pseudo p-value is $p_{\mathrm{floor}} = \frac{2}{R + 1}$. So for the Benjamini–Hochberg procedure to reject even one hypothesis, the number of cells reaching $p_{\mathrm{floor}}$ must satisfy this mathematically necessary condition:
 
@@ -620,7 +620,7 @@ $$
 
 The system computes $k_{\mathrm{hit}}$ (`fdr_min_hits_needed`) automatically and warns the user to raise $R$ to $999$ when $m$ is large.
 
-> 🧪 **Worked example:** with $m = 10{,}000$ cells and $\alpha = 0.05$, at least 800 cells must hit the floor if $R = 499$, but only 400 if $R = 999$. More permutations lower the p-value floor, which makes the condition easier to meet.
+> **Worked example:** with $m = 10{,}000$ cells and $\alpha = 0.05$, at least 800 cells must hit the floor if $R = 499$, but only 400 if $R = 999$. More permutations lower the p-value floor, which makes the condition easier to meet.
 
 ### 3.5. Connected hotspot clustering and robust economic core (CBD) identification
 
@@ -697,7 +697,7 @@ Diagnoses first-order spatial autoregression persistence (`spatial_ar1_persisten
 
 <a id="s4"></a>
 
-## ✅ Data quality, robustness and external validation
+## Data quality, robustness and external validation
 
 Three additions that report how much the result depends on pipeline and analytic choices. None of them changes NTL values.
 
@@ -713,7 +713,7 @@ Three additions that report how much the result depends on pipeline and analytic
 
 Code: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`, `ntl/ghsl_native.py`, `ntl/performance.py`. The [validation guide](validation/README.md) distinguishes synthetic tests, recorded field checks and remaining work.
 
-## 🛡️ IV. Memory safeguard algorithms
+## IV. Memory safeguard algorithms
 
 ### 4.1. Grid size estimation fuse
 
@@ -725,16 +725,16 @@ $$
 
 Here $\beta = 0.65$ adjusts for clipped border cells.
 
-> 💡 **In plain words:** the number of cells is roughly the region's area divided by the area of one cell, plus an allowance for the cells that get cut along the outline (the longer the perimeter, the bigger the allowance).
+> **In plain words:** the number of cells is roughly the region's area divided by the area of one cell, plus an allowance for the cells that get cut along the outline (the longer the perimeter, the bigger the allowance).
 
 | Condition (either one is enough) | Action |
 | :--- | :--- |
-| $N_{\mathrm{clip}} \ge N_{\max} = 150,000$ (`MAX_CELLS`) | 🔒 The execution button is locked and the next safe grid resolution is suggested |
-| $N_{\mathrm{bbox}} > 4 \times N_{\max}$ | 🔒 Same |
+| $N_{\mathrm{clip}} \ge N_{\max} = 150,000$ (`MAX_CELLS`) | The execution button is locked and the next safe grid resolution is suggested |
+| $N_{\mathrm{bbox}} > 4 \times N_{\max}$ | Same |
 
 ### 4.2. Dynamic winsorization and browser rendering cap
 
-#### 🎨 Dynamic winsorization for heatmap colormaps
+#### Dynamic winsorization for heatmap colormaps
 
 Ports, heavy industry and gas flares can be bright enough to wash out the contrast of residential urban areas on the map. To prevent that, the display ceiling $v_{\max}$ is set dynamically at the 99th percentile of lit cells $\mathrm{NTL}_{\mathrm{lit}} = \{\mathrm{NTL}_i \mid \mathrm{NTL}_i > 0\}$:
 
@@ -742,7 +742,7 @@ $$
 v_{\mathrm{raw}} = \begin{cases} P_{99}(\mathrm{NTL}_{\mathrm{lit}}) & \text{if } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert > 10 \\ \max_i(\mathrm{NTL}_i) & \text{if } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert \le 10 \end{cases}, \quad v_{\max} = \begin{cases} v_{\mathrm{raw}} & \text{if } v_{\mathrm{raw}} > 0.1 \\ 1.0 & \text{if } v_{\mathrm{raw}} \le 0.1 \end{cases}
 $$
 
-#### 🧱 Browser DOM rendering cap (`RENDER_CAP = 30,000`)
+#### Browser DOM rendering cap (`RENDER_CAP = 30,000`)
 
 When the grid exceeds $30,000$ cells, rendering the full Leaflet SVG/Canvas DOM tree can freeze the client browser. The system handles it like this:
 
@@ -758,14 +758,14 @@ When the grid exceeds $30,000$ cells, rendering the full Leaflet SVG/Canvas DOM 
 
 <a id="s5"></a>
 
-## 📦 V. Panel data structure and econometric data bridge
+## V. Panel data structure and econometric data bridge
 
 The primary goal of the system is to provide quantitative variables ready for statistical packages (Python, R, Stata) at two levels of analysis:
 
 | Level | Type of regression | Data file |
 | :--- | :--- | :--- |
-| 🔬 **Micro** | Cell-level regressions (cross-sectional / spatial panel) | Cell-level CSV |
-| 🌏 **Macro** | Region–year panel regressions | `ntl_lisa_panel.csv` |
+| **Micro** | Cell-level regressions (cross-sectional / spatial panel) | Cell-level CSV |
+| **Macro** | Region–year panel regressions | `ntl_lisa_panel.csv` |
 
 ### 5.1. Cell-level micro data
 
@@ -786,7 +786,7 @@ The cell-level CSV exports **100% of observations** in the locality, including u
 
 For macroeconomic studies tracking district or provincial development across years, the system aggregates micro-level data into **a single observation row** per `(iso3, region_id, year, cell_size_m)` tuple. These aggregate indicators capture the **spatial structure of development**.
 
-#### 1️⃣ Light inequality Gini coefficients
+#### 1. Light inequality Gini coefficients
 
 Building on the Night Light Development Index (NLDI) of Elvidge et al. (2012) and the satellite-based spatial inequality studies of Lessmann & Seidel (2017) and Mirza et al. (2021), the Gini coefficient measures how concentrated economic activity is:
 
@@ -802,7 +802,7 @@ $$
 | `gini_ntl_core_lit` | Lit core cells only | Inequality within illuminated areas |
 | `gini_sol_all` | The cell sum of lights $\mathrm{SOL}_i$ across all cells | Concentration of total light |
 
-#### 2️⃣ Hotspot area share and urban polycentricity
+#### 2. Hotspot area share and urban polycentricity
 
 The variables `hh_area_share` and `hh_cluster_area_share` measure the share of regional land area falling inside:
 
@@ -815,7 +815,7 @@ $$
 
 This serves as a proxy for **de facto urbanization**, overcoming the limitations of administrative urban classifications. Combined with the number of independent hotspot clusters (`n_hh_clusters`) and the area of the largest cluster (`largest_hh_cluster_km2`), researchers can quantify transitions from monocentric to polycentric urban forms.
 
-#### 3️⃣ Global spatial autocorrelation: Global Moran's I
+#### 3. Global spatial autocorrelation: Global Moran's I
 
 This indicator is displayed in the Data tab of `app.py`. It is computed across all $N$ grid cells (including $\mathrm{NTL} = 0$ cells) using symmetric binary Queen contiguity weights (Moran, 1950):
 
@@ -826,7 +826,7 @@ $$
 > [!WARNING]
 > Significant spatial autocorrelation in NTL is a reason to check the residuals of a fitted model; it does not by itself prove that OLS residuals are spatially correlated. If residual dependence remains, consider an appropriate spatial specification such as SAR, SEM or SDM (LeSage & Pace, 2009), or spatially robust inference (Conley, 1999), according to the research design.
 
-#### 4️⃣ Internal clustering of illuminated areas: `moran_I_lit`
+#### 4. Internal clustering of illuminated areas: `moran_I_lit`
 
 This indicator is exported in the panel CSV from `ntl/lisa_core.py`. It is the mean of Local Moran's I across tested lit cells:
 
@@ -840,7 +840,7 @@ It measures the intensity of spatial clustering within the electrified and urban
 
 The tables below define all variables in the exported `ntl_lisa_panel.csv` file, grouped for easier lookup.
 
-**🪪 Identifiers and scale**
+** Identifiers and scale**
 
 | Variable name (Column) | Technical & econometric meaning |
 | :--- | :--- |
@@ -850,7 +850,7 @@ The tables below define all variables in the exported `ntl_lisa_panel.csv` file,
 | `n_cells_lit`, `n_cells_tested` | Number of lit cells ($\mathrm{NTL} > \mathrm{threshold}$) and core cells with sufficient neighbors tested in LISA. |
 | `area_total_km2` | Total area of the locality summed across clipped grid cells ($\mathrm{km}^2$). |
 
-**🔥 Light coverage and hotspots**
+** Light coverage and hotspots**
 
 | Variable name (Column) | Technical & econometric meaning |
 | :--- | :--- |
@@ -863,7 +863,7 @@ The tables below define all variables in the exported `ntl_lisa_panel.csv` file,
 | `largest_hh_cluster_km2` | Area ($\mathrm{km}^2$) of the largest contiguous `High-High` cluster (primary urban core). |
 | `hotspot_dummy` | Binary indicator (`1/0`): equals `1` if `n_hh_clusters > 0`. Ready for Difference-in-Differences (DiD) designs. |
 
-**⚖️ Inequality and autocorrelation**
+** Inequality and autocorrelation**
 
 | Variable name (Column) | Technical & econometric meaning |
 | :--- | :--- |
@@ -872,7 +872,7 @@ The tables below define all variables in the exported `ntl_lisa_panel.csv` file,
 | `gini_sol_all` | Gini coefficient of cell sum of lights ($\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$) across all grid cells. |
 | `moran_I_lit` | Mean Local Moran's I across tested lit cells, measuring urban spatial clustering. |
 
-**🔁 Hyperparameters (reproducibility)**
+** Hyperparameters (reproducibility)**
 
 | Variable name (Column) | Technical & econometric meaning |
 | :--- | :--- |
@@ -884,7 +884,7 @@ The tables below define all variables in the exported `ntl_lisa_panel.csv` file,
 
 <a id="s6"></a>
 
-## 🚧 VI. System limitations and future extensions
+## VI. System limitations and future extensions
 
 ### 6.1. Input data limitations
 
@@ -918,7 +918,7 @@ Deployment on free cloud infrastructure (~1GB RAM) caps simultaneous polygon pro
 
 <a id="refs"></a>
 
-## 📚 References
+## References
 
 1. Anselin, L. (1995). Local Indicators of Spatial Association: LISA. *Geographical Analysis*, 27(2), 93–115. https://doi.org/10.1111/j.1538-4632.1995.tb00338.x
 

@@ -6,22 +6,22 @@ import zipfile
 from .ghsl_native import native_download_params
 
 GHSL_DATASETS = {
-    "built": "JRC/GHSL/P2023A/GHS_BUILT_S",   # diện tích xây dựng (m2 mỗi ô 100 m)
-    "pop": "JRC/GHSL/P2023A/GHS_POP",         # dân số (người mỗi ô 100 m)
+    "built": "JRC/GHSL/P2023A/GHS_BUILT_S",
+    "pop": "JRC/GHSL/P2023A/GHS_POP",
 }
 GHSL_SCALE_M = 100.0
-GHSL_LAST_OBSERVED = 2020   # các epoch sau năm này là ước tính/dự báo, không phải quan sát
-MAX_PIXELS = 3_000_000      # trần số pixel cho một lần tải, tránh vượt giới hạn getDownloadUrl
+GHSL_LAST_OBSERVED = 2020
+MAX_PIXELS = 3_000_000
 
 
 def nearest_epoch(year: int, last_observed: int = GHSL_LAST_OBSERVED) -> int:
-    """Epoch 5 năm gần nhất của GHSL, không vượt quá năm quan sát cuối."""
+
     e = int(5 * round(int(year) / 5.0))
     return max(1975, min(e, int(last_observed)))
 
 
 def estimate_pixels(bbox: tuple, scale_m: float) -> float:
-    """Số pixel xấp xỉ của bbox (độ) ở độ phân giải scale_m."""
+
     import math
     minx, miny, maxx, maxy = bbox
     mid = math.radians((miny + maxy) / 2.0)
@@ -31,7 +31,7 @@ def estimate_pixels(bbox: tuple, scale_m: float) -> float:
 
 
 def extract_tif_bytes(content: bytes) -> bytes:
-    """Lấy file .tif từ phản hồi getDownloadUrl (có thể là zip)."""
+
     if content[:2] == b"PK":
         with zipfile.ZipFile(io.BytesIO(content)) as z:
             names = [n for n in z.namelist() if n.lower().endswith(".tif")]
@@ -44,10 +44,10 @@ def extract_tif_bytes(content: bytes) -> bytes:
 
 
 def _http_error(resp, limit: int = 300) -> ConnectionError:
-    """ConnectionError giữ tiền tố 'HTTP:<mã>' và đính kèm lý do Earth Engine trả về (nếu có)."""
+
     try:
         detail = " ".join((resp.text or "").split())[:limit]
-    except Exception:  # noqa: BLE001  (phản hồi nhị phân hoặc không đọc được)
+    except Exception:
         detail = ""
     return ConnectionError(f"HTTP:{resp.status_code}" + (f" - {detail}" if detail else ""))
 
@@ -72,7 +72,7 @@ def _monthly_masked(ee, dataset: str, year: int, roi, cf_min: int):
 
 def fetch_ntl_variant(ee, dataset: str, bbox: tuple, year: int, scale_m: float,
                       cf_min: int = 1, reducer: str = "median") -> bytes:
-    """Raster NTL của năm với ngưỡng cf_cvg >= cf_min và reducer 'median' hoặc 'mean' (cf_min=1, median = bản chính)."""
+
     if reducer not in ("median", "mean"):
         raise ValueError("reducer phải là 'median' hoặc 'mean'")
     roi = ee.Geometry.Rectangle(list(bbox))
@@ -83,7 +83,7 @@ def fetch_ntl_variant(ee, dataset: str, bbox: tuple, year: int, scale_m: float,
 
 
 def fetch_obs_count_raster(ee, dataset: str, bbox: tuple, year: int, scale_m: float, cf_min: int = 1) -> bytes:
-    """Raster đếm số tháng có quan sát không mây (cf_cvg >= cf_min) tại mỗi pixel; 0 nghĩa là không có tháng nào."""
+
     roi = ee.Geometry.Rectangle(list(bbox))
     masked = _monthly_masked(ee, dataset, year, roi, cf_min)
     img = masked.count().unmask(0.0).toFloat().clip(roi)
@@ -91,7 +91,7 @@ def fetch_obs_count_raster(ee, dataset: str, bbox: tuple, year: int, scale_m: fl
 
 
 def _pixel_grid(params: dict) -> dict:
-    """Chuyển tham số lưới gốc (native_download_params) thành PixelGrid của computePixels."""
+
     import re
     a, b, c, d, e, f = (float(v) for v in params["crs_transform"])
     width, height = (int(v) for v in params["dimensions"])
@@ -101,7 +101,7 @@ def _pixel_grid(params: dict) -> dict:
                                 "shearY": d, "scaleY": e, "translateY": f}}
     if re.fullmatch(r"EPSG:\d+", crs, flags=re.IGNORECASE):
         grid["crsCode"] = crs.upper()
-    else:  # WKT, hoặc mã ESRI:/SR-ORG: mà EE không nhận như crsCode
+    else:
         if re.fullmatch(r"[A-Za-z-]+:\d+", crs):
             from rasterio.crs import CRS
             crs = CRS.from_user_input(crs).to_wkt()
@@ -110,14 +110,14 @@ def _pixel_grid(params: dict) -> dict:
 
 
 def _npy_to_float32(content: bytes, width: int, height: int):
-    """Đọc phản hồi NPY của computePixels thành mảng float32 (height, width) của đúng một băng."""
+
     import io
     import numpy as np
     try:
         arr = np.load(io.BytesIO(content), allow_pickle=False)
     except Exception as exc:  # noqa: BLE001
         raise ValueError("Phản hồi computePixels không phải NPY") from exc
-    if arr.dtype.names:  # mảng có cấu trúc: mỗi băng là một trường
+    if arr.dtype.names:
         if len(arr.dtype.names) != 1:
             raise ValueError("GHSL native download phải có đúng một băng")
         arr = arr[arr.dtype.names[0]]
@@ -128,7 +128,7 @@ def _npy_to_float32(content: bytes, width: int, height: int):
 
 
 def _write_geotiff(arr, params: dict) -> bytes:
-    """Ghi GeoTIFF một băng trên đúng CRS và affine đã yêu cầu (GDAL ghi được Mollweide, Earth Engine thì không)."""
+
     from rasterio.crs import CRS
     from rasterio.io import MemoryFile
     from rasterio.transform import Affine

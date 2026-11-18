@@ -1,6 +1,7 @@
-"""Kiểm định độ vững: kết luận LISA có đổi khi đổi đặc tả hay không.
+"""Test whether LISA conclusions survive alternative specifications.
 
-Mỗi biến thể chạy lại run_lisa với một thay đổi, rồi so tập ô High-High với bản gốc bằng hệ số Jaccard.
+Each variant changes one choice, reruns ``run_lisa``, and compares its
+High-High cells with the baseline by Jaccard similarity.
 """
 from __future__ import annotations
 
@@ -10,9 +11,9 @@ import pandas as pd
 from .lisa_core import run_lisa
 from .lisa_diagnostics import heavy_work_units, jaccard, winsorize_p99
 
-STABLE_JACCARD = 0.70     # trung vị Jaccard từ mức này: kết quả vững
-FRAGILE_JACCARD = 0.50    # dưới mức này: kết quả yếu
-CORE_FRACTION = 0.80      # ô thuộc "lõi vững" nếu là HH trong ít nhất tỷ lệ này số lần chạy
+STABLE_JACCARD = 0.70
+FRAGILE_JACCARD = 0.50
+CORE_FRACTION = 0.80
 
 
 def hh_mask(result) -> np.ndarray:
@@ -20,7 +21,7 @@ def hh_mask(result) -> np.ndarray:
 
 
 def default_specs(base: dict) -> list[dict]:
-    """Danh sách biến thể. Mỗi biến thể: name, group, overrides (kwargs của run_lisa), transform (hàm trên ntl hoặc None)."""
+
     thr = float(base.get("lit_threshold", 0.0))
     alpha = float(base.get("alpha", 0.05))
     is_log = bool(base.get("log_transform", False))
@@ -53,7 +54,7 @@ def _apply_transform(ntl, kind):
 
 
 def run_specs(base: dict, specs: list[dict], base_hh, progress=None) -> tuple[pd.DataFrame, np.ndarray]:
-    """Chạy các biến thể. Trả (bảng kết quả, ma trận HH kích thước (số_ô, số_biến_thể + 1) với cột 0 là bản gốc)."""
+
     area = np.asarray(base["area_km2"], float)
     tot = max(float(area.sum()), 1e-12)
     base_hh = np.asarray(base_hh, bool)
@@ -74,7 +75,7 @@ def run_specs(base: dict, specs: list[dict], base_hh, progress=None) -> tuple[pd
 
 
 def summarize(table: pd.DataFrame, hh_matrix: np.ndarray, area, core=None) -> dict:
-    """Tóm tắt: Jaccard nhỏ nhất/trung vị, số biến thể vững, diện tích 'lõi vững' và nhãn kết luận."""
+
     area = np.asarray(area, float)
     var = table[table["Nhóm"] != "base"]
     if var.empty:
@@ -88,7 +89,7 @@ def summarize(table: pd.DataFrame, hh_matrix: np.ndarray, area, core=None) -> di
     tot = max(float(area.sum()), 1e-12)
     verdict = "vững" if med >= STABLE_JACCARD else ("trung bình" if med >= FRAGILE_JACCARD else "yếu")
     if not base_col.any():
-        verdict = "không có HH"   # Jaccard của hai tập rỗng là 1, nhưng đó không phải bằng chứng về độ vững
+        verdict = "không có HH"
     return {
         "n_specs": int(len(var)),
         "min_jaccard": float(j.min()),
@@ -101,9 +102,11 @@ def summarize(table: pd.DataFrame, hh_matrix: np.ndarray, area, core=None) -> di
 
 
 def aggregate_blocks(cx, cy, ntl, area, cell_size_m: float, factor: int = 2) -> dict:
-    """Gộp factor x factor ô thành một ô lớn: NTL trung bình theo diện tích, diện tích cộng dồn.
+    """Aggregate ``factor`` by ``factor`` cells using area-weighted NTL.
 
-    Ô lớn nằm ở biên (tổng diện tích nhỏ hơn ô đầy đủ) sẽ bị run_lisa đánh dấu là ô biên như thường."""
+    Partial coarse cells retain their smaller summed area so ``run_lisa`` can
+    continue to identify them as border cells.
+    """
     cx, cy = np.asarray(cx, float), np.asarray(cy, float)
     ntl, area = np.asarray(ntl, float), np.asarray(area, float)
     ix = np.floor((cx + 1e-6) / cell_size_m).astype(np.int64)
@@ -112,7 +115,7 @@ def aggregate_blocks(cx, cy, ntl, area, cell_size_m: float, factor: int = 2) -> 
     df = pd.DataFrame({"bx": bx, "by": by, "a": area, "wx": area * np.nan_to_num(ntl), "ax": area * cx, "ay": area * cy})
     g = df.groupby(["bx", "by"], sort=True).agg(a=("a", "sum"), wx=("wx", "sum"), ax=("ax", "sum"), ay=("ay", "sum"))
     big = float(cell_size_m * factor)
-    # tâm lưới đều của ô lớn, không phải trọng tâm thật, để build_queen_neighbors dò đúng chỉ số
+
     bxs = g.index.get_level_values("bx").to_numpy()
     bys = g.index.get_level_values("by").to_numpy()
     return {
@@ -124,7 +127,7 @@ def aggregate_blocks(cx, cy, ntl, area, cell_size_m: float, factor: int = 2) -> 
 
 
 def maup_compare(base: dict, base_hh, factor: int = 2) -> dict:
-    """So sánh với lưới thô hơn factor lần: diện tích HH hai bên và mức trùng không gian."""
+
     agg = aggregate_blocks(base["cx"], base["cy"], base["ntl"], base["area_km2"], base["cell_size_m"], factor)
     kw = {k: v for k, v in base.items() if k not in ("cx", "cy", "ntl", "area_km2", "cell_size_m")}
     kw.update(cx=agg["cx"], cy=agg["cy"], ntl=agg["ntl"], area_km2=agg["area_km2"], cell_size_m=agg["cell_size_m"])
@@ -132,7 +135,7 @@ def maup_compare(base: dict, base_hh, factor: int = 2) -> dict:
     hh_big = hh_mask(res)
     base_hh = np.asarray(base_hh, bool)
     area = np.asarray(base["area_km2"], float)
-    # ô nhỏ nằm trong ô lớn nào
+
     lookup = {(int(a), int(b)): i for i, (a, b) in enumerate(agg["block_keys"])}
     owner = np.array([lookup[(int(a), int(b))] for a, b in agg["block_of_cell"]])
     fine_in_hh_big = hh_big[owner]
@@ -146,14 +149,14 @@ def maup_compare(base: dict, base_hh, factor: int = 2) -> dict:
         "n_hh_fine": int(base_hh.sum()), "n_hh_coarse": int(hh_big.sum()),
         "area_share_fine": hh_area / tot_fine,
         "area_share_coarse": big_area / max(float(area_big.sum()), 1e-12),
-        # phần diện tích HH ở lưới mịn rơi vào ô HH của lưới thô, và ngược lại
+
         "fine_inside_coarse": float(area[base_hh & fine_in_hh_big].sum() / hh_area) if hh_area > 0 else float("nan"),
         "coarse_covered_by_fine": float(area_big[hh_big & any_fine_hh].sum() / big_area) if big_area > 0 else float("nan"),
     }
 
 
 def adjacent_years(base: dict, base_hh, ntl_by_year: dict, progress=None) -> pd.DataFrame:
-    """Chạy lại LISA với cùng tham số cho các năm kề, so tập HH với năm gốc."""
+
     area = np.asarray(base["area_km2"], float)
     tot = max(float(area.sum()), 1e-12)
     base_hh = np.asarray(base_hh, bool)
@@ -171,7 +174,7 @@ def adjacent_years(base: dict, base_hh, ntl_by_year: dict, progress=None) -> pd.
 
 
 def work_units(m_tests: int, perms: int, n_specs: int, with_maup: bool = True) -> float:
-    """Khối lượng tính ước lượng, cùng thang đo với lisa_diagnostics.heavy_work_units."""
+
     return heavy_work_units(m_tests, perms, n_specs + (1 if with_maup else 0))
 
 

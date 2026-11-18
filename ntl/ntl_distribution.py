@@ -13,10 +13,10 @@ import math
 import numpy as np
 import pandas as pd
 
-MAX_POINTS = 400  
+MAX_POINTS = 400
 
 def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
-    """Chọn tối đa max_points chỉ số trải đều theo log, luôn giữ đầu và cuối."""
+
     if n <= max_points:
         return np.arange(n)
     idx = np.unique(np.round(np.geomspace(1, n, max_points)).astype(int) - 1)
@@ -24,7 +24,7 @@ def _thin_indices(n: int, max_points: int = MAX_POINTS) -> np.ndarray:
 
 
 def lorenz_df(sol_cell) -> tuple[pd.DataFrame, float]:
-    """Trả (df[cum_cells, cum_sol], gini). Điểm (0,0) và (1,1) luôn có mặt."""
+
     x = np.sort(np.asarray(sol_cell, float))
     n, total = x.size, float(x.sum())
     if n == 0 or total <= 0:
@@ -37,10 +37,10 @@ def lorenz_df(sol_cell) -> tuple[pd.DataFrame, float]:
 
 
 def ranksize_df(ntl, core, tail_frac: float = 0.10):
-    """Trả (points, fit, info).
+    """Return thinned rank-size points, a Pareto fit, and fit metadata.
 
-    points: rank, ntl của ô sáng vùng lõi (đã thưa hóa). fit: đường Pareto cho k ô đầu.
-    info: dict(alpha, k, u, n_lit) hoặc None nếu < 15 ô sáng (như compute_pareto_top_lights)."""
+    Metadata is omitted when fewer than 15 lit core cells are available.
+    """
     ntl = np.asarray(ntl, float)
     vals = np.sort(ntl[np.asarray(core, bool) & (ntl > 0)])[::-1]
     if vals.size == 0:
@@ -61,7 +61,7 @@ def ranksize_df(ntl, core, tail_frac: float = 0.10):
 
 
 def radial_df(cx, cy, ntl, area, width_km: float = 1.0) -> pd.DataFrame:
-    """NTL trung bình theo diện tích trong từng vòng cách ô sáng nhất (km). Cột: dist_km, mean_ntl, cells."""
+
     cx, cy = np.asarray(cx, float), np.asarray(cy, float)
     ntl, area = np.asarray(ntl, float), np.asarray(area, float)
     if ntl.size == 0 or not np.isfinite(ntl).any():
@@ -80,7 +80,7 @@ def radial_df(cx, cy, ntl, area, width_km: float = 1.0) -> pd.DataFrame:
 
 
 def hist_share_df(ntl, area, edges, labels) -> pd.DataFrame:
-    """Long format: bin, series ('cells' | 'sol'), pct. Tổng mỗi series = 100% (nếu có dữ liệu)."""
+
     ntl, area = np.asarray(ntl, float), np.asarray(area, float)
     cats = pd.cut(ntl, bins=edges, labels=list(labels))
     sol_cell = ntl * area

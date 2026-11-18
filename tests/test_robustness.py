@@ -1,4 +1,4 @@
-"""Kiểm thử cho các module chất lượng dữ liệu, độ vững và kiểm chứng ngoài (T21-T28)."""
+
 from __future__ import annotations
 
 import io
@@ -29,7 +29,7 @@ def make_grid(nx, ny, size=CELL, x0=500_000.0, y0=2_000_000.0):
 
 
 def hot_field(nx=30, ny=30, seed=0, centre=(15, 15), radius=4.0, noise=0.4):
-    """Nền thấp có nhiễu, một cụm sáng tròn ở giữa: LISA phải tìm ra cụm này một cách ổn định."""
+
     cx, cy, area = make_grid(nx, ny)
     ix, iy = np.arange(cx.size) % nx, np.arange(cx.size) // nx
     d = np.hypot(ix - centre[0], iy - centre[1])
@@ -50,12 +50,12 @@ def test_T21_rook_weights():
     cx, cy, ntl, area = hot_field()
     kw = base_kwargs(cx, cy, ntl, area)
     q = run_lisa(**kw)
-    assert run_lisa(**kw, weights="queen").cell_df.equals(q.cell_df)  # mặc định không đổi
+    assert run_lisa(**kw, weights="queen").cell_df.equals(q.cell_df)
     r = run_lisa(**kw, weights="rook")
     hh_q = (q.cell_df["lisa_class"] == "High-High").sum()
     hh_r = (r.cell_df["lisa_class"] == "High-High").sum()
     assert hh_q >= 30 and hh_r >= 30
-    # Rook chỉ giữ 4 láng giềng chung cạnh
+
     members = np.ones(cx.size, bool)
     nbr = build_queen_neighbors(cx, cy, CELL, members)
     from ntl.lisa_core import ROOK_DROP_COLS
@@ -64,10 +64,10 @@ def test_T21_rook_weights():
     iy = np.floor(cy / CELL).astype(int)
     interior = np.flatnonzero(nbr.min(axis=1) >= 0)
     for i in interior[:50]:
-        for c in kept:   # láng giềng giữ lại phải chung cạnh: lệch đúng một ô theo một trục
+        for c in kept:
             j = nbr[i, c]
             assert abs(ix[j] - ix[i]) + abs(iy[j] - iy[i]) == 1
-        for c in ROOK_DROP_COLS:  # láng giềng bị bỏ là ô chéo
+        for c in ROOK_DROP_COLS:
             j = nbr[i, c]
             assert abs(ix[j] - ix[i]) == 1 and abs(iy[j] - iy[i]) == 1
     with pytest.raises(ValueError):
@@ -80,7 +80,7 @@ def test_T22_data_quality_report():
     r = dq.raster_report(arr)
     assert r["n_pixels"] == 9
     assert math.isclose(r["nodata_share"], 2 / 9)
-    assert math.isclose(r["neg_share"], 2 / 7)       # chia cho pixel hữu hạn
+    assert math.isclose(r["neg_share"], 2 / 7)
     assert math.isclose(r["zero_share"], 2 / 7)
     assert r["min"] == -1.0 and r["max"] == 3.0
     assert dq.raster_report(np.array([]))["n_pixels"] == 0
@@ -90,7 +90,7 @@ def test_T22_data_quality_report():
 
     o = dq.obs_report(np.array([0, 0, 1, 2, 3, 12, 12, 12, 12, 12]))
     assert math.isclose(o["no_obs_share"], 0.2) and math.isclose(o["low_obs_share"], 0.4)
-    assert o["median_months"] == 12.0 or o["median_months"] == 7.5  # trung vị của dãy trên
+    assert o["median_months"] == 12.0 or o["median_months"] == 7.5
 
     flags = {f["key"]: f["level"] for f in dq.quality_flags(r, c, o)}
     assert flags["nodata"] == "warn" and flags["neg"] == "warn" and flags["missing"] == "warn"
@@ -111,12 +111,12 @@ def test_T23_aggregate_blocks_and_maup():
     agg = rob.aggregate_blocks(cx, cy, ntl, area, CELL, 2)
     assert len(agg["ntl"]) == 4 and agg["cell_size_m"] == 1000.0
     assert np.allclose(agg["area_km2"], 4 * 0.25)
-    # ô lớn đầu tiên gồm các ô 0, 1, 4, 5
+
     first = agg["ntl"][0]
     assert math.isclose(first, np.mean([0, 1, 4, 5]))
-    assert math.isclose(float((agg["ntl"] * agg["area_km2"]).sum()), float((ntl * area).sum()))  # bảo toàn tổng SOL
+    assert math.isclose(float((agg["ntl"] * agg["area_km2"]).sum()), float((ntl * area).sum()))
 
-    # khối bị khuyết ô (ô biên) có diện tích nhỏ hơn đầy đủ
+
     keep = np.ones(16, bool)
     keep[5] = False
     part = rob.aggregate_blocks(cx[keep], cy[keep], ntl[keep], area[keep], CELL, 2)
@@ -129,7 +129,7 @@ def test_T23_aggregate_blocks_and_maup():
     m = rob.maup_compare(kw, base_hh, 2)
     assert m["n_hh_fine"] > 0 and m["n_hh_coarse"] > 0
     assert 0.0 <= m["fine_inside_coarse"] <= 1.0 and 0.0 <= m["coarse_covered_by_fine"] <= 1.0
-    assert m["fine_inside_coarse"] > 0.5   # cụm rõ ràng phải trùng nhau giữa hai độ phân giải
+    assert m["fine_inside_coarse"] > 0.5
 
 
 # T24 ---------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ def test_T24_run_specs_and_summary():
     cx, cy, ntl, area = hot_field()
     kw = base_kwargs(cx, cy, ntl, area)
     base_hh = rob.hh_mask(run_lisa(**kw))
-    assert base_hh.sum() >= 30     # không rỗng, nếu không Jaccard = 1 một cách vô nghĩa
+    assert base_hh.sum() >= 30
     specs = rob.default_specs(kw)
     assert {s["group"] for s in specs} >= {"weights", "threshold", "transform", "inference"}
     table, mat = rob.run_specs(kw, specs, base_hh)
@@ -147,15 +147,15 @@ def test_T24_run_specs_and_summary():
     s = rob.summarize(table, mat, area)
     assert s["n_specs"] == len(specs) and s["min_jaccard"] <= s["median_jaccard"]
     assert 0.0 <= s["robust_core_share"] <= base_hh.sum() * area[0] / area.sum() + 1e-12
-    assert s["median_jaccard"] >= rob.STABLE_JACCARD and s["verdict"] == "vững"  # cụm rõ ràng nên phải vững
+    assert s["median_jaccard"] >= rob.STABLE_JACCARD and s["verdict"] == "vững"
 
-    # biến thể không đổi gì thì Jaccard đúng bằng 1 và lõi vững = toàn bộ HH
+
     same, mat2 = rob.run_specs(kw, [{"name": "y hệt", "group": "x", "overrides": {}}], base_hh)
     assert same.loc[1, "Jaccard"] == 1.0
     s2 = rob.summarize(same, mat2, area)
     assert math.isclose(s2["robust_core_share"], base_hh.sum() * area[0] / area.sum())
 
-    # nhiễu thuần: kết quả phải bị đánh giá yếu hơn cụm rõ ràng
+
     rng = np.random.default_rng(3)
     noise = rng.gamma(2.0, 3.0, cx.size) + 1.0
     kn = base_kwargs(cx, cy, noise, area, fdr=False)
@@ -164,7 +164,7 @@ def test_T24_run_specs_and_summary():
     tn, mn = rob.run_specs(kn, rob.default_specs(kn), hh_n)
     assert rob.summarize(tn, mn, area)["median_jaccard"] < s["median_jaccard"]
 
-    # kết quả gốc rỗng thì không có gì để kiểm tra độ vững: không được báo "vững"
+
     empty = np.zeros(cx.size, bool)
     te, me = rob.run_specs(kw, specs[:1], empty)
     assert rob.summarize(te, me, area)["verdict"] == "không có HH"
@@ -187,7 +187,7 @@ def test_T25_adjacent_years():
     kw = base_kwargs(cx, cy, ntl, area)
     base_hh = rob.hh_mask(run_lisa(**kw))
     assert base_hh.sum() >= 30
-    moved = np.roll(ntl.reshape(30, 30), 8, axis=1).ravel()   # cụm dịch sang phải 8 ô
+    moved = np.roll(ntl.reshape(30, 30), 8, axis=1).ravel()
     t = rob.adjacent_years(kw, base_hh, {2023: ntl.copy(), 2025: moved})
     assert list(t["Năm"]) == [2023, 2025]
     assert t.loc[0, "Jaccard so với năm gốc"] == 1.0
@@ -228,7 +228,7 @@ def test_T26_validation_statistics():
     same = val.compare_clipping(ntl, ntl)
     assert same["rho"] == 1.0 and same["share_changed"] == 0.0 and same["max_abs_diff"] == 0.0
     noclip = ntl.copy()
-    noclip[:90] = -0.3    # 90 ô bị cắt về 0 trong bản cắt
+    noclip[:90] = -0.3
     clipped = np.clip(noclip, 0, None)
     cmp_ = val.compare_clipping(clipped, noclip)
     assert math.isclose(cmp_["share_changed"], 90 / n) and math.isclose(cmp_["max_abs_diff"], 0.3)
@@ -240,7 +240,7 @@ def test_T27_ee_extra_pure_helpers():
     assert ee_extra.nearest_epoch(2012) == 2010 and ee_extra.nearest_epoch(1960) == 1975
     assert ee_extra.nearest_epoch(2030, last_observed=2025) == 2025
     px = ee_extra.estimate_pixels((16.50, 47.82, 16.56, 47.87), 100.0)
-    assert 2e3 < px < 3e3          # khoảng 4.5 km x 5.5 km ở 100 m, tức ~45 x 55 pixel
+    assert 2e3 < px < 3e3
     assert ee_extra.estimate_pixels((10, 10, 12, 12), 100.0) > ee_extra.MAX_PIXELS
 
     tif = b"II*\x00" + b"\x00" * 20
@@ -257,7 +257,7 @@ def test_T27_ee_extra_pure_helpers():
     with pytest.raises(ValueError):
         ee_extra.extract_tif_bytes(buf.getvalue())
 
-    with pytest.raises(ValueError):   # vùng quá lớn bị chặn trước khi gọi Earth Engine
+    with pytest.raises(ValueError):
         ee_extra.fetch_ghsl_raster(object(), "built", (10, 10, 12, 12), 2020)
     with pytest.raises(ValueError):
         ee_extra.fetch_ghsl_raster(object(), "gdp", (16.5, 47.8, 16.6, 47.9), 2020)
@@ -275,7 +275,7 @@ def test_T27b_ee_extra_builds_expected_calls(monkeypatch):
     out = ee_extra.fetch_ntl_variant(ee, "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG", (16.5, 47.8, 16.6, 47.9),
                                      2025, 463.83, cf_min=3, reducer="mean")
     assert out == b"II*\x00"
-    img.select.return_value.gte.assert_called_with(3)          # ngưỡng cf_cvg được truyền vào
+    img.select.return_value.gte.assert_called_with(3)
     col.map.return_value.mean.assert_called_once()
     col.map.return_value.median.assert_not_called()
     ee_extra.fetch_obs_count_raster(ee, "X", (16.5, 47.8, 16.6, 47.9), 2025, 463.83)
@@ -303,7 +303,7 @@ def test_T27b_ee_extra_builds_expected_calls(monkeypatch):
 
 
 def test_T28_pandas_roundtrip_of_export_columns():
-    """Các cột export ghép được thành một dòng panel mà không trùng khóa."""
+
     cx, cy, ntl, area = hot_field()
     kw = base_kwargs(cx, cy, ntl, area)
     base_hh = rob.hh_mask(run_lisa(**kw))

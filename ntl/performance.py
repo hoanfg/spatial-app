@@ -161,8 +161,8 @@ def render_performance_panel(recorder, lang='vi'):
     import streamlit as st
     data = recorder.export()
     vi = lang != 'en'
-    with st.expander('⏱️ Hiệu suất xử lý (không cần Cloud logs)' if vi
-                     else '⏱️ Runtime performance (no Cloud logs needed)', expanded=False):
+    with st.expander('Hiệu suất xử lý (không cần Cloud logs)' if vi
+                     else 'Runtime performance (no Cloud logs needed)', expanded=False):
         if not data['stages']:
             st.info('Chưa có phép đo.' if vi else 'No measurements recorded yet.')
             return
@@ -181,9 +181,9 @@ def render_performance_panel(recorder, lang='vi'):
                     if vi else 'RAM covers the whole Streamlit process and may include other sessions. '
                     'Sampling may miss a short peak. Earth Engine measures local wait/download only.'))
         d1, d2 = st.columns(2)
-        d1.download_button('⬇️ JSON', data=json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8'),
+        d1.download_button('JSON', data=json.dumps(data, ensure_ascii=False, indent=2).encode('utf-8'),
                            file_name='spatial_app_performance.json', mime='application/json',
                            key='dl_spatial_perf_json')
-        d2.download_button('⬇️ CSV', data=rows.to_csv(index=False).encode('utf-8-sig'),
+        d2.download_button('CSV', data=rows.to_csv(index=False).encode('utf-8-sig'),
                            file_name='spatial_app_performance.csv', mime='text/csv',
                            key='dl_spatial_perf_csv')
