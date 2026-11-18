@@ -3,10 +3,10 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-RHO_STRONG = 0.60   # quy ước thực hành: từ mức này coi là tương quan mạnh
-RHO_WEAK = 0.40     # dưới mức này coi là yếu
+RHO_STRONG = 0.60
+RHO_WEAK = 0.40
 MIN_CELLS = 30
-BLOCK_CELLS = 5     # cạnh khối (tính bằng ô) khi bootstrap theo khối
+BLOCK_CELLS = 5
 
 
 def _rank(x) -> np.ndarray:
@@ -24,7 +24,7 @@ def spearman(x, y) -> float:
 
 
 def auc_top_quartile(ntl, proxy) -> float:
-    """Xác suất một ô thuộc 25% mật độ proxy cao nhất có NTL cao hơn một ô còn lại (Mann–Whitney)."""
+
     ntl, proxy = np.asarray(ntl, float), np.asarray(proxy, float)
     cut = np.quantile(proxy, 0.75)
     pos = proxy >= cut
@@ -37,7 +37,7 @@ def auc_top_quartile(ntl, proxy) -> float:
 
 def block_bootstrap_rho(ntl, proxy, cx, cy, cell_size_m: float, b: int = 200, seed: int = 42,
                         block_cells: int = BLOCK_CELLS) -> tuple[float, float]:
-    """Khoảng 95% của Spearman khi lấy mẫu lại theo khối ô kề nhau (tôn trọng tự tương quan không gian)."""
+
     ntl, proxy = np.asarray(ntl, float), np.asarray(proxy, float)
     cx, cy = np.asarray(cx, float), np.asarray(cy, float)
     step = cell_size_m * block_cells
@@ -59,7 +59,7 @@ def block_bootstrap_rho(ntl, proxy, cx, cy, cell_size_m: float, b: int = 200, se
 
 
 def proxy_agreement(ntl, proxy_sum, area_km2, cx, cy, cell_size_m: float, core=None, b: int = 200) -> dict:
-    """Mức đồng thuận giữa NTL và mật độ của proxy (tổng proxy trong ô / diện tích ô)."""
+
     ntl, proxy_sum, area = (np.asarray(v, float) for v in (ntl, proxy_sum, area_km2))
     ok = np.isfinite(ntl) & np.isfinite(proxy_sum) & (area > 0)
     if core is not None:
@@ -81,7 +81,7 @@ def proxy_agreement(ntl, proxy_sum, area_km2, cx, cy, cell_size_m: float, core=N
 
 
 def compare_clipping(ntl_clipped, ntl_unclipped, rel_tol: float = 0.10) -> dict:
-    """So NTL khi cắt giá trị âm về 0 với khi giữ nguyên: mức lệch và thứ hạng ô có đổi không."""
+
     a, b = np.asarray(ntl_clipped, float), np.asarray(ntl_unclipped, float)
     ok = np.isfinite(a) & np.isfinite(b)
     if ok.sum() < 3:
@@ -95,7 +95,7 @@ def compare_clipping(ntl_clipped, ntl_unclipped, rel_tol: float = 0.10) -> dict:
 
 
 def export_columns(val: dict | None, tag: str) -> dict:
-    """Cột đưa vào dòng panel; tag là 'built' hoặc 'pop'."""
+
     if not val or val.get("n", 0) < MIN_CELLS:
         return {}
     return {

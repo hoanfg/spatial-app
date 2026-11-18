@@ -8,14 +8,14 @@
 
 **Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) & công cụ kinh tế lượng không gian**
 
-[ 🇬🇧 English ](README.md) &nbsp;|&nbsp; [ 🇻🇳 Tiếng Việt ](README-vi.md) &nbsp;|&nbsp; [ 🚀 Dùng thử trực tiếp ](https://spatial-app.streamlit.app/?)
+[English](README.md) &nbsp;|&nbsp; [Tiếng Việt](README-vi.md) &nbsp;|&nbsp; [Dùng thử trực tiếp](https://spatial-app.streamlit.app/?)
 
 </div>
 
 ---
 
 > [!TIP]
-> **⚡ TL;DR: chỉ có 30 giây để đọc?**
+> **TL;DR: chỉ có 30 giây để đọc?**
 >
 > Bạn thấy ngợp trước đống công thức bên dưới? Đây là bản "nói tiếng người" về việc hệ thống này làm được gì.
 >
@@ -25,27 +25,27 @@
 
 ```mermaid
 flowchart LR
-    A["🗺️ Chọn khu vực<br/>(ranh giới GADM)"] --> B["🛰️ Google Earth Engine<br/>(ảnh VIIRS)"]
-    B --> C["⚙️ exactextract (C/C++)<br/>gom điểm ảnh vào ô lưới"]
-    C --> D["📍 LISA & Moran's I<br/>điểm nóng, lõi đô thị, Gini"]
-    D --> E["📄 CSV cấp ô lưới<br/>và cấp vùng – năm"]
+    A["Chọn khu vực<br/>(ranh giới GADM)"] --> B["Google Earth Engine<br/>(ảnh VIIRS)"]
+    B --> C["exactextract (C/C++)<br/>gom điểm ảnh vào ô lưới"]
+    C --> D["LISA & Moran's I<br/>điểm nóng, lõi đô thị, Gini"]
+    D --> E["CSV cấp ô lưới<br/>và cấp vùng – năm"]
 ```
 
 Dự án này là một hệ thống dành cho **kinh tế lượng không gian**, ghép hạ tầng lưới không gian với luồng trích xuất dữ liệu ánh sáng ban đêm (nighttime lights – NTL).
 
 Ứng dụng đi qua ba chặng: chuẩn hóa các ranh giới hành chính bất quy tắc thành ma trận lưới vuông; kết nối trực tiếp với Google Earth Engine (GEE) để tải dữ liệu raster (SNPP-VIIRS); rồi tự tính các chỉ số thống kê không gian vi mô (LISA) và xuất dữ liệu bảng cho các mô hình vĩ mô.
 
-### 🧭 Bạn nên đọc phần nào?
+### Bạn nên đọc phần nào?
 
 | Bạn là... | Nên đọc |
 | :--- | :--- |
-| 🧑‍💼 Người làm chính sách, không chuyên về kỹ thuật | [Mục 0](#s0), nhất là nhóm câu hỏi app có thể trả lời và nguyên tắc diễn giải |
-| 📈 Nhà kinh tế cần biến số để chạy hồi quy | [Mục 0](#s0), [Mục V](#s5), sau đó là [Mục III](#s3) để hiểu nguồn gốc chỉ số |
-| 🔬 Nhà nghiên cứu muốn kiểm tra phương pháp | [Mục 0](#s0), [Mục II](#s2) và [Mục III](#s3) |
-| 🛠️ Người triển khai, vận hành hệ thống | [Khởi động nhanh](#quick-start), [Mục I](#s1), [Mục IV](#s4) và [Mục VI](#s6) |
+| Người làm chính sách, không chuyên về kỹ thuật | [Mục 0](#s0), nhất là nhóm câu hỏi app có thể trả lời và nguyên tắc diễn giải |
+| Nhà kinh tế cần biến số để chạy hồi quy | [Mục 0](#s0), [Mục V](#s5), sau đó là [Mục III](#s3) để hiểu nguồn gốc chỉ số |
+| Nhà nghiên cứu muốn kiểm tra phương pháp | [Mục 0](#s0), [Mục II](#s2) và [Mục III](#s3) |
+| Người triển khai, vận hành hệ thống | [Khởi động nhanh](#quick-start), [Mục I](#s1), [Mục IV](#s4) và [Mục VI](#s6) |
 
 <details>
-<summary><b>📖 Bảng thuật ngữ nhanh (bấm để mở)</b></summary>
+<summary><b>Bảng thuật ngữ nhanh (bấm để mở)</b></summary>
 
 <br>
 
@@ -71,7 +71,7 @@ Dự án này là một hệ thống dành cho **kinh tế lượng không gian*
 
 <a id="s0"></a>
 
-## 🧭 0. Kinh tế lượng không gian và phạm vi thực sự của ứng dụng
+## 0. Kinh tế lượng không gian và phạm vi thực sự của ứng dụng
 
 ### 0.1. Kinh tế lượng không gian là gì?
 
@@ -214,7 +214,7 @@ Các mô-đun nâng cao hữu ích nhất khi mỗi đầu ra được xem là c
 
 ![Từ bức xạ VIIRS tới bảng dữ liệu ô-năm](docs/assets/ntl-measurement-vi.jpg)
 
-<p align="center"><em>Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.</em></p>
+*Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.*
 
 Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ đo được. Có thể hình dung $y_i = g(a_i, z_i) + u_i$, trong đó $z_i$ chứa công nghệ chiếu sáng, sử dụng đất, điều kiện khí quyển và các yếu tố khác, còn $u_i$ chứa sai số đo lường còn lại. App cải thiện cách xây dựng và ghi chép $y_i$; app không tự nhận dạng $g(\cdot)$ hoặc khôi phục $a_i$ nếu thiếu giả định và biến kết quả bên ngoài (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
 
@@ -238,7 +238,7 @@ trong đó $r_p$ là bức xạ của điểm ảnh nguồn và $a_{ip}$ là di�
 
 ![Từ ô lưới tới ma trận trọng số và độ trễ không gian](docs/assets/spatial-weights-vi.jpg)
 
-<p align="center"><em>Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận $W$, rồi ma trận thành độ trễ không gian $Wy$.</em></p>
+*Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận $W$, rồi ma trận thành độ trễ không gian $Wy$.*
 
 $W$ không chỉ là một tùy chọn phần mềm. Tiếp giáp Queen giả định tiếp xúc cạnh hoặc góc đều có thể truyền tương tác; Rook loại tiếp xúc chỉ qua góc; ma trận khoảng cách hoặc mạng lưới sẽ biểu diễn một cơ chế khác. Chuẩn hóa theo hàng biến trễ không gian từ tổng láng giềng thành trung bình láng giềng, trong khi ma trận nhị phân đối xứng giữ một thang đo khác (Anselin, 1988; LeSage & Pace, 2009).
 
@@ -262,7 +262,7 @@ là trung bình có trọng số của vùng xung quanh. Nếu $y_i$ cao và $(W
 
 ![Từ đồ thị Moran tới LISA sau hiệu chỉnh FDR](docs/assets/lisa-inference-vi.jpg)
 
-<p align="center"><em>Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.</em></p>
+*Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.*
 
 LISA chạy một kiểm định cục bộ cho mỗi ô đủ điều kiện. p-value giả phụ thuộc thủ tục hoán vị có điều kiện, seed và số hoán vị. Độ phân giải nhỏ nhất của p-value bị giới hạn bởi số hoán vị. Kiểm định hàng nghìn ô còn tạo ra vấn đề kiểm định nhiều lần, vì vậy app cung cấp hiệu chỉnh FDR Benjamini-Hochberg và cảnh báo khi tổ hợp số hoán vị/FDR không thể bác bỏ ô nào (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
@@ -295,7 +295,7 @@ Do đó, số hoán vị quyết định độ phân giải của p-value. Nếu
 
 ![Các trục kiểm tra độ vững và kiểm chứng ngoài](docs/assets/robustness-validation-vi.jpg)
 
-<p align="center"><em>Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.</em></p>
+*Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.*
 
 Một kết quả có thể tái lập chưa chắc đã có độ vững. Tái lập nghĩa là cùng dữ liệu, mã và tham số cho lại cùng kết quả. Độ vững hỏi một câu khó hơn: kết luận có còn giữ được khi thay đổi những lựa chọn phân tích khác nhưng vẫn hợp lý về khoa học hay không. Có thể hình dung đầu ra là $R(s)$, trong đó $s$ là một đặc tả gồm cỡ lưới, $W$, phép biến đổi, ngưỡng, seed, FDR và năm. Độ vững nghiên cứu sự biến thiên của $R(s)$ trên một tập đặc tả có thể biện minh, không phải trên mọi tổ hợp tùy ý.
 
@@ -361,7 +361,7 @@ Mức đồng thuận cao hỗ trợ phát biểu rằng NTL phù hợp với c�
 
 <a id="s1"></a>
 
-## 🏗️ I. Tổng quan kiến trúc hệ thống và quản trị tài nguyên
+## I. Tổng quan kiến trúc hệ thống và quản trị tài nguyên
 
 Hệ thống không dừng ở việc trích xuất dữ liệu viễn thám. Nó là một engine xử lý không gian chạy trên web, nối thẳng quy trình tiền xử lý địa lý (GIS) với các mô hình kinh tế lượng không gian.
 
@@ -371,13 +371,13 @@ Bài toán ở đây là phải trộn ba loại dữ liệu khác bản chất:
 
 | Tầng | Nhiệm vụ | Kỹ thuật / công cụ chính |
 | :--- | :--- | :--- |
-| **Tier 1**<br>📂 Quét dữ liệu | Quét đệ quy cấu trúc thư mục GADM cục bộ, tự suy ra mã định danh ISO3, chuẩn hóa tên hành chính rồi nạp lên giao diện người dùng (UI), không phụ thuộc vào cơ sở dữ liệu tĩnh. | Nhận diện mẫu, chuẩn hóa Unicode (NFC/NFD), thư viện `pycountry` |
-| **Tier 2**<br>📐 Hình học | Xử lý hình học đa giác: chiếu toàn bộ dữ liệu vector về hệ tọa độ phẳng UTM (Universal Transverse Mercator) động, chọn theo kinh độ/vĩ độ tâm của hộp bao (bounding box), rồi dựng lưới không gian đều. | Vector hóa bằng `numpy.meshgrid` và `shapely.box` |
-| **Tier 3**<br>🛰️ Raster | Gửi truy vấn không gian tới Google Earth Engine (GEE) API để lọc mây, tổng hợp trung vị năm và cắt ảnh raster theo ranh giới vùng phân tích. Luồng byte-stream của ảnh GeoTIFF được nạp vào bộ nhớ tạm để **C/C++ engine** tính thống kê vùng theo tỷ lệ phủ diện tích điểm ảnh giữa lưới vector và raster. | GEE API, **C/C++ engine** `exactextract` |
-| **Tier 4**<br>📊 Kinh tế lượng & kết xuất | Tính Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini; kết xuất bản đồ tương tác đa lớp. Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu thành các tệp CSV cấp độ ô lưới và cấp độ vùng – năm. | Folium/Leaflet |
+| **Tier 1**<br>Quét dữ liệu | Quét đệ quy cấu trúc thư mục GADM cục bộ, tự suy ra mã định danh ISO3, chuẩn hóa tên hành chính rồi nạp lên giao diện người dùng (UI), không phụ thuộc vào cơ sở dữ liệu tĩnh. | Nhận diện mẫu, chuẩn hóa Unicode (NFC/NFD), thư viện `pycountry` |
+| **Tier 2**<br>Hình học | Xử lý hình học đa giác: chiếu toàn bộ dữ liệu vector về hệ tọa độ phẳng UTM (Universal Transverse Mercator) động, chọn theo kinh độ/vĩ độ tâm của hộp bao (bounding box), rồi dựng lưới không gian đều. | Vector hóa bằng `numpy.meshgrid` và `shapely.box` |
+| **Tier 3**<br>Raster | Gửi truy vấn không gian tới Google Earth Engine (GEE) API để lọc mây, tổng hợp trung vị năm và cắt ảnh raster theo ranh giới vùng phân tích. Luồng byte-stream của ảnh GeoTIFF được nạp vào bộ nhớ tạm để **C/C++ engine** tính thống kê vùng theo tỷ lệ phủ diện tích điểm ảnh giữa lưới vector và raster. | GEE API, **C/C++ engine** `exactextract` |
+| **Tier 4**<br>Kinh tế lượng & kết xuất | Tính Global Moran's I, Local Moran's I / LISA, nhận diện cụm điểm nóng liên thông, khoảng cách tới tâm lõi kinh tế, hệ số bất bình đẳng Gini; kết xuất bản đồ tương tác đa lớp. Dữ liệu đầu ra được đóng gói qua cầu nối dữ liệu thành các tệp CSV cấp độ ô lưới và cấp độ vùng – năm. | Folium/Leaflet |
 
 > [!NOTE]
-> 📎 Quy tắc phân loại quốc gia và xử lý nguồn GADM nằm trong [hướng dẫn dữ liệu và kiểm chứng](docs/README-vi.md).
+> Quy tắc phân loại quốc gia và xử lý nguồn GADM nằm trong [hướng dẫn dữ liệu và kiểm chứng](docs/README-vi.md).
 
 ### 1.2. Giới hạn phần cứng và cơ chế phòng ngừa tràn bộ nhớ trên đám mây
 
@@ -411,15 +411,15 @@ Streamlit vận hành theo nguyên lý **không trạng thái**: mỗi lần ng�
 
 <a id="s2"></a>
 
-## 🗺️ II. Phương pháp luận xử lý không gian (spatial geoprocessing)
+## II. Phương pháp luận xử lý không gian (spatial geoprocessing)
 
 ### 2.1. Giải pháp cho vấn đề đơn vị diện tích có thể thay đổi (MAUP)
 
 Trong kinh tế học không gian thực nghiệm, dùng thẳng ranh giới hành chính tỉnh/huyện/xã sẽ gây thiên lệch thống kê, vì các đơn vị này chênh nhau rất xa về diện tích lẫn hình dạng. Vấn đề này có tên là **vấn đề đơn vị diện tích có thể thay đổi (Modifiable areal unit problem – MAUP)** (Openshaw, 1984; Fotheringham & Wong, 1991). Hệ thống xử lý nó bằng cách quy khu vực nghiên cứu về một ma trận lưới vuông đồng nhất (Donaldson & Storeygard, 2016).
 
-> 💡 **Hiểu nôm na:** so sánh độ sáng của một huyện rộng bằng cả một tỉnh nhỏ với một quận nội thành chỉ vài chục km² thì rất khập khiễng. Chia tất cả thành các ô vuông bằng nhau thì mọi nơi đứng cùng một vạch xuất phát.
+> **Hiểu nôm na:** so sánh độ sáng của một huyện rộng bằng cả một tỉnh nhỏ với một quận nội thành chỉ vài chục km² thì rất khập khiễng. Chia tất cả thành các ô vuông bằng nhau thì mọi nơi đứng cùng một vạch xuất phát.
 
-#### 🧭 Thuật toán chiếu tọa độ động
+#### Thuật toán chiếu tọa độ động
 
 Bản thử nghiệm Phase 1 gắn cứng một mã EPSG địa phương (`EPSG:32648`). Bản hiện tại thì tự nội suy múi chiếu phẳng **UTM (Universal Transverse Mercator)** tối ưu, dựa trên kinh độ và vĩ độ tâm $(\lambda_{\mathrm{center}}, \phi_{\mathrm{center}})$ của hộp bao vùng nghiên cứu.
 
@@ -435,13 +435,13 @@ $$
 \mathrm{EPSG} = \begin{cases} 32600 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} \ge 0 \text{ (Bắc bán cầu)} \\ 32700 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} < 0 \text{ (Nam bán cầu)} \end{cases}
 $$
 
-> 🧪 **Ví dụ nhanh:** tâm vùng nghiên cứu ở kinh độ $105^\circ\mathrm{E}$, thuộc Bắc bán cầu, cho $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ và $\mathrm{EPSG} = 32648$. Đó đúng là mã mà bản Phase 1 từng gắn cứng.
+> **Ví dụ nhanh:** tâm vùng nghiên cứu ở kinh độ $105^\circ\mathrm{E}$, thuộc Bắc bán cầu, cho $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ và $\mathrm{EPSG} = 32648$. Đó đúng là mã mà bản Phase 1 từng gắn cứng.
 
 **Căn lưới.** Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới được căn về bội số nguyên của cạnh ô $\mathrm{size}$ trong không gian phẳng UTM. Nhờ vậy, lưới của các quận/huyện liền kề khớp khít với nhau khi ghép lại.
 
 ### 2.2. Lọc mây trên GEE và trích xuất zonal statistics bằng tỷ lệ phủ (fractional coverage)
 
-#### ☁️ Bước 1: lọc mây trước khi lấy trung vị
+#### Bước 1: lọc mây trước khi lấy trung vị
 
 | Hạng mục | Giá trị |
 | :--- | :--- |
@@ -452,7 +452,7 @@ $$
 
 Lý do cần mặt nạ: ở vùng nhiệt đới gió mùa, mây phủ dày đặc trong các tháng mưa có thể khiến một điểm ảnh không có quan sát hợp lệ nào (`cf_cvg` $= 0$), và giá trị bức xạ bị ghi thành $0$ một cách giả tạo. Mặt nạ lọc mây loại bỏ thiên lệch âm này trước khi lấy trung vị.
 
-#### 🎯 Bước 2: tính thống kê vùng bằng tỷ lệ phủ
+#### Bước 2: tính thống kê vùng bằng tỷ lệ phủ
 
 Phương pháp tâm điểm ảnh (center-of-pixel) truyền thống gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS. Vì vậy hệ thống dùng thư viện C/C++ `exactextract` (Baston, 2023). Bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ là trung bình có trọng số, với trọng số là tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
 
@@ -460,7 +460,7 @@ $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
 $$
 
-> 💡 **Hiểu nôm na:** mỗi điểm ảnh chỉ được tính phần nằm trong ô. Điểm ảnh có 60% diện tích rơi vào ô thì mang trọng số $0.6$, còn điểm ảnh chỉ sượt qua mép ô thì gần như không ảnh hưởng.
+> **Hiểu nôm na:** mỗi điểm ảnh chỉ được tính phần nằm trong ô. Điểm ảnh có 60% diện tích rơi vào ô thì mang trọng số $0.6$, còn điểm ảnh chỉ sượt qua mép ô thì gần như không ảnh hưởng.
 
 Giá trị rỗng hoặc âm phát sinh từ bước hiệu chỉnh ánh sáng nền của cảm biến được chuẩn hóa về $0.0$. Tổng lượng ánh sáng (sum of lights – SOL) của mỗi ô bằng bức xạ trung bình nhân với diện tích thực tế sau khi cắt:
 
@@ -474,11 +474,11 @@ $$
 
 <a id="s3"></a>
 
-## 📍 III. Lõi kinh tế lượng không gian (LISA core algorithm)
+## III. Lõi kinh tế lượng không gian (LISA core algorithm)
 
 Mô-đun `ntl/lisa_core.py` được viết hoàn toàn bằng đại số mảng trên `numpy` và `pandas`. Nó không cần đến các thư viện nặng như `libpysal` hay `esda`, và đưa độ phức tạp tính toán của đồ thị láng giềng xuống $\mathcal{O}(N \log N)$.
 
-> 💡 **LISA trong một câu:** thay vì một con số duy nhất cho cả vùng, LISA gắn cho *từng ô lưới* một nhãn cho biết ô đó và các ô xung quanh có cùng sáng, cùng tối, hay trái chiều nhau.
+> **LISA trong một câu:** thay vì một con số duy nhất cho cả vùng, LISA gắn cho *từng ô lưới* một nhãn cho biết ô đó và các ô xung quanh có cùng sáng, cùng tối, hay trái chiều nhau.
 
 ### 3.1. Xử lý dữ liệu lạm phát số 0 và ô biên
 
@@ -521,9 +521,9 @@ Khi các ô tối ($\mathrm{NTL}_i \le \mathrm{threshold}$, gán nhãn `DARK`) b
 
 | Nhãn | Ý nghĩa trong chế độ `lit_only` |
 | :--- | :--- |
-| 🔴 **High-High (HH)** | Lõi đô thị/thương mại có bức xạ cao vượt trội, nằm liền kề nhau. |
-| 🔵 **Low-Low (LL)** | Các khu vực ánh sáng yếu (thấp hơn mức trung bình của vùng sáng, như vùng ven đô hoặc điểm dân cư thưa) tụ cụm với nhau. Các vùng hoàn toàn không có ánh sáng đã được tách riêng vào trạng thái `DARK`. |
-| 🟠 **High-Low (HL)** và 🟣 **Low-High (LH)** | Các điểm dị thường không gian (spatial outliers) nằm ngay trong cấu trúc vùng sáng. |
+| **High-High (HH)** | Lõi đô thị/thương mại có bức xạ cao vượt trội, nằm liền kề nhau. |
+| **Low-Low (LL)** | Các khu vực ánh sáng yếu (thấp hơn mức trung bình của vùng sáng, như vùng ven đô hoặc điểm dân cư thưa) tụ cụm với nhau. Các vùng hoàn toàn không có ánh sáng đã được tách riêng vào trạng thái `DARK`. |
+| **High-Low (HL)** và  **Low-High (LH)** | Các điểm dị thường không gian (spatial outliers) nằm ngay trong cấu trúc vùng sáng. |
 
 ### 3.2. Đồ thị láng giềng Queen
 
@@ -531,11 +531,11 @@ Ma trận trọng số không gian $W$ được dựng theo quy tắc tiếp xú
 
 ```text
 ┌───┬───┬───┐
-│ ↖ │ ↑ │ ↗ │
+│ TB │ B  │ ĐB │
 ├───┼───┼───┤
-│ ← │ ■ │ → │      ■ = ô đang xét, 8 ô xung quanh là láng giềng
+│ T  │ ■  │ Đ  │      ■ = ô đang xét, 8 ô xung quanh là láng giềng
 ├───┼───┼───┤
-│ ↙ │ ↓ │ ↘ │
+│ TN │ N  │ ĐN │
 └───┴───┴───┘
 ```
 
@@ -547,7 +547,7 @@ $$
 
 Ở đây $\epsilon = 10^{-6}\text{ m}$ là hằng số bù sai số dấu phẩy động IEEE-754 gần mép ô, và $H = \max(iy) - \min(iy) + 4$.
 
-> 💡 **Hiểu nôm na:** mỗi ô được đánh một "số nhà" duy nhất. Thuật toán sắp xếp các số nhà, rồi dùng tìm kiếm nhị phân vector hóa `numpy.searchsorted` để tra cùng lúc 8 hàng xóm $(dx, dy) \in \{-1, 0, 1\}^2 \setminus \{(0,0)\}$ của mọi ô, thay vì so sánh từng cặp ô với nhau. Đó là lý do độ phức tạp chỉ còn $\mathcal{O}(N \log N)$.
+> **Hiểu nôm na:** mỗi ô được đánh một "số nhà" duy nhất. Thuật toán sắp xếp các số nhà, rồi dùng tìm kiếm nhị phân vector hóa `numpy.searchsorted` để tra cùng lúc 8 hàng xóm $(dx, dy) \in \{-1, 0, 1\}^2 \setminus \{(0,0)\}$ của mọi ô, thay vì so sánh từng cặp ô với nhau. Đó là lý do độ phức tạp chỉ còn $\mathcal{O}(N \log N)$.
 
 Trọng số không gian $w_{ij}$ được chuẩn hóa theo hàng:
 
@@ -567,9 +567,9 @@ $$
 I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert - 1} \sum_{r \in S} z_r^2
 $$
 
-> 💡 **Hiểu nôm na:** biến trễ không gian $\mathrm{Lag}(z_i)$ là mức sáng "trung bình" của các ô láng giềng. $I_i$ dương lớn nghĩa là ô đang xét và hàng xóm cùng xu hướng (cùng sáng hoặc cùng tối). $I_i$ âm nghĩa là chúng trái chiều nhau.
+> **Hiểu nôm na:** biến trễ không gian $\mathrm{Lag}(z_i)$ là mức sáng "trung bình" của các ô láng giềng. $I_i$ dương lớn nghĩa là ô đang xét và hàng xóm cùng xu hướng (cùng sáng hoặc cùng tối). $I_i$ âm nghĩa là chúng trái chiều nhau.
 
-#### 🎲 Hoán vị có điều kiện, vector hóa
+#### Hoán vị có điều kiện, vector hóa
 
 Bức xạ ánh sáng ban đêm không tuân theo phân phối chuẩn, nên ý nghĩa thống kê của $I_i$ được đánh giá bằng mô phỏng Monte Carlo với $R$ lần hoán vị có điều kiện:
 
@@ -596,7 +596,7 @@ $$
 
 Ở độ phân giải 500m, một lượt kiểm định có thể phải xét $m = \lvert \mathrm{Focal} \rvert$ ô lưới lên tới hàng chục ngàn ô. Nếu áp thẳng ngưỡng $\alpha = 0.05$ cho từng ô, sai số loại I sẽ bùng nổ (multiple testing problem) (Caldas de Castro & Singer, 2006).
 
-> 💡 **Hiểu nôm na:** thử 10.000 ô với ngưỡng 5%, thì ngay cả khi vùng này chẳng có cụm nào, về kỳ vọng vẫn có khoảng 500 ô được gắn nhãn "có ý nghĩa" chỉ vì may rủi.
+> **Hiểu nôm na:** thử 10.000 ô với ngưỡng 5%, thì ngay cả khi vùng này chẳng có cụm nào, về kỳ vọng vẫn có khoảng 500 ô được gắn nhãn "có ý nghĩa" chỉ vì may rủi.
 
 Hệ thống dùng thủ tục kiểm soát tỷ lệ phát hiện sai (false discovery rate – FDR) của Benjamini & Hochberg (1995):
 
@@ -610,7 +610,7 @@ $$
 
 3. Nếu tồn tại $k$, bác bỏ giả thuyết không $H_0$ (công nhận có cụm không gian có ý nghĩa thống kê) cho toàn bộ các ô có $p_i \le p_{(k)}$.
 
-#### 🚧 Điều kiện cần để kiểm định có thể "bắt" được cụm nào
+#### Điều kiện cần để kiểm định có thể "bắt" được cụm nào
 
 Mức sàn nhỏ nhất của pseudo p-value hai phía là $p_{\mathrm{floor}} = \frac{2}{R + 1}$. Vì vậy, để thủ tục Benjamini–Hochberg bác bỏ được ít nhất một giả thuyết, số ô chạm mức sàn $p_{\mathrm{floor}}$ phải thỏa mãn điều kiện cần về mặt toán học:
 
@@ -620,7 +620,7 @@ $$
 
 Hệ thống tự tính ngưỡng $k_{\mathrm{hit}}$ (`fdr_min_hits_needed`) và hiện cảnh báo, hướng dẫn người dùng tăng số hoán vị $R$ lên $999$ khi cỡ mẫu $m$ lớn.
 
-> 🧪 **Ví dụ minh họa:** với $m = 10{,}000$ ô và $\alpha = 0.05$, cần ít nhất 800 ô chạm mức sàn nếu $R = 499$, nhưng chỉ cần 400 ô nếu $R = 999$. Tăng số hoán vị làm sàn p-value thấp hơn, nên dễ đạt điều kiện hơn.
+> **Ví dụ minh họa:** với $m = 10{,}000$ ô và $\alpha = 0.05$, cần ít nhất 800 ô chạm mức sàn nếu $R = 499$, nhưng chỉ cần 400 ô nếu $R = 999$. Tăng số hoán vị làm sàn p-value thấp hơn, nên dễ đạt điều kiện hơn.
 
 ### 3.5. Gom cụm điểm nóng liên thông và xác định tâm lõi kinh tế
 
@@ -705,7 +705,7 @@ Hệ thống tính khoảng cách Euclid có dấu tới ranh giới cụm đi�
 
 <a id="s4"></a>
 
-## ✅ Chất lượng dữ liệu, kiểm định độ vững và kiểm chứng ngoài
+## Chất lượng dữ liệu, kiểm định độ vững và kiểm chứng ngoài
 
 Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa chọn của pipeline và của người phân tích. Không phần nào đổi giá trị NTL.
 
@@ -721,7 +721,7 @@ Ba phần bổ sung cho biết kết quả phụ thuộc bao nhiêu vào lựa c
 
 Mã nguồn: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `ntl/validation.py`, `ntl/zonal.py`, `ntl/ee_extra.py`, `ntl/ghsl_native.py`, `ntl/performance.py`. [Hướng dẫn kiểm chứng](validation/README-vi.md) tách rõ test nhân tạo, kết quả thực địa đã ghi và việc còn thiếu.
 
-## 🛡️ IV. Thuật toán quản trị tài nguyên bộ nhớ (memory safeguards)
+## IV. Thuật toán quản trị tài nguyên bộ nhớ (memory safeguards)
 
 ### 4.1. Cầu chì ước lượng quy mô lưới
 
@@ -733,16 +733,16 @@ $$
 
 Trong đó $\beta = 0.65$ là hệ số hiệu chỉnh hình học cho các ô biên bị cắt.
 
-> 💡 **Hiểu nôm na:** số ô ≈ diện tích vùng chia cho diện tích một ô, cộng thêm một khoản bù cho các ô bị cắt dọc theo đường viền (chu vi càng dài, khoản bù càng lớn).
+> **Hiểu nôm na:** số ô ≈ diện tích vùng chia cho diện tích một ô, cộng thêm một khoản bù cho các ô bị cắt dọc theo đường viền (chu vi càng dài, khoản bù càng lớn).
 
 | Điều kiện (chỉ cần một trong hai) | Hành động |
 | :--- | :--- |
-| $N_{\mathrm{clip}} \ge N_{\max} = 150,000$ (`MAX_CELLS`) | 🔒 Khóa nút thực thi và gợi ý độ phân giải lưới tối thiểu an toàn kế tiếp |
-| $N_{\mathrm{bbox}} > 4 \times N_{\max}$ | 🔒 Như trên |
+| $N_{\mathrm{clip}} \ge N_{\max} = 150,000$ (`MAX_CELLS`) | Khóa nút thực thi và gợi ý độ phân giải lưới tối thiểu an toàn kế tiếp |
+| $N_{\mathrm{bbox}} > 4 \times N_{\max}$ | Như trên |
 
 ### 4.2. Winsorization động và trần kết xuất trên trình duyệt
 
-#### 🎨 Winsorization động cho thang màu bản đồ nhiệt
+#### Winsorization động cho thang màu bản đồ nhiệt
 
 Cảng biển, khu công nghiệp nặng hay trạm đốt khí có thể sáng chói đến mức làm mất độ tương phản của các khu dân cư đô thị trên bản đồ. Để chặn điều đó, mức trần hiển thị $v_{\max}$ được tính động tại phân vị thứ 99 của tập các ô có ánh sáng $\mathrm{NTL}_{\mathrm{lit}} = \{\mathrm{NTL}_i \mid \mathrm{NTL}_i > 0\}$:
 
@@ -750,7 +750,7 @@ $$
 v_{\mathrm{raw}} = \begin{cases} P_{99}(\mathrm{NTL}_{\mathrm{lit}}) & \text{nếu } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert > 10 \\ \max_i(\mathrm{NTL}_i) & \text{nếu } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert \le 10 \end{cases}, \quad v_{\max} = \begin{cases} v_{\mathrm{raw}} & \text{nếu } v_{\mathrm{raw}} > 0.1 \\ 1.0 & \text{nếu } v_{\mathrm{raw}} \le 0.1 \end{cases}
 $$
 
-#### 🧱 Trần kết xuất DOM trình duyệt (`RENDER_CAP = 30,000`)
+#### Trần kết xuất DOM trình duyệt (`RENDER_CAP = 30,000`)
 
 Khi số ô lưới vượt quá $30,000$, trình duyệt có nguy cơ bị treo lúc dựng cây DOM SVG/Canvas của Leaflet. Hệ thống xử lý như sau:
 
@@ -766,14 +766,14 @@ Khi số ô lưới vượt quá $30,000$, trình duyệt có nguy cơ bị treo
 
 <a id="s5"></a>
 
-## 📦 V. Cấu trúc dữ liệu panel và cầu nối kinh tế lượng (data bridge)
+## V. Cấu trúc dữ liệu panel và cầu nối kinh tế lượng (data bridge)
 
 Mục tiêu cốt lõi của hệ thống là cung cấp bộ biến số định lượng chuẩn xác, sẵn sàng đưa vào các phần mềm thống kê (Python, R, Stata), cho hai cấp độ phân tích:
 
 | Cấp độ | Loại hồi quy | Tệp dữ liệu |
 | :--- | :--- | :--- |
-| 🔬 **Vi mô** | Hồi quy cấp ô lưới (cell-level cross-sectional / spatial panel) | CSV cấp ô lưới |
-| 🌏 **Vĩ mô** | Hồi quy cấp vùng – năm (region–year panel) | `ntl_lisa_panel.csv` |
+| **Vi mô** | Hồi quy cấp ô lưới (cell-level cross-sectional / spatial panel) | CSV cấp ô lưới |
+| **Vĩ mô** | Hồi quy cấp vùng – năm (region–year panel) | `ntl_lisa_panel.csv` |
 
 ### 5.1. Dữ liệu vi mô cấp ô lưới
 
@@ -794,7 +794,7 @@ Tệp CSV cấp ô lưới xuất ra **100% quan sát** của địa phương, k
 
 Với các nghiên cứu vĩ mô theo dõi sự phát triển cấp Quận/Huyện/Tỉnh qua nhiều năm, hệ thống tự động tổng hợp dữ liệu vi mô thành **một dòng quan sát duy nhất** cho mỗi tổ hợp `(iso3, region_id, year, cell_size_m)`. Các chỉ số này được thiết kế để đo **cấu trúc không gian của sự phát triển**.
 
-#### 1️⃣ Hệ số Gini bất bình đẳng ánh sáng
+#### 1. Hệ số Gini bất bình đẳng ánh sáng
 
 Kế thừa phương pháp chỉ số phát triển ánh sáng đêm (NLDI) của Elvidge et al. (2012) và các nghiên cứu bất bình đẳng không gian từ vệ tinh của Lessmann & Seidel (2017) và Mirza et al. (2021), hệ số Gini đo mức độ tập trung của hoạt động kinh tế:
 
@@ -810,7 +810,7 @@ $$
 | `gini_ntl_core_lit` | Riêng các ô lõi có ánh sáng | Bất bình đẳng nội bộ trong khu vực có điện/ánh sáng |
 | `gini_sol_all` | Tổng lượng ánh sáng $\mathrm{SOL}_i$ của mọi ô | Mức tập trung của tổng lượng ánh sáng |
 
-#### 2️⃣ Tỷ trọng diện tích điểm nóng và đa cực đô thị
+#### 2. Tỷ trọng diện tích điểm nóng và đa cực đô thị
 
 Hai biến `hh_area_share` và `hh_cluster_area_share` đo tỷ lệ diện tích lãnh thổ nằm trong:
 
@@ -823,7 +823,7 @@ $$
 
 Đây là biến đại diện (proxy) cho **mức độ đô thị hóa thực tế (de facto urbanization)**, khắc phục nhược điểm của số liệu diện tích đô thị theo phân loại hành chính. Kết hợp với số cụm điểm nóng độc lập (`n_hh_clusters`) và diện tích cụm lớn nhất (`largest_hh_cluster_km2`), nhà nghiên cứu có thể định lượng quá trình chuyển từ cấu trúc đô thị đơn cực sang đa cực.
 
-#### 3️⃣ Tự tương quan không gian toàn cục: Global Moran's I
+#### 3. Tự tương quan không gian toàn cục: Global Moran's I
 
 Chỉ số này hiển thị ở tab Dữ liệu của `app.py`. Nó được tính trên toàn bộ $N$ ô lưới (kể cả các ô $\mathrm{NTL} = 0$) với ma trận trọng số nhị phân Queen đối xứng (Moran, 1950):
 
@@ -834,7 +834,7 @@ $$
 > [!WARNING]
 > Tự tương quan không gian có ý nghĩa trong NTL là lý do để kiểm tra phần dư của mô hình đã ước lượng; riêng nó chưa chứng minh phần dư OLS có tương quan không gian. Nếu phần dư còn phụ thuộc không gian, chọn đặc tả phù hợp như SAR, SEM, SDM (LeSage & Pace, 2009) hoặc suy luận với sai số chuẩn vững theo không gian (Conley, 1999) tùy thiết kế nghiên cứu.
 
-#### 4️⃣ Mức kết tụ nội tại của vùng sáng: `moran_I_lit`
+#### 4. Mức kết tụ nội tại của vùng sáng: `moran_I_lit`
 
 Chỉ số này được xuất trong bảng Panel CSV từ `ntl/lisa_core.py`. Nó là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
 
@@ -848,7 +848,7 @@ Chỉ số đo cường độ kết tụ không gian bên trong ranh giới khu 
 
 Các bảng dưới đây định nghĩa đầy đủ các biến trong tệp xuất `ntl_lisa_panel.csv`, chia theo nhóm để dễ tra cứu.
 
-**🪪 Định danh và quy mô**
+** Định danh và quy mô**
 
 | Tên biến (Column) | Ý nghĩa kỹ thuật & kinh tế lượng |
 | :--- | :--- |
@@ -858,7 +858,7 @@ Các bảng dưới đây định nghĩa đầy đủ các biến trong tệp xu
 | `n_cells_lit`, `n_cells_tested` | Số ô có ánh sáng ($\mathrm{NTL} > \mathrm{threshold}$) và số ô lõi đủ láng giềng được đưa vào kiểm định LISA. |
 | `area_total_km2` | Tổng diện tích tự nhiên của địa phương tính theo lưới cắt ($\mathrm{km}^2$). |
 
-**🔥 Độ phủ ánh sáng và điểm nóng**
+** Độ phủ ánh sáng và điểm nóng**
 
 | Tên biến (Column) | Ý nghĩa kỹ thuật & kinh tế lượng |
 | :--- | :--- |
@@ -871,7 +871,7 @@ Các bảng dưới đây định nghĩa đầy đủ các biến trong tệp xu
 | `largest_hh_cluster_km2` | Diện tích ($\mathrm{km}^2$) của cụm điểm nóng `High-High` liên thông lớn nhất (hạt nhân đô thị chính). |
 | `hotspot_dummy` | Biến giả nhị phân (`1/0`): nhận giá trị `1` nếu `n_hh_clusters > 0`. Sẵn sàng cho mô hình Hiệu số trong Hiệu số (DiD). |
 
-**⚖️ Bất bình đẳng và tự tương quan**
+** Bất bình đẳng và tự tương quan**
 
 | Tên biến (Column) | Ý nghĩa kỹ thuật & kinh tế lượng |
 | :--- | :--- |
@@ -880,7 +880,7 @@ Các bảng dưới đây định nghĩa đầy đủ các biến trong tệp xu
 | `gini_sol_all` | Hệ số Gini của tổng lượng ánh sáng ($\mathrm{SOL}_i = \mathrm{NTL}_i \times A_i$) trên toàn bộ các ô lưới. |
 | `moran_I_lit` | Trung bình cộng thống kê Local Moran's I của các ô sáng được kiểm định, đo mức độ kết tụ đô thị. |
 
-**🔁 Siêu tham số (tái lập kết quả)**
+** Siêu tham số (tái lập kết quả)**
 
 | Tên biến (Column) | Ý nghĩa kỹ thuật & kinh tế lượng |
 | :--- | :--- |
@@ -892,7 +892,7 @@ Các bảng dưới đây định nghĩa đầy đủ các biến trong tệp xu
 
 <a id="s6"></a>
 
-## 🚧 VI. Giới hạn hệ thống và hướng mở rộng (limitations & future work)
+## VI. Giới hạn hệ thống và hướng mở rộng (limitations & future work)
 
 ### 6.1. Hạn chế của dữ liệu đầu vào
 
@@ -926,7 +926,7 @@ Triển khai trên hạ tầng đám mây miễn phí (~1GB RAM) giới hạn s�
 
 <a id="refs"></a>
 
-## 📚 Tài liệu tham khảo
+## Tài liệu tham khảo
 
 1. Anselin, L. (1995). Local Indicators of Spatial Association: LISA. *Geographical Analysis*, 27(2), 93–115. https://doi.org/10.1111/j.1538-4632.1995.tb00338.x
 

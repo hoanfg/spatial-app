@@ -53,8 +53,8 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
     done = ckey in rcache
     verdict_tag = ""
     if done:
-        verdict_tag = "  ·  " + _VERDICT.get(rcache[ckey]["summary"]["verdict"], _VERDICT["n/a"])[1 if vi else 2]
-    title = ("🧪 Kiểm định độ vững" if vi else "🧪 Robustness checks") + verdict_tag
+        verdict_tag = " · " + _VERDICT.get(rcache[ckey]["summary"]["verdict"], _VERDICT["n/a"])[1 if vi else 2]
+    title = ("Kiểm định độ vững" if vi else "Robustness checks") + verdict_tag
 
     with st.expander(title, expanded=False):
         st.caption(("Chạy lại LISA với nhiều đặc tả khác (trọng số, ngưỡng, biến đổi, α/FDR, lưới thô hơn, năm kề) rồi đo mức trùng của tập ô High-High "
@@ -82,11 +82,11 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
                 help=("Tải NTL của năm kề từ Earth Engine và chạy lại LISA cùng tham số. Chậm hơn." if vi
                       else "Fetches NTL for adjacent years from Earth Engine and re-runs LISA with the same parameters. Slower."))
 
-        run = st.button(("✅ " if done else "▶ ") + ("Chạy kiểm định độ vững" if vi else "Run robustness checks"),
+        run = st.button("Chạy kiểm định độ vững" if vi else "Run robustness checks",
                         key="rob_btn_run", disabled=too_big, use_container_width=True)
         if run:
             if done and not (with_years and ckey not in ycache):
-                st.toast("Đã có kết quả lưu đệm" if vi else "Cached result available", icon="✅")
+                st.toast("Đã có kết quả lưu đệm" if vi else "Cached result available")
             else:
                 try:
                     if not done:
@@ -106,8 +106,8 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
                                     arrs[y] = a
                             if arrs:
                                 _put(ycache, ckey, adjacent_years(base_kw, base_hh, arrs))
-                    st.toast("Hoàn tất kiểm định độ vững" if vi else "Robustness checks done", icon="✅")
-                    st.rerun()  # để dòng panel/CSV nhận các cột rob_*
+                    st.toast("Hoàn tất kiểm định độ vững" if vi else "Robustness checks done")
+                    st.rerun()
                 except Exception as e:  # noqa: BLE001
                     st.error(f"{'Lỗi' if vi else 'Error'}: {e}")
 
@@ -151,4 +151,4 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
             yy["Jaccard so với năm gốc"] = yy["Jaccard so với năm gốc"].round(3)
             st.dataframe(yy, hide_index=True, use_container_width=True)
         csv = show.to_csv(index=False).encode("utf-8-sig")
-        st.download_button("⬇️ CSV" , csv, file_name=f"robustness_{year}.csv", mime="text/csv", key="rob_dl")
+        st.download_button("CSV", csv, file_name=f"robustness_{year}.csv", mime="text/csv", key="rob_dl")

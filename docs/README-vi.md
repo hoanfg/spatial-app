@@ -18,24 +18,24 @@ Tài liệu này gom quy tắc trích xuất GADM v4.1 và tình trạng kiểm 
 ---
 <a id="s1"></a>
 
-## 🔍 1. Chẩn đoán nguyên nhân gốc rễ của dữ liệu rác trong GADM v4.1
+## 1. Chẩn đoán nguyên nhân gốc rễ của dữ liệu rác trong GADM v4.1
 
 Khi xử lý tự động các tệp GeoPackage (`gadm41_XXX.gpkg`), có 5 cái bẫy kỹ thuật khiến các kịch bản trích xuất thông thường sinh ra dữ liệu rác, hoặc làm méo kết quả hồi quy không gian.
 
-### 🪤 Bẫy 1: chuỗi `"NA"` (literal string `"NA"` so với SQL `NULL`)
+### Bẫy 1: chuỗi `"NA"` (literal string `"NA"` so với SQL `NULL`)
 
 Cơ sở dữ liệu GADM v4.1 được xuất từ môi trường R (`terra` / `sf`). Ở đó, rất nhiều giá trị khuyết trong các cột `NAME_1`, `NAME_2`, `NAME_3`, `TYPE_2`, `ENGTYPE_2` không phải `NULL` (`NaN`) mà được lưu thành **chuỗi văn bản `"NA"`** (hoặc `"?"`, `"Unknown"`). Hàm `.dropna()` của Pandas vì thế bỏ lọt hoàn toàn những dòng này, và hậu quả là:
 
 - Sinh ra một thư mục rác tên `NA` (khi `NAME_1 == "NA"`).
 - Gộp hàng chục quận đô thị chẳng liên quan gì nhau (cùng có `NAME_2 == "NA"`) thành một siêu đa giác nặng hàng chục MB.
 
-### 🪤 Bẫy 2: đa giác mặt nước nội địa (`Water body` / `Lake`)
+### Bẫy 2: đa giác mặt nước nội địa (`Water body` / `Lake`)
 
 Trong GADM v4.1, nhiều hồ lớn, vịnh hoặc vùng nước nội thủy được cắt thành các đa giác riêng ở lớp `ADM_2` và `ADM_3`. Cột `ENGTYPE_2` / `ENGTYPE_3` của chúng mang các giá trị như `"Water body"`, `"Lake"`, `"Inland water"`.
 
 Nếu không lọc bỏ những dòng này trước khi xuất file, mô hình kinh tế lượng sẽ đưa cả mặt hồ vào mẫu phân tích với bức xạ $\mathrm{NTL} = 0$. Hệ quả là hệ số Gini ánh sáng và mật độ kinh tế bị lệch nghiêm trọng.
 
-### 🪤 Bẫy 3: trùng tên đơn vị hành chính (name collision khi không dùng `GID_x`)
+### Bẫy 3: trùng tên đơn vị hành chính (name collision khi không dùng `GID_x`)
 
 Nếu vòng lặp trích xuất chỉ dùng `.unique()` trên cột `NAME_2` hoặc `NAME_3`, các đơn vị hành chính khác nhau nhưng cùng tên phiên âm Latinh trong một bang/tỉnh sẽ bị gộp vào một tệp `.geojson` duy nhất.
 
@@ -52,7 +52,7 @@ Nếu vòng lặp trích xuất chỉ dùng `.unique()` trên cột `NAME_2` ho�
 > [!IMPORTANT]
 > **Quy tắc bắt buộc:** luôn nhóm (`groupby`) theo khóa định danh duy nhất `GID_x` (như `GID_2`, `GID_3`), không nhóm theo `NAME_x`. Nếu trong cùng một thư mục có hai `GID_x` khác nhau nhưng trùng `NAME_x`, tự động thêm hậu tố bằng `ENGTYPE_x` hoặc mã `GID_x`.
 
-### 🪤 Bẫy 4: phân mảnh vi mô
+### Bẫy 4: phân mảnh vi mô
 
 | Thông số | Giá trị |
 | :--- | :--- |
@@ -64,7 +64,7 @@ Nếu vòng lặp trích xuất chỉ dùng `.unique()` trên cột `NAME_2` ho�
 
 Nếu kịch bản cứ tự động đọc lớp sâu nhất (`ADM_3` hoặc `ADM_4`) cho mọi quốc gia, các nước như Việt Nam, Pháp, Thái Lan, Indonesia sẽ bị đẩy xuống cấp Xã/Phường. Ở quy mô đó, mỗi đơn vị quá nhỏ và kiểm định LISA gần như tê liệt.
 
-### 🪤 Bẫy 5: bất đối xứng phân cấp giữa đô thị và nông thôn
+### Bẫy 5: bất đối xứng phân cấp giữa đô thị và nông thôn
 
 Một số quốc gia có đại đô thị trực thuộc trung ương, hoặc hạt đô thị bị khuyết cấp trung gian:
 
@@ -79,16 +79,16 @@ Một số quốc gia có đại đô thị trực thuộc trung ương, hoặc 
 
 <a id="s2"></a>
 
-## ⚖️ 2. Đánh đổi kiến trúc (architectural trade-off analysis)
+## 2. Đánh đổi kiến trúc (architectural trade-off analysis)
 
-Bảng dưới đây so sánh 3 phương án kiến trúc cho đường ống dữ liệu (🔴 yếu, 🟡 tạm được, 🟢 tốt):
+Bảng dưới đây so sánh 3 phương án kiến trúc cho đường ống dữ liệu ( yếu,  tạm được,  tốt):
 
-| Tiêu chí đánh giá | Phương án 1: Blind dynamic self-healing<br><sub>(tự động đọc lớp sâu nhất + nhảy cột khi gặp `'NA'`)</sub> | Phương án 2: Simple strict extractor + front-end alias JSON<br><sub>(cắt cứng + ánh xạ tên ở UI)</sub> | ⭐ Phương án 3 (khuyến nghị): Declarative rule-driven ETL<br><sub>(trích xuất điều khiển bằng bảng quy tắc quốc gia)</sub> |
+| Tiêu chí đánh giá | Phương án 1: Blind dynamic self-healing<br><sub>(tự động đọc lớp sâu nhất + nhảy cột khi gặp `'NA'`)</sub> | Phương án 2: Simple strict extractor + front-end alias JSON<br><sub>(cắt cứng + ánh xạ tên ở UI)</sub> | Phương án 3 (khuyến nghị): Declarative rule-driven ETL<br><sub>(trích xuất điều khiển bằng bảng quy tắc quốc gia)</sub> |
 | :--- | :--- | :--- | :--- |
-| **Chất lượng hình học** | 🔴 **Thấp:** dễ trộn đa giác cấp Hạt (lớn) với cấp Xã/Quận (nhỏ) trong cùng một quốc gia, khi chỉ một số dòng có `NAME_2 == 'NA'`. | 🔴 **Thấp (nếu dữ liệu gốc bất đối xứng):** file JSON ở front-end chỉ đổi được nhãn hiển thị, không thể tách một đa giác `NA` 37MB đã bị gộp sai dưới ổ cứng. | 🟢 **Triệt để:** xử lý dứt điểm việc gộp/tách hình học (`dissolve` theo `GID`) ngay ở bước tạo file `.geojson`. |
-| **Tính đồng nhất kinh tế lượng** | 🔴 **Kém:** gây hiện tượng *cross-level mixing* (các dòng trong bảng panel không cùng cấp hành chính, vi phạm giả định đồng nhất đơn vị quan sát). | 🟡 **Tốt** với các nước đồng nhất (`CHN`, `VNM`), nhưng **thất bại** với các nước lai ghép (`GBR`, `TWN`). | 🟢 **Tối ưu:** đảm bảo 100% các tệp `.geojson` trong một quốc gia đại diện cho các đơn vị kinh tế tương đương. |
-| **Hiệu năng trên Streamlit Cloud (khoảng 1 GB RAM)** | 🔴 **Rủi ro tràn bộ nhớ:** sinh ra hàng chục ngàn tệp cấp xã/phường cho các nước có `ADM_3`/`ADM_4`. | 🟡 **Nhanh:** giao diện nhẹ, nhưng phải duy trì một tệp JSON khổng lồ hàng chục ngàn dòng nếu muốn sửa tên từng quận. | 🟢 **Tối ưu nhất:** toàn bộ xử lý nặng chỉ thực hiện ngoại tuyến một lần. `app.py` giữ nguyên cấu trúc đọc thư mục rất nhẹ hiện tại. |
-| **Khả năng bảo trì** | 🔴 Khó kiểm soát lỗi ngầm khi thêm quốc gia mới. | 🟡 Phải sửa cả chương trình trích xuất lẫn tệp JSON ở giao diện. | 🟢 Chỉ cần thêm một dòng khai báo quy tắc gồm năm thuộc tính vào từ điển `COUNTRY_RULES` trong chương trình ETL. |
+| **Chất lượng hình học** | **Thấp:** dễ trộn đa giác cấp Hạt (lớn) với cấp Xã/Quận (nhỏ) trong cùng một quốc gia, khi chỉ một số dòng có `NAME_2 == 'NA'`. | **Thấp (nếu dữ liệu gốc bất đối xứng):** file JSON ở front-end chỉ đổi được nhãn hiển thị, không thể tách một đa giác `NA` 37MB đã bị gộp sai dưới ổ cứng. | **Triệt để:** xử lý dứt điểm việc gộp/tách hình học (`dissolve` theo `GID`) ngay ở bước tạo file `.geojson`. |
+| **Tính đồng nhất kinh tế lượng** | **Kém:** gây hiện tượng *cross-level mixing* (các dòng trong bảng panel không cùng cấp hành chính, vi phạm giả định đồng nhất đơn vị quan sát). | **Tốt** với các nước đồng nhất (`CHN`, `VNM`), nhưng **thất bại** với các nước lai ghép (`GBR`, `TWN`). | **Tối ưu:** đảm bảo 100% các tệp `.geojson` trong một quốc gia đại diện cho các đơn vị kinh tế tương đương. |
+| **Hiệu năng trên Streamlit Cloud (khoảng 1 GB RAM)** | **Rủi ro tràn bộ nhớ:** sinh ra hàng chục ngàn tệp cấp xã/phường cho các nước có `ADM_3`/`ADM_4`. | **Nhanh:** giao diện nhẹ, nhưng phải duy trì một tệp JSON khổng lồ hàng chục ngàn dòng nếu muốn sửa tên từng quận. | **Tối ưu nhất:** toàn bộ xử lý nặng chỉ thực hiện ngoại tuyến một lần. `app.py` giữ nguyên cấu trúc đọc thư mục rất nhẹ hiện tại. |
+| **Khả năng bảo trì** | Khó kiểm soát lỗi ngầm khi thêm quốc gia mới. | Phải sửa cả chương trình trích xuất lẫn tệp JSON ở giao diện. | Chỉ cần thêm một dòng khai báo quy tắc gồm năm thuộc tính vào từ điển `COUNTRY_RULES` trong chương trình ETL. |
 
 > [!IMPORTANT]
 > **Kết luận kiến trúc.** Không đặt logic chữa lỗi hình học ở front-end, và không để trình trích xuất tự đoán lớp sâu nhất một cách mù quáng. Hãy dùng **trình trích xuất điều khiển bằng quy tắc khai báo** với đủ 5 thuộc tính cho mỗi nhóm quốc gia:
@@ -107,7 +107,7 @@ Bảng dưới đây so sánh 3 phương án kiến trúc cho đường ống d�
 
 <a id="s3"></a>
 
-## 🌍 3. Bảng phân loại quốc gia GADM v4.1
+## 3. Bảng phân loại quốc gia GADM v4.1
 
 Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNTRY_NAMES` trong `app.py`) được phân vào **4 nhóm cấu trúc**:
 
@@ -118,7 +118,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 | **3** | `ASYMMETRIC_HYBRID` | Khuyết cấp trung gian `NAME_2 = "NA"` (`GBR`, `TWN`) | `ADM_ADM_3` (cho `GBR`; `TWN` có cấu hình riêng) | `NAME_1` (cho `GBR`) | `COALESCE(NAME_3, NAME_2)` (cho `GBR`) |
 | **4** | `SHALLOW_ADM1_CITY_STATE` | Thành bang và quốc gia nhỏ chỉ dùng cấp 1 | `ADM_ADM_1` | Tên quốc gia hoặc vùng lớn | `NAME_1` |
 
-### 🟦 Nhóm 1: `STANDARD_ADM2` (chuẩn cấp 2, chiếm ~85% quốc gia)
+### Nhóm 1: `STANDARD_ADM2` (chuẩn cấp 2, chiếm ~85% quốc gia)
 
 **Đặc điểm:** Cấp 1 (`NAME_1`) là Bang / Tỉnh / Thành phố trực thuộc trung ương. Cấp 2 (`NAME_2`) là Quận / Huyện / Hạt / Thành phố thuộc tỉnh, phủ kín 100% lãnh thổ và có quy mô diện tích lý tưởng cho lưới NTL (cạnh ô lưới $500 \text{ m}$ - $2000 \text{ m}$).
 
@@ -133,7 +133,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 **Danh sách quốc gia áp dụng:**
 
 <details open>
-<summary><b>🌏 Đông Nam Á</b></summary>
+<summary><b>Đông Nam Á</b></summary>
 
 <br>
 
@@ -152,7 +152,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 </details>
 
 <details>
-<summary><b>🏯 Đông Á & Nam Á</b></summary>
+<summary><b>Đông Á & Nam Á</b></summary>
 
 <br>
 
@@ -171,7 +171,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 </details>
 
 <details>
-<summary><b>🗽 Châu Mỹ</b></summary>
+<summary><b>Châu Mỹ</b></summary>
 
 <br>
 
@@ -190,7 +190,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 </details>
 
 <details>
-<summary><b>🏰 Châu Âu</b></summary>
+<summary><b>Châu Âu</b></summary>
 
 <br>
 
@@ -215,7 +215,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 </details>
 
 <details>
-<summary><b>🦘 Châu Đại Dương, Trung Đông & Châu Phi</b></summary>
+<summary><b>Châu Đại Dương, Trung Đông & Châu Phi</b></summary>
 
 <br>
 
@@ -232,7 +232,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 
 <a id="nhom2"></a>
 
-### 🟧 Nhóm 2: `SHIFTED_ADM3_PREFECTURE` (dịch chuyển cấp 3: cấp địa khu làm thư mục, cấp quận/huyện làm tệp)
+### Nhóm 2: `SHIFTED_ADM3_PREFECTURE` (dịch chuyển cấp 3: cấp địa khu làm thư mục, cấp quận/huyện làm tệp)
 
 **Đặc điểm:**
 
@@ -240,7 +240,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 - `ADM_2` mới là các thành phố cấp địa khu (Prefecture-level cities như Thâm Quyến, Quảng Châu, Vũ Hán, Tô Châu) hoặc phân vùng lớn.
 - Các quận đô thị lõi và huyện (`Qu` / `Xian` / `Xianjishi`) nằm ở **`ADM_3`**.
 
-#### 🇨🇳 Trường hợp điển hình nhất: Trung Quốc (`CHN`)
+#### Trường hợp điển hình nhất: Trung Quốc (`CHN`)
 
 Nếu xuất ở `ADM_2`, toàn bộ thành phố Thâm Quyến hay Quảng Châu chỉ là một file duy nhất. Khi đó không thể phân tích sự phân hóa giữa các quận lõi (Nam Sơn, Phúc Điền, Thiên Hà) và vùng ven.
 
@@ -253,7 +253,7 @@ Nếu xuất ở `ADM_2`, toàn bộ thành phố Thâm Quyến hay Quảng Châ
 
 Cách đặt tên này giúp người dùng vừa tìm theo Tỉnh dễ dàng trên thanh chọn của Streamlit, vừa tách biệt từng thành phố địa khu. Các tệp bên trong là toàn bộ Quận/Huyện ở `NAME_3` (nhóm theo `GID_3`).
 
-#### 🌐 Các quốc gia khác có thể áp dụng Nhóm 2 (hoặc cấu hình `ADM_3`)
+#### Các quốc gia khác có thể áp dụng Nhóm 2 (hoặc cấu hình `ADM_3`)
 
 | Mã | Muốn phân tích ở cấp... | Thay vì... | Cấu hình |
 | :---: | :--- | :--- | :--- |
@@ -263,11 +263,11 @@ Cách đặt tên này giúp người dùng vừa tìm theo Tỉnh dễ dàng tr
 
 ---
 
-### 🟨 Nhóm 3: `ASYMMETRIC_HYBRID` (bất đối xứng / khuyết cấp trung gian `NAME_2 = "NA"`)
+### Nhóm 3: `ASYMMETRIC_HYBRID` (bất đối xứng / khuyết cấp trung gian `NAME_2 = "NA"`)
 
 **Đặc điểm:** hệ thống hành chính lai ghép giữa mô hình hai cấp (two-tier shire counties) và mô hình một cấp (single-tier Unitary Authorities / Metropolitan Boroughs).
 
-#### 🇬🇧 Trường hợp 1: Vương quốc Anh (`GBR`)
+#### Trường hợp 1: Vương quốc Anh (`GBR`)
 
 **Cấu trúc thực tế trong `gadm41_GBR.gpkg`:**
 
@@ -288,7 +288,7 @@ Cách đặt tên này giúp người dùng vừa tìm theo Tỉnh dễ dàng tr
 > [!NOTE]
 > **Kết quả:** không mất bất kỳ quận nào của London hay Manchester, không sinh ra đa giác `NA` 37MB nào, và 100% tệp xuất ra đều là các Local Authority Districts đồng cấp.
 
-#### 🇹🇼 Trường hợp 2: Đài Loan (`TWN`)
+#### Trường hợp 2: Đài Loan (`TWN`)
 
 Trong GADM v4.1, một số huyện/thành phố bị lệch cấp giữa `NAME_1` và `NAME_2` (do `NAME_1` có hai tỉnh danh nghĩa `Fujian` và `Taiwan` bên cạnh các thành phố trực thuộc trung ương).
 
@@ -301,7 +301,7 @@ Trong GADM v4.1, một số huyện/thành phố bị lệch cấp giữa `NAME_
 
 ---
 
-### 🟥 Nhóm 4: `SHALLOW_ADM1_CITY_STATE` (thành bang & quốc gia diện tích nhỏ chỉ dùng cấp 1)
+### Nhóm 4: `SHALLOW_ADM1_CITY_STATE` (thành bang & quốc gia diện tích nhỏ chỉ dùng cấp 1)
 
 **Đặc điểm:** quốc gia có diện tích nhỏ hoặc là thành bang đô thị. Lớp `ADM_ADM_2` hoặc không tồn tại trong `.gpkg`, hoặc nếu có thì chỉ gồm các tổ dân phố nhỏ vài trăm mét vuông.
 
@@ -332,33 +332,33 @@ Trong GADM v4.1, một số huyện/thành phố bị lệch cấp giữa `NAME_
 
 <a id="s4"></a>
 
-## ✅ 4. Quy trình kiểm định chất lượng dữ liệu đầu ra
+## 4. Quy trình kiểm định chất lượng dữ liệu đầu ra
 
 Mỗi tệp `.geojson` trước khi được ghi xuống ổ cứng để đưa vào `app.py` đều phải đi qua **5 lần kiểm định tự động** trong tập lệnh trích xuất:
 
 ```mermaid
 flowchart LR
-    S["📥 Dữ liệu từ<br/>.gpkg"] --> C1["1️⃣ Chuỗi rác"]
-    C1 --> C2["2️⃣ Thủy văn"]
-    C2 --> C3["3️⃣ Hợp nhất<br/>theo GID"]
-    C3 --> C4["4️⃣ Chống ghi đè<br/>trùng tên"]
-    C4 --> C5["5️⃣ Diện tích<br/>tối thiểu"]
-    C5 --> G["📄 Tệp .geojson<br/>hợp lệ"]
+    S["Dữ liệu từ<br/>.gpkg"] --> C1["1. Chuỗi rác"]
+    C1 --> C2["2. Thủy văn"]
+    C2 --> C3["3. Hợp nhất<br/>theo GID"]
+    C3 --> C4["4. Chống ghi đè<br/>trùng tên"]
+    C4 --> C5["5. Diện tích<br/>tối thiểu"]
+    C5 --> G["Tệp .geojson<br/>hợp lệ"]
 ```
 
-### 1️⃣ Lần 1: kiểm tra chuỗi rác
+### 1. Lần 1: kiểm tra chuỗi rác
 
 Mọi giá trị thuộc tập `{"NA", "N/A", "NULL", "NONE", "UNKNOWN", "?", "", "NAN"}` (không phân biệt hoa thường, đã cắt khoảng trắng hai đầu) đều bị ép về `None` thực sự trước khi phân tích. Mọi dòng có `NAME_1 is None` (như `bang NA` trong `gadm41_GBR.gpkg`) bị loại bỏ, hoặc được gán lại từ cấp con nếu hợp lệ.
 
-### 2️⃣ Lần 2: bộ lọc thủy văn
+### 2. Lần 2: bộ lọc thủy văn
 
 Loại bỏ hoàn toàn các đa giác có `TYPE_x` hoặc `ENGTYPE_x` chứa một trong các từ khóa `Water body`, `Lake`, `Inland water`, `Sea`, `Estuary`.
 
-### 3️⃣ Lần 3: hợp nhất hình học theo mã định danh
+### 3. Lần 3: hợp nhất hình học theo mã định danh
 
 Sửa lỗi tự cắt (self-intersection) bằng `shapely.make_valid()`, rồi gộp (`dissolve`) theo đúng mã `GID` mục tiêu, để đảm bảo một đơn vị hành chính ứng với đúng một tệp `.geojson`.
 
-### 4️⃣ Lần 4: chống ghi đè trùng tên
+### 4. Lần 4: chống ghi đè trùng tên
 
 Nếu trong cùng một thư mục Tỉnh/Bang có hai đơn vị khác mã `GID` nhưng trùng tên hiển thị (ví dụ: *Fairfax County* và *Fairfax City*), hệ thống tự động gắn hậu tố phân biệt lấy từ `ENGTYPE_x`:
 
@@ -369,7 +369,7 @@ USA_Virginia_Fairfax_Independent_City.geojson
 
 Cách đặt tên này tương thích với hàm `list_counties()` và `split_county()` trong `app.py`.
 
-### 5️⃣ Lần 5: kiểm tra diện tích tối thiểu cho VIIRS
+### 5. Lần 5: kiểm tra diện tích tối thiểu cho VIIRS
 
 Cảnh báo nếu một đa giác có diện tích $< 0.25 \text{ km}^2$, tức nhỏ hơn một ô lưới $500 \times 500 \text{ m}$.
 

@@ -23,7 +23,7 @@ from streamlit.testing.v1 import AppTest  # noqa: E402
 
 
 def _app():
-    """Chạy render_lisa_tab trên lưới 20x20 ô 500 m có cụm sáng ở giữa."""
+
     import geopandas as gpd
     import numpy as np
     import pandas as pd

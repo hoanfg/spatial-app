@@ -1,7 +1,4 @@
-"""
-ui_theme.py
-
-"""
+"""Visual theme and reusable Streamlit components."""
 from __future__ import annotations
 
 import html as _html
@@ -10,8 +7,8 @@ import re
 
 import streamlit as st
 
-SODIUM = "#F2A93B"   # đèn natri áp suất thấp
-LED = "#9FD8FF"      # đèn LED trắng xanh
+SODIUM = "#F2A93B"
+LED = "#9FD8FF"
 NIGHT = "#0A1024"
 
 _FONTS = """
@@ -52,15 +49,14 @@ hr{border:0!important;border-top:1px solid var(--ntl-line)!important;background:
 .ntl-field i.g{box-shadow:0 0 9px rgba(242,169,59,.55)}
 .ntl-field i.l{background:var(--ntl-led);box-shadow:0 0 14px rgba(159,216,255,.75)}
 @keyframes ntlLit{from{opacity:0;transform:scale(.6)}to{opacity:var(--o);transform:none}}
-/* Chuyển động liên tục: chỉ đổi opacity (GPU lo, không tính lại bố cục)
-   .t = nhấp nháy như đèn thành phố;  .r = gợn sáng lan từ lõi đô thị ra ngoài (như cụm "điểm nóng" lan toả) */
+
 .ntl-field i.t{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards,
   ntlTwinkle var(--t) ease-in-out calc(var(--d) + 1s + var(--p)) infinite}
 @keyframes ntlTwinkle{0%,100%{opacity:var(--o)}50%{opacity:calc(var(--o) * .35)}}
 .ntl-field i.r{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards,
   ntlRipple 6s ease-out calc(var(--d) + 1.6s + var(--r)) infinite}
 @keyframes ntlRipple{0%,38%,100%{opacity:var(--o)}10%{opacity:1}}
-/* tắt khi: banner ngoài màn hình, máy yếu (JS gắn class lên <html>) */
+
 html.ntl-offscreen .ntl-field i.t,html.ntl-offscreen .ntl-field i.r{animation-play-state:paused}
 html.ntl-calm .ntl-field i.t,html.ntl-calm .ntl-field i.r{animation:ntlLit .5s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
 .ntl-hero-body{position:relative;z-index:1;padding:30px 34px;max-width:60%}
@@ -72,7 +68,7 @@ html.ntl-calm .ntl-field i.t,html.ntl-calm .ntl-field i.r{animation:ntlLit .5s c
 .ntl-facts dt{font-size:.74rem;color:#7F8BB0;margin:0 0 2px}
 .ntl-facts dd{font-size:.88rem;font-weight:600;margin:0;color:#DDE4F6}
 
-/* ================= TRẠNG THÁI CHỜ ================= */
+
 .ntl-empty{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:40px;margin:22px 0 8px;align-items:start}
 .ntl-empty-h{font-family:var(--ntl-display);font-size:1.7rem;font-weight:700;line-height:1.15;letter-spacing:-.02em}
 .ntl-empty-p{margin-top:10px;opacity:.72;line-height:1.55;max-width:44ch}
@@ -85,7 +81,7 @@ html.ntl-calm .ntl-field i.t,html.ntl-calm .ntl-field i.r{animation:ntlLit .5s c
 .ntl-steps b{display:block;font-size:1rem}
 .ntl-steps span{display:block;font-size:.9rem;opacity:.7;line-height:1.45;margin-top:1px}
 
-/* ================= TIÊU ĐỀ KẾT QUẢ ================= */
+
 .ntl-plate{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 28px;margin:2px 0 14px}
 .ntl-where .up{font-size:.88rem;opacity:.65;margin-bottom:2px}
 .ntl-where .name{font-family:var(--ntl-display);font-size:1.9rem;font-weight:700;line-height:1.08;letter-spacing:-.025em}
@@ -99,7 +95,7 @@ html.ntl-calm .ntl-field i.t,html.ntl-calm .ntl-field i.r{animation:ntlLit .5s c
 
 .ntl-sec{margin:22px 0 6px;font-family:var(--ntl-display);font-size:1.15rem;font-weight:700}
 
-/* ================= DẢI SỐ ĐO ================= */
+
 div[data-testid="stHorizontalBlock"]:has(div[data-testid="stMetric"]){gap:0!important;
   border-top:1px solid var(--ntl-line);border-bottom:1px solid var(--ntl-line)}
 div[data-testid="stHorizontalBlock"]:has(div[data-testid="stMetric"])>div{padding:16px 20px}
@@ -135,7 +131,7 @@ div[data-baseweb="tab-panel"]{animation:ntlTab .2s ease both;padding-top:1rem}
 .ntl-brand b{display:block;font-family:var(--ntl-display);font-size:1.02rem;line-height:1.1;letter-spacing:-.01em}
 .ntl-brand span{font-size:.78rem;opacity:.62}
 
-/* ================= NÚT ================= */
+
 button[data-testid^="stBaseButton"],div[data-testid="stDownloadButton"] button,div[data-testid="stFormSubmitButton"] button{
   border-radius:var(--ntl-r-ctl);font-weight:600;transition:border-color .15s ease,background .15s ease,transform .1s ease}
 button[data-testid="stBaseButton-secondary"]:hover:not(:disabled){border-color:var(--ntl-sodium)!important;color:inherit}
@@ -149,7 +145,7 @@ button[data-testid="stBaseButton-primary"]:active:not(:disabled){transform:scale
 button[data-testid="stBaseButton-primary"]:disabled,button[kind="primary"]:disabled{opacity:.4}
 button:focus-visible,[role="tab"]:focus-visible{outline:2px solid var(--ntl-led)!important;outline-offset:2px}
 
-/* ================= Ô NHẬP LIỆU ================= */
+
 div[data-baseweb="select"]>div,div[data-baseweb="input"]>div,div[data-baseweb="base-input"]{border-radius:var(--ntl-r-ctl)!important;
   border-color:var(--ntl-line)!important;transition:border-color .15s ease}
 div[data-baseweb="select"]:hover>div,div[data-baseweb="input"]:hover>div{border-color:rgba(242,169,59,.7)!important}
@@ -157,7 +153,7 @@ div[data-baseweb="select"]:focus-within>div,div[data-baseweb="input"]:focus-with
 [data-testid="stSliderThumbValue"]{font-weight:700;font-variant-numeric:tabular-nums}
 label[data-testid="stWidgetLabel"] p{font-size:.88rem;font-weight:500}
 
-/* ================= KHUNG / BẢNG / THÔNG BÁO ================= */
+
 div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > div[data-testid="stVerticalBlock"] .ntl-plate){
   border:0!important;padding:0!important;background:none!important}
 div[data-testid="stExpander"]{border:0!important;border-bottom:1px solid var(--ntl-line)!important;border-radius:0!important;background:none!important}
@@ -171,7 +167,7 @@ iframe{border-radius:var(--ntl-r-panel)}
 iframe[title="streamlit_folium.st_folium"]{box-shadow:0 0 0 1px var(--ntl-line)}
 [data-testid="stCaptionContainer"]{opacity:.72}
 
-/* ================= KHÁC ================= */
+
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-thumb{background:rgba(130,142,185,.4);border-radius:8px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(242,169,59,.7)}
@@ -226,7 +222,7 @@ _UX_CSS = """
   background:linear-gradient(to top,var(--ntl-glass) 78%,transparent);
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 
-/* ===== Lựa chọn radio -> nút chọn (segmented) ===== */
+
 [data-testid="stRadio"] [role="radiogroup"]{gap:6px;flex-wrap:wrap}
 [data-testid="stSidebar"] [data-testid="stRadio"] [role="radiogroup"]{flex-direction:row}
 [data-testid="stRadio"] label[data-baseweb="radio"]{margin:0;padding:5px 13px;border:1px solid var(--ntl-line);
@@ -237,15 +233,15 @@ _UX_CSS = """
 [data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p{font-weight:700}
 [data-testid="stRadio"] label[data-baseweb="radio"]:has(input:focus-visible){outline:2px solid var(--ntl-led);outline-offset:2px}
 
-/* ===== Tab dính đầu trang khi cuộn ===== */
+
 div[data-baseweb="tab-list"]{position:sticky;top:3.4rem;z-index:20;background:var(--ntl-glass);
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 
-/* ===== Tiêu đề từng mục trong tab ===== */
+
 [data-testid="stMain"] h3{font-size:1.28rem;font-weight:700;display:flex;align-items:center;gap:10px;margin-top:1.2rem}
 [data-testid="stMain"] h3:before{content:"";flex:none;width:9px;height:9px;border-radius:2px;background:var(--ntl-sodium)}
 
-/* ===== Dự phòng ===== */
+
 .ntl-redfix [data-testid="stSlider"],.ntl-redfix [data-testid="stCheckbox"],.ntl-redfix [data-testid="stToggle"]{filter:hue-rotate(38deg)}
 </style>
 """
@@ -253,7 +249,7 @@ div[data-baseweb="tab-list"]{position:sticky;top:3.4rem;z-index:20;background:va
 
 _LAYOUT_CSS = """
 <style>
-/* ===== Bố cục ===== */
+
 [data-testid="stMain"]{
   background:
     radial-gradient(900px 420px at 85% -8%,rgba(159,216,255,.075),transparent 62%),
@@ -271,7 +267,7 @@ _LAYOUT_CSS = """
     content:"";position:absolute;left:22px;right:22px;top:0;height:2px;border-radius:0 0 3px 3px;
     background:linear-gradient(90deg,transparent,var(--ntl-sodium,#F2A93B),var(--ntl-led,#9FD8FF),transparent);opacity:.8}
 }
-/* ===== Trạng thái trống ===== */
+
 .ntl-empty{container-type:inline-size;display:block;margin:34px 0 8px;text-align:center}
 .ntl-empty-h{font-size:2rem}
 .ntl-empty-p{margin:12px auto 0;max-width:56ch;opacity:.75}
@@ -289,11 +285,11 @@ _LAYOUT_CSS = """
 @container (max-width:460px){.ntl-steps{grid-template-columns:1fr}.ntl-empty-h{font-size:1.6rem}}
 @media (prefers-reduced-motion:reduce){.ntl-steps li{animation:none;opacity:1}}
 
-/* ===== Không dùng thanh bên ===== */
+
 [data-testid="stSidebar"],[data-testid="stSidebarCollapsedControl"],[data-testid="collapsedControl"],
 [data-testid="stSidebarCollapseButton"]{display:none!important}
 .block-container{max-width:1320px}
-/* thanh trên */
+
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand){align-items:center;margin:0 0 .6rem}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) .ntl-brand{margin:0}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand)>div[data-testid="stColumn"]:last-child{
@@ -302,7 +298,7 @@ div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] [ro
   flex-wrap:nowrap;gap:0;padding:3px;border:1px solid var(--ntl-line);border-radius:999px;background:rgba(14,21,48,.6)}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] label[data-baseweb="radio"]{
   border-color:transparent;padding:4px 14px}
-/* bảng điều khiển */
+
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl){position:relative;border:1px solid #243063;border-radius:20px;
   background:linear-gradient(180deg,rgba(24,34,72,.82),rgba(13,20,46,.82));padding:.6rem .9rem .5rem;margin:.4rem 0 1.2rem;
   box-shadow:0 18px 44px rgba(2,5,18,.45),inset 0 1px 0 rgba(159,216,255,.09)}
@@ -311,26 +307,26 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):before{content:"";p
 .ntl-dl{display:flex;align-items:center;gap:10px;margin:0 0 .5rem;font-family:var(--ntl-display);font-weight:700;font-size:.98rem;letter-spacing:-.01em}
 .ntl-dl span{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:.78rem;
   border:1px solid var(--ntl-sodium,#F2A93B);color:var(--ntl-sodium,#F2A93B);background:rgba(242,169,59,.1)}
-/* cột "Khởi chạy" */
+
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]{
   min-height:3.6rem;font-size:1.05rem;border-radius:14px;box-shadow:0 8px 24px rgba(242,169,59,.28)}
-/* ===== Sửa lỗi bấm: thanh trên cùng nằm dưới thanh header cố định của Streamlit ===== */
+
 .block-container{padding-top:4.4rem}
 header[data-testid="stHeader"]{pointer-events:none}
 header[data-testid="stHeader"] [data-testid="stToolbar"],header[data-testid="stHeader"] [data-testid="stToolbar"] *{pointer-events:auto}
-/* các khối chỉ chứa <style> (CSS nạp từ ui_theme) không được chiếm chỗ trong bố cục */
+
 div[data-testid="stElementContainer"]:has(style),div.element-container:has(style){display:none!important}
-/* radio -> nút chọn: ẩn chấm tròn mặc định (phần tử đầu), chỉ để chữ */
+
 [data-testid="stRadio"] label[data-baseweb="radio"]>*:not(:last-child){position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 [data-testid="stRadio"] label[data-baseweb="radio"]>*:last-child{display:block!important}
-/* nút đổi ngôn ngữ: dài hơn, hai nửa bằng nhau, bấm được cả ô */
+
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"]{width:100%}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] [role="radiogroup"]{
   width:100%;max-width:300px;margin-left:auto;flex-wrap:nowrap;gap:0}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] label[data-baseweb="radio"]{
   flex:1 1 0;justify-content:center;text-align:center;padding:7px 14px;position:relative}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] label[data-baseweb="radio"] p{white-space:nowrap}
-/* ô tra cứu + danh sách kết quả */
+
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) [data-testid="stTextInput"] input{padding:.55rem .8rem}
 [class*="st-key-srch_hit"]{margin-bottom:-.55rem}
 [class*="st-key-srch_hit"] button{justify-content:flex-start;text-align:left;min-height:2.3rem;padding:.3rem .85rem;font-weight:500;
@@ -339,7 +335,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) [data-testid="stTex
 [class*="st-key-srch_hit"] button{display:flex;justify-content:flex-start}
 [class*="st-key-srch_hit"] button>div,[class*="st-key-srch_hit"] button [data-testid="stMarkdownContainer"]{flex:1;text-align:left;justify-content:flex-start}
 [class*="st-key-srch_nav"] button{min-height:2rem;padding:0;font-size:1.2rem;line-height:1}
-[class*="st-key-srch_hit"] button:before{content:"📍";margin-right:.55rem}
+[class*="st-key-srch_hit"] button:before{content:none}
 [class*="st-key-srch_hit"] button:hover:not(:disabled){border-color:var(--ntl-sodium);background:rgba(242,169,59,.12)}
 @media (max-width:760px){.block-container{max-width:100%}}
 </style>
@@ -355,14 +351,14 @@ _FX_JS = r"""
   P.__ntlFx3 = true;
   var reduce = P.matchMedia && P.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Tắt chuyển động liên tục của banner */
+
   var root = D.documentElement;
   var nav = P.navigator || {};
   var weak = reduce || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 2) ||
              (nav.deviceMemory && nav.deviceMemory <= 2) || (nav.connection && nav.connection.saveData);
   if (weak) { root.classList.add('ntl-calm'); }
   else if (P.requestAnimationFrame) {
-    /* đo nhanh ~40 khung hình: dưới ~30 fps thì chuyển sang chế độ "calm" */
+
     var n = 0, t0 = 0;
     (function probe(ts) {
       if (!t0) { t0 = ts; }
@@ -370,14 +366,14 @@ _FX_JS = r"""
       if ((ts - t0) / (n - 1) > 34) { root.classList.add('ntl-calm'); }
     })(0);
   }
-  /* Tạm dừng khi banner đã cuộn khỏi màn hình hoặc tab bị ẩn */
+
   setInterval(function () {
     var h = D.querySelector('.ntl-hero');
     var out = D.hidden || !h || h.getBoundingClientRect().bottom < 0;
     root.classList.toggle('ntl-offscreen', !!out);
   }, 800);
 
-  /* Đếm số khi có kết quả mới (~0.6s) */
+
   function textNode(el) {
     var w = D.createTreeWalker(el, NodeFilter.SHOW_TEXT, null), n;
     while ((n = w.nextNode())) { if (/\d/.test(n.nodeValue)) { return n; } }
@@ -431,7 +427,7 @@ _FX_JS = r"""
   }).observe(D.body, {childList: true, subtree: true});
   scan();
 
-  /* Nút lên đầu trang */
+
   var top = D.createElement('button'); top.className = 'ntl-top'; top.type = 'button';
   top.setAttribute('aria-label', 'Back to top'); top.textContent = '↑';
   D.body.appendChild(top);
@@ -458,7 +454,7 @@ def inject_theme() -> None:
 
 
 def enable_fx() -> None:
-    """Bật hiệu ứng JS"""
+    """Enable optional JavaScript effects."""
     try:
         import streamlit.components.v1 as components
         components.html(_FX_JS, height=0)
@@ -471,7 +467,7 @@ def _esc(x) -> str:
 
 
 def _field_html(cols: int = 26, rows: int = 7) -> str:
-    """Cánh đồng ô lưới trang trí)"""
+    """Build the decorative grid field used by the hero banner."""
     seed = 11
 
     def rnd() -> float:
@@ -513,7 +509,7 @@ _FIELD = None
 
 
 def hero(title: str, subtitle: str, facts=None, chips=None) -> None:
-    """facts: danh sách (nhãn, giá trị)."""
+    """Render the hero banner with optional label-value facts."""
     global _FIELD
     if _FIELD is None:
         _FIELD = _field_html()
@@ -542,7 +538,7 @@ def sidebar_brand(title: str, subtitle: str) -> None:
 
 
 def deck_label(n, text: str) -> None:
-    """Nhãn đánh số cho từng cụm trong bảng điều khiển"""
+    """Render a numbered label for a control-panel group."""
     import re
     t = re.sub(r"^\s*\d+\.\s*", "", str(text))
     st.markdown(f'<div class="ntl-dl"><span>{_esc(str(n))}</span>{_esc(t)}</div>', unsafe_allow_html=True)
@@ -561,7 +557,7 @@ def empty_state(title: str, hint: str, steps) -> None:
 
 
 def place_banner(place: str, facts) -> None:
-    """place: 'Quốc gia / Tỉnh / Huyện'. facts: danh sách (nhãn, giá trị) hoặc chuỗi."""
+    """Render a locality path and optional metadata facts."""
     parts = [p.strip() for p in str(place).split(" / ") if p.strip()]
     name = parts[-1] if parts else str(place)
     up = " / ".join(parts[:-1])

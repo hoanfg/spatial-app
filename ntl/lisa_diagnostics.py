@@ -12,18 +12,16 @@ from .lisa_core import build_queen_neighbors, run_lisa
 
 PERM_CHOICES = (199, 499, 999)
 SEED_LIST = (42, 101, 202, 303, 404)
-SEED_SD_LIMIT = 0.005          # 0,5% diện tích vùng
+SEED_SD_LIMIT = 0.005
 PRIMACY_LIMIT = 0.60
 DARK_SHARE_LIMIT = 0.50
-# Tốc độ thô (đơn vị công việc / giây) dùng để ước tính thời gian trên máy yếu. Đo trên máy thường
-# được ~6e7; lấy 1.5e7 để ước tính thận trọng.
+
+
 WORK_RATE = 1.5e7
-HEAVY_WORK_LIMIT = 6e8         # trên mức này nút kiểm định nặng bị khóa
+HEAVY_WORK_LIMIT = 6e8
 
 
-# ----------------------------------------------------------------------------------------
-# Tiện ích
-# ----------------------------------------------------------------------------------------
+
 def jaccard(a, b) -> float:
     a, b = np.asarray(a, bool), np.asarray(b, bool)
     u = int((a | b).sum())
@@ -31,7 +29,7 @@ def jaccard(a, b) -> float:
 
 
 def winsorize_p99(ntl, q: float = 0.99):
-    """Cắt NTL ở phân vị q của các ô sáng (chống ô đốt khí / cảng / sân bay)."""
+
     x = np.asarray(ntl, float)
     lit = x[np.isfinite(x) & (x > 0)]
     if lit.size == 0:
@@ -47,16 +45,12 @@ def estimate_seconds(m_tests: int, perms: int, runs: int) -> float:
     return heavy_work_units(m_tests, perms, runs) / WORK_RATE
 
 
-# ----------------------------------------------------------------------------------------
-# 1. Điều kiện đủ của số hoán vị dưới FDR
-# ----------------------------------------------------------------------------------------
 def perm_power(m_tests: int, perms: int, alpha: float, fdr: bool = True,
                risky_ratio: float = 0.2) -> dict:
-    """p nhỏ nhất (hai phía) = 2/(perms+1). BH chỉ bác bỏ được nếu ≥ ceil(p_floor*m/alpha) ô chạm sàn.
+    """Assess whether the permutation floor gives BH enough resolving power.
 
-    ratio = min_hits / m_tests = p_floor / alpha (không phụ thuộc m).
-      * infeasible: ratio >= 1  -> BH không thể bác bỏ gì (âm tính giả 100%).
-      * risky:      ratio > risky_ratio -> cụm phải rất lớn mới phát hiện được.
+    For a two-sided test, ``p_floor = 2/(perms+1)`` and the minimum rejected
+    share is ``p_floor/alpha``. A share at or above one is infeasible.
     """
     p_floor = 2.0 / (perms + 1)
     out = {"p_floor": p_floor, "min_hits": 0, "ratio": 0.0, "infeasible": False,
@@ -77,13 +71,11 @@ def perm_power(m_tests: int, perms: int, alpha: float, fdr: bool = True,
     return out
 
 
-# ----------------------------------------------------------------------------------------
-# 2. Đuôi Pareto: sai số chuẩn Hill + kiểm định KS
-# ----------------------------------------------------------------------------------------
 def ks_pareto(top_k, u_thr: float, alpha: float):
-    """KS của top_k/u_thr so với F(x) = 1 - x^-alpha. Trả (D, p tiệm cận).
+    """Compare ``top_k/u_thr`` with a Pareto CDF and return asymptotic KS results.
 
-    alpha được ước lượng từ chính mẫu nên p-value chỉ mang tính gần đúng (hơi bảo thủ)."""
+    Because alpha is estimated from the same sample, the p-value is approximate.
+    """
     x = np.sort(np.asarray(top_k, float) / u_thr)
     k = x.size
     F = 1.0 - x ** (-alpha)
@@ -94,7 +86,7 @@ def ks_pareto(top_k, u_thr: float, alpha: float):
 
 
 def hill_diagnostics(ntl, core, lit, tail_frac: float = 0.10) -> dict:
-    """Cùng định nghĩa đuôi với compute_pareto_top_lights; thêm SE = alpha/sqrt(k), CI95 và KS."""
+
     ntl = np.asarray(ntl, float)
     vals = np.sort(ntl[np.asarray(core, bool) & np.asarray(lit, bool)])[::-1]
     nan = float("nan")
@@ -125,9 +117,6 @@ def tail_sensitivity(ntl, core, lit, fracs=(0.05, 0.10, 0.15)) -> dict:
     return {"rows": rows, "spread": spread}
 
 
-# ----------------------------------------------------------------------------------------
-# 3. Tỷ số thống trị cụm đầu (đa cực)
-# ----------------------------------------------------------------------------------------
 def cluster_primacy(region_metrics: dict) -> dict:
     n_cl = int(region_metrics.get("n_hh_clusters", 0))
     largest = float(region_metrics.get("largest_hh_cluster_km2", 0.0))
@@ -138,14 +127,12 @@ def cluster_primacy(region_metrics: dict) -> dict:
             "multipolar": bool(n_cl >= 2 and np.isfinite(primacy) and primacy < PRIMACY_LIMIT)}
 
 
-# ----------------------------------------------------------------------------------------
-# 4. Moran's I trên phần dư WLS của độ dốc đô thị
-# ----------------------------------------------------------------------------------------
 def resid_moran(cx, cy, ntl, area, dist_core_km, edge, cell_size_m: float,
                 perms: int = 99, seed: int = 42, max_n_perm: int = 40_000) -> dict:
-    """Phần dư u = ln(1+NTL) - (a - g*d) (WLS theo diện tích) rồi Moran's I (Queen, hàng chuẩn hóa).
+    """Compute Queen Moran's I for residuals from an area-weighted urban gradient.
 
-    Hoán vị chỉ chạy khi số ô ≤ max_n_perm để máy yếu không bị chậm; trên lưới lớn chỉ báo I."""
+    Permutations are skipped above ``max_n_perm``; large grids report I only.
+    """
     cx, cy = np.asarray(cx, float), np.asarray(cy, float)
     ntl, area = np.asarray(ntl, float), np.asarray(area, float)
     d = np.asarray(dist_core_km, float)
@@ -195,13 +182,11 @@ def resid_moran(cx, cy, ntl, area, dist_core_km, edge, cell_size_m: float,
         out["perm_done"] = True
         out["flag"] = bool(out["p"] < 0.05 and I > 0)
     elif np.isfinite(I):
-        out["flag"] = bool(I > 0.3)  # không có p-value: dùng ngưỡng thô
+        out["flag"] = bool(I > 0.3)
     return out
 
 
-# ----------------------------------------------------------------------------------------
-# 5. Lạm phát số 0
-# ----------------------------------------------------------------------------------------
+
 def dark_share(ntl, edge) -> dict:
     ntl = np.asarray(ntl, float)
     core = ~np.asarray(edge, bool)
@@ -209,12 +194,10 @@ def dark_share(ntl, edge) -> dict:
     return {"share": sh, "flag": bool(np.isfinite(sh) and sh > DARK_SHARE_LIMIT)}
 
 
-# ----------------------------------------------------------------------------------------
-# Gom nhóm nhẹ
-# ----------------------------------------------------------------------------------------
+
 def auto_diagnostics(cx, cy, ntl, area, cell_size_m, cell_df, region_metrics,
                      perms: int, alpha: float, fdr: bool, perm_auto_from=None) -> dict:
-    """Trả {"items": [...], "export": {...}, "n_warn": int}. Mỗi item: dict(key, level, vals)."""
+
     ntl = np.asarray(ntl, float)
     area = np.asarray(area, float)
     edge = cell_df["is_edge_masked"].to_numpy().astype(bool)
@@ -257,11 +240,9 @@ def auto_diagnostics(cx, cy, ntl, area, cell_size_m, cell_df, region_metrics,
     return {"items": items, "export": export, "n_warn": sum(1 for it in items if it["level"] == "warn")}
 
 
-# ----------------------------------------------------------------------------------------
-# Nhóm nặng (chạy theo nút)
-# ----------------------------------------------------------------------------------------
+
 def seed_stability(run_kwargs: dict, seeds=SEED_LIST, progress=None) -> dict:
-    """Chạy lại run_lisa với nhiều seed; sd của hh_area_share > 0,5% thì khuyến nghị 999 hoán vị."""
+
     shares = []
     for i, s in enumerate(seeds):
         kw = dict(run_kwargs)
@@ -276,7 +257,7 @@ def seed_stability(run_kwargs: dict, seeds=SEED_LIST, progress=None) -> dict:
 
 
 def method_sensitivity(run_kwargs: dict, base_hh, base_log: bool, progress=None) -> dict:
-    """So sánh tập ô HH: thô vs cắt P99 vs ln. Tái dùng kết quả gốc nếu trùng cấu hình."""
+
     ntl = np.asarray(run_kwargs["ntl"], float)
     hh = {}
     steps = [("raw", ntl, False), ("winsor", winsorize_p99(ntl), False), ("log", ntl, True)]

@@ -4,10 +4,11 @@ import math
 
 
 def fmt_p(p: float, perms: int | None, prefix: bool = False, digits: int = 3) -> str:
-    """Hiển thị p-value giả từ hoán vị.
+    """Format a permutation pseudo p-value without overstating its precision.
 
-    Với R hoán vị, p nhỏ nhất đo được là 1/(R+1). Khi p chạm mức sàn đó, giá trị thật chỉ biết là "≤ sàn",
-    nên hiện '≤ 0.005' thay vì '0.005' để không bị hiểu là p chính xác. prefix=True thêm 'p ' phía trước."""
+    With ``R`` permutations, the smallest measurable value is ``1/(R+1)``.
+    Values at that floor are displayed as an upper bound.
+    """
     if p is None or not math.isfinite(p):
         return "N/A"
     lead = "p " if prefix else ""

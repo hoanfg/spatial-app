@@ -13,12 +13,12 @@ from .lisa_core import edge_cell_mask
 from .validation import MIN_CELLS, compare_clipping, export_columns as val_export, proxy_agreement
 from .zonal import zonal_stat, zonal_sum_native
 
-_ICON = {"ok": "✅", "warn": "⚠️", "info": "ℹ️"}
+_STATUS = {"ok": ("Tốt", "OK"), "warn": ("Cần lưu ý", "Warning"), "info": ("Thông tin", "Info")}
 _PROXY_LABEL = {
     "built": ("Diện tích xây dựng (GHSL)", "Built-up surface (GHSL)"),
     "pop": ("Dân số (GHSL)", "Population (GHSL)"),
 }
-_KEEP = 8   # số kết quả giữ lại trong session cho mỗi loại
+_KEEP = 8
 
 
 def _put(cache: dict, key, value) -> None:
@@ -29,12 +29,13 @@ def _put(cache: dict, key, value) -> None:
 
 def _bbox(grid_wgs) -> tuple:
     x0, y0, x1, y1 = grid_wgs.total_bounds
-    pad = 0.005   # cùng khoảng đệm với pipeline chính
+    pad = 0.005
     return (round(x0 - pad, 5), round(y0 - pad, 5), round(x1 + pad, 5), round(y1 + pad, 5))
 
 
 def _line(it: dict, vi: bool) -> str:
-    k, v, ic = it["key"], it["vals"], _ICON[it["level"]]
+    k, v = it["key"], it["vals"]
+    status = _STATUS[it["level"]][0 if vi else 1]
     if k == "nodata":
         t = (f"**Pixel không có giá trị (NaN/inf):** {v['nodata_share'] * 100:.2f}% trong {v['n_pixels']:,} pixel. "
              "Pipeline đổi các pixel này thành 0." if vi else
@@ -63,11 +64,11 @@ def _line(it: dict, vi: bool) -> str:
              f"**Cloud-free months:** median {v['median_months']:.0f} per pixel; "
              f"{v['no_obs_share'] * 100:.1f}% of pixels have none (counted as dark), "
              f"{v['low_obs_share'] * 100:.1f}% have fewer than {v['min_months']}.")
-    return f"{ic} {t}"
+    return f"**{status}:** {t}"
 
 
 def collect_quality_export(ts: str) -> dict:
-    """Cột chất lượng và kiểm chứng đã tính cho lần chạy `ts`, để ghép vào dòng panel."""
+
     ss = st.session_state
     res_q = ss.get("_dq_base", {}).get(ts)
     if not res_q:
@@ -100,8 +101,9 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
     schema = ((dq or {}).get("raster") or {}).get("quality_band_schema")
     if schema and not schema.get("supported"):
         n_warn += 1
-    title = ("🛡️ Chất lượng dữ liệu & kiểm chứng ngoài" if vi else "🛡️ Data quality & external validation") + \
-        (f"  ·  ⚠️ {n_warn}" if n_warn else "  ·  ✅")
+    title = ("Chất lượng dữ liệu & kiểm chứng ngoài" if vi else "Data quality & external validation")
+    if n_warn:
+        title += f" · {n_warn} " + ("cảnh báo" if vi else "warning(s)")
 
     with st.expander(title, expanded=bool(n_warn)):
         if not dq:
@@ -124,7 +126,7 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                            "cells with no extracted value. It only records; it never changes NTL values."))
         st.markdown("\n\n".join(_line(i, vi) for i in items))
 
-        # --- các kiểm tra theo nút -------------------------------------------------------------
+
         st.markdown("---")
         st.subheader("Kiểm tra sâu" if vi else "Deeper checks",
                      help=("Các nút này tải thêm dữ liệu từ Earth Engine hoặc trích xuất lại từ ảnh đã tải. "
@@ -134,17 +136,17 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
         grid_wgs = grid_utm.to_crs(epsg=4326)
         bbox = _bbox(grid_wgs)
         b1, b2 = st.columns(2)
-        run_obs = b1.button(("✅ " if ts in obs_cache else "▶ ") + ("Đếm số tháng quan sát không mây" if vi else "Count cloud-free months"),
+        run_obs = b1.button("Đếm số tháng quan sát không mây" if vi else "Count cloud-free months",
                             key="dq_btn_obs", use_container_width=True,
                             help=("Với mỗi pixel, đếm số tháng có quan sát không mây trong năm. Pixel 0 tháng đang bị tính là tối." if vi
                                   else "Counts cloud-free months per pixel in the year. Pixels with 0 months are currently counted as dark."))
-        run_clip = b2.button(("✅ " if ts in clip_cache else "▶ ") + ("So sánh không cắt giá trị âm" if vi else "Compare without clipping negatives"),
+        run_clip = b2.button("So sánh không cắt giá trị âm" if vi else "Compare without clipping negatives",
                              key="dq_btn_clip", use_container_width=True, disabled="tif_bytes" not in res,
                              help=("Trích xuất lại trung bình theo ô từ ảnh đã tải nhưng giữ giá trị âm, rồi so với bản đã cắt. Không cần Earth Engine." if vi
                                    else "Re-extracts cell means from the downloaded image keeping negatives, then compares with the clipped version. No Earth Engine needed."))
 
         def _done(msg_vi, msg_en):
-            st.toast(msg_vi if vi else msg_en, icon="✅")
+            st.toast(msg_vi if vi else msg_en)
 
         if run_obs:
             if ts in obs_cache:
@@ -187,7 +189,7 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
             else:
                 st.success("Cách xử lý giá trị âm gần như không ảnh hưởng." if vi else "Negative handling has almost no effect.")
 
-        # --- kiểm chứng ngoài ------------------------------------------------------------------
+
         st.markdown("---")
         st.subheader("Kiểm chứng ngoài" if vi else "External validation",
                      help=("So NTL với một đại lượng độc lập trên cùng các ô. Nếu hai thứ gần như không liên quan, NTL ở nơi này "
@@ -197,7 +199,7 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
         kind = st.radio("Đại lượng so sánh" if vi else "Compare with", ["built", "pop"], horizontal=True, key="dq_proxy_kind",
                         format_func=lambda k: _PROXY_LABEL[k][0 if vi else 1])
         vkey = (ts, kind)
-        run_val = st.button(("✅ " if vkey in val_cache else "▶ ") + ("Tải và so sánh" if vi else "Fetch and compare"),
+        run_val = st.button("Tải và so sánh" if vi else "Fetch and compare",
                             key="dq_btn_val",
                             help=("Tải raster GHSL 100 m từ Earth Engine, cộng theo ô rồi tính tương quan hạng Spearman với NTL (khoảng tin cậy bootstrap theo khối)." if vi
                                   else "Fetches the 100 m GHSL raster from Earth Engine, sums it per cell and computes the Spearman rank correlation with NTL (block-bootstrap CI)."))
