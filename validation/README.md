@@ -79,7 +79,25 @@ This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai G
 | G15 | P2 | `moran_I_lit` is a mean of local statistics, not Global Moran I. | Ensure all current CSV/UI explanations preserve that distinction. |
 | G16 | P2 | The evidence guide's VIIRS catalog link must match the application's `VCMSLCFG` product. | Check source/version provenance; no V11 rerun. |
 | G17 | P1 | BH arithmetic is tested, but spatial dependence does not guarantee nominal FDR in every setting. | Simulated spatial nulls: empirical FDR and power for BH versus BY, across weights and autocorrelation levels. |
-| G18 | P1 | Default LISA omits zero-radiance cells from both inference and neighborhood graph. | Compare HH/LL classifications with zeros included, distinguishing observed zeros from missing observations. |
+| G18 | P1 | Synthetic support-aware sensitivity is now deposited: zero inclusion and false zero-fill change LISA labels, neighbors and p-values. **Real incomplete-support validation stays open.** | Repeat with a genuine A02-verified low-support scene; do not treat the synthetic result as external validation. |
+
+### G18 synthetic evidence (bounded result, 18 November 2026)
+
+This experiment is based on a fully specified **synthetic** 12×12 grid at 500 m, not a real VIIRS or A02 scene. The controlled support mask has 106 observed-positive cells, 28 genuinely observed zeros and 10 unobserved cells that carry legacy filled zeros. All three runs use Queen neighbors, 999 conditional permutations, seed 42, alpha 0.05; the following outputs use BH-FDR.
+
+| Analysis population and zero policy | Tested cells | HH | LL |
+| --- | ---: | ---: | ---: |
+| Known-support locations, positive NTL only | 106 | 22 | 21 |
+| Known-support locations, including observed zero | 134 | 21 | 17 |
+| All locations, naively treating unknown-support zeros as observed | 144 | 18 | 13 |
+
+Including observed zeros changed 50/134 classes on the common known-support domain (including 28 formerly DARK cells); 45/134 neighbor counts and 92/106 comparable pseudo p-values also changed. Inappropriately including the 10 unknown-support cells changed 9/134 classes, 28/134 neighbor counts and 112/134 comparable pseudo p-values **among the truly supported locations**. In the naive run, all 10 unknown-support cells entered the local test family. Separate unadjusted results are stored in the evidence CSV.
+
+**Scope restriction:** This demonstrates possible specification sensitivity under one controlled synthetic field, **not** a measured bias magnitude in a real locality, proof of which policy is universally correct, or empirical FDR control. The safe audit runs subset the observed geography instead of feeding NaNs to the existing `run_lisa` (whose full Gini calculation rejects NaN). Consequently, the normalization population and tested family also change. Existing V11/GHSL/A02/A03/A04 validations are untouched, and the production default still excludes zero NTL cells from LISA.
+
+**Retained evidence:** [generator](g18_zero_support_experiment.py), [input and support mask](evidence/g18_zero_support/synthetic_input.csv), [all cell-level results](evidence/g18_zero_support/cell_comparison.csv) and [machine-readable summary, software versions and SHA-256 identities](evidence/g18_zero_support/summary.json). The CI job runs the generator and checks all three archived outputs for exact reproducibility.
+
+**G18 field validation remains open:** Select a genuine locality with independently verified observation-support metadata, distinguish measured zeros and missing coverage, and repeat a sensitivity comparison with preregistered interpretation and coverage thresholds.
 
 ### New validation acceptance criteria
 
