@@ -9,8 +9,8 @@
     "pandas": "3.1.1",
     "scipy": "1.17.1"
   },
-  "synthetic_input_sha256": "e345931a3c1cf8b70b61fc6250d2bf748c9a314ed6799130f6294f179bbf41eb",
-  "cell_comparison_sha256": "1cfa9b365eb9f54cbd20242f9035e2f7e8ce28186ced448590318c31bbb5aeff",
+  "synthetic_input_sha256": "2896ae0450840e3185d71b4e832c88bfb8e1c49322b594b46772dcbaf08f0f28",
+  "cell_comparison_sha256": "867541aa7bbf139195e70ad30260e476a838d229fc43898c517fc98b5e465f9e",
   "lisa_seed": 42,
   "lisa_permutations": 999,
   "lisa_alpha": 0.05,
