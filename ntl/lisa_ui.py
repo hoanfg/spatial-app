@@ -233,52 +233,52 @@ RING_COLORS = {
 
 T["vi"].update({
     "h_kpi_title": "4 chỉ số tổng hợp cấp vùng–năm được trích xuất tự động từ kiểm định LISA để đưa vào bảng hồi quy Panel.",
-    "h_map_t": "Bản đồ tương tác cấp ô lưới. Cho phép chuyển đổi trực tiếp giữa Cụm LISA, Vành đai lan tỏa (Spillover Rings) và Tiếp cận thị trường (Recentered MA).",
+    "h_map_t": "Bản đồ mô tả cụm LISA, nhóm khoảng cách HH và chỉ số NTL có trọng số khoảng cách trừ kỳ vọng hoán vị; không đưa ra kết luận nhân quả.",
     "h_comp_t": "Phân bố tỷ trọng diện tích các trạng thái không gian và đồ thị phân tán Moran kiểm tra cấu trúc tự tương quan.",
     "h_comp": "Số lượng ô và tỷ lệ % diện tích của từng trạng thái LISA trên tổng diện tích tự nhiên của địa phương.",
-    "h_fq_title": "4 nhóm chỉ số kinh tế lượng không gian biên (2022–2026) đo lường cấu trúc đô thị và nhận diện nhân quả.",
-    "h_ring_tbl": "Phân tách địa phương thành 5 vành đai đồng tâm từ biên cụm điểm nóng (Butts, 2024) để bóc tách hiệu ứng tràn và cô lập nhóm đối chứng sạch (>10km).",
-    "h_rdd_chart": "Đồ thị gián đoạn không gian (Spatial RDD) theo khoảng cách có dấu tới biên cụm nóng (d < 0: trong lõi, d > 0: ngoài lõi).",
-    "donut_rdd": "Khuyết biên Donut RDD (bỏ |d| < 0.5 km chống nhiễu tràn sáng VIIRS)",
-    "h_donut_rdd": "Loại bỏ các ô nằm trong bán kính 500m quanh ranh giới cụm nóng để khử tự tương quan cơ học do độ phân giải gốc ~463m của vệ tinh VIIRS (Barreca et al., 2011; Gibson et al., 2021).",
-    "h_st_year_t0": "Chọn năm gốc đối chiếu (t₀) để tính sai phân không–thời gian Δz và ma trận chuyển dịch Markov tới năm hiện tại.",
+    "h_fq_title": "Các chỉ số mô tả suy ra từ NTL và LISA. Chúng không phải tham số nhân quả hoặc mô hình cấu trúc đã được nhận dạng.",
+    "h_ring_tbl": "Các nhóm khoảng cách Euclid tính từ tâm ô HH gần nhất. Tên mã cũ trong CSV được giữ để tương thích; không phải nhóm can thiệp hay đối chứng nhân quả.",
+    "h_rdd_chart": "Đồ thị mô tả NTL theo khoảng cách có dấu tới tâm ô thuộc nhóm đối lập gần nhất. Đây không phải khoảng cách tới đường biên hình học hoặc một ước lượng Spatial RDD.",
+    "donut_rdd": "Thử độ nhạy: bỏ các ô có |d| < 0,5 km",
+    "h_donut_rdd": "Loại ô có khoảng cách tới tâm ô đối lập gần nhất dưới 500 m để so độ nhạy mô tả; không chứng minh đã loại hết ảnh hưởng quang học hay phụ thuộc không gian.",
+    "h_st_year_t0": "Chọn năm sớm hơn năm hiện tại để tính thay đổi vị thế NTL và bảng chuyển dịch phân vị giữa hai kỳ.",
     "h_st_run_btn": "Tải ảnh vệ tinh VIIRS năm t₀ trên đúng lưới UTM hiện tại và tính vector dịch chuyển không gian 2 kỳ.",
     "h_st_shorrocks": "Chỉ số dịch chuyển Shorrocks (0 = thứ hạng không gian đóng băng hoàn toàn; càng cao = mức độ xáo trộn giữa các phân vị càng mạnh).",
-    "h_st_synergy": "Tỷ lệ diện tích vùng lõi có cả ô tâm và các ô láng giềng cùng tăng trưởng bức xạ tương đối (Δz ≥ 0, ΔLag z ≥ 0).",
-    "h_st_shadow": "Tỷ lệ diện tích vùng lõi bị suy giảm tương đối khi vùng lân cận tăng trưởng nóng (Δz < 0, ΔLag z ≥ 0: hiệu ứng hút nguồn lực).",
+    "h_st_synergy": "Tỷ lệ diện tích vùng lõi có Δz ≥ 0 và ΔLag z ≥ 0 theo NTL chuẩn hóa riêng từng năm; không phải tăng trưởng kinh tế.",
+    "h_st_shadow": "Tỷ lệ diện tích có Δz < 0 và ΔLag z ≥ 0, theo chuẩn hóa riêng từng năm; không chứng minh sự dịch chuyển nguồn lực.",
     "h_markov_hi": "Xác suất chuyển dịch giữa 4 phân vị ánh sáng (Q1→Q4) khi ô nằm cạnh các láng giềng ban đầu có độ sáng CAO (trên trung vị Lag z năm t₀).",
     "h_markov_lo": "Xác suất chuyển dịch giữa 4 phân vị ánh sáng (Q1→Q4) khi ô nằm cạnh các láng giềng ban đầu có độ sáng THẤP (dưới trung vị Lag z năm t₀).",
     "h_bridge_t": "Xuất dữ liệu vi mô (100% quan sát cấp ô) và dữ liệu vĩ mô (1 dòng/vùng-năm) phục vụ hồi quy trên Stata, R, Python.",
     "h_panel_tbl": "Bảng dữ liệu Panel tích lũy qua các lần bấm 'Thêm vùng-năm'. Khóa chính: (iso3, region_id, year, cell_size_m).",
     "map_mode_lbl": "Lớp hiển thị bản đồ",
-    "map_modes": {"lisa": "Cụm LISA", "ring": "Vành đai lan tỏa (Spillover)", "ma": "Recentered MA"},
+    "map_modes": {"lisa": "Cụm LISA", "ring": "Vành đai khoảng cách HH", "ma": "MA trừ kỳ vọng hoán vị"},
     "h_map_mode": "Đổi lớp tô màu trên bản đồ để kiểm tra trực quan các biến kinh tế lượng Q1.",
-    "tt_full": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái LISA", "Cách tâm CBD (km)", "Cách biên HH (km)", "Vành đai lan tỏa", "Recentered MA"],
+    "tt_full": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái LISA", "Cách tâm NTL (km)", "Cách tâm ô đối lập (km)", "Nhóm khoảng cách HH", "MA trừ kỳ vọng hoán vị"],
 })
 
 T["en"].update({
     "h_kpi_title": "4 region-year summary indicators extracted from LISA for macro panel regressions.",
-    "h_map_t": "Interactive grid map. Switch between LISA Clusters, Causal Spillover Rings, and Recentered Market Access.",
+    "h_map_t": "Interactive descriptive map of LISA clusters, HH distance groups, and permutation-centered distance-weighted NTL.",
     "h_comp_t": "Area share breakdown across spatial classes and Moran scatterplot diagnosing spatial autocorrelation.",
     "h_comp": "Cell count and area share (%) of each LISA class relative to total locality area.",
-    "h_fq_title": "4 frontier spatial econometric indicator groups (2022–2026) for urban structure and causal inference.",
-    "h_ring_tbl": "Partitions the locality into 5 concentric exposure rings from the hotspot boundary (Butts, 2024) to isolate pure controls (>10km).",
-    "h_rdd_chart": "Spatial Regression Discontinuity (Spatial RDD) curve along signed distance to the hotspot boundary (d < 0: inside, d > 0: outside).",
-    "donut_rdd": "Donut RDD (drop |d| < 0.5 km to purge VIIRS blooming)",
-    "h_donut_rdd": "Excludes cells within 500m of the hotspot boundary to remove mechanical autocorrelation from native ~463m VIIRS pixels (Barreca et al., 2011; Gibson et al., 2021).",
-    "h_st_year_t0": "Select comparison base year (t₀) to compute space-time first differences Δz and Spatial Markov transitions.",
+    "h_fq_title": "Descriptive NTL and LISA-derived indicators, not identified causal effects or validated structural parameters.",
+    "h_ring_tbl": "Distance groups use Euclidean distance to the nearest HH cell center. Historical CSV codes are retained for compatibility; no causal treatment or control is established.",
+    "h_rdd_chart": "Descriptive NTL profile against signed distance to the nearest opposite-group cell center, not a geometric border distance or a Spatial RDD estimate.",
+    "donut_rdd": "Sensitivity: omit cells with |d| < 0.5 km",
+    "h_donut_rdd": "Omits cells within 500 m of an opposite-group cell center for descriptive sensitivity only; it does not establish removal of blooming or spatial dependence.",
+    "h_st_year_t0": "Select a strictly earlier year for two-period NTL relative-position changes and quartile transitions.",
     "h_st_run_btn": "Fetch base-year t₀ VIIRS raster on the current UTM grid and compute two-period spatial dynamics.",
     "h_st_shorrocks": "Shorrocks Mobility Index (0 = completely static spatial hierarchy; higher values indicate stronger rank mobility).",
-    "h_st_synergy": "Share of core area where both the focal cell and its neighbors experienced positive relative growth (Δz ≥ 0, ΔLag z ≥ 0).",
-    "h_st_shadow": "Share of core area experiencing relative decline while surrounding neighbors grow (Δz < 0, ΔLag z ≥ 0: resource siphoning effect).",
+    "h_st_synergy": "Core-area share with both Δz ≥ 0 and ΔLag z ≥ 0 in year-standardized NTL, not economic growth.",
+    "h_st_shadow": "Share of core area with Δz < 0 and ΔLag z ≥ 0 under year-specific standardization; not evidence of resource diversion.",
     "h_markov_hi": "Transition probability matrix across 4 light quartiles (Q1→Q4) conditioned on HIGH initial neighbor brightness (above median Lag z at t₀).",
     "h_markov_lo": "Transition probability matrix across 4 light quartiles (Q1→Q4) conditioned on LOW initial neighbor brightness (below median Lag z at t₀).",
     "h_bridge_t": "Export micro cell-level CSVs (100% observations) and macro region-year panel rows for Stata, R, and Python.",
     "h_panel_tbl": "Accumulated panel table across 'Add region-year' clicks. Primary key: (iso3, region_id, year, cell_size_m).",
     "map_mode_lbl": "Map display layer",
-    "map_modes": {"lisa": "LISA Clusters", "ring": "Spillover Rings", "ma": "Recentered MA"},
+    "map_modes": {"lisa": "LISA Clusters", "ring": "HH distance groups", "ma": "Permutation-centered NTL"},
     "h_map_mode": "Switch the active choropleth layer to visually inspect frontier Q1 spatial variables.",
-    "tt_full": ["Cell", "NTL", "z (lit)", "pseudo p", "LISA Class", "Dist to CBD (km)", "Signed dist HH (km)", "Spillover Ring", "Recentered MA"],
+    "tt_full": ["Cell", "NTL", "z (lit)", "pseudo p", "LISA Class", "Dist to NTL center (km)", "Dist to opposite-group cell (km)", "HH distance group", "Permutation-centered NTL"],
 })
 
 _CSS = """
@@ -940,9 +940,9 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     st.divider()
     is_vi = (lang != "en")
     st.markdown(
-        "####  Chỉ số kinh tế lượng Không gian biên"
+        "#### Chỉ số không gian mô tả bổ sung"
         if is_vi else
-        "####  Frontier spatial econometric indicators",
+        "#### Additional descriptive spatial indicators",
         help=L["h_fq_title"],
     )
 
@@ -959,31 +959,31 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
               if is_vi else "Hill tail exponent on top 10% lit cells (Bluhm & Krause, 2022). Closer to 1.0 indicates extreme upper-tail concentration."),
     )
     fq2.metric(
-        "Độ dốc đô thị γ (km⁻¹)" if is_vi else "Urban Decay Gradient γ (km⁻¹)",
+        "Độ dốc NTL theo khoảng cách γ (km⁻¹)" if is_vi else "NTL Distance Gradient γ (km⁻¹)",
         f"{_ug:.4f}" if np.isfinite(_ug) else "N/A",
-        help=("Hệ số suy giảm mật độ kinh tế WLS ln(1+NTL) theo khoảng cách tới tâm CBD (Duranton & Puga, 2023)."
-              if is_vi else "Area-weighted WLS decay rate of ln(1+NTL) per km from the CBD (Duranton & Puga, 2023)."),
+        help=("Độ dốc WLS của ln(1+NTL) theo khoảng cách tới tâm được suy ra từ NTL; chưa chứng minh là độ dốc mật độ kinh tế."
+              if is_vi else "Area-weighted WLS slope of ln(1+NTL) against distance from an NTL-derived center, not a verified economic-density gradient."),
     )
     fq3.metric(
-        "Độ khớp đơn tâm (R²)" if is_vi else "Monocentricity Fit (R²)",
+        "R² theo khoảng cách tới một tâm NTL" if is_vi else "Single-center NTL fit (R²)",
         f"{_mr2 * 100:.1f}%" if np.isfinite(_mr2) else "N/A",
-        help=("Tỷ lệ phương sai ln(1+NTL) giải thích bởi khoảng cách tới 1 tâm CBD duy nhất. R² thấp + nhiều cụm HH = Đô thị đa cực (Polycentric)."
-              if is_vi else "Share of ln(1+NTL) variance explained by distance to a single CBD. Low R² with multiple HH clusters indicates polycentricity."),
+        help=("R² mô tả của hồi quy ln(1+NTL) theo khoảng cách tới tâm suy ra từ NTL; không đủ để kết luận đô thị đơn tâm hay đa cực."
+              if is_vi else "Descriptive R² of ln(1+NTL) regressed on distance from an NTL-derived center; it does not establish monocentric or polycentric urban structure."),
     )
     fq4.metric(
-        "Độ bền AR(1) không gian" if is_vi else "Spatial AR(1) Persistence",
+        "Tương quan NTL và trễ không gian" if is_vi else "NTL–spatial-lag correlation",
         f"{_ar1:.3f}" if np.isfinite(_ar1) else "N/A",
-        help=("Hệ số tự tương quan bậc 1 (Müller & Watson, 2024 Econometrica). Nếu > 0.70, dữ liệu tiệm cận nghiệm đơn vị không gian (cần lấy sai phân hoặc kiểm soát chặt)."
-              if is_vi else "First-order spatial autoregression coefficient (Müller & Watson, 2024 Econometrica). Values > 0.70 warn of near-unit-root spatial persistence."),
+        help=("Tương quan Pearson Corr(z, Wz) trong cùng một năm. Không phải hệ số SAR/AR(1) và không phải kiểm định nghiệm đơn vị không gian."
+              if is_vi else "Pearson Corr(z, Wz) in one cross-section. This is neither a fitted SAR/AR(1) parameter nor a spatial unit-root test."),
     )
 
     col_ring, col_rdd = st.columns([1.05, 1.45])
     with col_ring:
         with st.container(border=True):
             st.markdown(
-                "** Vành đai lan tỏa nhân quả**"
+                "**Các nhóm khoảng cách quanh ô HH**"
                 if is_vi else
-                "** Causal spillover rings**",
+                "**HH-centered distance groups**",
                 help=L["h_ring_tbl"],
             )
             ring_arr = cdf["spillover_ring"].to_numpy()
@@ -997,16 +997,16 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     ("Số ô" if is_vi else "Cells"): int(m_r.sum()),
                     ("% Diện tích" if is_vi else "% Area"): round(float(area[m_r].sum() / max(area.sum(), 1e-12) * 100), 1),
                     ("NTL TB" if is_vi else "Mean NTL"): round(float(ntl_arr[m_r].mean()), 2) if m_r.any() else 0.0,
-                    ("MA khử lệch" if is_vi else "Recentered MA"): round(float(np.nanmean(rec_ma_arr[m_r])), 2) if m_r.any() and np.isfinite(rec_ma_arr[m_r]).any() else 0.0,
+                    ("MA trừ kỳ vọng" if is_vi else "Permutation-centered NTL"): round(float(np.nanmean(rec_ma_arr[m_r])), 2) if m_r.any() and np.isfinite(rec_ma_arr[m_r]).any() else 0.0,
                 })
             st.dataframe(pd.DataFrame(ring_rows), hide_index=True, use_container_width=True)
 
     with col_rdd:
         with st.container(border=True):
             st.markdown(
-                "** Đường cong suy giảm & Gián đoạn ranh giới đô thị**"
+                "**Hồ sơ NTL theo khoảng cách có dấu**"
                 if is_vi else
-                "** Urban boundary discontinuity & Spillover decay (Spatial RDD)**",
+                "**Descriptive NTL profile by signed cell-center distance**",
                 help=L["h_rdd_chart"],
             )
             donut_on = st.toggle(L["donut_rdd"], value=False, key="lisa_donut_rdd", help=L["h_donut_rdd"])
@@ -1026,8 +1026,8 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     .query("cells >= 2 and bin_d >= -10 and bin_d <= 15")
                 )
                 pts_chart = alt.Chart(binned_rdd).mark_line(point=True, color="#ffb703", strokeWidth=2.2).encode(
-                    x=alt.X("bin_d:Q", title=("Khoảng cách có dấu tới biên cụm nóng (km) [ <0: Trong lõi | >0: Ngoài lõi ]"
-                                              if is_vi else "Signed distance to hotspot boundary (km) [ <0: Inside | >0: Outside ]")),
+                    x=alt.X("bin_d:Q", title=("Khoảng cách có dấu tới tâm ô đối lập (km) [<0: HH | >0: ngoài HH]"
+                                              if is_vi else "Signed distance to nearest opposite-group cell center (km) [<0: HH | >0: non-HH]")),
                     y=alt.Y("mean_ln_ntl:Q", title="Mean ln(1 + NTL)"),
                     tooltip=[
                         alt.Tooltip("bin_d:Q", title="Signed Dist (km)", format=".1f"),
@@ -1040,10 +1040,10 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                 ).encode(x="x:Q")
                 st.altair_chart((pts_chart + zero_rule).interactive().properties(height=265), use_container_width=True)
             else:
-                st.info("Chưa đủ quan sát để vẽ đường cong Spatial RDD." if is_vi else "Not enough observations for Spatial RDD curve.")
+                st.info("Chưa đủ quan sát để vẽ hồ sơ NTL theo khoảng cách." if is_vi else "Not enough observations for the NTL distance profile.")
 
     if fetch_year_ntl_fn is not None and available_years:
-        other_years = [int(y) for y in available_years if int(y) != yr]
+        other_years = sorted({int(y) for y in available_years if int(y) < yr})
         if other_years:
             with st.expander(
                 f"Động học Không – Thời gian & Ma trận Spatial Markov (So sánh năm đối chiếu t₀ → {yr})"
@@ -1096,12 +1096,12 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                         help=L["h_st_shorrocks"],
                     )
                     m2.metric(
-                        "Tăng trưởng cộng hưởng (Δz+, ΔLag+)" if is_vi else "Synergistic Growth Share",
+                        "Vị thế cùng tăng (Δz+, ΔLag+)" if is_vi else "Joint Relative-Position Increase",
                         f"{sm['synergistic_growth_pct']:.1f}%",
                         help=L["h_st_synergy"],
                     )
                     m3.metric(
-                        "Bóng tối tích tụ (Δz-, ΔLag+)" if is_vi else "Agglomeration Shadow Share",
+                        "Vị thế ô giảm, láng giềng tăng" if is_vi else "Opposing Relative-Position Change",
                         f"{sm['agglomeration_shadow_pct']:.1f}%",
                         help=L["h_st_shadow"],
                     )
@@ -1137,15 +1137,15 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     mc1, mc2 = st.columns(2)
                     with mc1:
                         st.markdown(
-                            "**Spatial Markov: Khi láng giềng ban đầu SÁNG CAO (High-Lag Context, %)**"
-                            if is_vi else "**Spatial Markov: High-Lag Neighbor Context (%)**",
+                            "**Chuyển dịch phân vị 2 kỳ: lân cận ban đầu cao (%)**"
+                            if is_vi else "**Two-period quartile transitions: initially high neighbor context (%)**",
                             help=L["h_markov_hi"],
                         )
                         st.dataframe(st_out.markov_high_lag, use_container_width=True)
                     with mc2:
                         st.markdown(
-                            "**Spatial Markov: Khi láng giềng ban đầu SÁNG THẤP (Low-Lag Context, %)**"
-                            if is_vi else "**Spatial Markov: Low-Lag Neighbor Context (%)**",
+                            "**Chuyển dịch phân vị 2 kỳ: lân cận ban đầu thấp (%)**"
+                            if is_vi else "**Two-period quartile transitions: initially low neighbor context (%)**",
                             help=L["h_markov_lo"],
                         )
                         st.dataframe(st_out.markov_low_lag, use_container_width=True)

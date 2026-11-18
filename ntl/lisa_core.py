@@ -266,7 +266,12 @@ def compute_urban_density_gradient(ntl: np.ndarray, dist_core_km: np.ndarray,
 
 def compute_spillover_rings_and_rdd(cx: np.ndarray, cy: np.ndarray, is_hh: np.ndarray,
                                     core: np.ndarray, edge: np.ndarray):
+    """Descriptive HH distance groups and signed distances between cell centers.
 
+    Negative distances use the nearest non-HH core-cell center; positive
+    distances use the nearest HH-cell center. Neither is a geometric-boundary
+    distance or evidence of a causal discontinuity. Export codes are retained.
+    """
     n = len(cx)
     hh_idx = np.flatnonzero(is_hh)
     non_hh_idx = np.flatnonzero(core & ~is_hh)
@@ -297,10 +302,11 @@ def compute_recentered_market_access(cx: np.ndarray, cy: np.ndarray, sol: np.nda
                                      core: np.ndarray, cell_size_m: float,
                                      radius_steps: int = 5, tau_km: float = 0.5,
                                      dense_limit: int = 1_200_000):
-    """Compute recentered market access following Borusyak and Hull (2023).
+    """Compute a descriptive distance-weighted NTL sum centered by permutation.
 
-    Raw access uses distance-decayed SOL within ``radius_steps`` cells. The
-    analytical spatial-permutation expectation removes central-location bias.
+    Subtract the expectation under exchanges of core-cell SOL values at fixed
+    locations. This identity is not by itself an identification argument for
+    market access or an exogenous-shock exposure design. Legacy keys remain.
     """
     n = len(cx)
     raw_ma = np.full(n, np.nan)
@@ -479,6 +485,8 @@ def run_lisa(cx, cy, ntl, area_km2, cell_size_m: float, *,
     raw_ma, exp_ma, rec_ma = compute_recentered_market_access(cx, cy, sol, core, cell_size_m)
 
 
+    # Legacy export key spatial_ar1_persistence is Corr(z, Wz), not a fitted
+    # autoregressive parameter or a spatial unit-root diagnostic.
     valid_ar = focal & np.isfinite(z) & np.isfinite(lagz)
     if int(valid_ar.sum()) >= 10 and float(np.std(z[valid_ar])) > 1e-6:
         spatial_ar1_rho = float(np.corrcoef(z[valid_ar], lagz[valid_ar])[0, 1])
@@ -573,6 +581,9 @@ class SpaceTimeResult:
 
 def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
                        year_t0: int, year_t1: int, edge_tol: float = 0.99) -> SpaceTimeResult:
+    """Compare two periods in chronological order on a fixed spatial grid."""
+    if int(year_t0) >= int(year_t1):
+        raise ValueError("Space-time comparison requires year_t0 < year_t1")
 
     cx, cy = np.asarray(cx, dtype=float), np.asarray(cy, dtype=float)
     ntl0 = np.asarray(ntl_t0, dtype=float)
