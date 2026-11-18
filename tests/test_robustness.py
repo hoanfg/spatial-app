@@ -195,6 +195,16 @@ def test_T25_adjacent_years():
     exp = rob.export_columns({}, None, t)
     assert math.isclose(exp["rob_adjacent_year_min_jaccard"], round(float(t.iloc[1, 3]), 4))
 
+    quality_frame = pd.DataFrame({
+        "ntl_mean": ntl.copy(),
+        "dq_status": np.repeat("observed", len(ntl)),
+    })
+    framed = rob.adjacent_years(kw, base_hh, {2023: quality_frame})
+    assert framed.loc[0, "Jaccard so với năm gốc"] == 1.0
+
+    with pytest.raises(ValueError, match="ntl_mean"):
+        rob.adjacent_years(kw, base_hh, {2023: quality_frame.drop(columns="ntl_mean")})
+
 
 # T26 ---------------------------------------------------------------------------------------
 def test_T26_validation_statistics():

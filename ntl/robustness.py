@@ -164,7 +164,14 @@ def adjacent_years(base: dict, base_hh, ntl_by_year: dict, progress=None) -> pd.
     items = sorted(ntl_by_year.items())
     for i, (year, ntl) in enumerate(items):
         kw = dict(base)
-        kw["ntl"] = np.asarray(ntl, float)
+        if isinstance(ntl, pd.DataFrame):
+            if "ntl_mean" not in ntl.columns:
+                raise ValueError("Adjacent-year data must contain an 'ntl_mean' column")
+            ntl = ntl["ntl_mean"]
+        values = np.asarray(ntl, float)
+        if values.ndim != 1 or len(values) != len(area):
+            raise ValueError("Adjacent-year NTL must be a one-dimensional vector aligned with the analysis grid")
+        kw["ntl"] = values
         hh = hh_mask(run_lisa(**kw))
         rows.append({"Năm": int(year), "Số ô HH": int(hh.sum()),
                      "% diện tích HH": float(area[hh].sum() / tot * 100), "Jaccard so với năm gốc": jaccard(base_hh, hh)})

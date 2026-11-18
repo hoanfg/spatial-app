@@ -214,7 +214,7 @@ The advanced modules are most useful when each output is treated as an answer to
 
 ![From VIIRS radiance to a cell-year table](docs/assets/ntl-measurement.jpg)
 
-<div align="center"><em>Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.</em></div>
+<p align="center"><em>Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.</em></p>
 
 Let $a_i$ denote an unobserved economic construct and $y_i$ the observed radiance. A useful mental model is $y_i = g(a_i, z_i) + u_i$, where $z_i$ contains lighting technology, land use, atmospheric conditions and other factors, while $u_i$ contains remaining measurement error. The app improves the construction and documentation of $y_i$; it does not identify $g(\cdot)$ or recover $a_i$ without external assumptions and outcomes (Henderson et al., 2012; Donaldson & Storeygard, 2016; Gibson et al., 2021).
 
@@ -238,7 +238,7 @@ where $r_p$ is source-pixel radiance and $a_{ip}$ is the area shared by pixel $p
 
 ![From grid cells to a weights matrix and spatial lag](docs/assets/spatial-weights.jpg)
 
-<div align="center"><em>Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.</em></div>
+<p align="center"><em>Figure 2. A neighbor rule turns the grid into a graph, the graph into <var>W</var>, and <var>W</var> into the spatial lag <var>Wy</var>.</em></p>
 
 $W$ is not merely a software setting. Queen contiguity asks whether immediate edge or corner contact carries relevant interaction; Rook excludes corner-only contact; a distance or network matrix would encode a different mechanism. Row standardization changes a spatial lag from a neighbor sum into a neighbor average, while a binary symmetric matrix preserves a different scale (Anselin, 1988; LeSage & Pace, 2009).
 
@@ -262,7 +262,7 @@ is a weighted neighborhood average. If $y_i$ is high and $(Wy)_i$ is also high, 
 
 ![From the Moran scatterplot to FDR-corrected LISA results](docs/assets/lisa-inference.jpg)
 
-<div align="center"><em>Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.</em></div>
+<p align="center"><em>Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.</em></p>
 
 LISA runs one local test for each eligible cell. The pseudo p-value depends on the conditional permutation procedure, random seed and number of permutations. Its finest attainable resolution is bounded by the permutation count. Testing thousands of cells also creates a multiple-testing problem, so the app provides Benjamini-Hochberg FDR control and reports when the requested permutation/FDR combination cannot reject any cell (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
@@ -295,7 +295,7 @@ The number of permutations therefore determines p-value resolution. If an FDR-ad
 
 ![Robustness axes and external comparison](docs/assets/robustness-validation.jpg)
 
-<div align="center"><em>Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.</em></div>
+<p align="center"><em>Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.</em></p>
 
 A reproducible result is not necessarily robust. Reproducibility means that the same data, code and parameters reproduce the same result. Robustness asks a harder question: does the conclusion remain when defensible analytical choices change? Write the output conceptually as $R(s)$, where $s$ is a specification containing grid size, $W$, transformation, threshold, seed, FDR rule and year. Robustness studies how $R(s)$ varies across a scientifically defensible specification set, not across every arbitrary combination.
 
@@ -354,6 +354,42 @@ High agreement supports the statement that NTL is aligned with that particular s
 | External validation | GHSL variable and epoch, usable cells, $\rho$, block-bootstrap interval, AUC and tied-zero share |
 | Dynamics | Both years, standardization rule, extensive/intensive statistics and the descriptive nature of regimes |
 | Reproducibility | Source revision, exported parameter/provenance fields and the exact cell/panel file used |
+
+### 0.10. Scientific specification sheet
+
+The table below records the **current operational defaults implemented in the source code**. It is not a claim that one parameter set is optimal for every study. Defaults provide a reproducible starting point; the researcher must still explain why the grid, neighbor relation, threshold and inferential procedure fit the substantive question. This matters especially for spatial data because changing the analytical unit or weights matrix can change a result even when the source observations remain fixed (Openshaw, 1984; Fotheringham & Wong, 1991; Anselin, 1988).
+
+| Component | Current specification | Scientific meaning and reporting requirement |
+| :--- | :--- | :--- |
+| **Observation unit** | One grid cell within one place and year; the panel key is `iso3`, `region_id`, `year`, `cell_size_m` | A cell is measurement support, not automatically a neighborhood, market or behavioral unit. Changing cell size changes the empirical question. |
+| **Time** | Years 2014–2025; an annual image is the median of monthly images with `cf_cvg > 0` | The median limits the influence of extreme monthly observations, but does not turn monthly imagery into an error-free annual economic measure. Record the year, valid-month support and VIIRS source version (Elvidge et al., 2017, 2021). |
+| **Measured quantity** | `avg_rad` in nW/cm²/sr; `ntl_mean` is the fractional-coverage mean and `ntl_sol = ntl_mean × area_km2` | `ntl_mean` represents average intensity; `ntl_sol` combines intensity with area. They answer different questions and should not be substituted without explanation (Henderson et al., 2012; Gibson et al., 2021). |
+| **Geometry** | Dynamic UTM grid, 500–5,000 m cell side, 500 m default; cells below 99% of full-cell area are flagged as borders | UTM supports metre-based distance and area. The 99% rule defines the core sample but does not remove MAUP; test at least one alternative grid size when cluster location matters. |
+| **Raster extraction** | Mean weighted by the intersected area between source pixels and analysis cells | Fractional coverage prevents a pixel that barely touches a cell from receiving full-cell weight. Report the extraction rule and NoData policy with the result (Baston, 2023). |
+| **Spatial relation** | Queen by default; Rook for sensitivity analysis; row-standardized LISA weights | Queen and Rook encode different definitions of “nearby.” Report the rule, normalization, average neighbors and island handling (Anselin, 1988; LeSage & Pace, 2009). |
+| **Global Moran** | 199 permutations in the overview interface | This is a region-wide test of global spatial structure. Its pseudo p-value has finite resolution and does not locate the cells producing the pattern (Moran, 1950). |
+| **Local Moran / LISA** | Defaults: 499 permutations, seed 42, $\alpha=0.05$, BH-FDR on, raw scale, light threshold 0, at least 1 neighbor and a 4-cell minimum cluster | If 499 permutations and the number of tests make rejection under BH-FDR impossible, the interface raises the count to 999. Report quadrant membership separately from statistical significance (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006). |
+| **Missing and negative values** | Missing or negative zonal results enter the operational surface as 0; quality flags retain the origin of the conversion | A measured zero, no observation and a negative corrected radiance are not equivalent evidence. Preserve the `dq_*` fields so that data treatment does not become a hidden assumption (Gibson et al., 2021). |
+| **Computational limits** | At most 150,000 analysis cells; at most 30,000 cells rendered on the map | These are operational limits, not statistical standards. If a coarser grid is required to complete a run, report the change in spatial support. |
+| **Outputs** | Cell CSV, LISA CSV, region-year CSV, Space-Time CSV and optional GeoJSON | Exports retain measurements, eligibility flags, parameters and inferential labels. Do not preserve only a map or the final classification column. |
+
+> [!IMPORTANT]
+> **For a first-time reader:** “default” only means that the app begins with this setting. It does not mean that 500 m, Queen or $\alpha=0.05$ is always correct. A defensible specification links each technical choice to the proposed mechanism, then shows how the conclusion changes under other reasonable choices.
+
+### 0.11. A worked reading of one result across five evidence layers
+
+Suppose the map shows a `High-High` cluster near the center of a place. The sequence below illustrates **how to reason about a result**; it is not an empirical finding for any particular location.
+
+1. **Measurement layer:** confirm that the cluster has adequate monthly support, is not concentrated in border cells, and is not created only by clipping negative values or replacing NoData with 0. If measurement support fails, economic interpretation should stop here.
+2. **Descriptive layer:** report the cluster's radiance, area, SOL share and location. The warranted statement is “observed radiance is concentrated here,” not “this is the richest area.” NTL is informative as a proxy, but its relationship with economic activity varies by place and target construct (Henderson et al., 2012; Donaldson & Storeygard, 2016; Gibson et al., 2021).
+3. **Inferential layer:** read the `HH` label together with its pseudo p-value, BH-FDR rule, permutation count and tested-cell count. LISA was designed to identify local pockets of association and spatial outliers; it does not supply a causal mechanism (Anselin, 1995).
+4. **Robustness layer:** compare Queen with Rook and vary grid size, year, seed, transformation and threshold. If the core persists while the border moves, describe a stable core and a sensitive boundary instead of calling the entire object “robust.”
+5. **External-validity layer:** compare with GHSL built surface or population and report uncertainty. Agreement supports interpretation relative to that settlement construct; it does not make GHSL ground truth or NTL equivalent to GDP (Pesaresi & Politis, 2023; Schiavina et al., 2023).
+
+A bounded academic conclusion could therefore read: *“Under the reported specification, the central area contains a High-High radiance cluster that remains significant after multiple-testing correction. Its core persists under Queen/Rook and alternative-grid checks, while NTL ranks agree with GHSL built surface. The result supports an interpretation of spatial concentration in observed light-emitting activity, but does not by itself identify GDP, welfare or a causal effect.”*
+
+> [!NOTE]
+> **A simple stopping rule:** if the evidence reaches only the descriptive layer, stop with descriptive language. Use “significant” only after reporting the inferential procedure; use “robust” only after listing the alternatives tested; and use causal language only when the research design identifies an effect.
 
 <sub>[↑ Back to top](#top)</sub>
 
