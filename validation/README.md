@@ -30,7 +30,7 @@ The original source review used identifiers A01 to A12. Their current status is 
 | A01 | CI discovery gap closed. Current workflow runs the full maintained test tree across two jobs. |
 | A02 | Observation fields verified for an all-observed Bao'an case; synthetic sensitivity quantified; a real missing-support case remains open. |
 | A03 | Independent numerical oracles and Yanqing field comparisons are recorded; broader morphologies and continuous annual data remain open. |
-| A04 | Closed. The application, LISA metrics and Lorenz curve use one Gini implementation. Finite nonnegative values are required; invalid values raise an error rather than silently changing the sample. Empty and all-zero samples return 0. |
+| A04 | Closed. One Gini implementation returns 0.000000 for `[5,5,5,5]`, 0.500000 for `[0,0,10,10]`, 0.250000 for `[1,2,3,4]` and 0 for empty/all-zero samples, matching the independent pairwise formula within $10^{-12}$. Negative, NaN and infinite cases all raise an error instead of changing the sample. |
 | A05 | Test versions are partly pinned, but production dependencies and a full reproducible lock remain incomplete. |
 | A06 | Integration coverage and modular statistical code reduce risk; application orchestration remains coupled. |
 | A07 | Block-aggregation MAUP is tested as implemented; equivalence to direct coarse-grid raster extraction is not established. |
