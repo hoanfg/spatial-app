@@ -44,7 +44,7 @@ SETTINGS = tuple((radius, tau) for radius in (3, 5, 8) for tau in (0.25, 0.5, 1.
 BASE = (5, 0.5)
 SCENARIOS = ("light_aligned", "bright_nonjob_artifact", "shuffled_placebo")
 SENS_COLS = ("source", "scenario", "radius_steps", "tau_per_km", "n_core",
-             "reference", "rank_corr_vs_independent_jobs", "rank_corr_vs_baseline",
+             "reference", "rank_corr_vs_constructed_jobs", "rank_corr_vs_baseline",
              "top_decile_jaccard_vs_baseline", "rank_corr_raw_vs_centered",
              "rank_corr_raw_vs_kernel_exposure", "rank_corr_centered_vs_kernel_exposure",
              "share_centered_negative", "mean_raw", "mean_expected", "mean_centered",
@@ -166,20 +166,32 @@ def load_baoan():
     area=df["area_km2"].to_numpy(float)
     x,y=df[xcol].to_numpy(float),df[ycol].to_numpy(float)
     good=np.isfinite(x)&np.isfinite(y)&np.isfinite(ntl)&np.isfinite(area)&(ntl>=0)&(area>0)
-    if not good.all():
-        raise ValueError("Bao'an source includes invalid projected, NTL or area fields")
     border=pd.to_numeric(df["is_border_cell"],errors="raise").to_numpy(dtype=int)
     if not np.isin(border,[0,1]).all():
         raise ValueError("Bao'an border flags must be binary")
     core=(border==0)
     if core.sum()<10:
         raise ValueError("Bao'an has too few full core cells")
-    data={"grid_id":df["grid_id"].to_numpy(), "cx":x, "cy":y,
-          "area":area, "ntl":ntl, "sol":ntl*area, "core":core}
+    if not good[core].all():
+        problems=np.flatnonzero(core & ~good)
+        raise ValueError("Invalid full-core Bao'an inputs; count="+str(len(problems))
+                         +", IDs="+str(df["grid_id"].iloc[problems[:8]].tolist())
+                         +", missing_x="+str(int(np.sum(~np.isfinite(x[core]))))
+                         +", missing_y="+str(int(np.sum(~np.isfinite(y[core]))))
+                         +", invalid_ntl="+str(int(np.sum(~np.isfinite(ntl[core])|(ntl[core]<0))))
+                         +", invalid_area="+str(int(np.sum(~np.isfinite(area[core])|(area[core]<=0)))))
+    # Physical edge rows remain in the archived provenance and the output
+    # join table. Only fully valid core coordinates are handed to the kernel.
+    # This avoids fabricating any missing border-cell coordinates or values.
+    core_idx=np.flatnonzero(core)
+    data={"grid_id":df["grid_id"].to_numpy(), "cx":x[core_idx], "cy":y[core_idx],
+          "sol":(ntl*area)[core_idx], "core":np.ones(len(core_idx),bool),
+          "full_core_mask":core, "source_core_indices":core_idx}
     source={"path":str(BAOAN.relative_to(ROOT)),
             "sha256":hashlib.sha256(file_bytes).hexdigest(),
             "n_source_cells":len(df), "n_core":int(core.sum()),
             "n_border_excluded":int((~core).sum()),
+            "invalid_noncore_fields_not_used":int(np.sum(~good & ~core)),
             "coordinate_x":xcol,"coordinate_y":ycol,
             "support_observed":int((df["dq_status"]=="observed").sum())}
     return data,source
@@ -197,7 +209,7 @@ def metrics(source, scenario, radius, tau, rec, raw, expected, core, base_rec,
         "source":source,"scenario":scenario,"radius_steps":radius,
         "tau_per_km":tau,"n_core":len(ids),
         "reference":"synthetic_jobs_distance_potential" if benchmark is not None else "none_real_proxy_missing",
-        "rank_corr_vs_independent_jobs":rank_r(rec[ids],benchmark[ids]) if benchmark is not None else None,
+        "rank_corr_vs_constructed_jobs":rank_r(rec[ids],benchmark[ids]) if benchmark is not None else None,
         "rank_corr_vs_baseline":rank_r(rec[ids],base_rec[ids]),
         "top_decile_jaccard_vs_baseline":top_decile_jaccard(rec[ids],base_rec[ids]),
         "rank_corr_raw_vs_centered":rank_r(raw[ids],rec[ids]),
@@ -255,11 +267,15 @@ def run_experiment():
         results.append(metrics("baoan_real_ntl","observed_2020",radius,tau,
                                rec,raw,expected,core,base_real[2]))
     real_rows=[]
-    for i in range(len(core)):
-        raw,expected,rec=(component[i] for component in base_real)
+    full_core=real["full_core_mask"]
+    row_pos=np.full(len(full_core),-1,dtype=int)
+    row_pos[real["source_core_indices"]]=np.arange(len(real["source_core_indices"]))
+    for i in range(len(full_core)):
+        j=int(row_pos[i])
+        raw,expected,rec=(component[j] for component in base_real) if j>=0 else (np.nan,np.nan,np.nan)
         real_rows.append({
             "grid_id":str(real["grid_id"][i]),
-            "is_full_cell":int(core[i]),
+            "is_full_cell":int(full_core[i]),
             "ntl_raw_access":"" if not np.isfinite(raw) else repr(float(raw)),
             "ntl_expected_permutation":"" if not np.isfinite(expected) else repr(float(expected)),
             "ntl_centered_access":"" if not np.isfinite(rec) else repr(float(rec)),
@@ -296,7 +312,7 @@ def run_experiment():
         "software":{"python":sys.version.split()[0],
                     "numpy":np.__version__,"pandas":pd.__version__,"scipy":scipy.__version__},
         "metric_definitions":{
-            "rank_corr_vs_independent_jobs":"Spearman centered NTL potential against controlled synthetic jobs distance potential (null for observed Bao'an)",
+            "rank_corr_vs_constructed_jobs":"Spearman centered NTL potential against controlled synthetic jobs distance potential (null for observed Bao'an)",
             "rank_corr_vs_baseline":"Spearman of centered variants against baseline centered potential on same analyzed cells",
             "top_decile_jaccard_vs_baseline":"overlap of top ceil(10%*n) ranked core cells",
             "rank_corr_raw_vs_kernel_exposure":"Spearman raw weighted SOL and location-only permutation expectation; NOT exogeneity",
