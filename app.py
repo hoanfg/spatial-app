@@ -1226,7 +1226,7 @@ except Exception:  # noqa: BLE001
     def empty_state(title, hint, steps):
         st.info(hint)
 
-    def place_banner(place, facts):
+    def place_banner(place, facts, signature=None, coord=None):
         st.markdown(f"#### {place}")
         st.caption(" · ".join(f"{f[0]} {f[1]}" if isinstance(f, (tuple, list)) else str(f) for f in facts))
 
@@ -2066,7 +2066,8 @@ with st.container(border=True):
         ("Ô lưới" if LANG == "vi" else "Cell size", f"{size} m"),
         ("Hệ tọa độ" if LANG == "vi" else "CRS", f"EPSG:{epsg}"),
         ("Điểm ảnh mỗi ô" if LANG == "vi" else "Pixels per cell", f"{px_per_cell}"),
-    ])
+    ], signature=(cent_utm.x.to_numpy(), cent_utm.y.to_numpy(), ntl),
+       coord=(float(np.mean(lat_c)), float(np.mean(lon_c))))
     c1, c2, c3, c4, c5, c6 = st.columns(6)
     c1.metric(L["m_cells"], f"{n:,}", help="Tổng số ô lưới sau khi cắt theo ranh giới." if LANG == "vi" else "Total grid cells after clipping.")
     c2.metric(L["m_mean"], f"{w_mean:.2f}", help="NTL trung bình có trọng số diện tích (nW/cm²/sr)." if LANG == "vi" else "Area-weighted mean NTL (nW/cm²/sr).")

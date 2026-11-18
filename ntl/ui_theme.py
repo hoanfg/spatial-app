@@ -13,7 +13,7 @@ NIGHT = "#0A1024"
 
 _FONTS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap');
 </style>
 """
 
@@ -25,10 +25,12 @@ _THEME_CSS = """
   --ntl-night:#0A1024;
   --ntl-line:rgba(130,142,185,.30);
   --ntl-soft:rgba(130,142,185,.07);
-  --ntl-display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --ntl-display:"Source Serif 4","Source Serif Pro",Georgia,"Times New Roman",serif;
+  --ntl-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ntl-rule:rgba(142,153,184,.28);
   --ntl-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --ntl-r-panel:16px;
-  --ntl-r-ctl:8px;
+  --ntl-r-panel:6px;
+  --ntl-r-ctl:4px;
 }
 html,body,.stApp,[data-testid="stAppViewContainer"],[data-testid="stSidebar"],
 button,input,textarea,select{font-family:var(--ntl-body)}
@@ -342,6 +344,105 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) [data-testid="stTex
 """
 
 
+# "Night chart sheet": the app is laid out like a survey sheet -- graticule paper, hairline rules,
+# serif titles, monospace instrument readouts, square pixels. Override layer, injected last.
+_SHEET_CSS = """
+<style>
+/* ----- giấy: lưới kinh vĩ rất mờ thay cho chấm ----- */
+[data-testid="stMain"]{background:
+  linear-gradient(rgba(142,153,184,.05) 1px,transparent 1px) 0 0/96px 96px,
+  linear-gradient(90deg,rgba(142,153,184,.05) 1px,transparent 1px) 0 0/96px 96px,
+  radial-gradient(900px 420px at 88% -10%,rgba(159,216,255,.045),transparent 62%),
+  var(--ntl-night,#0A1024)}
+.stApp h1,.stApp h2,.stApp h3,.stApp h4{font-weight:600;letter-spacing:-.01em}
+
+/* ----- banner = khung tờ bản đồ: viền kép + thước chia độ ----- */
+.ntl-hero{border-radius:6px;border-color:#26335F;background:#080D1F}
+.ntl-hero:before{content:"";position:absolute;inset:7px;border:1px solid rgba(142,153,184,.17);border-radius:2px;pointer-events:none;z-index:2}
+.ntl-hero:after{content:"";position:absolute;left:7px;right:7px;bottom:7px;height:6px;pointer-events:none;z-index:2;opacity:.65;
+  background:repeating-linear-gradient(90deg,rgba(142,153,184,.55) 0 1px,transparent 1px 12px)}
+.ntl-hero-body{padding:34px 40px 40px}
+.ntl-title{font-weight:600;font-size:2.15rem;line-height:1.1;letter-spacing:-.012em}
+.ntl-sub{color:#9AA6C6}
+.ntl-facts dt,.ntl-meta dt{font-family:var(--ntl-mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:#7F8BB0;opacity:1}
+.ntl-facts dd{font-family:var(--ntl-mono);font-size:.8rem;font-weight:500}
+.ntl-field{gap:4px}
+.ntl-field i{border-radius:1px}
+.ntl-field i.g{box-shadow:none}
+.ntl-field i.l{box-shadow:0 0 9px rgba(159,216,255,.45)}
+
+/* ----- thanh trên cùng + chuyển ngôn ngữ ----- */
+.ntl-mark{border-radius:4px}
+.ntl-mark i{border-radius:1px}
+.ntl-brand b{font-family:var(--ntl-display);font-size:1.06rem;font-weight:600}
+.ntl-brand span{font-family:var(--ntl-mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+[data-testid="stRadio"] label[data-baseweb="radio"]{border-radius:4px}
+div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] [role="radiogroup"]{border-radius:6px}
+
+/* ----- bảng điều khiển = phiếu nhập liệu ----- */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl){border-radius:6px;border-color:#26335F;background:rgba(12,19,44,.72);
+  box-shadow:none;padding:.9rem 1.1rem .6rem}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):before{left:18px;right:auto;width:58px;height:3px;border-radius:0;
+  background:var(--ntl-sodium,#F2A93B);opacity:1}
+.ntl-dl{font-family:var(--ntl-display);font-size:1.05rem;font-weight:600;gap:10px;letter-spacing:-.005em}
+.ntl-dl span{width:auto;height:auto;padding:2px 6px;border-radius:2px;font-family:var(--ntl-mono);font-size:.7rem;font-weight:500;
+  letter-spacing:.06em;border:1px solid rgba(242,169,59,.55);background:none;color:var(--ntl-sodium,#F2A93B)}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]{
+  min-height:3.4rem;border-radius:4px;box-shadow:none;font-size:1.02rem;letter-spacing:.01em}
+button[data-testid="stBaseButton-primary"]:hover:not(:disabled){box-shadow:none;outline:2px solid rgba(242,169,59,.5);outline-offset:2px}
+[class*="st-key-srch_hit"] button{border-radius:4px}
+[class*="st-key-srch_hit"] button:before{content:"▸";color:var(--ntl-sodium,#F2A93B);font-family:var(--ntl-mono)}
+
+/* ----- trạng thái chờ = quy trình thao tác (không thẻ, không vòng tròn) ----- */
+.ntl-empty{text-align:left;margin:44px 0 8px}
+.ntl-empty-h{font-size:2.3rem;font-weight:600;line-height:1.08;letter-spacing:-.015em}
+.ntl-empty-p{margin:12px 0 0;max-width:64ch;text-align:left;opacity:.72}
+.ntl-steps{gap:0 28px;margin-top:30px}
+.ntl-steps li{padding:16px 0 6px;border:0;border-top:1px solid var(--ntl-rule);border-radius:0;background:none;
+  transition:border-color .18s ease}
+.ntl-steps li:first-child{border-top:2px solid var(--ntl-sodium)}
+.ntl-steps li:hover{transform:none;box-shadow:none;border-top-color:var(--ntl-sodium)}
+.ntl-steps .n{display:block;place-items:unset;text-align:left;width:auto;height:auto;border:0;border-radius:0;background:none!important;backdrop-filter:none;
+  font-family:var(--ntl-mono);font-size:.78rem;font-weight:500;letter-spacing:.08em;color:#7F8BB0}
+.ntl-steps li:first-child .n{color:var(--ntl-sodium)}
+.ntl-steps b{font-family:var(--ntl-display);font-size:1.12rem;font-weight:600}
+.ntl-steps span{font-size:.9rem}
+
+/* ----- tiêu đề kết quả = bảng ghi địa điểm ----- */
+.ntl-plate{align-items:stretch;flex-wrap:wrap;gap:16px 34px;margin:0 0 18px;padding:2px 0 0}
+.ntl-where{flex:1 1 280px;align-self:center}
+.ntl-where .up{font-family:var(--ntl-mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.62;margin-bottom:6px}
+.ntl-where .name{font-size:2.5rem;font-weight:600;line-height:1.04;letter-spacing:-.018em}
+.ntl-where .name:before{display:none}
+.ntl-where .co{margin-top:10px;font-family:var(--ntl-mono);font-size:.78rem;letter-spacing:.04em;color:var(--ntl-sodium)}
+.ntl-meta{align-self:center}
+.ntl-sig{flex:0 0 auto;align-self:center;display:grid;grid-template-columns:repeat(var(--c),1fr);gap:2px;
+  width:clamp(150px,20vw,250px);padding:8px;border:1px solid var(--ntl-rule);border-radius:2px;background:#080D1F}
+.ntl-sig i{display:block;aspect-ratio:1/1;opacity:0;animation:ntlSig .45s cubic-bezier(.2,.7,.2,1) var(--d,0s) forwards}
+.ntl-sig i.e{background:none;animation:none;opacity:1}
+@keyframes ntlSig{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.ntl-sig i{animation:none;opacity:1}}
+@media (max-width:640px){.ntl-sig{width:100%;max-width:260px}}
+
+/* ----- số đo = đồng hồ đọc số ----- */
+div[data-testid="stMetricLabel"] p{font-family:var(--ntl-mono);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;opacity:.66}
+div[data-testid="stMetricValue"]{font-family:var(--ntl-display);font-weight:600;font-variant-numeric:lining-nums tabular-nums}
+
+/* ----- đề mục trong tab: đánh số kiểu tờ bản đồ ----- */
+div[data-baseweb="tab-panel"]{counter-reset:ntlsec}
+[data-testid="stMain"] h3{counter-increment:ntlsec;font-size:1.4rem;font-weight:600;gap:12px}
+[data-testid="stMain"] h3:before{content:counter(ntlsec,decimal-leading-zero);width:auto;height:auto;padding:2px 6px;border-radius:2px;
+  border:1px solid rgba(242,169,59,.5);background:none;font-family:var(--ntl-mono);font-size:.7rem;font-weight:500;
+  letter-spacing:.06em;color:var(--ntl-sodium)}
+
+/* ----- bo góc vuông hơn ở mọi nơi còn lại ----- */
+div[data-testid="stDataFrame"],div[data-testid="stAlert"],div[data-testid="stAlertContainer"],
+div[data-testid="stStatus"],div[data-testid="stStatusWidget"],div[data-testid="stToast"],.ntl-top{border-radius:4px}
+iframe{border-radius:var(--ntl-r-panel)}
+</style>
+"""
+
+
 _FX_JS = r"""
 <script>
 (function () {
@@ -451,6 +552,7 @@ def inject_theme() -> None:
     st.markdown(_THEME_CSS, unsafe_allow_html=True)
     st.markdown(_UX_CSS, unsafe_allow_html=True)
     st.markdown(_LAYOUT_CSS, unsafe_allow_html=True)
+    st.markdown(_SHEET_CSS, unsafe_allow_html=True)
 
 
 def enable_fx() -> None:
@@ -541,12 +643,13 @@ def deck_label(n, text: str) -> None:
     """Render a numbered label for a control-panel group."""
     import re
     t = re.sub(r"^\s*\d+\.\s*", "", str(text))
-    st.markdown(f'<div class="ntl-dl"><span>{_esc(str(n))}</span>{_esc(t)}</div>', unsafe_allow_html=True)
+    tag = f"{n:02d}" if isinstance(n, int) else str(n)
+    st.markdown(f'<div class="ntl-dl"><span>{_esc(tag)}</span>{_esc(t)}</div>', unsafe_allow_html=True)
 
 
 def empty_state(title: str, hint: str, steps) -> None:
     lis = "".join(
-        f'<li><div class="n">{i}</div><div><b>{_esc(t)}</b><span>{_esc(d)}</span></div></li>'
+        f'<li><div class="n">{i:02d}</div><div><b>{_esc(t)}</b><span>{_esc(d)}</span></div></li>'
         for i, (t, d) in enumerate(steps, 1)
     )
     st.markdown(
@@ -556,8 +659,64 @@ def empty_state(title: str, hint: str, steps) -> None:
     )
 
 
-def place_banner(place: str, facts) -> None:
-    """Render a locality path and optional metadata facts."""
+def _dms(lat: float, lon: float) -> str:
+    """Format a coordinate pair as degrees and minutes, e.g. 47°50′N · 16°32′E."""
+    def one(v: float, pos: str, neg: str) -> str:
+        t = int(round(abs(v) * 60))
+        return f"{t // 60}°{t % 60:02d}′{pos if v >= 0 else neg}"
+    return f"{one(lat, 'N', 'S')} · {one(lon, 'E', 'W')}"
+
+
+# Colour ramp of the light signature: unlit -> dim amber -> sodium -> LED white-blue.
+_SIG_RAMP = ((0.0, (27, 35, 72)), (0.45, (150, 104, 30)), (0.78, (242, 169, 59)), (1.0, (159, 216, 255)))
+
+
+def _sig_color(t: float) -> str:
+    for (t0, c0), (t1, c1) in zip(_SIG_RAMP, _SIG_RAMP[1:]):
+        if t <= t1:
+            k = 0.0 if t1 == t0 else (t - t0) / (t1 - t0)
+            return "#%02X%02X%02X" % tuple(int(round(a + (b - a) * k)) for a, b in zip(c0, c1))
+    return "#%02X%02X%02X" % _SIG_RAMP[-1][1]
+
+
+def light_signature(x, y, v, cols: int = 30, max_rows: int = 14) -> str:
+    """Pixel portrait of a locality: grid-cell centroids (x, y) with NTL values v, binned to a small
+    square-pixel raster. Display only; it never feeds back into any computation."""
+    import numpy as np
+    x, y, v = (np.asarray(a, dtype=float) for a in (x, y, v))
+    ok = np.isfinite(x) & np.isfinite(y) & np.isfinite(v)
+    if ok.sum() < 2:
+        return ""
+    x, y, v = x[ok], y[ok], np.maximum(v[ok], 0.0)
+    dx, dy = float(np.ptp(x)), float(np.ptp(y))
+    step = max(dx / cols, dy / max_rows, 1e-9)
+    ix = np.minimum(((x - x.min()) / step).astype(int), int(dx / step))
+    iy = np.minimum(((y.max() - y) / step).astype(int), int(dy / step))      # north at the top
+    nc, nr = int(ix.max()) + 1, int(iy.max()) + 1
+    tot = np.zeros((nr, nc)); cnt = np.zeros((nr, nc))
+    np.add.at(tot, (iy, ix), v); np.add.at(cnt, (iy, ix), 1.0)
+    mean = np.divide(tot, cnt, out=np.zeros_like(tot), where=cnt > 0)
+    pos = mean[mean > 0]
+    hi = float(np.quantile(pos, 0.99)) if pos.size else 0.0
+    norm = np.clip(np.log1p(mean) / np.log1p(hi), 0, 1) if hi > 0 else np.zeros_like(mean)
+    pk = np.unravel_index(int(np.argmax(norm)), norm.shape)
+    out = []
+    for r in range(nr):
+        for c in range(nc):
+            if cnt[r, c] == 0:
+                out.append("<i class=\"e\"></i>")
+                continue
+            d = min(math.hypot(r - pk[0], c - pk[1]) * 0.035, 1.2)
+            out.append(f'<i style="--d:{d:.2f}s;background:{_sig_color(float(norm[r, c]))}"></i>')
+    return f'<div class="ntl-sig" style="--c:{nc}" aria-hidden="true">{"".join(out)}</div>'
+
+
+def place_banner(place: str, facts, signature=None, coord=None) -> None:
+    """Render a locality path, optional metadata facts, a coordinate readout and a light signature.
+
+    signature: optional (x, y, values) arrays, drawn as a pixel portrait of the locality.
+    coord: optional (lat, lon) in degrees.
+    """
     parts = [p.strip() for p in str(place).split(" / ") if p.strip()]
     name = parts[-1] if parts else str(place)
     up = " / ".join(parts[:-1])
@@ -571,8 +730,21 @@ def place_banner(place: str, facts) -> None:
                 cells.append(f"<div><dd>{_esc(f)}</dd></div>")
         meta = '<dl class="ntl-meta">' + "".join(cells) + "</dl>"
     up_html = f'<div class="up">{_esc(up)}</div>' if up else ""
+    co_html = ""
+    if coord is not None:
+        try:
+            co_html = f'<div class="co">{_esc(_dms(float(coord[0]), float(coord[1])))}</div>'
+        except (TypeError, ValueError, IndexError):
+            co_html = ""
+    sig_html = ""
+    if signature is not None:
+        try:
+            sig_html = light_signature(*signature)
+        except Exception:  # noqa: BLE001  (decoration must never break the page)
+            sig_html = ""
     st.markdown(
-        f'<div class="ntl-plate"><div class="ntl-where">{up_html}<div class="name">{_esc(name)}</div></div>{meta}</div>',
+        f'<div class="ntl-plate"><div class="ntl-where">{up_html}<div class="name">{_esc(name)}</div>{co_html}</div>'
+        f'{meta}{sig_html}</div>',
         unsafe_allow_html=True,
     )
 
