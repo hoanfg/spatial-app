@@ -44,4 +44,4 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install numpy==2.4.6 pandas==3.1.1 scipy==1.17.1
-      - run: python validation/g18_zero_support_experiment.py --verify
+      - run: python validation/g18_zero_support_experiment.py --emit-ci
