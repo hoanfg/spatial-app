@@ -65,7 +65,7 @@ Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và
 | G01 | P0 | Đã đổi nhãn lan tỏa nhân quả/RDD thành mô tả khoảng cách HH. Tác động nhân quả vẫn **chưa kiểm chứng**. | Thiết kế can thiệp hoặc ranh giới độc lập, kiểm tra tính liên tục và nhóm so sánh hợp lệ. |
 | G02 | P0 | Giao diện nêu đúng `spatial_ar1_persistence` là `Corr(z, Wz)` cùng một năm, **không phải** hệ số AR hay kiểm định nghiệm đơn vị. | Mô hình không gian tường minh và phép kiểm tính dừng riêng nếu cần. |
 | G03 | P1 | Các ngưỡng NTL 5/15/40 đã được gọi là nhóm bức xạ mô tả; hiệu chuẩn ý nghĩa kinh tế vẫn **mở**. | Dữ liệu sử dụng đất và biến kinh tế độc lập tại nhiều địa bàn. |
-| G04 | P1 | Đẳng thức NTL có trọng số khoảng cách trừ kỳ vọng hoán vị đã có kiểm thử; ý nghĩa tiếp cận thị trường và tính ngoại sinh còn **mở**. | Đối chiếu việc làm, dân số hoặc khả năng tiếp cận độc lập; thử độ nhạy hệ số suy giảm khoảng cách. |
+| G04 | P1 | Đã lưu bằng chứng về độ nhạy chỉ số NTL theo khoảng cách trên Bảo An 2020 và thí nghiệm nhân tạo có quy mô việc làm biết trước. **Hiệu chuẩn tiếp cận thị trường kinh tế và ngoại sinh vẫn mở.** | Đối chiếu dữ liệu việc làm, dân số, chi phí đi lại hoặc kết quả thị trường độc lập, đồng bộ địa bàn, thời gian và đơn vị không gian. |
 | G05 | P1 | Tâm CBD lấy từ NTL có thể gây thiên lệch lựa chọn tâm khi đánh giá độ dốc và R². | Tâm hoạt động xác định độc lập, so độ dốc và R² theo từng cách chọn tâm. |
 | G06 | P1 | Số học Hill/KS đã kiểm thử nhưng chưa xác nhận dữ liệu thực sự theo Pareto. | Bootstrap có ước lượng lại tham số, so ngưỡng đuôi và các phân phối thay thế. |
 | G07 | P1 | Giao diện và sổ tay đã ghi đúng khoảng cách **giữa tâm ô**; khoảng cách tới biên đa giác thực vẫn **chưa kiểm chứng**. | Đối chiếu với khoảng cách đến biên đa giác tại cụm HH phức tạp và nhiều lưới. |
@@ -80,6 +80,34 @@ Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và
 | G16 | P2 | Liên kết danh mục VIIRS trong hướng dẫn bằng chứng phải đúng mã `VCMSLCFG` đang chạy. | Đối chiếu nguồn và phiên bản; không chạy lại V11. |
 | G17 | P1 | Đã lưu mô phỏng FDR/lực kiểm định với p-value Gaussian hợp lệ và phép thử độ nhạy bằng hoán vị LISA thực tế. **Bảo đảm FDR cho địa bàn thực vẫn còn mở.** | Phải kiểm tra giả thuyết hoán vị, sự phụ thuộc giữa p-value và trường hợp thực phù hợp trước khi công bố FDR danh nghĩa. |
 | G18 | P1 | Đã lưu bằng chứng độ nhạy tổng hợp có cờ quan sát: đưa ô 0 vào và điền 0 sai làm đổi nhãn, láng giềng và p-value LISA. **Kiểm chứng thực địa thiếu hỗ trợ vẫn mở.** | Lặp lại trên ca thực có hỗ trợ A02 được xác minh; không coi mô phỏng là kiểm chứng ngoài. |
+
+### G04: Tiềm năng NTL có trọng số khoảng cách và kiểm chứng độ nhạy (19/11/2026)
+
+**Đại lượng được kiểm tra.** Mã hiện hành tính $P_i=\sum_{j\ne i}w_{ij}SOL_j$ và $\widetilde P_i=P_i-\overline{SOL}_{core}\sum_{j\ne i}w_{ij}$, với $w_{ij}=\exp(-\tau d_{ij})$ trong bán kính Euclid cố định trên lưới. Cấu hình mặc định dùng $\tau=0,5$ mỗi km và bán kính năm bước tại lưới 500 m, tức **2,5 km**; khoảng cách làm trọng số còn một nửa xấp xỉ 1,386 km. Phép biến đổi chỉ trừ **kỳ vọng theo hoán vị không hạn chế các giá trị SOL giữa ô lõi**, không phải phép đo chi phí vận tải thực tế hoặc phép tái định tâm theo một cơ chế phân bổ cú sốc ngoại sinh phục vụ nhận dạng nhân quả. Đẳng thức kỳ vọng đã được kiểm trong T07 trước đây và **không được chạy lại**.
+
+**Thí nghiệm nhân tạo có quy mô việc làm biết trước.** Trên lưới không đều gồm 335 ô, nguồn việc làm nhân tạo được dựng trước; sau đó mới sinh ánh sáng tương quan với việc làm kèm nhiễu, thêm một nguồn sáng mạnh không gắn với việc làm, hoặc xáo vị trí ánh sáng một lần theo seed (đối chứng mô tả, không phải kiểm định hoán vị). Ở cấu hình mặc định, tương quan thứ hạng Spearman giữa **tiềm năng NTL đã trừ kỳ vọng** và **tiềm năng việc làm nhân tạo** như sau:
+
+| Kịch bản NTL nhân tạo | Tương quan với tiềm năng việc làm nhân tạo |
+| --- | ---: |
+| Ánh sáng được sinh có liên hệ trực tiếp với việc làm | 0,9361 |
+| Thêm nguồn chiếu sáng mạnh không đại diện việc làm | 0,4393 |
+| Xáo vị trí NTL một lần theo seed | -0,2513 |
+
+Các con số thể hiện độ nhạy theo **cơ chế tạo dữ liệu nhân tạo**, không xác nhận độ chính xác kinh tế trên thực địa. Nguồn việc làm được giả lập và trường ánh sáng khớp được **sinh trực tiếp từ nguồn đó**, không phải dữ liệu việc làm thực tế được đo độc lập. Trường xáo vị trí chỉ là một hiện thực đối chứng, không có p-value.
+
+**Độ nhạy bức xạ thực tại Bảo An (2020, 500 m).** Tái sử dụng đúng CSV gốc **7.148 ô** đã được kiểm tra A02. Có **6.186 ô lõi đầy đủ** đủ điều kiện để tính trọng số khoảng cách; 962 ô biên vẫn nằm trong tệp kết quả theo ID nhưng các chỉ số tiềm năng để trống. Cả 7.148 dòng nguồn đều có trạng thái đã quan sát. Một dòng không thuộc lõi có trường dữ liệu không hợp lệ được loại khỏi phép tính, không tự điền tọa độ hoặc NTL. Không thay đổi hay trích xuất lại CSV nguồn. Khi đối chiếu cùng tập ô lõi và cấu hình mặc định:
+
+| Bán kính (bước lưới) | Bán kính tối đa | Khoảng tương quan Spearman theo $\tau$ | Khoảng Jaccard của nhóm 10% cao nhất |
+| --- | --- | --- | --- |
+| 3 | 1,5 km | 0,9855 đến 0,9891 | 0,7813 đến 0,8152 |
+| 5 | 2,5 km | 0,9984 đến 1,0000 | 0,9344 đến 1,0000 |
+| 8 | 4,0 km | 0,9733 đến 0,9985 | 0,7839 đến 0,9527 |
+
+Các mức $\tau$ được thử là 0,25; 0,5 và 1,0 mỗi km. Thứ hạng tổng thể tương đối gần nhau, nhưng tập ô thuộc 10% cao nhất có thể thay đổi. Ở cấu hình mặc định, tương quan thứ hạng giữa tiềm năng NTL thô và thành phần kỳ vọng chỉ do hình học là **0,4085**; giữa tiềm năng đã trừ kỳ vọng và thành phần hình học là **0,1758**. Đây **không phải kiểm định độc lập thống kê** và tiềm năng đã trừ kỳ vọng không nhất thiết mất mọi tương quan không gian. Giá trị âm (50,73% ô đủ điều kiện ở cấu hình mặc định) chỉ có nghĩa là **thấp hơn kỳ vọng tham chiếu theo hoán vị**, không hàm ý việc làm hay thị trường có giá trị âm.
+
+**Bằng chứng lưu trữ đầy đủ:** [chương trình có thể tái lập](g04_ntl_potential_experiment.py), [CSV đầu vào nhân tạo 335 ô có quy mô việc làm](evidence/g04_ntl_potential/synthetic_input.csv), [1.005 kết quả cấp ô nhân tạo ở cấu hình mặc định](evidence/g04_ntl_potential/synthetic_cell_results.csv), [kết quả cấp ô theo 7.148 ID Bảo An](evidence/g04_ntl_potential/baoan_cell_results.csv), [bảng 36 trường hợp độ nhạy](evidence/g04_ntl_potential/sensitivity.csv) và [JSON gồm mã băm SHA-256 nguồn, phiên bản thư viện, định nghĩa và giới hạn](evidence/g04_ntl_potential/summary.json). CSV gốc Bảo An đã được bảo quản ở `validation/evidence/a02_post_pr27/`. CI sẽ đối chiếu đúng cả năm tệp mới bằng cách chạy lại chương trình, giữ nguyên đầu vào lịch sử.
+
+**Điều kiện G04 chưa hoàn tất:** Cần số liệu việc làm hoặc dân số được thu thập độc lập, có vị trí và cùng khoảng thời gian, kết hợp với chi phí giao thông hoặc đi lại có cơ sở, tốt nhất thêm kết quả thị trường quan sát thực tế. Việc làm nhân tạo không đóng được khoảng trống này; kiểm tra độ nhạy thuần NTL tại một địa bàn không nhận dạng tác động ngoại sinh. Trong [Donaldson và Hornbeck (2016)](https://doi.org/10.1093/qje/qjw002), tiếp cận thị trường liên quan quy mô thị trường và chi phí vận tải; còn phép tái định tâm phục vụ nhận dạng trong [Borusyak và Hull (2023)](https://doi.org/10.3982/ECTA19367) cần quy tắc về các cú sốc phản thực được xác định rõ.
 
 ### Kiểm chứng G17 dưới phụ thuộc không gian (phạm vi mô phỏng, 19/11/2026)
 
