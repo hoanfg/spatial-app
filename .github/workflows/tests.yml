@@ -57,4 +57,4 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install numpy==2.4.6 pandas==3.1.1 scipy==1.17.1
-      - run: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --emit-ci
+      - run: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --verify
