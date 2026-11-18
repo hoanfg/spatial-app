@@ -19,9 +19,9 @@
 >
 > Bạn thấy ngợp trước đống công thức bên dưới? Đây là bản "nói tiếng người" về việc hệ thống này làm được gì.
 >
-> - **Bài toán.** Muốn biết một vùng giàu hay nghèo khi không có số liệu GDP, người ta nhìn ảnh vệ tinh chụp ánh sáng ban đêm. **Nhưng** đống dữ liệu này rất nặng: chạy trên máy tính thường là tràn RAM, làm thủ công thì mất cả tuần.
+> - **Bài toán.** Ánh sáng ban đêm có thể là biến đại diện không hoàn hảo cho một số hoạt động, nhưng không đo trực tiếp GDP hoặc mức giàu nghèo. **Nhưng** đống dữ liệu này rất nặng: chạy trên máy tính thường là tràn RAM, làm thủ công thì mất cả tuần.
 > - **App làm gì.** Bạn chọn một khu vực $\rightarrow$ app tự kết nối *Google Earth Engine* để tải ảnh $\rightarrow$ engine C/C++ gom hàng triệu điểm ảnh vào từng ô lưới $\rightarrow$ **các giới hạn an toàn kiểm soát khối lượng xử lý; khả năng chạy ổn định trong 1GB vẫn cần kiểm thử toàn bộ hệ thống triển khai.**
-> - **Bạn nhận lại gì.** Một nút bấm, một file CSV đã dọn sẵn các chỉ số kinh tế: đâu là lõi đô thị? chỗ nào là "điểm nóng" (LISA)? mức bất bình đẳng (Gini) cao hay thấp? Việc của bạn chỉ còn là tải về và đưa thẳng vào mô hình hồi quy.
+> - **Bạn nhận lại gì.** Một nút bấm, một CSV cấp ô gồm số đo NTL, cụm ánh sáng theo LISA và độ tập trung Gini. Đây là dữ liệu mô tả và các biến ứng viên; ý nghĩa kinh tế cần được kiểm chứng trước khi diễn giải hồi quy.
 
 ```mermaid
 flowchart LR
@@ -140,14 +140,14 @@ Giao diện đi theo đúng thứ tự của một quy trình nghiên cứu có 
 | :--- | :--- | :--- |
 | **Bộ chọn địa phương và độ phân giải** | Tìm kiếm hoặc duyệt quốc gia, đơn vị cấp một và địa phương; chọn năm 2014-2025 và ô lưới 500-5.000 m; ước lượng khối lượng trước khi chạy | Diện tích ranh giới, số ô dự kiến, CRS UTM động và cảnh báo hoặc chặn tác vụ quá lớn |
 | **Pipeline trích xuất** | Dựng lưới vuông căn chỉnh nhất quán, tạo ảnh VIIRS trung vị năm, trích xuất trung bình ô theo tỷ lệ diện tích và ghi hiệu năng từng bước | Hình học lưới, `ntl_mean`, `area_km2`, tâm ô và thông tin nguồn gốc pipeline |
-| **Tab Bản đồ** | Chuyển giữa NTL liên tục, nhóm kinh tế toàn cục và vị thế nội bộ; chọn thang màu tuyến tính, căn bậc hai hoặc logarit; ẩn ô tối, viền Top 10, đường biên ô và lớp che ngoài vùng | Tooltip từng ô với hạng, phân vị, tỷ trọng SOL, điểm chuẩn hóa, lớp và tọa độ |
+| **Tab Bản đồ** | Chuyển giữa NTL liên tục, nhóm bức xạ mô tả và vị thế nội bộ; chọn thang màu tuyến tính, căn bậc hai hoặc logarit; ẩn ô tối, viền Top 10, đường biên ô và lớp che ngoài vùng | Tooltip từng ô với hạng, phân vị, tỷ trọng SOL, điểm chuẩn hóa, lớp và tọa độ |
 | **Tab Dữ liệu: tổng quan** | Báo trung bình có/không trọng số, phân vị, độ phân tán, độ lệch, Gini, tỷ lệ ô sáng và các ô sáng nhất | Nhận định nhanh, bảng mô tả, bảng Top 10 và bảng xem trước đầy đủ |
 | **Tab Dữ liệu: cấu trúc không gian** | Tính Global Moran's I với láng giềng Queen và suy luận bằng hoán vị | $I$ quan sát, $I$ kỳ vọng, p-value giả và số láng giềng trung bình |
 | **Tab Dữ liệu: phân phối** | So sánh tỷ trọng số ô với tỷ trọng ánh sáng; vẽ Lorenz, hạng-quy mô và hồ sơ theo khoảng cách | Gini, hình dạng đuôi Pareto và bằng chứng mô tả về cấu trúc đơn tâm hoặc đa tâm |
 | **Khối chất lượng dữ liệu** | Gắn cờ thiếu, âm, 0 và hỗ trợ quan sát thấp; tùy chọn so sánh cắt/không cắt số âm và tải số tháng hợp lệ | Các cột `dq_*`, cảnh báo tự động và giả định dùng để tạo ảnh NTL tổng hợp |
 | **Khối kiểm chứng ngoài** | So sánh NTL với diện tích xây dựng hoặc dân số GHSL trên lưới gốc GHSL được bảo toàn | Spearman $\rho$, khoảng bootstrap theo khối, AUC và epoch GHSL được sử dụng |
 | **Tab LISA và Panel** | Chọn số hoán vị, $\alpha$, FDR, biến đổi log, ngưỡng sáng, cỡ cụm tối thiểu và số láng giềng tối thiểu; phân loại cụm và xác định lõi | Bản đồ LISA, cơ cấu diện tích, KPI vùng-năm, CSV cấp ô và CSV panel |
-| **Các chế độ bản đồ LISA** | Xem cụm cục bộ, vành đai lan tỏa hoặc tiếp cận thị trường đã khử lệch; xem khoảng cách tới lõi và khoảng cách có dấu tới biên điểm nóng | Đầu vào cho nghiên cứu độ dốc mật độ, tiếp cận thị trường và thiết kế quanh ranh giới không gian |
+| **Các chế độ bản đồ LISA** | Xem cụm cục bộ, nhóm khoảng cách HH hoặc NTL trừ kỳ vọng hoán vị; xem khoảng cách tới tâm suy ra từ NTL và tâm ô nhóm đối lập | Các biến mô tả phải kiểm chứng thêm trước khi diễn giải kinh tế hoặc nhân quả |
 | **Chẩn đoán và độ vững** | Kiểm tra tỷ lệ tối, mẫu không gian của phần dư, đuôi Pareto, độ ổn định theo seed, phép biến đổi/trọng số/ngưỡng, MAUP và năm kề | Cảnh báo, hệ số trùng Jaccard, diện tích HH ổn định và bảng độ vững tải xuống được |
 | **Khối động học Không-Thời gian** | Tải lại năm so sánh, tính thay đổi vị thế chuẩn hóa của ô và láng giềng, dựng ma trận chuyển dịch có điều kiện không gian | Bốn chế độ thay đổi tương đối, chỉ số dịch chuyển Shorrocks, biên độ rộng/sâu và CSV Không-Thời gian |
 | **Khối hiệu năng** | Ghi thời gian và bộ nhớ tiến trình cho các bước trích xuất, thống kê vùng, LISA, GHSL và Không-Thời gian khi có dữ liệu | Thời gian từng bước, RSS cực đại theo mẫu, mã phiên bản triển khai khi xác định được và JSON/CSV tải xuống |
@@ -324,8 +324,8 @@ App dẫn xuất một số biến từ bề mặt ánh sáng mô tả:
 
 - **Chẩn đoán đuôi Pareto** tóm tắt độ tập trung của nhóm ô sáng nhất và cần đi kèm tỷ lệ đuôi được chọn, sai số chuẩn cùng kiểm định KS (Bluhm & Krause, 2022).
 - **Độ dốc mật độ đô thị** mô tả bức xạ thay đổi theo khoảng cách tới lõi được phát hiện. Lõi này do thuật toán xác định, không phải CBD chính thức hay ranh giới can thiệp nhân quả.
-- **Tiếp cận thị trường đã khử lệch** loại phần được dự đoán bởi vị trí trung tâm, tránh coi tiếp cận là phơi nhiễm ngẫu nhiên một cách cơ học (Borusyak & Hull, 2023).
-- **Khoảng cách có dấu tới biên điểm nóng và các vành đai lan tỏa** chuẩn bị biến chạy và nhóm phơi nhiễm cho thiết kế quanh ranh giới hoặc có tương tác. Nhận dạng vẫn cần tính liên tục, không sắp xếp chính xác và mô hình lan tỏa có cơ sở (Vazquez-Bare, 2023; Butts, 2024).
+- **NTL có trọng số khoảng cách trừ kỳ vọng hoán vị** chỉ trừ kỳ vọng dưới phép gán ngẫu nhiên tại các vị trí cố định; không tự giải quyết nội sinh hoặc nhận dạng phơi nhiễm ngoại sinh (tham khảo Borusyak & Hull, 2023).
+- **Khoảng cách có dấu giữa tâm các ô và nhóm khoảng cách HH** là các chỉ số mô tả, không phải khoảng cách tới biên đa giác hoặc nhóm can thiệp đã được nhận dạng. Nghiên cứu nhân quả cần quy tắc phân bổ độc lập, tính liên tục và mô hình tương tác phù hợp (Vazquez-Bare, 2023; Butts, 2024).
 
 Các đầu ra này là ứng viên cho biến giải thích, biến kết quả, thước đo phơi nhiễm hoặc chẩn đoán. Vai trò đúng phụ thuộc vào đại lượng cần ước lượng và thứ tự thời gian của thiết kế thực nghiệm.
 
@@ -664,18 +664,18 @@ Các mô hình kinh tế học đô thị thường nghiên cứu độ dốc m�
 
 Có ba bước để từ cụm đi tới tâm lõi:
 
-1. **Nhận diện điểm nóng.** Một cụm `High-High` liên thông $c$ được công nhận là **cực tăng trưởng / điểm nóng đô thị** nếu số ô của cụm đạt ngưỡng tối thiểu $n_c \ge n_{\min}$ (mặc định $n_{\min} = 4$ ô).
+1. **Nhận diện điểm nóng.** Một cụm `High-High` liên thông $c$ được ghi nhận là **cụm ánh sáng cao (HH)** nếu số ô của cụm đạt ngưỡng tối thiểu $n_c \ge n_{\min}$ (mặc định $n_{\min} = 4$ ô).
 
-2. **Chọn tâm lõi kinh tế (CBD).** Tọa độ tâm $(\mathrm{CBD}_x, \mathrm{CBD}_y)$ là **trọng tâm có trọng số tổng ánh sáng (SOL-weighted centroid) của cụm High-High có diện tích lớn nhất** ($C^{\star}$):
+2. **Chọn tâm sáng đại diện (tâm suy ra từ NTL).** Tọa độ tâm $(\mathrm{CBD}_x, \mathrm{CBD}_y)$ là **trọng tâm có trọng số tổng ánh sáng (SOL-weighted centroid) của cụm High-High có diện tích lớn nhất** ($C^{\star}$):
 
 $$
 \mathrm{CBD}_x = \frac{\sum_{i \in C^{\star}} c_{x,i} \cdot (\mathrm{NTL}_i \cdot A_i)}{\sum_{i \in C^{\star}} (\mathrm{NTL}_i \cdot A_i)}, \quad \mathrm{CBD}_y = \frac{\sum_{i \in C^{\star}} c_{y,i} \cdot (\mathrm{NTL}_i \cdot A_i)}{\sum_{i \in C^{\star}} (\mathrm{NTL}_i \cdot A_i)}
 $$
 
-3. **Phương án dự phòng.** Nếu địa phương chưa có cụm `High-High` nào đạt ngưỡng $n_{\min}$, hệ thống chuyển sang phương án dự phòng vững (robust fallback): chọn ô lõi không biên có điểm tổ hợp trung bình trượt không gian $0.5 \cdot \mathrm{NTL}_i + 0.5 \cdot \mathrm{Lag}(\mathrm{NTL}_i)$ cao nhất làm tâm.
+3. **Phương án dự phòng.** Nếu địa phương chưa có cụm `High-High` nào đạt ngưỡng $n_{\min}$, hệ thống áp dụng quy tắc dự phòng mô tả: chọn ô lõi không biên có điểm tổ hợp trung bình trượt không gian $0.5 \cdot \mathrm{NTL}_i + 0.5 \cdot \mathrm{Lag}(\mathrm{NTL}_i)$ cao nhất làm tâm.
 
 > [!NOTE]
-> **Vì sao không chọn thẳng ô sáng nhất** $\arg\max_i(\mathrm{NTL}_i)$**?** Ô sáng nhất rất dễ là điểm nhiễu công nghiệp, cảng biển hoặc sân bay ở vùng rìa, và sẽ kéo tâm lõi lệch khỏi trung tâm thật. Trọng tâm của cả một cụm ổn định hơn nhiều.
+> **Vì sao không chọn thẳng ô sáng nhất** $\arg\max_i(\mathrm{NTL}_i)$**?** Ô sáng nhất rất dễ là điểm nhiễu công nghiệp, cảng biển hoặc sân bay ở vùng rìa, và sẽ kéo tâm lõi lệch khỏi trung tâm thật. Trọng tâm của cụm là một lựa chọn mô tả; độ ổn định so với tâm độc lập còn cần kiểm chứng.
 
 Từ tâm lõi, khoảng cách Euclid từ mọi ô lưới $i$ tới tâm lõi kinh tế (đơn vị: km) được xuất thành biến `dist_to_core_km`:
 
