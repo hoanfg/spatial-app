@@ -1,14 +1,12 @@
 import html as html_lib
 import inspect  # noqa: F401
 import gettext
-import io
 import json
 import math
 import os
 import re
 import tempfile
 import unicodedata
-import zipfile
 from datetime import datetime, timezone
 
 import altair as alt
@@ -19,9 +17,9 @@ import geopandas as gpd
 import numpy as np
 from ntl.zonal import read_valid_band
 from ntl.semantics import annual_image_with_quality, cell_quality
+from ntl.ee_extra import download_tiled_geotiff, tile_bboxes
 from ntl.performance import PerformanceRecorder, measured_call, render_performance_panel
 import pandas as pd
-import requests
 import shapely
 import streamlit as st
 from branca.element import MacroElement
@@ -679,6 +677,7 @@ TEXT = {
         "idle": "Chọn địa phương, độ phân giải, năm ở bảng điều khiển phía trên rồi bấm **Chạy phân tích**.",
         "st1": "Trạm 1/3 · Đang dựng lưới {s} m và cắt theo ranh giới...",
         "st2": "Trạm 2/3 · Đang tải ảnh vệ tinh VIIRS từ Google Earth Engine (có thể mất vài chục giây)...",
+        "st2_tiles": "Trạm 2/3 · Đang tải VIIRS theo {n} mảnh dự kiến; mảnh quá lớn sẽ tự chia tiếp...",
         "st3": "Trạm 3/3 · Đang tính NTL trung bình theo tỷ lệ phủ điểm ảnh cho từng ô...",
         "st4": "Hoàn tất ",
         "ok1": "Đã tạo {n:,} ô lưới ({s}m), UTM EPSG:{e}.",
@@ -686,7 +685,7 @@ TEXT = {
         "ok3": "Hoàn tất trích xuất thống kê vùng.",
         "err_cells": "Lưới có ~{n:,} ô, vượt trần {m:,}. Hãy chọn độ phân giải thô hơn hoặc địa phương nhỏ hơn.",
         "err_empty": "Không có ảnh VIIRS nào cho khu vực/năm {y}.",
-        "err_http": "Tải raster thất bại (HTTP {c}). Vùng có thể quá lớn (giới hạn ~50MB); thử địa phương nhỏ hơn.",
+        "err_http": "Tải raster thất bại (HTTP {c}) sau khi tự chia mảnh. Hãy thử lại; nếu lỗi lặp lại, chọn vùng nhỏ hơn.",
         "err_stage": "Lỗi tại {s}",
         "m_cells": "Số ô lưới",
         "m_mean": "NTL trung bình",
@@ -824,6 +823,7 @@ TEXT = {
         "idle": "Pick a locality, resolution and year in the control panel above, then press **Execute Pipeline**.",
         "st1": "Station 1/3 · Building {s} m grid and clipping to boundary...",
         "st2": "Station 2/3 · Downloading VIIRS imagery from Google Earth Engine (may take a while)...",
+        "st2_tiles": "Station 2/3 · Downloading {n} planned VIIRS tile(s); oversized tiles split automatically...",
         "st3": "Station 3/3 · Computing coverage-weighted NTL for every cell...",
         "st4": "Done ",
         "ok1": "Generated {n:,} grid cells ({s}m), UTM EPSG:{e}.",
@@ -831,7 +831,7 @@ TEXT = {
         "ok3": "Zonal statistics extraction complete.",
         "err_cells": "Grid has ~{n:,} cells, above the {m:,} cap. Use a coarser resolution or a smaller area.",
         "err_empty": "No VIIRS imagery for this area/year {y}.",
-        "err_http": "Raster download failed (HTTP {c}). Area may be too large (~50MB limit); try a smaller district.",
+        "err_http": "Raster download failed (HTTP {c}) after automatic tiling. Retry; if it recurs, choose a smaller area.",
         "err_stage": "Error at {s}",
         "m_cells": "Grid cells",
         "m_mean": "Mean NTL",
@@ -1146,7 +1146,7 @@ HELP = {
         "country": "Quốc gia chứa dữ liệu ranh giới (tự quét từ thư mục data/). Thêm quốc gia mới chỉ cần thả thư mục vào đó.",
         "state": "Tỉnh/Thành phố. Danh sách đổi theo quốc gia đã chọn.",
         "county": "Quận/Huyện cần phân tích. Mỗi file .geojson là một địa phương.",
-        "cell": "Cạnh ô lưới vuông (m). Lưới mịn → nhiều ô hơn nhưng VIIRS gốc chỉ ~463 m, nên ô < 1000 m không độc lập thông tin.",
+        "cell": "Cạnh ô lưới phân tích (m). Lưới mịn tạo nhiều ô hơn nhưng không đổi độ phân giải VIIRS gốc (~463 m) hay kích thước yêu cầu tải; vùng lớn được tải theo các mảnh tự động. Ô < 1000 m không độc lập thông tin.",
         "year": "Năm lấy trung vị 12 ảnh tháng VIIRS để giảm nhiễu mây, trăng, cháy.",
         "run": "Chạy 3 trạm: tạo lưới → tải ảnh vệ tinh → tính thống kê vùng. Kết quả được giữ lại khi bạn đổi tab.",
         "lang": "Đổi ngôn ngữ giao diện, không ảnh hưởng dữ liệu.",
@@ -1162,7 +1162,7 @@ HELP = {
         "country": "Country holding the boundary data (auto-scanned from the data/ folder). To add one, just drop its folder there.",
         "state": "Province/City. The list follows the selected country.",
         "county": "District to analyse. Each .geojson file is one locality.",
-        "cell": "Square cell side (m). Finer grid = more cells, but native VIIRS is ~463 m, so cells < 1000 m are not informationally independent.",
+        "cell": "Analysis-grid side (m). A finer grid creates more cells but does not change native VIIRS resolution (~463 m) or the source download size; large areas are downloaded in automatic tiles. Cells < 1000 m are not informationally independent.",
         "year": "Year whose 12 monthly VIIRS composites are median-aggregated to damp clouds, moonlight and fires.",
         "run": "Runs 3 stations: grid → satellite download → zonal statistics. Results persist when you switch tabs.",
         "lang": "Switches the interface language only; data is unaffected.",
@@ -1395,7 +1395,7 @@ def boundary_stats(path: str, mtime: float):
 
 
 @st.cache_data(show_spinner=False, ttl=3600, max_entries=8)
-def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 3) -> bytes:
+def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 4) -> bytes:
     """Download a cloud-screened annual-median NTL GeoTIFF for a WGS84 bounding box."""
     minx, miny, maxx, maxy = bbox
     roi = ee.Geometry.Rectangle([minx, miny, maxx, maxy])
@@ -1412,26 +1412,7 @@ def fetch_ntl_raster(bbox: tuple, year_id: int, semantics_version: int = 3) -> b
         return img.select("avg_rad").updateMask(img.select("cf_cvg").gt(0))
 
     img = annual_image_with_quality(col.map(_mask_cloud_free), roi)
-    url = img.getDownloadUrl(
-        {"scale": GEE_SCALE_M, "crs": "EPSG:4326", "region": roi, "format": "GEO_TIFF"}
-    )
-    resp = requests.get(url, timeout=180)
-    if resp.status_code != 200:
-        raise ConnectionError(f"HTTP:{resp.status_code}")
-
-    content = resp.content
-
-    if content[:2] == b"PK":
-        with zipfile.ZipFile(io.BytesIO(content)) as z:
-            tif_names = [n for n in z.namelist() if n.lower().endswith(".tif")]
-            if not tif_names:
-                raise ValueError("ZIP without .tif")
-            content = z.read(tif_names[0])
-
-    if content[:2] not in (b"II", b"MM"):
-        raise ValueError(L["err_tiff"])
-
-    return content
+    return download_tiled_geotiff(ee, img, bbox, GEE_SCALE_M, band_count=6)
 
 
 def class_codes(values: np.ndarray) -> np.ndarray:
@@ -1864,11 +1845,12 @@ def run_pipeline():
 
 
             stage = "Station 2"
-            status.update(label=L["st2"])
             grid_wgs = grid.to_crs(epsg=4326)
             gx0, gy0, gx1, gy1 = grid_wgs.total_bounds
             pad = 0.005
             bbox = (round(gx0 - pad, 5), round(gy0 - pad, 5), round(gx1 + pad, 5), round(gy1 + pad, 5))
+            _download_tiles = len(tile_bboxes(bbox, GEE_SCALE_M, band_count=6))
+            status.update(label=L["st2_tiles"].format(n=_download_tiles))
             tif_bytes = measured_call(monitor, "ntl.ee_download", fetch_ntl_raster, bbox, year_id=int(year))
             st.write(L["ok2"].format(y=year))
 

@@ -306,12 +306,31 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl){position:relative;b
   box-shadow:0 18px 44px rgba(2,5,18,.45),inset 0 1px 0 rgba(159,216,255,.09)}
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):before{content:"";position:absolute;left:26px;right:26px;top:0;height:2px;
   border-radius:0 0 3px 3px;background:linear-gradient(90deg,transparent,var(--ntl-sodium,#F2A93B),var(--ntl-led,#9FD8FF),transparent);opacity:.85}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):after{content:"";position:absolute;inset:10px;pointer-events:none;
+  background:linear-gradient(var(--ntl-sodium),var(--ntl-sodium)) left top/18px 1px no-repeat,
+    linear-gradient(var(--ntl-sodium),var(--ntl-sodium)) left top/1px 18px no-repeat,
+    linear-gradient(var(--ntl-led),var(--ntl-led)) right bottom/18px 1px no-repeat,
+    linear-gradient(var(--ntl-led),var(--ntl-led)) right bottom/1px 18px no-repeat;opacity:.5}
 .ntl-dl{display:flex;align-items:center;gap:10px;margin:0 0 .5rem;font-family:var(--ntl-display);font-weight:700;font-size:.98rem;letter-spacing:-.01em}
 .ntl-dl span{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:.78rem;
   border:1px solid var(--ntl-sodium,#F2A93B);color:var(--ntl-sodium,#F2A93B);background:rgba(242,169,59,.1)}
+.ntl-dl:after{content:"";height:1px;flex:1;margin-left:4px;background:linear-gradient(90deg,var(--ntl-line),transparent)}
 
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]{
-  min-height:3.6rem;font-size:1.05rem;border-radius:14px;box-shadow:0 8px 24px rgba(242,169,59,.28)}
+  position:relative;overflow:hidden;min-height:3.6rem;font-size:1.05rem;border-radius:14px;
+  box-shadow:0 8px 24px rgba(242,169,59,.28)}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]:after{
+  content:"";position:absolute;inset:-40% auto -40% -35%;width:24%;transform:skewX(-18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transition:left .45s cubic-bezier(.2,.7,.2,1)}
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]:hover:after{left:115%}
+
+div[data-testid="stStatus"],div[data-testid="stStatusWidget"]{position:relative;overflow:hidden}
+div[data-testid="stStatus"]:before,div[data-testid="stStatusWidget"]:before{content:"";position:absolute;top:0;left:-32%;width:32%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--ntl-led),transparent);animation:ntlTelemetry 2.4s linear infinite;z-index:2}
+@keyframes ntlTelemetry{to{left:100%}}
+
+div[data-testid="stDataFrame"]{box-shadow:0 12px 30px rgba(2,5,18,.25)}
+div[data-testid="stDataFrame"]:focus-within{border-color:rgba(159,216,255,.55)}
 
 .block-container{padding-top:4.4rem}
 header[data-testid="stHeader"]{pointer-events:none}
@@ -340,6 +359,10 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) [data-testid="stTex
 [class*="st-key-srch_hit"] button:before{content:none}
 [class*="st-key-srch_hit"] button:hover:not(:disabled){border-color:var(--ntl-sodium);background:rgba(242,169,59,.12)}
 @media (max-width:760px){.block-container{max-width:100%}}
+@media (prefers-reduced-motion:reduce){
+  div[data-testid="stStatus"]:before,div[data-testid="stStatusWidget"]:before{animation:none;display:none}
+  div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]:after{display:none}
+}
 </style>
 """
 

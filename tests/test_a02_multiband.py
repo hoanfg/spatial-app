@@ -9,6 +9,7 @@ from rasterio.transform import from_origin
 from shapely.geometry import box
 
 from ntl.semantics import QUALITY_BANDS, cell_quality
+from ntl.ee_extra import merge_geotiffs
 from ntl.zonal import zonal_stat, zonal_mean_multiband
 
 
@@ -100,3 +101,23 @@ def test_batch_incorrect_band_contract_is_rejected():
         zonal_mean_multiband(raw, grid, bands=(2, 3, 4), names=QUALITY_BANDS)
     with pytest.raises(ValueError, match="inconsistent"):
         zonal_mean_multiband(raw, grid, bands=(2, 3), names=("same", "same"))
+
+
+def test_tiled_geotiff_merge_preserves_six_band_schema():
+    descriptions = ("avg_rad",) + QUALITY_BANDS
+
+    def tile(left, value):
+        with MemoryFile() as mf:
+            with mf.open(driver="GTiff", height=2, width=2, count=6, dtype="float32",
+                         crs="EPSG:4326", transform=from_origin(left, 2, 1, 1)) as dst:
+                dst.write(np.full((6, 2, 2), value, dtype="float32"))
+                for band_no, description in enumerate(descriptions, start=1):
+                    dst.set_band_description(band_no, description)
+            return mf.read()
+
+    merged = merge_geotiffs([tile(0, 1), tile(2, 2)])
+    with MemoryFile(merged) as mf, mf.open() as src:
+        assert src.count == 6 and src.width == 4 and src.height == 2
+        assert src.descriptions == descriptions
+        np.testing.assert_array_equal(src.read()[:, :, :2], 1)
+        np.testing.assert_array_equal(src.read()[:, :, 2:], 2)
