@@ -715,9 +715,9 @@ $$
 
 Kết quả gồm độ dốc NTL $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số khớp nội mẫu $R^2_{\mathrm{gradient}}$ (`monocentric_r2`). Hai đại lượng này chưa xác nhận CBD chính thức hoặc cấu trúc đô thị đơn tâm.
 
-**3. NTL có trọng số khoảng cách sau khi trừ kỳ vọng hoán vị** ($\widetilde{\mathrm{MA}}_i$, tham khảo động cơ tái định tâm biến phơi nhiễm của Borusyak & Hull, 2023)
+**3. NTL có trọng số khoảng cách sau khi trừ kỳ vọng hoán vị** (tên cột cũ `recentered_market_access`)
 
-Tính tiềm năng thị trường trọng lực $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ trên cửa sổ lưới đối xứng, rồi trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ để trừ kỳ vọng hoán vị của đúng chỉ số này (`recentered_market_access`). Bước trừ không tự loại bỏ nội sinh kinh tế hoặc nhận dạng tác động tiếp cận thị trường.
+Ứng dụng cộng ánh sáng vệ tinh có trọng số theo khoảng cách, $P_i = \sum_{j \ne i}\mathrm{SOL}_j\exp(-\tau d_{ij})$, trong đó $\mathrm{SOL}_j = \mathrm{NTL}_j \times \mathrm{diện\ tích\ ô}_j$ và $d_{ij}$ là khoảng cách Euclid giữa các ô trong bán kính cố định. Sau đó ứng dụng trừ kỳ vọng hoán vị không gian $\mathbb{E}_{\pi}[P_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}}\sum_{j \ne i}\exp(-\tau d_{ij})$. Cột xuất vẫn giữ tên `recentered_market_access` để tương thích. **Phép tính không sử dụng dữ liệu việc làm, dân số, thu nhập, chi phí vận tải hoặc thời gian di chuyển thực.** Kết quả mô tả mức tập trung NTL so với tham chiếu hoán vị, không phải tiếp cận thị trường kinh tế đã được kiểm chứng. "Việc làm" trong G04 hoàn toàn do chương trình tự sinh để thử độ nhạy, không phải đầu vào của ứng dụng và không phải việc làm thực địa. Muốn hiệu chuẩn kinh tế cần dữ liệu độc lập được ghép phù hợp. Trừ kỳ vọng hoán vị không tự xác định cú sốc ngoại sinh hoặc xử lý nội sinh kinh tế; không thể lấy Borusyak và Hull (2023) làm bằng chứng về nhận dạng nhân quả của phép tính này.
 
 **4. Nhóm khoảng cách HH và khoảng cách có dấu giữa tâm ô** (thiết kế nhân quả không gian cần giả định riêng; xem Vazquez-Bare, 2023; Butts, 2024)
 
