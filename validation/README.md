@@ -65,7 +65,7 @@ This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai G
 | G01 | P0 | Causal spillover/RDD claims replaced with descriptive HH-distance wording. Causality remains **unverified**. | External intervention or boundary identification, continuity checks and credible comparison design. |
 | G02 | P0 | The UI now identifies `spatial_ar1_persistence` as cross-sectional `Corr(z, Wz)`. It is **not** a spatial AR estimate or unit-root test. | Estimate an explicit spatial model and define a separate stationarity test if needed. |
 | G03 | P1 | Fixed NTL thresholds 5/15/40 now have descriptive radiance labels; economic calibration is **open**. | Cross-location land-use and independent socioeconomic calibration. |
-| G04 | P1 | Permutation-centered NTL access identity is tested; its economic market-access meaning and exogeneity are **open**. | Compare with independent jobs, population or accessibility measures and sensitivity to distance decay. |
+| G04 | P1 | A bounded synthetic jobs-construct stress test and observed Bao'an 2020 NTL kernel sensitivity now have complete archived evidence. **Economic market-access validation and exogeneity remain open.** | Compare with genuinely independent georeferenced employment, population, transport friction or observed market outcomes, with predeclared measures and spatial uncertainty. |
 | G05 | P1 | The NTL-derived CBD can bias the estimated distance gradient and fit. | Compare against independently located activity centers; quantify slope and R² shifts. |
 | G06 | P1 | Hill/KS arithmetic is tested; a fitted Pareto law is not independently established. | Bootstrap fit after re-estimating parameters; compare tail cutoffs and rival distributions. |
 | G07 | P1 | The UI and handbook now clarify signed **cell-center** distance; geometric hotspot-border distance remains **unverified**. | Compare with polygon-boundary distances for complex HH shapes and grids. |
@@ -80,6 +80,34 @@ This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai G
 | G16 | P2 | The evidence guide's VIIRS catalog link must match the application's `VCMSLCFG` product. | Check source/version provenance; no V11 rerun. |
 | G17 | P1 | Synthetic Gaussian valid-p FDR/power simulations and actual LISA permutation stress tests deposited. **Field-specific FDR assurance is still open.** | Evaluate whether the real spatial permutation null and p-value dependence assumptions are credible; additional independent field-based or appropriately structured nulls are required. |
 | G18 | P1 | Synthetic support-aware sensitivity is now deposited: zero inclusion and false zero-fill change LISA labels, neighbors and p-values. **Real incomplete-support validation stays open.** | Repeat with a genuine A02-verified low-support scene; do not treat the synthetic result as external validation. |
+
+### G04: Distance-weighted NTL potential, construct stress and field sensitivity (19 November 2026)
+
+**Scientific object.** The code computes $P_i=\sum_{j\ne i}w_{ij}SOL_j$ and $\widetilde P_i=P_i-\overline{SOL}_{core}\sum_{j\ne i}w_{ij}$ with $w_{ij}=\exp(-\tau d_{ij})$ truncated at a fixed Euclidean grid radius. At the production baseline, $\tau=0.5$ per kilometre and the five-step radius on a 500 m grid is **2.5 km** (the exponential half-distance is about 1.386 km). This transformation subtracts the **location-specific expectation under an unrestricted permutation of core-cell SOL**, not an estimated economic travel cost or the shock-assignment counterfactuals needed for causal exposure recentering. The previous T07 mathematical-expectation test is already closed and was not rerun.
+
+**Synthetic construct stress with known, engineered job mass.** An irregular 335-cell grid contains a synthetic employment surface generated first. Light intensity is then deliberately constructed to match it with noise, to contain a bright *nonemployment* artifact, or to be spatially shuffled (one negative-control realization, not a randomization test). At the baseline, Spearman's correlation of **centered NTL potential** with the known synthetic **jobs-distance potential** was:
+
+| Synthetic NTL scenario | Spearman correlation with constructed jobs-distance potential |
+| --- | ---: |
+| NTL deliberately linked to simulated jobs | 0.9361 |
+| Same NTL with a strong unrelated lighting source | 0.4393 |
+| Single seeded spatial shuffle of NTL | -0.2513 |
+
+These values show sensitivity to the **constructed data-generating mechanism**, not empirical economic accuracy. The benchmark jobs surface is synthetic and the aligned light field is **generated directly from it**, so it is not an independent external employment observation. The single shuffled case does not supply a p-value.
+
+**Observed radiance sensitivity in Bao'an (2020, 500 m).** Reuse exactly the existing, A02-checked, **7,148-row** archived cell CSV; **6,186 full core cells** enter the distance kernel and 962 clipped border cells remain in the exported join table with blank potentials. All 7,148 source records have observed A02 status. One noncore row has an invalid field and is excluded, not filled or assigned a fabricated coordinate. The source CSV is not edited or re-extracted. Against the same baseline on the same eligible core cells:
+
+| Radius in grid steps | Max radius | Spearman range across $\tau$ | Top-decile Jaccard range across $\tau$ |
+| --- | --- | --- | --- |
+| 3 | 1.5 km | 0.9855 to 0.9891 | 0.7813 to 0.8152 |
+| 5 | 2.5 km | 0.9984 to 1.0000 | 0.9344 to 1.0000 |
+| 8 | 4.0 km | 0.9733 to 0.9985 | 0.7839 to 0.9527 |
+
+Here $\tau\in\{0.25,0.5,1.0\}$ per km. Overall cell ranks remain similar, while identity of the highest-ranked 10% changes more. At baseline, raw potential has rank correlation **0.4085** with the geometry-only expected-exposure term, while the centered potential has **0.1758** with that term. Neither is an independence test and the centered quantity need not be spatially uncorrelated with geometry in realized, spatially structured data. Negative centered values (50.73% of eligible cells at baseline) mean *below the spatial-permutation reference expectation*, not negative employment or negative market access.
+
+**Archived inputs and detailed outputs:** the [reproducible program](g04_ntl_potential_experiment.py), [335-cell synthetic input with generated employment](evidence/g04_ntl_potential/synthetic_input.csv), [1,005 synthetic cell-level baseline results](evidence/g04_ntl_potential/synthetic_cell_results.csv), [all 7,148 Bao'an cell IDs and baseline results](evidence/g04_ntl_potential/baoan_cell_results.csv), [36 scenario-level comparisons](evidence/g04_ntl_potential/sensitivity.csv), and [machine-readable summary, source SHA-256, software versions, definitions and limitations](evidence/g04_ntl_potential/summary.json). The original Bao'an CSV referenced by the summary is already deposited at `validation/evidence/a02_post_pr27/`. The CI job checks exact reproducibility of all five new outputs and leaves historical inputs intact.
+
+**Remaining G04 requirement:** A scientifically defensible economic market-access validation needs a real, independent, georeferenced employment or population surface and defensible transport/commuting costs aligned by place, time and spatial units; ideally also external market outcomes. Synthetic job mass cannot close that gap, and an NTL-only real-data sensitivity cannot identify an exogenous effect. This distinction matters because structural market access is linked to transport costs and markets in [Donaldson and Hornbeck (2016)](https://doi.org/10.1093/qje/qjw002), while exposure recentering for identification uses explicitly defined counterfactual shocks in [Borusyak and Hull (2023)](https://doi.org/10.3982/ECTA19367).
 
 ### G17 spatial-dependence FDR study (bounded simulation, 19 November 2026)
 
