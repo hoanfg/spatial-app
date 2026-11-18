@@ -203,10 +203,3 @@ python -m pytest -q tests
 
 The first command checks the deposited Bao'an CSV, performance summary and evidence inventories. The documentation check verifies the maintained English/Vietnamese guides and their links. The Python suite checks application contracts; it does not download new satellite data.
 
-## Evidence still needed
-
-- one real A02 case with missing or low observation support;
-- complete source-raster pairs and per-cell outputs for the three-location V11 comparison;
-- a live per-cell GHSL export for independent comparison;
-- repeated performance measurements using the same deployed revision and settings;
-- a continuous multi-year VIIRS series and an independently sourced economic outcome for broader interpretation.
