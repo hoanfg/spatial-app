@@ -78,8 +78,32 @@ This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai G
 | G14 | P2 | Jaccard, core-frequency, seed SD and space-time movement thresholds are descriptive rules of thumb. | Empirical sensitivity plots rather than universal scientific cutoffs. |
 | G15 | P2 | `moran_I_lit` is a mean of local statistics, not Global Moran I. | Ensure all current CSV/UI explanations preserve that distinction. |
 | G16 | P2 | The evidence guide's VIIRS catalog link must match the application's `VCMSLCFG` product. | Check source/version provenance; no V11 rerun. |
-| G17 | P1 | BH arithmetic is tested, but spatial dependence does not guarantee nominal FDR in every setting. | Simulated spatial nulls: empirical FDR and power for BH versus BY, across weights and autocorrelation levels. |
+| G17 | P1 | Synthetic Gaussian valid-p FDR/power simulations and actual LISA permutation stress tests deposited. **Field-specific FDR assurance is still open.** | Evaluate whether the real spatial permutation null and p-value dependence assumptions are credible; additional independent field-based or appropriately structured nulls are required. |
 | G18 | P1 | Synthetic support-aware sensitivity is now deposited: zero inclusion and false zero-fill change LISA labels, neighbors and p-values. **Real incomplete-support validation stays open.** | Repeat with a genuine A02-verified low-support scene; do not treat the synthetic result as external validation. |
+
+### G17 spatial-dependence FDR study (bounded simulation, 19 November 2026)
+
+This is a **two-part synthetic study**, not new VIIRS field validation and not a re-check of the BH step-up arithmetic closed by A03. A valid marginal p-value distribution and dependence among p-values are distinct from the correctness of the BH implementation.
+
+**Part A, known null truth and power:** On a 64-cell (8×8) synthetic grid, compute row-standardized Queen or Rook neighbors and Gaussian fields of the form $z=D^{-1/2}(I-\rho W)^{-1}\epsilon$. Rescaling by exact marginal standard deviations makes each null score standard normal; the two-sided Gaussian p-values remain marginally valid even when the spatial scores depend on one another. Use $\rho\in\{0,0.5,0.8,-0.5\}$, 400 replications per weight, correlation and scenario, and $\alpha=0.05$. In a separate alternative, add a fixed mean shift of 2.75 standard deviations to the same nine predeclared central cells. The 55 remaining nulls are known true by construction. Here, **empirical FDR** is the average over replicates of false rejections divided by $\max(1,\text{all rejections})$; **power** is the proportion of nine injected signals detected. BY uses BH at $\alpha/H_{64}$ where $H_{64}=\sum_{i=1}^{64}1/i$.
+
+| Part A measure across 8 spatial settings | BH | BY |
+| --- | ---: | ---: |
+| All-null empirical FDR | 0.0475 to 0.0575 | 0.0075 to 0.0175 |
+| Fixed nine-cell signal, empirical FDR | 0.0353 to 0.0483 | 0.0087 to 0.0164 |
+| Fixed nine-cell signal, detection power | 0.4222 to 0.4467 | 0.2194 to 0.2544 |
+
+These are finite-simulation estimates, with Monte Carlo standard errors and 95% intervals in the [summary](evidence/g17_spatial_fdr/summary.json). A value such as 0.0575 from 400 all-null replicates is **not** by itself evidence that nominal 0.05 was violated. The filter parameter $\rho$ is the generator parameter, not an estimate of the app's cross-sectional lag-correlation indicator. The observed BY power reduction is specific to this signal size and set of dependencies.
+
+**Part B, the actual Local Moran conditional-permutation method:** Generate positive lognormal light fields on the same fixed grid; apply the production `local_moran` and `bh_reject` routines, plus the BY threshold, with 999 conditional permutations, $\alpha=0.05$, 24 replications for each combination of Queen/Rook and $\rho\in\{0,0.8,-0.5\}$. For $\rho=0$, cells are identically and independently distributed, so spatial randomization is exchangeable and all local association null hypotheses hold. Under this all-null case neither BH nor BY rejected in 24/24 replications for either weight. This limited observation **does not prove** exact FDR control.
+
+Under a correlated background with $\rho=0.8$ and no planted mean shift, BH rejected at least one cell in 16/24 Queen runs but 1/24 Rook runs; BY rejected in none of these 24-run groups. **These are not false discovery counts:** a correlated background itself violates the random-placement null and may produce genuine local spatial association. There is no validated per-cell true-null map for these runs, so the archived summary marks their FDR as `null`.
+
+**P-value granularity:** With 999 two-sided permutations, the minimum reported pseudo p is 0.002 for 64 tests. Even the smallest p cannot trigger the step-up threshold at rank one. The earliest potentially feasible rank is three for BH and thirteen for BY in this setup. This discrete threshold materially limits power and must be reported when interpreting the LISA stress results.
+
+**Evidence and replay:** The full synthetic design and predeclared injection mask are in [design.csv](evidence/g17_spatial_fdr/design.csv), all **6,544 individual simulation records** in [replicates.csv](evidence/g17_spatial_fdr/replicates.csv), and scenario summaries, uncertainty, assumptions and SHA-256 digests in [summary.json](evidence/g17_spatial_fdr/summary.json). The [generator](g17_spatial_fdr_experiment.py) uses fixed seeds and pinned NumPy, pandas and SciPy in CI. Run `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --verify` from repository root to compare generated outputs with every retained artifact.
+
+**Unresolved G17 claim:** Neither positive spatial dependence nor BH step-up correctness proves the formal PRDS condition for LISA pseudo p-values. BY's arbitrary-dependence guarantee presumes valid null p-values; it **does not repair invalid spatial permutations**. Before a real-world nominal FDR claim, define the scientific null, the full tested family, how spatial nuisance dependence is handled and what ground truth or valid null calibration supports the claim. See [Benjamini and Yekutieli (2001)](https://doi.org/10.1214/aos/1013699998) and the [GeoDa Local Spatial Autocorrelation guidance](https://geodacenter.github.io/workbook/6a_local_auto/lab6a.html).
 
 ### G18 synthetic evidence (bounded result, 18 November 2026)
 
