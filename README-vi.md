@@ -690,10 +690,10 @@ Mô-đun `ntl/lisa_core.py` không dừng ở thống kê mô tả không gian t
 | # | Mô-đun | Trả lời câu hỏi | Biến xuất ra |
 | :---: | :--- | :--- | :--- |
 | 1 | Số mũ đuôi Pareto | Các ô sáng nhất tập trung mạnh đến mức nào? | Không áp dụng |
-| 2 | Độ dốc suy giảm mật độ đô thị | Ánh sáng giảm nhanh ra sao khi rời xa tâm lõi? | `urban_gradient_decay`, `monocentric_r2` |
-| 3 | Tiếp cận thị trường đã tái định tâm | Chỉ số tiếp cận thị trường còn lại bao nhiêu sau khi trừ quan hệ ước lượng của nó với khoảng cách tới lõi được phát hiện? | `recentered_market_access` |
-| 4 | Vành đai lan tỏa & biến chạy có dấu | Ranh giới điểm nóng nằm ở đâu và hiệu ứng lan tỏa ra bao xa? | `signed_dist_hh_km` |
-| 5 | Nghiệm đơn vị không gian & Spatial Markov | Cấu trúc không gian bền vững đến đâu và thay đổi ra sao giữa hai kỳ? | `spatial_ar1_persistence` |
+| 2 | Độ dốc NTL theo khoảng cách | Ánh sáng thay đổi thế nào theo khoảng cách tới tâm suy ra từ NTL? | `urban_gradient_decay`, `monocentric_r2` |
+| 3 | NTL có trọng số khoảng cách trừ kỳ vọng hoán vị | Phần còn lại sau khi trừ kỳ vọng hoán vị tại các vị trí ô cố định là bao nhiêu? | `recentered_market_access` |
+| 4 | Nhóm khoảng cách HH và khoảng cách có dấu giữa tâm ô | NTL thay đổi thế nào khi xa các ô HH và các ô nhóm đối lập? | `signed_dist_hh_km` |
+| 5 | Tương quan trễ không gian và chuyển dịch hai kỳ | Tương quan giữa z và trễ không gian là bao nhiêu, vị thế NTL thay đổi thế nào giữa hai năm? | `spatial_ar1_persistence` |
 
 Chi tiết từng mô-đun:
 
@@ -705,35 +705,35 @@ $$
 \hat{\zeta}_{\mathrm{Hill}} = \left[ \frac{1}{k} \sum_{j=1}^{k} \ln\left(\frac{\mathrm{NTL}_{(j)}}{\mathrm{NTL}_{(k+1)}}\right) \right]^{-1}
 $$
 
-**2. Độ dốc suy giảm mật độ đô thị nội sinh** ($\hat{\gamma}$, Duranton & Puga, 2023)
+**2. Độ dốc NTL theo khoảng cách (mô tả)** ($\hat{\gamma}$, Duranton & Puga, 2023)
 
-Ước lượng phương trình cấu trúc không gian đô thị bằng bình phương tối thiểu có trọng số diện tích (WLS) trên tập ô lõi:
+Ước lượng liên hệ mô tả giữa log NTL và khoảng cách tới tâm do chính NTL quyết định bằng WLS có trọng số diện tích trên tập ô lõi. Đây chưa phải phương trình cấu trúc mật độ kinh tế đô thị:
 
 $$
 \ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}
 $$
 
-Kết quả gồm tốc độ suy giảm mật độ $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số xác định đơn tâm $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
+Kết quả gồm độ dốc NTL $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số khớp nội mẫu $R^2_{\mathrm{gradient}}$ (`monocentric_r2`). Hai đại lượng này chưa xác nhận CBD chính thức hoặc cấu trúc đô thị đơn tâm.
 
-**3. Tiếp cận thị trường đã khử thiên lệch vị trí trung tâm** ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023)
+**3. NTL có trọng số khoảng cách sau khi trừ kỳ vọng hoán vị** ($\widetilde{\mathrm{MA}}_i$, tham khảo động cơ tái định tâm biến phơi nhiễm của Borusyak & Hull, 2023)
 
-Tính tiềm năng thị trường trọng lực $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ trên cửa sổ lưới đối xứng, rồi trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ để loại bỏ thiên lệch do vị trí trung tâm địa lý (`recentered_market_access`).
+Tính tiềm năng thị trường trọng lực $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ trên cửa sổ lưới đối xứng, rồi trừ đi kỳ vọng giải tích dưới phép hoán vị không gian $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ để trừ kỳ vọng hoán vị của đúng chỉ số này (`recentered_market_access`). Bước trừ không tự loại bỏ nội sinh kinh tế hoặc nhận dạng tác động tiếp cận thị trường.
 
-**4. Vành đai lan tỏa đồng tâm và biến chạy có dấu cho Spatial RDD** (Vazquez-Bare, 2023; Butts, 2024)
+**4. Nhóm khoảng cách HH và khoảng cách có dấu giữa tâm ô** (thiết kế nhân quả không gian cần giả định riêng; xem Vazquez-Bare, 2023; Butts, 2024)
 
-Hệ thống tính khoảng cách Euclid có dấu tới ranh giới cụm điểm nóng, `signed_dist_hh_km` ($d < 0$ bên trong lõi, $d > 0$ bên ngoài lõi). Biến này là biến chạy cho thiết kế hồi quy gián đoạn không gian (Spatial RDD). Đồng thời, địa phương được chia thành 5 vành đai tiếp xúc để cô lập nhóm đối chứng sạch, không bị nhiễm hiệu ứng tràn:
+Hệ thống tính khoảng cách Euclid có dấu **giữa các tâm ô**: ô HH lấy khoảng cách tới tâm ô lõi không HH gần nhất (âm), ô không HH lấy khoảng cách tới tâm ô HH gần nhất (dương). Đây không phải khoảng cách tới biên đa giác thực và không phải ước lượng Spatial RDD. Các mã nhóm vẫn được giữ để tương thích CSV, không xác định tác động nhân quả hoặc nhóm đối chứng không bị ảnh hưởng:
 
 | Vành đai | Ý nghĩa |
 | :--- | :--- |
-| `0_Treated_HH` | Nhóm bị tác động: các ô thuộc điểm nóng `High-High` |
-| `1_Spillover_0_2km` | Vành lan tỏa 0–2 km |
-| `2_Spillover_2_5km` | Vành lan tỏa 2–5 km |
-| `3_Spillover_5_10km` | Vành lan tỏa 5–10 km |
-| `4_Pure_Control_gt10km` | Nhóm đối chứng sạch, xa hơn 10 km |
+| `0_Treated_HH` | Ô thuộc cụm HH; mã cũ không hàm ý đã có can thiệp |
+| `1_Spillover_0_2km` | Ô không HH cách tâm ô HH gần nhất tối đa 2 km |
+| `2_Spillover_2_5km` | Ô không HH cách tâm ô HH gần nhất trên 2 đến 5 km |
+| `3_Spillover_5_10km` | Ô không HH cách tâm ô HH gần nhất trên 5 đến 10 km |
+| `4_Pure_Control_gt10km` | Ô không HH cách tâm ô HH gần nhất trên 10 km; mã cũ không hàm ý đối chứng sạch |
 
-**5. Kiểm soát nghiệm đơn vị không gian và động học Spatial Markov hai kỳ** (Müller & Watson, 2022, 2024; Rey, Arribas-Bel, & Wolf, 2023; Borusyak, Jaravel, & Spiess, 2024)
+**5. Tương quan trễ không gian và chuyển dịch vị thế NTL hai kỳ** (nghiệm đơn vị cần phép kiểm riêng; xem Müller & Watson, 2024; nền tảng Spatial Markov tại Rey và cộng sự, 2023)
 
-Đo độ bền tự hồi quy không gian bậc 1 (`spatial_ar1_persistence`), đồng thời có mô-đun so sánh hai kỳ ($t_0 \rightarrow t_1$) để tách riêng hiệu ứng *bóng tối tích tụ (Agglomeration Shadow)* và dựng ma trận xác suất chuyển dịch Markov có điều kiện không gian.
+Cột CSV cũ `spatial_ar1_persistence` thực chất lưu $\operatorname{Corr}(z,Wz)$ trong một lát cắt, không phải hệ số AR không gian hay kiểm định nghiệm đơn vị. Mô-đun hai năm mô tả chuyển dịch vị thế NTL chuẩn hóa riêng từng năm và tần suất chuyển phân vị theo bối cảnh láng giềng, không nhận dạng hiệu ứng *bóng tối tích tụ*. Yêu cầu $t_0 < t_1$; hai năm chưa đủ để ước lượng quá trình Markov nhiều kỳ ổn định.
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
@@ -821,7 +821,7 @@ Tệp CSV cấp ô xuất mọi ô do lưới đã cắt của ứng dụng tạ
 | :--- | :--- | :--- |
 | **Cường độ và quy mô ánh sáng** | `ntl_mean`, `ntl_sol`, `ntl_log` | Đo mức sáng và tổng lượng sáng của ô, ở cả thang gốc và thang logarit. |
 | **Trễ không gian và vị thế tương đối** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Cung cấp trực tiếp biến trễ không gian của bức xạ gốc ($\mathrm{Lag}(\mathrm{NTL}_i)$), trễ không gian của điểm chuẩn hóa ($\mathrm{Lag}(z_i)$) và khoảng cách tới tâm lõi kinh tế, để ước lượng hiệu ứng lan tỏa cũng như hàm suy giảm mật độ kinh tế từ tâm đô thị. |
-| **Phân loại cụm LISA** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Tạo biến giả, hoặc phân tích ranh giới đô thị bằng thiết kế hồi quy gián đoạn không gian (spatial regression discontinuity design – Spatial RDD). |
+| **Phân loại cụm LISA** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Tạo biến giả và mô tả tương phản không gian. Thiết kế nhân quả quanh ranh giới cần nhận dạng độc lập và đường biên hình học chính xác. |
 
 > [!NOTE]
 > **Vì sao xuất cả bản logarit lẫn bản gốc?** Biến `ntl_log` được định nghĩa là $\ln(1 + \mathrm{NTL}_i)$. Nó nén đuôi phân phối lệch phải và giảm ảnh hưởng của các quan sát cực trị trong hồi quy OLS/WLS. Tuy nhiên, theo chứng minh lý thuyết của Chen & Roth (2024), các phép biến đổi dạng $\ln(1 + Y)$ nhạy cảm với đơn vị đo của $Y$ khi dữ liệu có nhiều giá trị bằng $0$, vì kết quả ước lượng trộn lẫn tác động theo chiều rộng (*extensive margin*) với chiều sâu (*intensive margin*). Do đó hệ thống xuất kèm `ntl_mean` và `ntl_sol` ở thang đo gốc, để nhà nghiên cứu dễ dàng chạy hồi quy **Poisson Pseudo-Maximum Likelihood (PPML)** làm kiểm định độ vững (robustness check).
