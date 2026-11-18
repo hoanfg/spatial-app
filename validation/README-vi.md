@@ -30,7 +30,7 @@ Vị trí tệp, mã băm và các phép kiểm có thể chạy nằm trong [h�
 | A01 | Khoảng trống tìm kiểm thử trong CI đã đóng. Quy trình hiện tại chạy toàn bộ cây kiểm thử đang được duy trì qua hai tác vụ. |
 | A02 | Các trường hỗ trợ quan sát đã được xác nhận cho ca Bảo An có đủ quan sát; độ nhạy nhân tạo đã được định lượng; ca thiếu hỗ trợ thật vẫn còn mở. |
 | A03 | Có chuẩn số học độc lập và đối chiếu thực địa tại Diên Khánh; các dạng không gian rộng hơn cùng chuỗi năm liên tục vẫn chưa đủ. |
-| A04 | Hai hàm Gini vẫn xử lý giá trị âm hoặc không hữu hạn khác nhau; quy tắc đầu vào khoa học chưa được thống nhất. |
+| A04 | Đã đóng. Ứng dụng, chỉ số LISA và đường Lorenz dùng chung một cách tính Gini. Đầu vào phải hữu hạn và không âm; giá trị sai quy tắc gây lỗi thay vì âm thầm đổi mẫu. Mảng rỗng và toàn 0 trả về 0. |
 | A05 | Một phần phiên bản kiểm thử đã cố định, nhưng thư viện vận hành và tệp khóa tái lập đầy đủ chưa hoàn thiện. |
 | A06 | Kiểm thử tích hợp và mô-đun thống kê tách riêng đã giảm rủi ro; phần điều phối ứng dụng vẫn liên kết chặt. |
 | A07 | MAUP theo cách gộp khối đã được kiểm tra đúng theo triển khai; chưa chứng minh tương đương với trích xuất raster trực tiếp trên lưới thô. |
@@ -52,11 +52,10 @@ Vị trí tệp, mã băm và các phép kiểm có thể chạy nằm trong [h�
 ## Bước tiếp theo
 
 1. Kiểm tra A02 bằng một ca thực tế thiếu hoặc ít quan sát mà không âm thầm đổi chính sách `legacy_zero_fill`.
-2. Thống nhất hợp đồng đầu vào âm và không hữu hạn giữa hai cách tính Gini.
-3. So cách gộp khối với một lần trích xuất raster mới trực tiếp trên lưới thô cho A07.
-4. Lặp lại phép đo hiệu năng với cùng mã triển khai, địa bàn, năm và kích thước lưới.
-5. Mở rộng phép tính hai mốc thành chuỗi hằng năm liên tục trước khi kết luận về thời gian.
-6. So sánh NTL với biến kinh tế độc lập, cùng địa bàn và thời gian trước khi diễn giải kinh tế.
+2. So cách gộp khối với một lần trích xuất raster mới trực tiếp trên lưới thô cho A07.
+3. Lặp lại phép đo hiệu năng với cùng mã triển khai, địa bàn, năm và kích thước lưới.
+4. Mở rộng phép tính hai mốc thành chuỗi hằng năm liên tục trước khi kết luận về thời gian.
+5. So sánh NTL với biến kinh tế độc lập, cùng địa bàn và thời gian trước khi diễn giải kinh tế.
 
 ## Giới hạn phương pháp
 

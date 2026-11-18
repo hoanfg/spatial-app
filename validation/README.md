@@ -30,7 +30,7 @@ The original source review used identifiers A01 to A12. Their current status is 
 | A01 | CI discovery gap closed. Current workflow runs the full maintained test tree across two jobs. |
 | A02 | Observation fields verified for an all-observed Bao'an case; synthetic sensitivity quantified; a real missing-support case remains open. |
 | A03 | Independent numerical oracles and Yanqing field comparisons are recorded; broader morphologies and continuous annual data remain open. |
-| A04 | Two Gini functions still differ for negative or nonfinite inputs; the scientific input contract is not yet unified. |
+| A04 | Closed. The application, LISA metrics and Lorenz curve use one Gini implementation. Finite nonnegative values are required; invalid values raise an error rather than silently changing the sample. Empty and all-zero samples return 0. |
 | A05 | Test versions are partly pinned, but production dependencies and a full reproducible lock remain incomplete. |
 | A06 | Integration coverage and modular statistical code reduce risk; application orchestration remains coupled. |
 | A07 | Block-aggregation MAUP is tested as implemented; equivalence to direct coarse-grid raster extraction is not established. |
@@ -52,11 +52,10 @@ The original source review used identifiers A01 to A12. Their current status is 
 ## Next steps
 
 1. Test A02 with a real missing or low-observation case without changing the `legacy_zero_fill` policy silently.
-2. Resolve the negative and nonfinite input contract shared by the two Gini implementations.
-3. Compare block aggregation with a fresh coarse-grid raster extraction for A07.
-4. Repeat performance measurements with the same deployed commit, location, year and grid size.
-5. Extend the two-date analysis to a continuous annual series before making temporal claims.
-6. Compare NTL with an independently sourced and aligned economic outcome before drawing economic conclusions.
+2. Compare block aggregation with a fresh coarse-grid raster extraction for A07.
+3. Repeat performance measurements with the same deployed commit, location, year and grid size.
+4. Extend the two-date analysis to a continuous annual series before making temporal claims.
+5. Compare NTL with an independently sourced and aligned economic outcome before drawing economic conclusions.
 
 ## Method boundaries
 
