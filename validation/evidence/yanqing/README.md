@@ -53,10 +53,15 @@ The evidence command recalculates these counts directly from the deposited CSV. 
 
 | File | SHA-256 |
 | --- | --- |
+| `CHN_beijing_yanqing_2014_2020_500m_spacetime_cells.csv` | `56450adc6f46ce06f7fa9b68ebbfdd704b8e3bd1445ec0be32809d3cd98d198c` |
+| `CHN_beijing_yanqing_2020_500m_lisa_cells.csv` | `37186205051561607d611597a80cc3ce3cd22ec2cc201d9c9c842e23f3a87ec6` |
+| `dien_khanh_NTL_2020_500m.csv` | `0d7f29127621e1964c338bd97e62544e342a4377ac830821bdbef0bee124206b` |
+| `yanqing_lisa_independent_cell_comparison.csv` | `83fc8d94cc2badc785ba9fdbbe85be3619462afdf419a35cd47090653bca4bdd` |
+| `yanqing_viirs_all_8333_polygon_comparison.csv` | `c5af295ea01f9f927c133d8fb5596ab8fd4848334d9ea33046c63df248174250` |
 | `yanqing_validation_evidence.zip` | `51a662cb875ffe4bccfd3c628eeafb136aa9025bb500b5bdaa94d31b24ca5b93` |
 | `yanqing_viirs_2014_reference.tif` | `637661ab304986ef19befa4c7ca62d1e9cface500862803f02ad76a4b6637c31` |
 
-The transferred CSV files preserve their numerical values but may have normalized UTF-8 line encoding. Do not describe them as bit-for-bit copies unless their recorded hash agrees.
+These hashes identify the bytes currently deposited in the repository. A rerun must report a different hash if a tool rewrites line endings or serialization, even when the numerical values remain equal.
 
 ## Limits
 
