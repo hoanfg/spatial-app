@@ -214,7 +214,7 @@ The advanced modules are most useful when each output is treated as an answer to
 
 ![From VIIRS radiance to a cell-year table](docs/assets/ntl-measurement.jpg)
 
-*Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.*
+<div align="center">*Figure 1. The measurement chain moves from VIIRS radiance, administrative boundaries and a projected grid to fractional coverage and a cell-year table.*</div>
 
 Let $a_i$ denote an unobserved economic construct and $y_i$ the observed radiance. A useful mental model is $y_i = g(a_i, z_i) + u_i$, where $z_i$ contains lighting technology, land use, atmospheric conditions and other factors, while $u_i$ contains remaining measurement error. The app improves the construction and documentation of $y_i$; it does not identify $g(\cdot)$ or recover $a_i$ without external assumptions and outcomes (Henderson et al., 2012; Donaldson & Storeygard, 2016; Gibson et al., 2021).
 
@@ -238,7 +238,7 @@ where $r_p$ is source-pixel radiance and $a_{ip}$ is the area shared by pixel $p
 
 ![From grid cells to a weights matrix and spatial lag](docs/assets/spatial-weights.jpg)
 
-*Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.*
+<div align="center">*Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.*</div>
 
 $W$ is not merely a software setting. Queen contiguity asks whether immediate edge or corner contact carries relevant interaction; Rook excludes corner-only contact; a distance or network matrix would encode a different mechanism. Row standardization changes a spatial lag from a neighbor sum into a neighbor average, while a binary symmetric matrix preserves a different scale (Anselin, 1988; LeSage & Pace, 2009).
 
@@ -262,7 +262,7 @@ is a weighted neighborhood average. If $y_i$ is high and $(Wy)_i$ is also high, 
 
 ![From the Moran scatterplot to FDR-corrected LISA results](docs/assets/lisa-inference.jpg)
 
-*Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.*
+<div align="center">*Figure 3. Exploratory patterns are evaluated with conditional permutations and multiple-testing correction before a cell receives a significant LISA label.*</div>
 
 LISA runs one local test for each eligible cell. The pseudo p-value depends on the conditional permutation procedure, random seed and number of permutations. Its finest attainable resolution is bounded by the permutation count. Testing thousands of cells also creates a multiple-testing problem, so the app provides Benjamini-Hochberg FDR control and reports when the requested permutation/FDR combination cannot reject any cell (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
@@ -295,7 +295,7 @@ The number of permutations therefore determines p-value resolution. If an FDR-ad
 
 ![Robustness axes and external comparison](docs/assets/robustness-validation.jpg)
 
-*Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.*
+<div align="center">*Figure 4. A conclusion is challenged across grid scale, neighbor relation, adjacent year and GHSL comparison; persistent features are separated from sensitive ones.*</div>
 
 A reproducible result is not necessarily robust. Reproducibility means that the same data, code and parameters reproduce the same result. Robustness asks a harder question: does the conclusion remain when defensible analytical choices change? Write the output conceptually as $R(s)$, where $s$ is a specification containing grid size, $W$, transformation, threshold, seed, FDR rule and year. Robustness studies how $R(s)$ varies across a scientifically defensible specification set, not across every arbitrary combination.
 
