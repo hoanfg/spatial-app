@@ -715,9 +715,9 @@ $$
 
 It exports the fitted slope $\hat{\gamma}$ (`urban_gradient_decay`) and the in-sample fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`). Neither identifies an official CBD or establishes monocentricity.
 
-**3. Permutation-centered distance-weighted NTL** ($\widetilde{\mathrm{MA}}_i$, compare the exposure-centering motivation in Borusyak & Hull, 2023)
+**3. Permutation-centered distance-weighted NTL** (legacy field `recentered_market_access`)
 
-Computes the gravity-weighted market potential $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ over a symmetric UTM grid stencil, then subtracts its exact analytical expectation under spatial permutation $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ to center this particular statistic around its spatial-permutation expectation (`recentered_market_access`). It does not alone remove economic endogeneity or identify an exogenous market-access effect.
+The app sums distance-weighted satellite lights, $P_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$, with $\mathrm{SOL}_j = \mathrm{NTL}_j \times \mathrm{cell\ area}_j$ and Euclidean grid distance $d_{ij}$ within a fixed radius. It then subtracts the spatial-permutation expectation, $\mathbb{E}_{\pi}[P_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}}\sum_{j \ne i}\exp(-\tau d_{ij})$. The exported key remains `recentered_market_access` for compatibility. **No measured jobs, population, income, transport costs or travel times enter this calculation.** The result describes NTL concentration relative to a spatial-randomization reference, not verified economic market access. Synthetic jobs in G04 are generated solely for a controlled stress test; they are not input to the production app and are not real employment observations. Economic calibration would require independent matched data. Subtracting the permutation expectation does not identify an exogenous shock or remove economic endogeneity; Borusyak and Hull (2023) is not evidence of causal identification for this implementation.
 
 **4. Descriptive HH distance groups and signed cell-center distances** (spatial causal designs require additional assumptions; see Vazquez-Bare, 2023; Butts, 2024)
 
