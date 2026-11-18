@@ -214,7 +214,7 @@ Các mô-đun nâng cao hữu ích nhất khi mỗi đầu ra được xem là c
 
 ![Từ bức xạ VIIRS tới bảng dữ liệu ô-năm](docs/assets/ntl-measurement-vi.jpg)
 
-<div align="center"><em>Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.</em></div>
+<p align="center"><em>Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.</em></p>
 
 Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ đo được. Có thể hình dung $y_i = g(a_i, z_i) + u_i$, trong đó $z_i$ chứa công nghệ chiếu sáng, sử dụng đất, điều kiện khí quyển và các yếu tố khác, còn $u_i$ chứa sai số đo lường còn lại. App cải thiện cách xây dựng và ghi chép $y_i$; app không tự nhận dạng $g(\cdot)$ hoặc khôi phục $a_i$ nếu thiếu giả định và biến kết quả bên ngoài (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
 
@@ -238,7 +238,7 @@ trong đó $r_p$ là bức xạ của điểm ảnh nguồn và $a_{ip}$ là di�
 
 ![Từ ô lưới tới ma trận trọng số và độ trễ không gian](docs/assets/spatial-weights-vi.jpg)
 
-<div align="center"><em>Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận $W$, rồi ma trận thành độ trễ không gian $Wy$.</em></div>
+<p align="center"><em>Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận <var>W</var>, rồi ma trận thành độ trễ không gian <var>Wy</var>.</em></p>
 
 $W$ không chỉ là một tùy chọn phần mềm. Tiếp giáp Queen giả định tiếp xúc cạnh hoặc góc đều có thể truyền tương tác; Rook loại tiếp xúc chỉ qua góc; ma trận khoảng cách hoặc mạng lưới sẽ biểu diễn một cơ chế khác. Chuẩn hóa theo hàng biến trễ không gian từ tổng láng giềng thành trung bình láng giềng, trong khi ma trận nhị phân đối xứng giữ một thang đo khác (Anselin, 1988; LeSage & Pace, 2009).
 
@@ -262,7 +262,7 @@ là trung bình có trọng số của vùng xung quanh. Nếu $y_i$ cao và $(W
 
 ![Từ đồ thị Moran tới LISA sau hiệu chỉnh FDR](docs/assets/lisa-inference-vi.jpg)
 
-<div align="center"><em>Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.</em></div>
+<p align="center"><em>Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.</em></p>
 
 LISA chạy một kiểm định cục bộ cho mỗi ô đủ điều kiện. p-value giả phụ thuộc thủ tục hoán vị có điều kiện, seed và số hoán vị. Độ phân giải nhỏ nhất của p-value bị giới hạn bởi số hoán vị. Kiểm định hàng nghìn ô còn tạo ra vấn đề kiểm định nhiều lần, vì vậy app cung cấp hiệu chỉnh FDR Benjamini-Hochberg và cảnh báo khi tổ hợp số hoán vị/FDR không thể bác bỏ ô nào (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
@@ -295,7 +295,7 @@ Do đó, số hoán vị quyết định độ phân giải của p-value. Nếu
 
 ![Các trục kiểm tra độ vững và kiểm chứng ngoài](docs/assets/robustness-validation-vi.jpg)
 
-<div align="center"><em>Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.</em></div>
+<p align="center"><em>Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.</em></p>
 
 Một kết quả có thể tái lập chưa chắc đã có độ vững. Tái lập nghĩa là cùng dữ liệu, mã và tham số cho lại cùng kết quả. Độ vững hỏi một câu khó hơn: kết luận có còn giữ được khi thay đổi những lựa chọn phân tích khác nhưng vẫn hợp lý về khoa học hay không. Có thể hình dung đầu ra là $R(s)$, trong đó $s$ là một đặc tả gồm cỡ lưới, $W$, phép biến đổi, ngưỡng, seed, FDR và năm. Độ vững nghiên cứu sự biến thiên của $R(s)$ trên một tập đặc tả có thể biện minh, không phải trên mọi tổ hợp tùy ý.
 
@@ -354,6 +354,42 @@ Mức đồng thuận cao hỗ trợ phát biểu rằng NTL phù hợp với c�
 | Kiểm chứng ngoài | Biến và epoch GHSL, số ô dùng được, $\rho$, khoảng bootstrap theo khối, AUC và tỷ lệ số 0 đồng hạng |
 | Động học | Hai năm, quy tắc chuẩn hóa, thống kê biên độ rộng/sâu và tính chất mô tả của chế độ |
 | Tái lập | Mã phiên bản nguồn, trường tham số/nguồn gốc được xuất và đúng tệp ô/panel đã sử dụng |
+
+### 0.10. Phiếu đặc tả khoa học của phép phân tích
+
+Bảng dưới đây mô tả **cấu hình vận hành mặc định hiện được mã nguồn triển khai**, không phải một bộ tham số tối ưu cho mọi nghiên cứu. Giá trị mặc định tạo ra một điểm xuất phát có thể tái lập; nhà nghiên cứu vẫn phải giải thích vì sao cỡ lưới, quan hệ láng giềng, ngưỡng và thủ tục suy luận phù hợp với câu hỏi của mình. Đây là điểm đặc biệt quan trọng đối với dữ liệu không gian, vì thay đổi đơn vị phân tích hoặc ma trận trọng số có thể làm thay đổi kết quả ngay cả khi dữ liệu nguồn không đổi (Openshaw, 1984; Fotheringham & Wong, 1991; Anselin, 1988).
+
+| Thành phần | Đặc tả hiện tại | Ý nghĩa khoa học và điều cần công bố |
+| :--- | :--- | :--- |
+| **Đơn vị quan sát** | Một ô lưới trong một địa phương và một năm; khóa panel gồm `iso3`, `region_id`, `year`, `cell_size_m` | Một ô là đơn vị hỗ trợ đo lường, không mặc nhiên là khu dân cư, thị trường hay đơn vị hành vi. Khi đổi cỡ ô, câu hỏi thực nghiệm cũng thay đổi. |
+| **Thời gian** | Các năm 2014–2025; ảnh năm là trung vị của các ảnh tháng có `cf_cvg > 0` | Trung vị làm giảm ảnh hưởng của quan sát tháng cực trị, nhưng không biến chuỗi tháng thành một phép đo kinh tế hàng năm không sai số. Cần lưu năm, số tháng quan sát hợp lệ và phiên bản nguồn VIIRS (Elvidge và cộng sự, 2017, 2021). |
+| **Đại lượng đo** | `avg_rad`, đơn vị nW/cm²/sr; `ntl_mean` là trung bình theo tỷ lệ phủ, `ntl_sol = ntl_mean × area_km2` | `ntl_mean` đo cường độ trung bình; `ntl_sol` kết hợp cường độ với diện tích. Hai biến trả lời hai câu hỏi khác nhau và không nên được dùng thay thế mà không giải thích (Henderson và cộng sự, 2012; Gibson và cộng sự, 2021). |
+| **Hình học** | Lưới UTM động, cạnh 500–5.000 m, mặc định 500 m; ô có diện tích dưới 99% ô đầy đủ được gắn cờ biên | UTM cho phép đo khoảng cách và diện tích bằng mét. Quy tắc 99% làm rõ tập ô lõi nhưng không loại bỏ MAUP; nên thử ít nhất một cỡ lưới thay thế khi kết luận phụ thuộc vị trí cụm. |
+| **Trích xuất raster** | Trung bình theo phần diện tích giao giữa điểm ảnh nguồn và ô phân tích | Tỷ lệ phủ tránh cho một điểm ảnh chỉ chạm nhẹ vào ô có trọng số như một điểm ảnh phủ đầy. Cách tính và chính sách NoData cần được báo cùng kết quả (Baston, 2023). |
+| **Quan hệ không gian** | Queen là mặc định; Rook dùng trong kiểm tra độ nhạy; trọng số LISA được chuẩn hóa theo hàng | Queen và Rook mã hóa hai định nghĩa khác nhau của “lân cận”. Phải báo quy tắc, chuẩn hóa, số láng giềng trung bình và cách xử lý ô cô lập (Anselin, 1988; LeSage & Pace, 2009). |
+| **Global Moran** | 199 hoán vị trong giao diện tổng quan | Đây là kiểm định toàn vùng cho cấu trúc không gian tổng thể. p-value giả có độ phân giải hữu hạn và không chỉ ra ô nào tạo nên mẫu hình (Moran, 1950). |
+| **Local Moran / LISA** | Mặc định 499 hoán vị, seed 42, $\alpha=0.05$, BH-FDR bật, thang gốc, ngưỡng sáng 0, ít nhất 1 láng giềng và cụm tối thiểu 4 ô | Nếu tổ hợp 499 hoán vị và số phép kiểm định làm BH-FDR không thể bác bỏ giả thuyết nào, giao diện tự nâng lên 999 hoán vị. Nhãn góc và ý nghĩa thống kê phải được báo riêng (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006). |
+| **Dữ liệu thiếu và số âm** | Giá trị thống kê vùng thiếu hoặc âm được đưa về 0 trong bề mặt vận hành; các cờ chất lượng lưu lại nguồn gốc của chuyển đổi | Số 0 đo được, không có quan sát và giá trị âm sau hiệu chỉnh không có cùng ý nghĩa. Phân tích cần giữ `dq_*` để tránh biến quyết định xử lý dữ liệu thành một giả định vô hình (Gibson và cộng sự, 2021). |
+| **Giới hạn tính toán** | Tối đa 150.000 ô cho phân tích; bản đồ chỉ kết xuất tối đa 30.000 ô | Đây là giới hạn vận hành, không phải tiêu chuẩn thống kê. Nếu phải tăng cỡ lưới để chạy được, cần ghi nhận thay đổi hỗ trợ không gian trong phương pháp. |
+| **Đầu ra** | CSV cấp ô, CSV LISA, CSV vùng-năm, CSV Không-Thời gian và GeoJSON tùy chọn | Tệp xuất giữ biến đo lường, cờ đủ điều kiện, tham số và nhãn suy luận. Không nên chỉ lưu bản đồ hoặc cột phân loại cuối cùng. |
+
+> [!IMPORTANT]
+> **Cách hiểu cho người mới:** “mặc định” chỉ có nghĩa là app sẽ bắt đầu từ cấu hình đó. Nó không có nghĩa 500 m, Queen hay $\alpha=0.05$ luôn là lựa chọn đúng. Một đặc tả tốt phải nối được lựa chọn kỹ thuật với cơ chế đang nghiên cứu, sau đó cho thấy kết luận thay đổi ra sao dưới các lựa chọn hợp lý khác.
+
+### 0.11. Ví dụ đọc một kết quả theo năm tầng bằng chứng
+
+Giả sử bản đồ cho thấy một cụm `High-High` gần trung tâm địa phương. Trình tự dưới đây minh họa **cách lập luận**, không phải kết quả thực nghiệm của một địa phương cụ thể.
+
+1. **Tầng đo lường:** kiểm tra cụm có đủ tháng quan sát, không tập trung ở ô biên và không xuất hiện chỉ vì cắt số âm hoặc thay NoData bằng 0. Nếu tầng này không đạt, chưa nên bàn về ý nghĩa kinh tế.
+2. **Tầng mô tả:** báo cường độ, diện tích, tỷ trọng SOL và vị trí của cụm. Câu kết luận phù hợp là “bức xạ quan sát được tập trung tại đây”, chưa phải “đây là khu vực giàu nhất”. NTL có giá trị như một proxy nhưng quan hệ với hoạt động kinh tế thay đổi theo địa điểm và mục tiêu đo lường (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
+3. **Tầng suy luận:** đọc nhãn `HH` cùng pseudo p-value, BH-FDR, số hoán vị và số ô được kiểm định. LISA được thiết kế để phát hiện các túi liên kết cục bộ và ngoại lệ không gian; nó không tự cung cấp cơ chế nhân quả (Anselin, 1995).
+4. **Tầng độ vững:** so Queen với Rook, thay cỡ lưới, năm, seed, phép biến đổi và ngưỡng. Nếu phần lõi còn tồn tại nhưng biên thay đổi, nên mô tả lõi là ổn định và ranh giới là nhạy cảm, thay vì gộp cả hai thành một nhận xét “vững”.
+5. **Tầng giá trị bên ngoài:** đối chiếu với GHSL built-up hoặc population và báo cả bất định. Đồng thuận hỗ trợ cách diễn giải theo cấu trúc định cư tương ứng; không biến GHSL thành chân lý hay biến NTL thành GDP (Pesaresi & Politis, 2023; Schiavina và cộng sự, 2023).
+
+Một câu kết luận học thuật có giới hạn vì vậy có thể viết: *“Trong đặc tả đã công bố, khu vực trung tâm chứa một cụm bức xạ High-High có ý nghĩa sau hiệu chỉnh nhiều kiểm định. Phần lõi của cụm còn xuất hiện trong các kiểm tra Queen/Rook và cỡ lưới thay thế, đồng thời thứ hạng NTL đồng thuận với bề mặt xây dựng GHSL. Kết quả hỗ trợ diễn giải về mức tập trung không gian của hoạt động phát sáng quan sát được, nhưng không tự xác định GDP, phúc lợi hoặc tác động nhân quả.”*
+
+> [!NOTE]
+> **Quy tắc dừng đơn giản:** nếu bằng chứng mới chỉ đạt tầng mô tả, hãy dừng ở ngôn ngữ mô tả. Chỉ dùng từ “có ý nghĩa” sau khi nêu thủ tục suy luận; chỉ dùng từ “vững” sau khi báo các đặc tả đã thử; và chỉ dùng ngôn ngữ nhân quả khi thiết kế nghiên cứu thật sự nhận dạng được tác động.
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
