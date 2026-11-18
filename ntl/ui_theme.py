@@ -436,9 +436,10 @@ button[data-testid="stBaseButton-primary"]:hover:not(:disabled){box-shadow:none;
 .ntl-where .name:before{display:none}
 .ntl-where .co{margin-top:10px;font-family:var(--ntl-mono);font-size:.78rem;letter-spacing:.04em;color:var(--ntl-sodium)}
 .ntl-meta{align-self:center}
-.ntl-sig{flex:0 0 auto;align-self:center;display:grid;grid-template-columns:repeat(var(--c),1fr);gap:2px;
-  width:clamp(150px,20vw,250px);padding:8px;border:1px solid var(--ntl-rule);border-radius:2px;background:#080D1F}
-.ntl-sig i{display:block;aspect-ratio:1/1;opacity:0;animation:ntlSig .45s cubic-bezier(.2,.7,.2,1) var(--d,0s) forwards}
+.ntl-sig{flex:0 0 auto;align-self:center;display:grid;grid-template-columns:repeat(var(--c),6px);grid-auto-rows:6px;
+  justify-content:center;align-content:center;gap:2px;width:clamp(150px,20vw,250px);min-height:86px;padding:8px;
+  border:1px solid var(--ntl-rule);border-radius:2px;background:#080D1F}
+.ntl-sig i{display:block;width:6px;height:6px;opacity:0;animation:ntlSig .45s cubic-bezier(.2,.7,.2,1) var(--d,0s) forwards}
 .ntl-sig i.e{background:none;animation:none;opacity:1}
 @keyframes ntlSig{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.ntl-sig i{animation:none;opacity:1}}
@@ -448,10 +449,10 @@ button[data-testid="stBaseButton-primary"]:hover:not(:disabled){box-shadow:none;
 div[data-testid="stMetricLabel"] p{font-family:var(--ntl-mono);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;opacity:.66}
 div[data-testid="stMetricValue"]{font-family:var(--ntl-display);font-weight:600;font-variant-numeric:tabular-nums}
 
-/* ----- đề mục trong tab: đánh số kiểu tờ bản đồ ----- */
-div[data-baseweb="tab-panel"]{counter-reset:ntlsec}
-[data-testid="stMain"] h3{counter-increment:ntlsec;font-size:1.4rem;font-weight:700;gap:12px}
-[data-testid="stMain"] h3:before{content:counter(ntlsec,decimal-leading-zero);width:auto;height:auto;padding:2px 6px;border-radius:2px;
+/* ----- tab sections: number headings only after the dynamic DOM is stable ----- */
+[data-testid="stMain"] h3{font-size:1.4rem;font-weight:700;gap:12px}
+[data-testid="stMain"] h3:before{content:"";width:14px;height:1px;border-radius:0;background:var(--ntl-sodium)}
+[data-testid="stMain"] h3[data-ntl-index]:before{content:attr(data-ntl-index);width:auto;height:auto;padding:2px 6px;border-radius:2px;
   border:1px solid rgba(242,169,59,.5);background:none;font-family:var(--ntl-mono);font-size:.7rem;font-weight:500;
   letter-spacing:.06em;color:var(--ntl-sodium)}
 
@@ -541,6 +542,11 @@ _FX_JS = r"""
   function scan() {
     pending = false;
     D.querySelectorAll('[data-testid="stMetricValue"]').forEach(animate);
+    D.querySelectorAll('[data-baseweb="tab-panel"]').forEach(function (panel) {
+      panel.querySelectorAll('h3').forEach(function (heading, index) {
+        heading.setAttribute('data-ntl-index', String(index + 1).padStart(2, '0'));
+      });
+    });
     checkPrimary();
   }
   new P.MutationObserver(function () {
@@ -709,7 +715,18 @@ def light_signature(x, y, v, cols: int = 30, max_rows: int = 14) -> str:
         return ""
     x, y, v = x[ok], y[ok], np.maximum(v[ok], 0.0)
     dx, dy = float(np.ptp(x)), float(np.ptp(y))
-    step = max(dx / cols, dy / max_rows, 1e-9)
+
+    def observed_step(values) -> float:
+        unique = np.unique(values)
+        gaps = np.diff(unique)
+        gaps = gaps[gaps > max(float(np.ptp(unique)) * 1e-9, 1e-9)]
+        return float(np.quantile(gaps, 0.25)) if gaps.size else 0.0
+
+    # Never invent a display pixel smaller than the observed centroid spacing.
+    # This keeps small regular grids compact instead of scattering a few cells
+    # across a mostly empty 30-column preview.
+    native_step = max(observed_step(x), observed_step(y))
+    step = max(dx / cols, dy / max_rows, native_step, 1e-9)
     ix = np.minimum(((x - x.min()) / step).astype(int), int(dx / step))
     iy = np.minimum(((y.max() - y) / step).astype(int), int(dy / step))      # north at the top
     nc, nr = int(ix.max()) + 1, int(iy.max()) + 1
