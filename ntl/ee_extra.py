@@ -134,6 +134,20 @@ def _is_request_size_error(exc: Exception) -> bool:
     return "request size" in message or "50331648" in message or "must be less than or equal" in message
 
 
+def _quarter_boxes(box: tuple) -> list[tuple]:
+    """Split a rectangle into four strictly smaller rectangles."""
+    minx, miny, maxx, maxy = (float(value) for value in box)
+    midx, midy = (minx + maxx) / 2.0, (miny + maxy) / 2.0
+    if midx in (minx, maxx) or midy in (miny, maxy):
+        raise ValueError("Earth Engine tile is too small to subdivide")
+    return [
+        (minx, miny, midx, midy),
+        (midx, miny, maxx, midy),
+        (minx, midy, midx, maxy),
+        (midx, midy, maxx, maxy),
+    ]
+
+
 def download_tiled_geotiff(ee, img, bbox: tuple, scale_m: float, band_count: int = 1,
                            max_request_bytes: int = MAX_TILE_REQUEST_BYTES,
                            timeout: int = 180) -> bytes:
@@ -145,16 +159,16 @@ def download_tiled_geotiff(ee, img, bbox: tuple, scale_m: float, band_count: int
         try:
             return [_download(img, roi, scale_m, timeout=timeout)]
         except Exception as exc:  # noqa: BLE001
-            if depth >= 5 or not _is_request_size_error(exc):
+            if not _is_request_size_error(exc):
                 raise
-            children = tile_bboxes(box, scale_m, band_count, max_request_bytes // 4)
-            if len(children) == 1:
-                minx, miny, maxx, maxy = box
-                midx, midy = (minx + maxx) / 2.0, (miny + maxy) / 2.0
-                children = [
-                    (minx, miny, midx, midy), (midx, miny, maxx, midy),
-                    (minx, midy, midx, maxy), (midx, midy, maxx, maxy),
-                ]
+            if depth >= 8:
+                raise RuntimeError(
+                    "Earth Engine request remained above its size limit after automatic tiling"
+                ) from exc
+            # The server response is authoritative. Always quarter the rejected
+            # rectangle instead of reusing the byte estimator, whose assumptions
+            # may differ from Earth Engine at high latitudes or for masked bands.
+            children = _quarter_boxes(box)
             out = []
             for child in children:
                 out.extend(fetch_box(child, depth + 1))
