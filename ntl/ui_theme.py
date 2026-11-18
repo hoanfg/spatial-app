@@ -13,7 +13,7 @@ NIGHT = "#0A1024"
 
 _FONTS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Instrument+Sans:wght@400;500;600&display=swap');
 </style>
 """
 
@@ -25,8 +25,8 @@ _THEME_CSS = """
   --ntl-night:#0A1024;
   --ntl-line:rgba(130,142,185,.30);
   --ntl-soft:rgba(130,142,185,.07);
-  --ntl-display:"Source Serif 4","Source Serif Pro",Georgia,"Times New Roman",serif;
-  --ntl-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ntl-display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --ntl-mono:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;   /* nhãn nhỏ: cùng họ chữ nội dung, viết hoa + giãn chữ */
   --ntl-rule:rgba(142,153,184,.28);
   --ntl-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --ntl-r-panel:6px;
@@ -354,27 +354,24 @@ _SHEET_CSS = """
   linear-gradient(90deg,rgba(142,153,184,.05) 1px,transparent 1px) 0 0/96px 96px,
   radial-gradient(900px 420px at 88% -10%,rgba(159,216,255,.045),transparent 62%),
   var(--ntl-night,#0A1024)}
-.stApp h1,.stApp h2,.stApp h3,.stApp h4{font-weight:600;letter-spacing:-.01em}
+.stApp h1,.stApp h2,.stApp h3,.stApp h4{font-weight:700;letter-spacing:-.015em}
 
 /* ----- banner = khung tờ bản đồ: viền kép + thước chia độ ----- */
 .ntl-hero{border-radius:6px;border-color:#26335F;background:#080D1F}
 .ntl-hero:before{content:"";position:absolute;inset:7px;border:1px solid rgba(142,153,184,.17);border-radius:2px;pointer-events:none;z-index:2}
 .ntl-hero:after{content:"";position:absolute;left:7px;right:7px;bottom:7px;height:6px;pointer-events:none;z-index:2;opacity:.65;
   background:repeating-linear-gradient(90deg,rgba(142,153,184,.55) 0 1px,transparent 1px 12px)}
-.ntl-hero-body{padding:34px 40px 40px}
-.ntl-title{font-weight:600;font-size:2.15rem;line-height:1.1;letter-spacing:-.012em}
+.ntl-hero-body{padding:32px 36px 38px}
+.ntl-facts{row-gap:14px}
+.ntl-title{font-weight:700;font-size:2rem;line-height:1.1;letter-spacing:-.025em}
 .ntl-sub{color:#9AA6C6}
-.ntl-facts dt,.ntl-meta dt{font-family:var(--ntl-mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:#7F8BB0;opacity:1}
-.ntl-facts dd{font-family:var(--ntl-mono);font-size:.8rem;font-weight:500}
-.ntl-field{gap:4px}
-.ntl-field i{border-radius:1px}
-.ntl-field i.g{box-shadow:none}
-.ntl-field i.l{box-shadow:0 0 9px rgba(159,216,255,.45)}
+.ntl-facts dt,.ntl-meta dt{font-family:var(--ntl-mono);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7F8BB0;opacity:1}
+.ntl-facts dd{font-size:.88rem;font-weight:600}
 
 /* ----- thanh trên cùng + chuyển ngôn ngữ ----- */
 .ntl-mark{border-radius:4px}
 .ntl-mark i{border-radius:1px}
-.ntl-brand b{font-family:var(--ntl-display);font-size:1.06rem;font-weight:600}
+.ntl-brand b{font-family:var(--ntl-display);font-size:1.06rem;font-weight:700}
 .ntl-brand span{font-family:var(--ntl-mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
 [data-testid="stRadio"] label[data-baseweb="radio"]{border-radius:4px}
 div[data-testid="stHorizontalBlock"]:has(.ntl-brand) [data-testid="stRadio"] [role="radiogroup"]{border-radius:6px}
@@ -384,7 +381,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl){border-radius:6px;b
   box-shadow:none;padding:.9rem 1.1rem .6rem}
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl):before{left:18px;right:auto;width:58px;height:3px;border-radius:0;
   background:var(--ntl-sodium,#F2A93B);opacity:1}
-.ntl-dl{font-family:var(--ntl-display);font-size:1.05rem;font-weight:600;gap:10px;letter-spacing:-.005em}
+.ntl-dl{font-family:var(--ntl-display);font-size:1.05rem;font-weight:700;gap:10px;letter-spacing:-.01em}
 .ntl-dl span{width:auto;height:auto;padding:2px 6px;border-radius:2px;font-family:var(--ntl-mono);font-size:.7rem;font-weight:500;
   letter-spacing:.06em;border:1px solid rgba(242,169,59,.55);background:none;color:var(--ntl-sodium,#F2A93B)}
 div[data-testid="stVerticalBlockBorderWrapper"]:has(.ntl-dl) button[data-testid="stBaseButton-primary"]{
@@ -395,7 +392,7 @@ button[data-testid="stBaseButton-primary"]:hover:not(:disabled){box-shadow:none;
 
 /* ----- trạng thái chờ = quy trình thao tác (không thẻ, không vòng tròn) ----- */
 .ntl-empty{text-align:left;margin:44px 0 8px}
-.ntl-empty-h{font-size:2.3rem;font-weight:600;line-height:1.08;letter-spacing:-.015em}
+.ntl-empty-h{font-size:2.2rem;font-weight:700;line-height:1.08;letter-spacing:-.025em}
 .ntl-empty-p{margin:12px 0 0;max-width:64ch;text-align:left;opacity:.72}
 .ntl-steps{gap:0 28px;margin-top:30px}
 .ntl-steps li{padding:16px 0 6px;border:0;border-top:1px solid var(--ntl-rule);border-radius:0;background:none;
@@ -405,14 +402,14 @@ button[data-testid="stBaseButton-primary"]:hover:not(:disabled){box-shadow:none;
 .ntl-steps .n{display:block;place-items:unset;text-align:left;width:auto;height:auto;border:0;border-radius:0;background:none!important;backdrop-filter:none;
   font-family:var(--ntl-mono);font-size:.78rem;font-weight:500;letter-spacing:.08em;color:#7F8BB0}
 .ntl-steps li:first-child .n{color:var(--ntl-sodium)}
-.ntl-steps b{font-family:var(--ntl-display);font-size:1.12rem;font-weight:600}
+.ntl-steps b{font-family:var(--ntl-display);font-size:1.12rem;font-weight:700}
 .ntl-steps span{font-size:.9rem}
 
 /* ----- tiêu đề kết quả = bảng ghi địa điểm ----- */
 .ntl-plate{align-items:stretch;flex-wrap:wrap;gap:16px 34px;margin:0 0 18px;padding:2px 0 0}
 .ntl-where{flex:1 1 280px;align-self:center}
 .ntl-where .up{font-family:var(--ntl-mono);font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.62;margin-bottom:6px}
-.ntl-where .name{font-size:2.5rem;font-weight:600;line-height:1.04;letter-spacing:-.018em}
+.ntl-where .name{font-size:2.4rem;font-weight:700;line-height:1.04;letter-spacing:-.025em}
 .ntl-where .name:before{display:none}
 .ntl-where .co{margin-top:10px;font-family:var(--ntl-mono);font-size:.78rem;letter-spacing:.04em;color:var(--ntl-sodium)}
 .ntl-meta{align-self:center}
@@ -426,11 +423,11 @@ button[data-testid="stBaseButton-primary"]:hover:not(:disabled){box-shadow:none;
 
 /* ----- số đo = đồng hồ đọc số ----- */
 div[data-testid="stMetricLabel"] p{font-family:var(--ntl-mono);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;opacity:.66}
-div[data-testid="stMetricValue"]{font-family:var(--ntl-display);font-weight:600;font-variant-numeric:lining-nums tabular-nums}
+div[data-testid="stMetricValue"]{font-family:var(--ntl-display);font-weight:600;font-variant-numeric:tabular-nums}
 
 /* ----- đề mục trong tab: đánh số kiểu tờ bản đồ ----- */
 div[data-baseweb="tab-panel"]{counter-reset:ntlsec}
-[data-testid="stMain"] h3{counter-increment:ntlsec;font-size:1.4rem;font-weight:600;gap:12px}
+[data-testid="stMain"] h3{counter-increment:ntlsec;font-size:1.4rem;font-weight:700;gap:12px}
 [data-testid="stMain"] h3:before{content:counter(ntlsec,decimal-leading-zero);width:auto;height:auto;padding:2px 6px;border-radius:2px;
   border:1px solid rgba(242,169,59,.5);background:none;font-family:var(--ntl-mono);font-size:.7rem;font-weight:500;
   letter-spacing:.06em;color:var(--ntl-sodium)}
