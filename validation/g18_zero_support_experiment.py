@@ -122,7 +122,7 @@ def run_experiment():
         "centroid_x_m": round(float(cells["cx"][i]), 1),
         "centroid_y_m": round(float(cells["cy"][i]), 1),
         "area_km2": 0.25,
-        "ntl_legacy_zero_fill": round(float(cells["ntl"][i]), 6),
+        "ntl_legacy_zero_fill": repr(float(cells["ntl"][i])),
         "synthetic_support": str(cells["status"][i]),
     } for i in range(n)]
     input_csv = _csv_text(in_rows, list(in_rows[0]))
@@ -132,7 +132,7 @@ def run_experiment():
     comparison_rows = [{
         "grid_id": int(cells["grid_id"][i]),
         "synthetic_support": str(cells["status"][i]),
-        "ntl_legacy_zero_fill": round(float(cells["ntl"][i]), 6),
+        "ntl_legacy_zero_fill": repr(float(cells["ntl"][i])),
     } for i in range(n)]
     for correction in CORRECTIONS:
         is_fdr = correction == "bh_fdr"
