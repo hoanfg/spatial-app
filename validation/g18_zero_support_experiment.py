@@ -16,12 +16,15 @@ from __future__ import annotations
 import argparse
 import base64
 import csv
+import hashlib
 import io
 import json
 import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
+import scipy
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ntl.lisa_core import run_lisa
@@ -205,12 +208,16 @@ def run_experiment():
                 ),
             }
 
+    result_csv = _csv_text(comparison_rows, list(comparison_rows[0]))
     summary = {
         "gap": "G18",
         "status": "synthetic_sensitivity_only_real_support_case_open",
         "field_validation": False,
         "input_origin": "fixed_generated_synthetic_cells",
         "study_seed": STUDY_SEED,
+        "software_versions": {"numpy": np.__version__, "pandas": pd.__version__, "scipy": scipy.__version__},
+        "synthetic_input_sha256": hashlib.sha256(input_csv.encode("utf-8")).hexdigest(),
+        "cell_comparison_sha256": hashlib.sha256(result_csv.encode("utf-8")).hexdigest(),
         "lisa_seed": SEED,
         "lisa_permutations": PERMS,
         "lisa_alpha": ALPHA,
@@ -241,7 +248,6 @@ def run_experiment():
             "The production default include_zeros=False is unchanged.",
         ],
     }
-    result_csv = _csv_text(comparison_rows, list(comparison_rows[0]))
     summary_text = json.dumps(summary, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
     return {
         "synthetic_input.csv": input_csv,
