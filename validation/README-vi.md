@@ -49,14 +49,6 @@ Vị trí tệp, mã băm và các phép kiểm có thể chạy nằm trong [h�
 | Hợp đồng của ứng dụng | `python -m pytest -q tests` | Kiểm tra số học, cấu trúc dữ liệu, mặt nạ và giao diện bằng đầu vào đã lưu hoặc nhân tạo. |
 | Đối chiếu raster ba địa bàn | [Quy trình nhiều địa bàn](cross_location/README-vi.md) và manifest kiểm toán phục hồi | Ghi phương pháp V11 đã hoàn tất, đầu vào, tệp ô biên, dung sai và kết quả. Checkout hiện tại không phải gói đầu vào nhị phân đã bung để chạy mới. |
 
-## Bước tiếp theo
-
-1. Kiểm tra A02 bằng một ca thực tế thiếu hoặc ít quan sát mà không âm thầm đổi chính sách `legacy_zero_fill`.
-2. So cách gộp khối với một lần trích xuất raster mới trực tiếp trên lưới thô cho A07.
-3. Lặp lại phép đo hiệu năng với cùng mã triển khai, địa bàn, năm và kích thước lưới.
-4. Mở rộng phép tính hai mốc thành chuỗi hằng năm liên tục trước khi kết luận về thời gian.
-5. So sánh NTL với biến kinh tế độc lập, cùng địa bàn và thời gian trước khi diễn giải kinh tế.
-
 ## Giới hạn phương pháp
 
 - NTL mỗi ô là trung bình bức xạ VIIRS hợp lệ theo tỷ lệ phủ điểm ảnh. Giá trị âm hợp lệ được chặn về 0 ở đầu ra cũ; các trường hỗ trợ quan sát được giữ riêng.
