@@ -1,0 +1,179 @@
+{
+  "gap": "G18",
+  "status": "synthetic_sensitivity_only_real_support_case_open",
+  "field_validation": false,
+  "input_origin": "fixed_generated_synthetic_cells",
+  "study_seed": 18026,
+  "software_versions": {
+    "numpy": "2.4.6",
+    "pandas": "3.1.1",
+    "scipy": "1.17.1"
+  },
+  "synthetic_input_sha256": "e345931a3c1cf8b70b61fc6250d2bf748c9a314ed6799130f6294f179bbf41eb",
+  "cell_comparison_sha256": "1cfa9b365eb9f54cbd20242f9035e2f7e8ce28186ced448590318c31bbb5aeff",
+  "lisa_seed": 42,
+  "lisa_permutations": 999,
+  "lisa_alpha": 0.05,
+  "weights": "queen",
+  "cell_size_m": 500.0,
+  "shape": [
+    12,
+    12
+  ],
+  "n_cells": 144,
+  "support_counts": {
+    "observed_positive": 106,
+    "observed_zero": 28,
+    "no_observation": 10
+  },
+  "policies": {
+    "positive_only": "only supported cells; include_zeros=False",
+    "observed_zeros": "only supported cells; include_zeros=True",
+    "naive_missing_as_zero": "all cells including false zero-filled unknown support; include_zeros=True"
+  },
+  "inference": "separate unadjusted and BH-FDR runs, not pooled",
+  "runs": {
+    "positive_only__unadjusted": {
+      "locations_in_analysis": 134,
+      "tested_cells": 106,
+      "statistically_significant_cells": 51,
+      "hh_cells": 23,
+      "ll_cells": 28,
+      "hl_cells": 0,
+      "lh_cells": 0,
+      "dark_class_cells": 28,
+      "observed_zero_cells_tested": 0,
+      "unobserved_cells_tested": 0,
+      "hotspot_clusters_min_4": 1,
+      "fdr": false,
+      "permutations": 999,
+      "alpha": 0.05
+    },
+    "observed_zeros__unadjusted": {
+      "locations_in_analysis": 134,
+      "tested_cells": 134,
+      "statistically_significant_cells": 52,
+      "hh_cells": 25,
+      "ll_cells": 27,
+      "hl_cells": 0,
+      "lh_cells": 0,
+      "dark_class_cells": 0,
+      "observed_zero_cells_tested": 28,
+      "unobserved_cells_tested": 0,
+      "hotspot_clusters_min_4": 1,
+      "fdr": false,
+      "permutations": 999,
+      "alpha": 0.05
+    },
+    "naive_missing_as_zero__unadjusted": {
+      "locations_in_analysis": 144,
+      "tested_cells": 144,
+      "statistically_significant_cells": 48,
+      "hh_cells": 23,
+      "ll_cells": 24,
+      "hl_cells": 0,
+      "lh_cells": 1,
+      "dark_class_cells": 0,
+      "observed_zero_cells_tested": 28,
+      "unobserved_cells_tested": 10,
+      "hotspot_clusters_min_4": 1,
+      "fdr": false,
+      "permutations": 999,
+      "alpha": 0.05
+    },
+    "positive_only__bh_fdr": {
+      "locations_in_analysis": 134,
+      "tested_cells": 106,
+      "statistically_significant_cells": 43,
+      "hh_cells": 22,
+      "ll_cells": 21,
+      "hl_cells": 0,
+      "lh_cells": 0,
+      "dark_class_cells": 28,
+      "observed_zero_cells_tested": 0,
+      "unobserved_cells_tested": 0,
+      "hotspot_clusters_min_4": 1,
+      "fdr": true,
+      "permutations": 999,
+      "alpha": 0.05
+    },
+    "observed_zeros__bh_fdr": {
+      "locations_in_analysis": 134,
+      "tested_cells": 134,
+      "statistically_significant_cells": 38,
+      "hh_cells": 21,
+      "ll_cells": 17,
+      "hl_cells": 0,
+      "lh_cells": 0,
+      "dark_class_cells": 0,
+      "observed_zero_cells_tested": 28,
+      "unobserved_cells_tested": 0,
+      "hotspot_clusters_min_4": 1,
+      "fdr": true,
+      "permutations": 999,
+      "alpha": 0.05
+    },
+    "naive_missing_as_zero__bh_fdr": {
+      "locations_in_analysis": 144,
+      "tested_cells": 144,
+      "statistically_significant_cells": 32,
+      "hh_cells": 18,
+      "ll_cells": 13,
+      "hl_cells": 0,
+      "lh_cells": 1,
+      "dark_class_cells": 0,
+      "observed_zero_cells_tested": 28,
+      "unobserved_cells_tested": 10,
+      "hotspot_clusters_min_4": 1,
+      "fdr": true,
+      "permutations": 999,
+      "alpha": 0.05
+    }
+  },
+  "comparisons": {
+    "positive_only_vs_observed_zeros__unadjusted": {
+      "common_supported_locations": 134,
+      "changed_class_on_common_support": 58,
+      "changed_neighbor_count_on_common_support": 45,
+      "overlap_tested_cells": 106,
+      "changed_p_on_overlap_1e-5": 92,
+      "hh_jaccard_on_common_support": 0.846154,
+      "ll_jaccard_on_common_support": 0.078431
+    },
+    "observed_zeros_vs_naive_missing_as_zero__unadjusted": {
+      "common_supported_locations": 134,
+      "changed_class_on_common_support": 10,
+      "changed_neighbor_count_on_common_support": 28,
+      "overlap_tested_cells": 134,
+      "changed_p_on_overlap_1e-5": 112,
+      "hh_jaccard_on_common_support": 0.846154,
+      "ll_jaccard_on_common_support": 0.785714
+    },
+    "positive_only_vs_observed_zeros__bh_fdr": {
+      "common_supported_locations": 134,
+      "changed_class_on_common_support": 50,
+      "changed_neighbor_count_on_common_support": 45,
+      "overlap_tested_cells": 106,
+      "changed_p_on_overlap_1e-5": 92,
+      "hh_jaccard_on_common_support": 0.954545,
+      "ll_jaccard_on_common_support": 0.0
+    },
+    "observed_zeros_vs_naive_missing_as_zero__bh_fdr": {
+      "common_supported_locations": 134,
+      "changed_class_on_common_support": 9,
+      "changed_neighbor_count_on_common_support": 28,
+      "overlap_tested_cells": 134,
+      "changed_p_on_overlap_1e-5": 112,
+      "hh_jaccard_on_common_support": 0.772727,
+      "ll_jaccard_on_common_support": 0.764706
+    }
+  },
+  "limitations": [
+    "All support masks and radiance values are synthetic, not A02 field evidence.",
+    "The missing-support locations are excluded from safe LISA runs by subsetting geometry, because run_lisa Gini currently rejects NaN.",
+    "Changing the analysis population changes reference normalization and the tested family as well as the neighborhood graph.",
+    "Differences quantify specification sensitivity, not the truth of any HH/LL classification or the external validity of either policy.",
+    "No historical V11, GHSL, A02 observed-case, A03 or A04 evidence was rerun.",
+    "The production default include_zeros=False is unchanged."
+  ]
+}
