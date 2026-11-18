@@ -690,10 +690,10 @@ $$
 | # | Module | Question it answers | Output variable |
 | :---: | :--- | :--- | :--- |
 | 1 | Top-lights Pareto tail exponent | How strongly are the brightest cells concentrated? | Not applicable |
-| 2 | Urban density decay gradient | How fast does light fall off away from the core? | `urban_gradient_decay`, `monocentric_r2` |
-| 3 | Recentered market access | What remains of the implemented market-access index after subtracting its fitted relationship with distance to the detected core? | `recentered_market_access` |
-| 4 | Spillover rings & signed boundary distance | Where is the hotspot boundary, and how far do spillovers reach? | `signed_dist_hh_km` |
-| 5 | Spatial unit-root diagnostics & Spatial Markov | How persistent is the spatial structure, and how does it change between two periods? | `spatial_ar1_persistence` |
+| 2 | NTL distance gradient | How does light vary with distance from an NTL-derived center? | `urban_gradient_decay`, `monocentric_r2` |
+| 3 | Permutation-centered distance-weighted NTL | What remains after subtracting the spatial permutation expectation at fixed cell locations? | `recentered_market_access` |
+| 4 | HH distance groups & signed cell-center distance | How does NTL vary with distance from HH cells and opposite-group cell centers? | `signed_dist_hh_km` |
+| 5 | Spatial-lag correlation & two-period transitions | How are standardized NTL and its spatial lag related, and how do relative positions change between two years? | `spatial_ar1_persistence` |
 
 Details of each module:
 
@@ -705,27 +705,27 @@ $$
 \hat{\zeta}_{\mathrm{Hill}} = \left[ \frac{1}{k} \sum_{j=1}^{k} \ln\left(\frac{\mathrm{NTL}_{(j)}}{\mathrm{NTL}_{(k+1)}}\right) \right]^{-1}
 $$
 
-**2. Endogenous urban density decay gradient** ($\hat{\gamma}$, Duranton & Puga, 2023)
+**2. Descriptive NTL distance gradient** ($\hat{\gamma}$, Duranton & Puga, 2023)
 
-Estimates the structural spatial decay equation by area-weighted WLS across core cells:
+Fits the descriptive association between log NTL and distance from the NTL-derived center by area-weighted WLS across core cells. The center is selected using NTL, so this is not a structural urban-density model:
 
 $$
 \ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}
 $$
 
-It exports both the decay rate $\hat{\gamma}$ (`urban_gradient_decay`) and the monocentricity goodness-of-fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`).
+It exports the fitted slope $\hat{\gamma}$ (`urban_gradient_decay`) and the in-sample fit $R^2_{\mathrm{gradient}}$ (`monocentric_r2`). Neither identifies an official CBD or establishes monocentricity.
 
-**3. Recentered market access** ($\widetilde{\mathrm{MA}}_i$, Borusyak & Hull, 2023)
+**3. Permutation-centered distance-weighted NTL** ($\widetilde{\mathrm{MA}}_i$, compare the exposure-centering motivation in Borusyak & Hull, 2023)
 
-Computes the gravity-weighted market potential $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ over a symmetric UTM grid stencil, then subtracts its exact analytical expectation under spatial permutation $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ to purge geographic centrality bias (`recentered_market_access`).
+Computes the gravity-weighted market potential $\mathrm{MA}_{i} = \sum_{j \ne i} \mathrm{SOL}_{j} \exp(-\tau d_{ij})$ over a symmetric UTM grid stencil, then subtracts its exact analytical expectation under spatial permutation $\mathbb{E}_{\pi}[\mathrm{MA}_{i}] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})$ to center this particular statistic around its spatial-permutation expectation (`recentered_market_access`). It does not alone remove economic endogeneity or identify an exogenous market-access effect.
 
-**4. Concentric spillover rings and signed boundary distance for Spatial RDD** (Vazquez-Bare, 2023; Butts, 2024)
+**4. Descriptive HH distance groups and signed cell-center distances** (spatial causal designs require additional assumptions; see Vazquez-Bare, 2023; Butts, 2024)
 
-Computes the signed Euclidean distance to the nearest hotspot boundary, `signed_dist_hh_km` ($d < 0$ inside the core, $d > 0$ outside the core). It serves as the running variable for Spatial Regression Discontinuity Designs (Spatial RDD). The locality is also partitioned into 5 concentric exposure rings, from `0_Treated_HH` through `4_Pure_Control_gt10km`, to isolate uncontaminated control units.
+Computes the signed Euclidean distance between cell centers: HH cells use the nearest non-HH core-cell center (negative), while non-HH cells use the nearest HH-cell center (positive). This is **not** distance to a polygon boundary or a validated Spatial RDD running variable. The groups retain historical CSV codes from `0_Treated_HH` to `4_Pure_Control_gt10km`, but those codes do not identify a causal treatment or uncontaminated controls.
 
-**5. Spatial unit-root diagnostics and two-period Spatial Markov dynamics** (Müller & Watson, 2022, 2024; Rey, Arribas-Bel, & Wolf, 2023; Borusyak, Jaravel, & Spiess, 2024)
+**5. Spatial-lag correlation and two-period relative-position transitions** (the spatial unit-root question requires separate analysis; see Müller & Watson, 2024; spatial Markov background in Rey et al., 2023)
 
-Diagnoses first-order spatial autoregression persistence (`spatial_ar1_persistence`) and enables two-period ($t_0 \rightarrow t_1$) directional LISA analysis, to quantify *Agglomeration Shadow* effects and conditional Spatial Markov transition matrices.
+The legacy CSV key `spatial_ar1_persistence` stores $\operatorname{Corr}(z,Wz)$ within one cross-section, not an estimated spatial AR coefficient or unit-root test. The two-year module describes changes in year-standardized NTL positions and conditional quartile-transition frequencies, not identified *Agglomeration Shadow* effects. It requires $t_0 < t_1$ and does not estimate a stationary multi-period Markov process.
 
 <sub>[↑ Back to top](#top)</sub>
 
@@ -813,7 +813,7 @@ The cell-level CSV exports every cell produced by the application's clipped grid
 | :--- | :--- | :--- |
 | **Radiance intensity and light volume** | `ntl_mean`, `ntl_sol`, `ntl_log` | Measure how bright a cell is and how much light it emits in total, on both the raw and the log scale. |
 | **Spatial lag and relative location** | `ntl_raw_lag`, `ntl_z_lit`, `lisa_lag_z`, `dist_to_core_km` | Directly provide the spatial lag of raw radiance ($\mathrm{Lag}(\mathrm{NTL}_i)$), the spatial lag of standardized scores ($\mathrm{Lag}(z_i)$) and the distance to the economic core, for estimating spatial spillovers and urban density decay gradients. |
-| **LISA cluster classification** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Build categorical dummy variables, or analyze urban boundary effects with spatial regression discontinuity designs (Spatial RDD). |
+| **LISA cluster classification** | `lisa_I`, `lisa_p_sim`, `lisa_class`, `lisa_significant`, `hh_cluster_id` | Build categorical dummies and descriptive spatial contrasts. A causal boundary design requires independent identification and an actual geometric boundary. |
 
 > [!NOTE]
 > **Why export both a log version and a levels version?** The variable `ntl_log` is defined as $\ln(1 + \mathrm{NTL}_i)$. It compresses right skewness and dampens extreme outliers in OLS/WLS regressions. However, as shown theoretically by Chen & Roth (2024), transformations of the form $\ln(1 + Y)$ are sensitive to the scaling unit of $Y$ when zeros are prevalent, because the estimate conflates the *extensive margin* and the *intensive margin*. The system therefore also exports `ntl_mean` and `ntl_sol` in levels, so researchers can estimate **Poisson Pseudo-Maximum Likelihood (PPML)** models as a robustness check.
