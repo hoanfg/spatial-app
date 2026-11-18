@@ -66,6 +66,28 @@ def synthetic_cells():
     status = np.full(len(ix), "observed_positive", dtype=object)
     status[observed_zero] = "observed_zero"
     status[missing] = "no_observation"
+
+    # For an audited rerun the committed input CSV, not platform-specific
+    # last-bit results of exp(), is the exact numeric source of truth. Retain
+    # the seed/formula above as an independent within-tolerance source check.
+    archived = EVIDENCE / "synthetic_input.csv"
+    if archived.is_file():
+        with archived.open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+        if len(rows) != len(ix):
+            raise ValueError("G18 source CSV has the wrong cell count")
+        if any(int(row["grid_id"]) != i
+               or int(row["grid_ix"]) != int(ix[i])
+               or int(row["grid_iy"]) != int(iy[i])
+               or row["synthetic_support"] != status[i]
+               for i, row in enumerate(rows)):
+            raise ValueError("G18 source CSV conflicts with the fixed spatial/support design")
+        archived_ntl = np.array(
+            [float(row["ntl_legacy_zero_fill"]) for row in rows], dtype=float
+        )
+        if not np.allclose(archived_ntl, ntl, rtol=0.0, atol=1.0e-10):
+            raise ValueError("G18 source CSV differs materially from the seeded generator")
+        ntl = archived_ntl
     return {
         "grid_id": np.arange(len(ix), dtype=int),
         "ix": ix, "iy": iy,
