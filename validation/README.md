@@ -19,6 +19,8 @@ A result applies only to the stated location, year, input and precision. The tab
 
 File locations, hashes and runnable checks are listed in the [evidence guide](evidence/README.md).
 
+The evidence guide's [scientific claim audit](evidence/README.md#scientific-claim-audit) distinguishes literature support, implementation tests and field comparisons. A citation can justify a method or interpretation, but it does not establish that this application's output passed a field check.
+
 ## Audit coverage register
 
 The original source review used identifiers A01 to A12. Their current status is summarized here; the [complete audit question matrix](evidence/README.md#complete-audit-question-matrix) records the question, reason, evidence file, method, quantitative result or acceptance rule, tolerance and limit for each item.
