@@ -95,7 +95,7 @@ TILE_SAT = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/M
 TILE_LIGHT = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
 TILE_STREET = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
 
-# Economic-class thresholds (nW/cm²/sr), shared by tooltips, tables, and CSV exports
+# Descriptive radiance-band thresholds (nW/cm²/sr), not economic classifications
 THRESHOLDS = [40, 15, 5]  # >=40, >=15, >=5, >0, ==0
 
 # Economic classes run from brightest (0) to unlit (4); local ranks run from top (0) to unlit (3)
@@ -699,7 +699,7 @@ TEXT = {
         "caption": "Cường độ ánh sáng ban đêm ({y}) - nW/cm²/sr",
 
         "color_mode": "Chế độ màu",
-        "color_names": {"ntl": "Cường độ NTL", "class": "Nhóm kinh tế", "local": "Vị thế nội bộ"},
+        "color_names": {"ntl": "Cường độ NTL", "class": "Khoảng cường độ NTL", "local": "Vị thế nội bộ"},
         "scale": "Thang màu (chế độ NTL)",
         "scale_names": {"linear": "Tuyến tính", "sqrt": "Căn bậc hai", "log": "Logarit"},
         "opacity": "Độ đậm ô lưới",
@@ -716,7 +716,7 @@ TEXT = {
         "layer_top": "Top 10 điểm sáng",
         "layer_mask": "Vùng ngoài ranh giới",
         "render_cap": "Địa phương có {n:,} ô; bản đồ chỉ vẽ {c:,} ô sáng nhất để trình duyệt chạy mượt.",
-        "legend_class": "Nhóm kinh tế (Global)",
+        "legend_class": "Nhóm cường độ NTL",
         "legend_local": "Vị thế nội bộ (Local)",
         "p_mean": "TB",
         "p_max": "Cao nhất",
@@ -725,14 +725,14 @@ TEXT = {
         "tt": {"cell": "Ô", "area": "Diện tích đo lường", "ratio": "So với TB địa phương",
                "rank": "Thứ hạng sáng", "pct": "Phân vị", "share": "Tỷ trọng tổng ánh sáng",
                "z": "Độ lệch chuẩn (z)", "sol": "Tổng ánh sáng ô (SOL)", "xy": "Tâm ô (lat, lon)",
-               "econ": "Ước lượng kinh tế (Global)", "local": "Vị thế nội bộ (Local)"},
-        "short": ["Thương mại", "Đô thị lõi", "Vành đai", "Ven đô", "Không sáng"],
-        "dev": ["Thương mại/Dịch vụ (Mật độ siêu cao)", "Đô thị lõi/Khu dân cư đông đúc",
-                "Vành đai đô thị/Ngoại ô phát triển", "Khu vực ven đô/Hoạt động kinh tế thấp",
-                "Không gian mở/Khu vực thiếu sáng"],
+               "econ": "Nhóm cường độ NTL (toàn cục)", "local": "Vị thế nội bộ (Local)"},
+        "short": ["Rất sáng", "Sáng cao", "Sáng vừa", "Sáng thấp", "Không sáng"],
+        "dev": ["NTL ≥ 40 (rất sáng)", "15 ≤ NTL < 40 (sáng cao)",
+                "5 ≤ NTL < 15 (sáng vừa)", "0 < NTL < 5 (sáng thấp)",
+                "NTL = 0 (không sáng hoặc thiếu quan sát, xem dq_)"],
 
-        "rank": ["Top 25% (Tâm điểm kinh tế của địa phương)", "Mức phát triển trung bình của địa phương",
-                 "Bottom 25% (Vùng trũng của địa phương)", "Không có ánh sáng đáng kể"],
+        "rank": ["Top 25% NTL của địa phương", "Nhóm NTL trung gian",
+                 "Bottom 25% NTL của địa phương", "Không có tín hiệu NTL dương"],
 
         "sec_take": "Nhận định nhanh",
         "take": [
@@ -745,7 +745,7 @@ TEXT = {
             "trọng số hoặc lọc bằng `is_border_cell`.",
         ],
         "gdesc": ["ánh sáng phân bố khá đồng đều", "mức tập trung vừa phải", "ánh sáng tập trung rất cao vào vài ô lõi"],
-        "mdesc": ["ánh sáng tụ thành cụm có ý nghĩa thống kê → cần mô hình không gian (SAR/SEM/SDM) hoặc sai số chuẩn Conley/cụm",
+        "mdesc": ["ánh sáng có tự tương quan không gian dương trong phép kiểm này; cần chẩn đoán riêng trước khi chọn mô hình",
                   "chưa thấy cụm không gian có ý nghĩa thống kê",
                   "có dấu hiệu phân bố xen kẽ (tự tương quan âm) có ý nghĩa thống kê"],
         "sec_overview": "Thông tin chung",
@@ -758,7 +758,7 @@ TEXT = {
         "mi_note": "Trọng số kề nhau kiểu Queen (8 hướng) trên lưới đều, kiểm định giả thuyết bằng {k} hoán vị ngẫu nhiên. "
                    "I > 0: ô sáng nằm cạnh ô sáng (cụm); I ≈ 0: ngẫu nhiên; I < 0: xen kẽ.",
         "mi_na": f"Chưa đủ dữ liệu để tính Moran's I (cần ≥ {MORAN_MIN_CELLS} ô và NTL có biến thiên).",
-        "sec_class": "Cơ cấu theo nhóm kinh tế (Global)",
+        "sec_class": "Cơ cấu theo khoảng cường độ NTL",
         "sec_hist": "Phân bố số ô theo cường độ NTL",
         "sec_top": "Top 10 ô sáng nhất",
         "sec_full": "Xem bảng đầy đủ (tối đa 5.000 dòng sáng nhất)",
@@ -844,7 +844,7 @@ TEXT = {
         "tab_guide": "Reading Guide",
         "caption": "Nighttime Lights Intensity ({y}) - nW/cm²/sr",
         "color_mode": "Color mode",
-        "color_names": {"ntl": "NTL intensity", "class": "Economic class", "local": "Local standing"},
+        "color_names": {"ntl": "NTL intensity", "class": "NTL intensity band", "local": "Local standing"},
         "scale": "Color scale (NTL mode)",
         "scale_names": {"linear": "Linear", "sqrt": "Square root", "log": "Logarithmic"},
         "opacity": "Cell opacity",
@@ -861,7 +861,7 @@ TEXT = {
         "layer_top": "Top 10 hotspots",
         "layer_mask": "Outside boundary",
         "render_cap": "This area has {n:,} cells; the map draws only the {c:,} brightest to keep the browser smooth",
-        "legend_class": "Economic class (Global)",
+        "legend_class": "NTL radiance band",
         "legend_local": "Local standing",
         "p_mean": "Mean",
         "p_max": "Max",
@@ -869,13 +869,13 @@ TEXT = {
         "tt": {"cell": "Cell", "area": "Survey area", "ratio": "Versus area average",
                "rank": "Brightness rank", "pct": "Percentile", "share": "Share of total light",
                "z": "Std. deviations (z)", "sol": "Cell sum of lights (SOL)", "xy": "Centroid (lat, lon)",
-               "econ": "Economic proxy (Global)", "local": "Internal status (Local)"},
-        "short": ["Commercial", "Urban core", "Fringe", "Peri-urban", "Unlit"],
-        "dev": ["Commercial/Services (Ultra-high density)", "Urban Core/Dense Residential",
-                "Urban Fringe/Developing Suburb", "Peri-urban/Low Economic Activity",
-                "Open Space/Unlit Area"],
-        "rank": ["Top 25% (Economic Hotspot of the area)", "Area-average development",
-                 "Bottom 25% (Economic Coldspot)", "No significant light"],
+               "econ": "NTL radiance band (global)", "local": "Internal status (Local)"},
+        "short": ["Very bright", "High light", "Medium light", "Low light", "Unlit"],
+        "dev": ["NTL ≥ 40 (very bright)", "15 ≤ NTL < 40 (high radiance)",
+                "5 ≤ NTL < 15 (medium radiance)", "0 < NTL < 5 (low radiance)",
+                "NTL = 0 (unlit or unsupported, see dq_)"],
+        "rank": ["Top 25% locality NTL", "Intermediate locality NTL",
+                 "Bottom 25% locality NTL", "No positive NTL signal"],
         "sec_take": "Quick takeaways",
         "take": [
             " **Brightest spot:** cell **#{gid}** (lat {lat:.4f}, lon {lon:.4f}) has NTL = **{mx:.2f}**, "
@@ -887,7 +887,7 @@ TEXT = {
             "as a weight or filter with `is_border_cell`.",
         ],
         "gdesc": ["fairly even light distribution", "moderate concentration", "light is extremely concentrated in a few core cells"],
-        "mdesc": ["light is significantly clustered → use spatial models (SAR/SEM/SDM) or Conley/clustered standard errors",
+        "mdesc": ["positive spatial dependence in this test; model choice requires separate diagnostics",
                   "no statistically significant spatial clustering",
                   "significant alternating pattern (negative autocorrelation)"],
         "sec_overview": "Overview",
@@ -900,7 +900,7 @@ TEXT = {
         "mi_note": "Queen contiguity (8 directions) on the regular grid; significance from {k} random permutations. "
                    "I > 0: bright cells sit next to bright cells (clusters); I ≈ 0: random; I < 0: alternating.",
         "mi_na": f"Not enough data for Moran's I (needs ≥ {MORAN_MIN_CELLS} cells and variation in NTL).",
-        "sec_class": "Breakdown by economic class (Global)",
+        "sec_class": "Breakdown by NTL radiance band",
         "sec_hist": "Number of cells by NTL intensity",
         "sec_top": "Top 10 brightest cells",
         "sec_full": "Show full table (up to 5,000 brightest rows)",
@@ -972,8 +972,8 @@ DATA_DICT = [
     ("ntl_pctile", "Phân vị 0-100", "Percentile 0-100"),
     ("ntl_vs_mean", "Tỷ lệ so với trung bình (theo diện tích) của địa phương", "Ratio to the locality's area-weighted mean"),
     ("sol_share_pct", "% tổng ánh sáng (SOL) của địa phương nằm trong ô", "% of the locality's total SOL located in the cell"),
-    ("ntl_class", "Nhóm kinh tế toàn cầu 1-5 (1 = sáng nhất, 5 = không sáng)", "Global economic class 1-5 (1 = brightest, 5 = unlit)"),
-    ("ntl_class_label", "Nhãn nhóm kinh tế (tiếng Anh)", "Economic class label (English)"),
+    ("ntl_class", "Nhóm cường độ NTL 1-5 (ngưỡng mô tả, chưa hiệu chuẩn kinh tế)", "NTL intensity band 1-5 (descriptive, not economically calibrated)"),
+    ("ntl_class_label", "Nhãn nhóm cường độ NTL (tiếng Anh)", "NTL radiance band label (English)"),
     ("ntl_local_grp", "Vị thế nội bộ: 1 = Top 25%, 2 = giữa, 3 = Bottom 25%, 4 = không sáng",
      "Local standing: 1 = Top 25%, 2 = middle, 3 = Bottom 25%, 4 = unlit"),
 ]
@@ -1086,10 +1086,16 @@ GUIDE = {
 }
 
 CLASS_NOTES = {
-    "vi": ["Trung tâm thương mại/dịch vụ, khu công nghiệp sáng mạnh", "Lõi đô thị, dân cư đông đúc",
-           "Vành đai đô thị, ngoại ô đang phát triển", "Ven đô, hoạt động kinh tế thấp", "Đất trống, nông-lâm nghiệp, mặt nước"],
-    "en": ["Commercial/services hubs, brightly lit industry", "Urban core, dense residential",
-           "Urban fringe, developing suburbs", "Peri-urban, low economic activity", "Open land, farm/forest, water"],
+    "vi": ["NTL từ 40 trở lên; không suy ra chức năng đất hoặc mức phát triển",
+           "NTL từ 15 đến dưới 40; chỉ là nhóm bức xạ",
+           "NTL từ 5 đến dưới 15; chỉ là nhóm bức xạ",
+           "NTL trên 0 đến dưới 5; có thể gồm nhiều kiểu sử dụng đất",
+           "NTL bằng 0; cần xem cờ hỗ trợ quan sát dq_"],
+    "en": ["NTL 40 or higher; land use and development are not inferred",
+           "NTL 15 to below 40; radiance grouping only",
+           "NTL 5 to below 15; radiance grouping only",
+           "NTL above 0 to below 5; may span different land uses",
+           "NTL zero; inspect dq_ observation support"],
 }
 THRESH_TEXT = [">= 40", "15 - 40", "5 - 15", "> 0 - 5", "0"]
 
