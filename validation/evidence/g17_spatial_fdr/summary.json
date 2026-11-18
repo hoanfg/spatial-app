@@ -1,0 +1,1426 @@
+{
+  "gap": "G17",
+  "status": "synthetic_fdr_and_spatial_stress_only_real_data_open",
+  "field_validation": false,
+  "source": "generated Gaussian copula with spatial linear filter, and lognormal LISA field",
+  "study_seed": 17026,
+  "cell_size_m": 500.0,
+  "shape": [
+    8,
+    8
+  ],
+  "cells": 64,
+  "gaussian_replications_per_case": 400,
+  "lisa_replications_per_case": 24,
+  "lisa_permutations": 999,
+  "lisa_p_min_two_sided": 0.002,
+  "alpha": 0.05,
+  "rho_gaussian": [
+    0.0,
+    0.5,
+    0.8,
+    -0.5
+  ],
+  "rho_lisa": [
+    0.0,
+    0.8,
+    -0.5
+  ],
+  "weights": [
+    "queen",
+    "rook"
+  ],
+  "gaussian_alternative_z_mean_shift": 2.75,
+  "n_injected": 9,
+  "spatial_neighbors": {
+    "queen": {
+      "minimum_neighbors": 3,
+      "maximum_neighbors": 8,
+      "average_neighbors": 6.5625
+    },
+    "rook": {
+      "minimum_neighbors": 2,
+      "maximum_neighbors": 4,
+      "average_neighbors": 3.5
+    }
+  },
+  "software": {
+    "python": "3.11.18",
+    "numpy": "2.4.6",
+    "pandas": "3.1.1",
+    "scipy": "1.17.1"
+  },
+  "sha256": {
+    "generator_py": "344c027aedbb25e7176519237a1666f49b6c42155362bef88d52eef1200e9637",
+    "design_csv": "1fbeceae508d6a88ba7e4718552413db36a83535b940cffe69fc79333a6623df",
+    "replicates_csv": "09887729d950395facbd45f6258701c723a6b039eab67d860f054b81d8f7e1cc"
+  },
+  "methods": {
+    "unadjusted": "two-sided p < alpha",
+    "bh": "production bh_reject(p, alpha)",
+    "by": "production bh_reject(p, alpha/H_m), H_m=sum(1/i)"
+  },
+  "known_truth": {
+    "gaussian_valid_p": "All marginal nulls are standard normal even for spatially dependent scores; injected 3x3 cells have nonzero mean. The non-injected cell nulls are exactly true.",
+    "lisa_iid": "iid continuous lognormal values are exchangeable under the conditional spatial-randomization null; all tests null.",
+    "lisa_correlated": "Nonzero rho induces spatial association and breaks exchangeability. A field with no planted shock is NOT an all-null local Moran field. Rejection frequency is descriptive, not false-discovery-rate evidence."
+  },
+  "limitations": [
+    "Monte Carlo intervals represent finite simulation uncertainty only.",
+    "The Gaussian experiment tests BH/BY with valid marginal p-values; it is NOT a validation of the local Moran permutation p construction.",
+    "The iid local Moran test is a valid exchangeability stress case; clustered or negatively correlated lognormal fields violate its permutation null.",
+    "No evidence that local spatial p-values satisfy PRDS is supplied.",
+    "A Gaussian correlated p-value design does not model all possible dependencies.",
+    "Both the hypothesis family and p-value resolution must be reported for any application-specific FDR claim.",
+    "The app's existing BH routine, its default settings and A03 evidence are unchanged.",
+    "No independent VIIRS support case or empirical LISA FDR certification is claimed."
+  ],
+  "results": [
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "+0.00",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.84,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.280401,
+          "fdr_mc_se": 0.005981,
+          "fdr_mc_ci95_normal": [
+            0.268679,
+            0.292124
+          ],
+          "mean_false_rejections": 2.895,
+          "injection_power": 0.771667,
+          "power_mc_se": 0.007149,
+          "power_mc_ci95_normal": [
+            0.757654,
+            0.78568
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.085,
+          "any_rejection_rate": 0.955,
+          "any_rejection_wilson95": [
+            0.929995,
+            0.971349
+          ],
+          "empirical_fdr": 0.046256,
+          "fdr_mc_se": 0.005002,
+          "fdr_mc_ci95_normal": [
+            0.036451,
+            0.056061
+          ],
+          "mean_false_rejections": 0.2625,
+          "injection_power": 0.424722,
+          "power_mc_se": 0.010708,
+          "power_mc_ci95_normal": [
+            0.403734,
+            0.445711
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.02,
+          "any_rejection_rate": 0.795,
+          "any_rejection_wilson95": [
+            0.752721,
+            0.831667
+          ],
+          "empirical_fdr": 0.011833,
+          "fdr_mc_se": 0.004169,
+          "fdr_mc_ci95_normal": [
+            0.003662,
+            0.020005
+          ],
+          "mean_false_rejections": 0.03,
+          "injection_power": 0.221111,
+          "power_mc_se": 0.008969,
+          "power_mc_ci95_normal": [
+            0.203532,
+            0.238691
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "+0.00",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.345,
+          "any_rejection_rate": 0.9775,
+          "any_rejection_wilson95": [
+            0.957797,
+            0.988118
+          ],
+          "empirical_fdr": 0.9775,
+          "fdr_mc_se": 0.007424,
+          "fdr_mc_ci95_normal": [
+            0.962948,
+            0.992052
+          ],
+          "mean_false_rejections": 3.345,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.055,
+          "any_rejection_rate": 0.05,
+          "any_rejection_wilson95": [
+            0.032597,
+            0.075964
+          ],
+          "empirical_fdr": 0.05,
+          "fdr_mc_se": 0.010911,
+          "fdr_mc_ci95_normal": [
+            0.028615,
+            0.071385
+          ],
+          "mean_false_rejections": 0.055,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.015,
+          "any_rejection_rate": 0.015,
+          "any_rejection_wilson95": [
+            0.006892,
+            0.032335
+          ],
+          "empirical_fdr": 0.015,
+          "fdr_mc_se": 0.006085,
+          "fdr_mc_ci95_normal": [
+            0.003073,
+            0.026927
+          ],
+          "mean_false_rejections": 0.015,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "+0.50",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.955,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.26566,
+          "fdr_mc_se": 0.006887,
+          "fdr_mc_ci95_normal": [
+            0.252163,
+            0.279158
+          ],
+          "mean_false_rejections": 2.8125,
+          "injection_power": 0.793611,
+          "power_mc_se": 0.008329,
+          "power_mc_ci95_normal": [
+            0.777286,
+            0.809937
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.2875,
+          "any_rejection_rate": 0.925,
+          "any_rejection_wilson95": [
+            0.894952,
+            0.946962
+          ],
+          "empirical_fdr": 0.046258,
+          "fdr_mc_se": 0.005606,
+          "fdr_mc_ci95_normal": [
+            0.035271,
+            0.057245
+          ],
+          "mean_false_rejections": 0.2675,
+          "injection_power": 0.446667,
+          "power_mc_se": 0.013104,
+          "power_mc_ci95_normal": [
+            0.420983,
+            0.47235
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.1225,
+          "any_rejection_rate": 0.7425,
+          "any_rejection_wilson95": [
+            0.697485,
+            0.782902
+          ],
+          "empirical_fdr": 0.010625,
+          "fdr_mc_se": 0.003781,
+          "fdr_mc_ci95_normal": [
+            0.003215,
+            0.018035
+          ],
+          "mean_false_rejections": 0.0275,
+          "injection_power": 0.232778,
+          "power_mc_se": 0.010716,
+          "power_mc_ci95_normal": [
+            0.211775,
+            0.25378
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "+0.50",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.25,
+          "any_rejection_rate": 0.95,
+          "any_rejection_wilson95": [
+            0.924036,
+            0.967403
+          ],
+          "empirical_fdr": 0.95,
+          "fdr_mc_se": 0.010911,
+          "fdr_mc_ci95_normal": [
+            0.928615,
+            0.971385
+          ],
+          "mean_false_rejections": 3.25,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.06,
+          "any_rejection_rate": 0.0525,
+          "any_rejection_wilson95": [
+            0.034592,
+            0.078922
+          ],
+          "empirical_fdr": 0.0525,
+          "fdr_mc_se": 0.011166,
+          "fdr_mc_ci95_normal": [
+            0.030615,
+            0.074385
+          ],
+          "mean_false_rejections": 0.06,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.015,
+          "any_rejection_rate": 0.015,
+          "any_rejection_wilson95": [
+            0.006892,
+            0.032335
+          ],
+          "empirical_fdr": 0.015,
+          "fdr_mc_se": 0.006085,
+          "fdr_mc_ci95_normal": [
+            0.003073,
+            0.026927
+          ],
+          "mean_false_rejections": 0.015,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "+0.80",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.815,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.252384,
+          "fdr_mc_se": 0.01032,
+          "fdr_mc_ci95_normal": [
+            0.232156,
+            0.272611
+          ],
+          "mean_false_rejections": 2.75,
+          "injection_power": 0.785,
+          "power_mc_se": 0.011957,
+          "power_mc_ci95_normal": [
+            0.761564,
+            0.808436
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.24,
+          "any_rejection_rate": 0.7975,
+          "any_rejection_wilson95": [
+            0.755374,
+            0.833966
+          ],
+          "empirical_fdr": 0.048314,
+          "fdr_mc_se": 0.007222,
+          "fdr_mc_ci95_normal": [
+            0.034159,
+            0.062468
+          ],
+          "mean_false_rejections": 0.305,
+          "injection_power": 0.437222,
+          "power_mc_se": 0.016776,
+          "power_mc_ci95_normal": [
+            0.404341,
+            0.470103
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.2425,
+          "any_rejection_rate": 0.6075,
+          "any_rejection_wilson95": [
+            0.558841,
+            0.654113
+          ],
+          "empirical_fdr": 0.013684,
+          "fdr_mc_se": 0.004415,
+          "fdr_mc_ci95_normal": [
+            0.005029,
+            0.022338
+          ],
+          "mean_false_rejections": 0.05,
+          "injection_power": 0.243611,
+          "power_mc_se": 0.014106,
+          "power_mc_ci95_normal": [
+            0.215964,
+            0.271258
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "+0.80",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.21,
+          "any_rejection_rate": 0.8275,
+          "any_rejection_wilson95": [
+            0.787405,
+            0.861365
+          ],
+          "empirical_fdr": 0.8275,
+          "fdr_mc_se": 0.018914,
+          "fdr_mc_ci95_normal": [
+            0.790428,
+            0.864572
+          ],
+          "mean_false_rejections": 3.21,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.135,
+          "any_rejection_rate": 0.055,
+          "any_rejection_wilson95": [
+            0.036598,
+            0.081867
+          ],
+          "empirical_fdr": 0.055,
+          "fdr_mc_se": 0.011413,
+          "fdr_mc_ci95_normal": [
+            0.03263,
+            0.07737
+          ],
+          "mean_false_rejections": 0.135,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.02,
+          "any_rejection_rate": 0.0175,
+          "any_rejection_wilson95": [
+            0.008502,
+            0.035677
+          ],
+          "empirical_fdr": 0.0175,
+          "fdr_mc_se": 0.006564,
+          "fdr_mc_ci95_normal": [
+            0.004634,
+            0.030366
+          ],
+          "mean_false_rejections": 0.02,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "-0.50",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.7125,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.260465,
+          "fdr_mc_se": 0.0064,
+          "fdr_mc_ci95_normal": [
+            0.247921,
+            0.273009
+          ],
+          "mean_false_rejections": 2.69,
+          "injection_power": 0.780278,
+          "power_mc_se": 0.006086,
+          "power_mc_ci95_normal": [
+            0.76835,
+            0.792206
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.015,
+          "any_rejection_rate": 0.9775,
+          "any_rejection_wilson95": [
+            0.957797,
+            0.988118
+          ],
+          "empirical_fdr": 0.040151,
+          "fdr_mc_se": 0.004689,
+          "fdr_mc_ci95_normal": [
+            0.03096,
+            0.049342
+          ],
+          "mean_false_rejections": 0.215,
+          "injection_power": 0.422222,
+          "power_mc_se": 0.009258,
+          "power_mc_ci95_normal": [
+            0.404077,
+            0.440368
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.005,
+          "any_rejection_rate": 0.8075,
+          "any_rejection_wilson95": [
+            0.766011,
+            0.843139
+          ],
+          "empirical_fdr": 0.009542,
+          "fdr_mc_se": 0.003145,
+          "fdr_mc_ci95_normal": [
+            0.003378,
+            0.015705
+          ],
+          "mean_false_rejections": 0.03,
+          "injection_power": 0.219444,
+          "power_mc_se": 0.008305,
+          "power_mc_ci95_normal": [
+            0.203166,
+            0.235723
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "queen",
+      "rho": "-0.50",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.2025,
+          "any_rejection_rate": 0.975,
+          "any_rejection_wilson95": [
+            0.954598,
+            0.986365
+          ],
+          "empirical_fdr": 0.975,
+          "fdr_mc_se": 0.007816,
+          "fdr_mc_ci95_normal": [
+            0.959681,
+            0.990319
+          ],
+          "mean_false_rejections": 3.2025,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.065,
+          "any_rejection_rate": 0.0575,
+          "any_rejection_wilson95": [
+            0.038618,
+            0.084801
+          ],
+          "empirical_fdr": 0.0575,
+          "fdr_mc_se": 0.011654,
+          "fdr_mc_ci95_normal": [
+            0.034657,
+            0.080343
+          ],
+          "mean_false_rejections": 0.065,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0175,
+          "any_rejection_rate": 0.0125,
+          "any_rejection_wilson95": [
+            0.005351,
+            0.028924
+          ],
+          "empirical_fdr": 0.0125,
+          "fdr_mc_se": 0.005562,
+          "fdr_mc_ci95_normal": [
+            0.001598,
+            0.023402
+          ],
+          "mean_false_rejections": 0.0175,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "+0.00",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.8025,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.266286,
+          "fdr_mc_se": 0.006383,
+          "fdr_mc_ci95_normal": [
+            0.253776,
+            0.278797
+          ],
+          "mean_false_rejections": 2.75,
+          "injection_power": 0.783611,
+          "power_mc_se": 0.006869,
+          "power_mc_ci95_normal": [
+            0.770149,
+            0.797074
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.2475,
+          "any_rejection_rate": 0.965,
+          "any_rejection_wilson95": [
+            0.942115,
+            0.979039
+          ],
+          "empirical_fdr": 0.042415,
+          "fdr_mc_se": 0.004528,
+          "fdr_mc_ci95_normal": [
+            0.03354,
+            0.05129
+          ],
+          "mean_false_rejections": 0.2475,
+          "injection_power": 0.444444,
+          "power_mc_se": 0.010943,
+          "power_mc_ci95_normal": [
+            0.422997,
+            0.465892
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.105,
+          "any_rejection_rate": 0.7975,
+          "any_rejection_wilson95": [
+            0.755374,
+            0.833966
+          ],
+          "empirical_fdr": 0.011107,
+          "fdr_mc_se": 0.003382,
+          "fdr_mc_ci95_normal": [
+            0.004478,
+            0.017736
+          ],
+          "mean_false_rejections": 0.04,
+          "injection_power": 0.229444,
+          "power_mc_se": 0.009175,
+          "power_mc_ci95_normal": [
+            0.211461,
+            0.247428
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "+0.00",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.1625,
+          "any_rejection_rate": 0.955,
+          "any_rejection_wilson95": [
+            0.929995,
+            0.971349
+          ],
+          "empirical_fdr": 0.955,
+          "fdr_mc_se": 0.010378,
+          "fdr_mc_ci95_normal": [
+            0.934659,
+            0.975341
+          ],
+          "mean_false_rejections": 3.1625,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.06,
+          "any_rejection_rate": 0.0525,
+          "any_rejection_wilson95": [
+            0.034592,
+            0.078922
+          ],
+          "empirical_fdr": 0.0525,
+          "fdr_mc_se": 0.011166,
+          "fdr_mc_ci95_normal": [
+            0.030615,
+            0.074385
+          ],
+          "mean_false_rejections": 0.06,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.015,
+          "any_rejection_rate": 0.015,
+          "any_rejection_wilson95": [
+            0.006892,
+            0.032335
+          ],
+          "empirical_fdr": 0.015,
+          "fdr_mc_se": 0.006085,
+          "fdr_mc_ci95_normal": [
+            0.003073,
+            0.026927
+          ],
+          "mean_false_rejections": 0.015,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "+0.50",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.61,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.251856,
+          "fdr_mc_se": 0.00711,
+          "fdr_mc_ci95_normal": [
+            0.237921,
+            0.265791
+          ],
+          "mean_false_rejections": 2.58,
+          "injection_power": 0.781111,
+          "power_mc_se": 0.00889,
+          "power_mc_ci95_normal": [
+            0.763687,
+            0.798535
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.175,
+          "any_rejection_rate": 0.91,
+          "any_rejection_wilson95": [
+            0.877917,
+            0.934283
+          ],
+          "empirical_fdr": 0.041506,
+          "fdr_mc_se": 0.005074,
+          "fdr_mc_ci95_normal": [
+            0.031561,
+            0.051451
+          ],
+          "mean_false_rejections": 0.23,
+          "injection_power": 0.438333,
+          "power_mc_se": 0.013364,
+          "power_mc_ci95_normal": [
+            0.41214,
+            0.464527
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.2625,
+          "any_rejection_rate": 0.73,
+          "any_rejection_wilson95": [
+            0.684457,
+            0.771167
+          ],
+          "empirical_fdr": 0.008696,
+          "fdr_mc_se": 0.002455,
+          "fdr_mc_ci95_normal": [
+            0.003885,
+            0.013508
+          ],
+          "mean_false_rejections": 0.0375,
+          "injection_power": 0.247222,
+          "power_mc_se": 0.011214,
+          "power_mc_ci95_normal": [
+            0.225242,
+            0.269202
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "+0.50",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.0325,
+          "any_rejection_rate": 0.9225,
+          "any_rejection_wilson95": [
+            0.892095,
+            0.944867
+          ],
+          "empirical_fdr": 0.9225,
+          "fdr_mc_se": 0.013386,
+          "fdr_mc_ci95_normal": [
+            0.896264,
+            0.948736
+          ],
+          "mean_false_rejections": 3.0325,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.065,
+          "any_rejection_rate": 0.055,
+          "any_rejection_wilson95": [
+            0.036598,
+            0.081867
+          ],
+          "empirical_fdr": 0.055,
+          "fdr_mc_se": 0.011413,
+          "fdr_mc_ci95_normal": [
+            0.03263,
+            0.07737
+          ],
+          "mean_false_rejections": 0.065,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.01,
+          "any_rejection_rate": 0.01,
+          "any_rejection_wilson95": [
+            0.003895,
+            0.025427
+          ],
+          "empirical_fdr": 0.01,
+          "fdr_mc_se": 0.004981,
+          "fdr_mc_ci95_normal": [
+            0.000237,
+            0.019763
+          ],
+          "mean_false_rejections": 0.01,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "+0.80",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.7275,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.241594,
+          "fdr_mc_se": 0.009494,
+          "fdr_mc_ci95_normal": [
+            0.222985,
+            0.260203
+          ],
+          "mean_false_rejections": 2.6325,
+          "injection_power": 0.788333,
+          "power_mc_se": 0.010838,
+          "power_mc_ci95_normal": [
+            0.767092,
+            0.809575
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.195,
+          "any_rejection_rate": 0.7925,
+          "any_rejection_wilson95": [
+            0.750069,
+            0.829366
+          ],
+          "empirical_fdr": 0.035282,
+          "fdr_mc_se": 0.005404,
+          "fdr_mc_ci95_normal": [
+            0.02469,
+            0.045875
+          ],
+          "mean_false_rejections": 0.2425,
+          "injection_power": 0.439167,
+          "power_mc_se": 0.016812,
+          "power_mc_ci95_normal": [
+            0.406214,
+            0.472119
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.3425,
+          "any_rejection_rate": 0.6125,
+          "any_rejection_wilson95": [
+            0.563903,
+            0.658957
+          ],
+          "empirical_fdr": 0.016404,
+          "fdr_mc_se": 0.005094,
+          "fdr_mc_ci95_normal": [
+            0.006419,
+            0.026389
+          ],
+          "mean_false_rejections": 0.0525,
+          "injection_power": 0.254444,
+          "power_mc_se": 0.014623,
+          "power_mc_ci95_normal": [
+            0.225783,
+            0.283106
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "+0.80",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.1125,
+          "any_rejection_rate": 0.83,
+          "any_rejection_wilson95": [
+            0.790091,
+            0.863631
+          ],
+          "empirical_fdr": 0.83,
+          "fdr_mc_se": 0.018805,
+          "fdr_mc_ci95_normal": [
+            0.793142,
+            0.866858
+          ],
+          "mean_false_rejections": 3.1125,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.08,
+          "any_rejection_rate": 0.055,
+          "any_rejection_wilson95": [
+            0.036598,
+            0.081867
+          ],
+          "empirical_fdr": 0.055,
+          "fdr_mc_se": 0.011413,
+          "fdr_mc_ci95_normal": [
+            0.03263,
+            0.07737
+          ],
+          "mean_false_rejections": 0.08,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0125,
+          "any_rejection_rate": 0.01,
+          "any_rejection_wilson95": [
+            0.003895,
+            0.025427
+          ],
+          "empirical_fdr": 0.01,
+          "fdr_mc_se": 0.004981,
+          "fdr_mc_ci95_normal": [
+            0.000237,
+            0.019763
+          ],
+          "mean_false_rejections": 0.0125,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "-0.50",
+      "scenario": "fixed_3x3_mean_shift",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.6725,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.990488,
+            1.0
+          ],
+          "empirical_fdr": 0.259597,
+          "fdr_mc_se": 0.006809,
+          "fdr_mc_ci95_normal": [
+            0.246252,
+            0.272943
+          ],
+          "mean_false_rejections": 2.7,
+          "injection_power": 0.774722,
+          "power_mc_se": 0.006346,
+          "power_mc_ci95_normal": [
+            0.762283,
+            0.787161
+          ]
+        },
+        "bh": {
+          "mean_rejections": 4.14,
+          "any_rejection_rate": 0.9875,
+          "any_rejection_wilson95": [
+            0.971076,
+            0.994649
+          ],
+          "empirical_fdr": 0.041634,
+          "fdr_mc_se": 0.004683,
+          "fdr_mc_ci95_normal": [
+            0.032455,
+            0.050813
+          ],
+          "mean_false_rejections": 0.235,
+          "injection_power": 0.433889,
+          "power_mc_se": 0.008673,
+          "power_mc_ci95_normal": [
+            0.41689,
+            0.450888
+          ]
+        },
+        "by": {
+          "mean_rejections": 2.17,
+          "any_rejection_rate": 0.88,
+          "any_rejection_wilson95": [
+            0.844486,
+            0.908285
+          ],
+          "empirical_fdr": 0.009083,
+          "fdr_mc_se": 0.002553,
+          "fdr_mc_ci95_normal": [
+            0.004079,
+            0.014087
+          ],
+          "mean_false_rejections": 0.0375,
+          "injection_power": 0.236944,
+          "power_mc_se": 0.007627,
+          "power_mc_ci95_normal": [
+            0.221996,
+            0.251893
+          ]
+        }
+      }
+    },
+    {
+      "study": "gaussian_valid_p",
+      "weights": "rook",
+      "rho": "-0.50",
+      "scenario": "global_null",
+      "truth_scope": "valid_known_nulls",
+      "replications": 400,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.145,
+          "any_rejection_rate": 0.94,
+          "any_rejection_wilson95": [
+            0.912277,
+            0.959352
+          ],
+          "empirical_fdr": 0.94,
+          "fdr_mc_se": 0.011889,
+          "fdr_mc_ci95_normal": [
+            0.916697,
+            0.963303
+          ],
+          "mean_false_rejections": 3.145,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.0625,
+          "any_rejection_rate": 0.0475,
+          "any_rejection_wilson95": [
+            0.030617,
+            0.072992
+          ],
+          "empirical_fdr": 0.0475,
+          "fdr_mc_se": 0.010649,
+          "fdr_mc_ci95_normal": [
+            0.026629,
+            0.068371
+          ],
+          "mean_false_rejections": 0.0625,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0075,
+          "any_rejection_rate": 0.0075,
+          "any_rejection_wilson95": [
+            0.002554,
+            0.021816
+          ],
+          "empirical_fdr": 0.0075,
+          "fdr_mc_se": 0.004319,
+          "fdr_mc_ci95_normal": [
+            0.0,
+            0.015966
+          ],
+          "mean_false_rejections": 0.0075,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "lisa_conditional_permutation",
+      "weights": "queen",
+      "rho": "+0.00",
+      "scenario": "iid_spatial_randomization_null",
+      "truth_scope": "exchangeable_all_null",
+      "replications": 24,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 2.8333,
+          "any_rejection_rate": 0.916667,
+          "any_rejection_wilson95": [
+            0.741512,
+            0.976841
+          ],
+          "empirical_fdr": 0.916667,
+          "fdr_mc_se": 0.05763,
+          "fdr_mc_ci95_normal": [
+            0.803711,
+            1.0
+          ],
+          "mean_false_rejections": 2.8333,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": 0.0,
+          "fdr_mc_se": 0.0,
+          "fdr_mc_ci95_normal": [
+            0.0,
+            0.0
+          ],
+          "mean_false_rejections": 0.0,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": 0.0,
+          "fdr_mc_se": 0.0,
+          "fdr_mc_ci95_normal": [
+            0.0,
+            0.0
+          ],
+          "mean_false_rejections": 0.0,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "lisa_conditional_permutation",
+      "weights": "queen",
+      "rho": "+0.80",
+      "scenario": "correlated_background_no_injection",
+      "truth_scope": "nonexchangeable_unidentified_truth",
+      "replications": 24,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 16.2083,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.862024,
+            1.0
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 5.25,
+          "any_rejection_rate": 0.666667,
+          "any_rejection_wilson95": [
+            0.467063,
+            0.820278
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "lisa_conditional_permutation",
+      "weights": "queen",
+      "rho": "-0.50",
+      "scenario": "correlated_background_no_injection",
+      "truth_scope": "nonexchangeable_unidentified_truth",
+      "replications": 24,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 1.9167,
+          "any_rejection_rate": 0.875,
+          "any_rejection_wilson95": [
+            0.689961,
+            0.956557
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "lisa_conditional_permutation",
+      "weights": "rook",
+      "rho": "+0.00",
+      "scenario": "iid_spatial_randomization_null",
+      "truth_scope": "exchangeable_all_null",
+      "replications": 24,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 3.5833,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.862024,
+            1.0
+          ],
+          "empirical_fdr": 1.0,
+          "fdr_mc_se": 0.0,
+          "fdr_mc_ci95_normal": [
+            1.0,
+            1.0
+          ],
+          "mean_false_rejections": 3.5833,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": 0.0,
+          "fdr_mc_se": 0.0,
+          "fdr_mc_ci95_normal": [
+            0.0,
+            0.0
+          ],
+          "mean_false_rejections": 0.0,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": 0.0,
+          "fdr_mc_se": 0.0,
+          "fdr_mc_ci95_normal": [
+            0.0,
+            0.0
+          ],
+          "mean_false_rejections": 0.0,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "lisa_conditional_permutation",
+      "weights": "rook",
+      "rho": "+0.80",
+      "scenario": "correlated_background_no_injection",
+      "truth_scope": "nonexchangeable_unidentified_truth",
+      "replications": 24,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 9.0833,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.862024,
+            1.0
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.25,
+          "any_rejection_rate": 0.041667,
+          "any_rejection_wilson95": [
+            0.007393,
+            0.202418
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        }
+      }
+    },
+    {
+      "study": "lisa_conditional_permutation",
+      "weights": "rook",
+      "rho": "-0.50",
+      "scenario": "correlated_background_no_injection",
+      "truth_scope": "nonexchangeable_unidentified_truth",
+      "replications": 24,
+      "n_hypotheses": 64,
+      "methods": {
+        "unadjusted": {
+          "mean_rejections": 5.5833,
+          "any_rejection_rate": 1.0,
+          "any_rejection_wilson95": [
+            0.862024,
+            1.0
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "bh": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        },
+        "by": {
+          "mean_rejections": 0.0,
+          "any_rejection_rate": 0.0,
+          "any_rejection_wilson95": [
+            0.0,
+            0.137976
+          ],
+          "empirical_fdr": null,
+          "injection_power": null
+        }
+      }
+    }
+  ]
+}

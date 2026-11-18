@@ -45,3 +45,16 @@ jobs:
           cache: pip
       - run: pip install numpy==2.4.6 pandas==3.1.1 scipy==1.17.1
       - run: python validation/g18_zero_support_experiment.py --verify
+
+  g17-evidence:
+    name: G17 spatial-dependence FDR evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install numpy==2.4.6 pandas==3.1.1 scipy==1.17.1
+      - run: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --verify
