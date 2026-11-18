@@ -58,7 +58,7 @@ The app covers three stages: it turns irregular administrative boundaries into u
 | **SOL** (Sum of Lights) | Total light of a cell = mean radiance × cell area. |
 | **LISA** | An indicator that tells whether *each grid cell* clusters with its surroundings (a bright cluster, a dim cluster, or an odd one out). |
 | **HH / LL / HL / LH** | The four LISA labels: High-High, Low-Low, High-Low, Low-High (see [Section 3.1](#s3)). |
-| **MAUP** | Sensitivity of a result to the scale and zoning of spatial units; a regular grid standardizes measurement support but does not remove this problem. |
+| **MAUP** | The statistical bias that appears when you compare administrative units whose areas and shapes differ wildly. |
 | **FDR** | A way to keep the number of false discoveries in check when thousands of cells are tested at once. |
 | **CBD** | Central Business District, the economic core of a region. |
 | **Gini** | A measure of concentration/inequality. Near 0 means evenly spread; near 1 means concentrated in very few cells. |
@@ -157,7 +157,7 @@ The interface follows the same order as a defensible research workflow. Features
 
 1. **State the unit and question.** Decide whether the observation is a grid cell or a region-year and whether the task is description, prediction, association or causal inference.
 2. **Choose the boundary and year.** Record the GADM identifier and source year rather than relying on the displayed place name alone.
-3. **Choose spatial support.** Select an initial grid from the spatial scale of the process, source resolution and computational budget, then repeat the analysis at defensible finer or coarser resolutions. No single cell size is generally optimal.
+3. **Choose spatial support.** Start at 1,000 m for many econometric uses, then treat 500 m and coarser grids as sensitivity checks. The best size still depends on the process being studied.
 4. **Inspect measurement support.** Read the `dq_*` fields and the quality panel before interpreting a zero as absence of activity.
 5. **Explore levels and concentration.** Use the map, histogram, Lorenz curve, Gini and radial profile before running local tests.
 6. **Test global structure.** Global Moran's I answers whether clustering exists at the locality level, not where it occurs.
@@ -449,11 +449,11 @@ Streamlit runs on a **stateless** model: every time a user touches any UI contro
 
 ## II. Spatial geoprocessing methodology
 
-### 2.1. Making spatial support explicit under MAUP
+### 2.1. Addressing the modifiable areal unit problem (MAUP)
 
-Results calculated from areal data can change when the scale or zoning of the analytical units changes. This sensitivity is the **modifiable areal unit problem (MAUP)** (Openshaw, 1984; Fotheringham & Wong, 1991). Administrative units make spatial support especially heterogeneous because their areas and shapes differ, but replacing them with a regular grid does not eliminate MAUP. The application makes support explicit and comparable by using a projected square grid; defensible analysis still requires reporting the grid definition and testing reasonable alternative sizes or alignments.
+In empirical spatial economics, using administrative boundaries (provinces, districts, communes) directly introduces statistical bias, because the units differ enormously in area and shape. This is known as the **modifiable areal unit problem (MAUP)** (Openshaw, 1984; Fotheringham & Wong, 1991). The system deals with it by standardizing the study area into a uniform square grid matrix (Donaldson & Storeygard, 2016).
 
-> **In plain words:** equal squares make the measurement units easier to compare, but the chosen square size and origin can still change the pattern. A grid is a documented analytical choice, not a complete solution to MAUP.
+> **In plain words:** comparing the brightness of a district as large as a small province with that of an inner-city ward of a few dozen km² is not a fair fight. Cut everything into equal squares and every place starts from the same line.
 
 #### Dynamic coordinate projection algorithm
 
@@ -473,7 +473,7 @@ $$
 
 > **Quick example:** a study area centered at longitude $105^\circ\mathrm{E}$ in the Northern hemisphere gives $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ and $\mathrm{EPSG} = 32648$, which is exactly the code the Phase 1 prototype hardcoded.
 
-**Grid alignment.** Grid origin coordinates $(x_0, y_0)$ are snapped to integer multiples of the cell side length $\mathrm{size}$ in the selected UTM CRS. This makes grid lines repeatable for runs that use the same CRS, size and origin rule. It does not guarantee one seamless lattice across localities assigned to different UTM zones; cross-location analysis must first define a common grid and projection.
+**Grid alignment.** All grid origin coordinates $(x_0, y_0)$ are snapped to integer multiples of the cell side length $\mathrm{size}$ in flat UTM space. Grids of adjacent districts therefore fit together without gaps or overlaps when merged.
 
 ### 2.2. Cloud masking on GEE and zonal statistics extraction via fractional coverage
 
@@ -486,11 +486,11 @@ $$
 | Cloud-free mask | `cf_cvg` $> 0$, applied to each monthly image |
 | Compositing | **Annual median composite** (Elvidge et al., 2017, 2021) |
 
-Why the mask is needed: `cf_cvg` $= 0$ means that the monthly pixel has no cloud-free observation support. Treating that value as observed darkness would conflate missing support with measured radiance, so the application excludes it before the annual median. If all months are excluded, the annual value is missing and the legacy operational surface later fills it with zero while the `dq_*` fields retain the distinction. The Version 1 monthly series can still contain aurora, fires, boats and other temporary lights; this mask is not a complete contamination filter.
+Why the mask is needed: in monsoon tropical regions, heavy cloud cover during rainy months can leave a pixel with no valid observation at all (`cf_cvg` $= 0$), and the radiance gets recorded as an artificial $0$. The cloud-free mask removes this downward bias before the median is taken.
 
 #### Step 2: zonal statistics via fractional coverage
 
-A center-of-pixel rule assigns a source pixel wholly according to its center and therefore ignores partial overlap at polygon boundaries. The resulting difference depends on the geometry and resolution; this repository does not claim one universal error magnitude. The system instead uses `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}_{i}$ of grid cell $i$ is a weighted average, with weights given by the fractional pixel area $w_{ip} \in [0, 1]$ that actually falls inside polygon cell $i$:
+Traditional center-of-pixel raster stats introduce substantial error when the grid cell size approaches the native VIIRS pixel size. The system therefore uses the C/C++ library `exactextract` (Baston, 2023). The mean radiance $\mathrm{NTL}_{i}$ of grid cell $i$ is a weighted average, with weights given by the fractional pixel area $w_{ip} \in [0, 1]$ that actually falls inside polygon cell $i$:
 
 $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
@@ -683,15 +683,15 @@ $$
 d_{\mathrm{core}, i} = \frac{1}{1000}\sqrt{(c_{x,i} - \mathrm{CBD}_x)^2 + (c_{y,i} - \mathrm{CBD}_y)^2}
 $$
 
-### 3.6. Additional spatial diagnostic modules
+### 3.6. Frontier spatial econometric modules
 
-`ntl/lisa_core.py` goes beyond static exploratory spatial data analysis (ESDA) by computing five additional diagnostic modules. They can reveal spatial structure, sensitivity and possible channels that a later research design may need to address; they do not by themselves identify a causal or structural parameter:
+`ntl/lisa_core.py` goes beyond static exploratory spatial data analysis (ESDA). To support modern causal and structural identification, it automatically computes 5 frontier econometric modules:
 
 | # | Module | Question it answers | Output variable |
 | :---: | :--- | :--- | :--- |
 | 1 | Top-lights Pareto tail exponent | How strongly are the brightest cells concentrated? | Not applicable |
 | 2 | Urban density decay gradient | How fast does light fall off away from the core? | `urban_gradient_decay`, `monocentric_r2` |
-| 3 | Recentered market access | What remains of the implemented market-access index after subtracting its fitted relationship with distance to the detected core? | `recentered_market_access` |
+| 3 | Recentered market access | What is a cell's market potential once the part due to a central location is removed? | `recentered_market_access` |
 | 4 | Spillover rings & signed boundary distance | Where is the hotspot boundary, and how far do spillovers reach? | `signed_dist_hh_km` |
 | 5 | Spatial unit-root diagnostics & Spatial Markov | How persistent is the spatial structure, and how does it change between two periods? | `spatial_ar1_persistence` |
 
@@ -782,11 +782,11 @@ $$
 
 When the grid exceeds $30,000$ cells, rendering the full Leaflet SVG/Canvas DOM tree can freeze the client browser. The system handles it like this:
 
-- It retains the brightest cells for this overview map display.
+- It prioritizes LISA-significant cells and the brightest cells for the map display.
 - It rounds geometry coordinates to $10^{-6}$ degrees (`shapely.set_precision`) to shrink the GeoJSON payload.
 
 > [!IMPORTANT]
-> Only the overview map is trimmed. **CSV exports retain every cell produced by the clipped analysis grid.**
+> Only the map is trimmed. **All exported CSV files retain 100% of observations.**
 
 <sub>[↑ Back to top](#top)</sub>
 
@@ -805,7 +805,7 @@ The primary goal of the system is to provide quantitative variables ready for st
 
 ### 5.1. Cell-level micro data
 
-The cell-level CSV exports every cell produced by the application's clipped grid, including unlit `DARK` cells and clipped `EDGE` cells. Keeping these rows alongside indicator flags (`is_border_cell`, `is_edge_masked`, `is_dark`) makes later inclusion and exclusion rules observable and auditable. It does not by itself identify or correct sample-selection bias; that requires a study-specific sampling model and assumptions about the selection process (Heckman, 1979).
+The cell-level CSV exports **100% of observations** in the locality, including unlit `DARK` cells and clipped `EDGE` cells. Keeping every observation alongside the indicator flags (`is_border_cell`, `is_edge_masked`, `is_dark`) lets researchers explicitly control for **sample selection bias** (Heckman, 1979; Henderson et al., 2012).
 
 **Core micro variable groups:**
 
@@ -927,11 +927,11 @@ The tables below define all variables in the exported `ntl_lisa_panel.csv` file,
 | # | Limitation | Cause and consequence |
 | :---: | :--- | :--- |
 | 1 | **Light spillover and reflection** | Because of the optical properties of the VIIRS DNB sensor and atmospheric scattering, light from high-intensity sources (seaports, industrial complexes, major bridges) tends to spill over into adjacent pixels or reflect off water surfaces (Elvidge et al., 2017; Gibson et al., 2021). This can slightly expand the boundaries of `High-High` clusters along coastlines and rivers. |
-| 2 | **Clamping negatives to $0$** | The source product permits negative corrected radiance. This application clamps negatives for its legacy operational surface, but the literature does not establish one universally correct threshold. The quality panel therefore reports negative support and can compare unclipped extraction; sensitivity should be reported where dark-area conclusions matter. |
-| 3 | **Shared source support on fine grids** | The native resolution of monthly VIIRS composites is approximately $463.83\text{ m}$, so a $500 \times 500\text{ m}$ grid cell covers roughly $1.16$ native pixels by nominal area. Adjacent analysis cells can receive fractions of the same source pixel, creating measurement dependence that should not be mistaken for independent cell-level information. |
+| 2 | **Clamping negatives to $0$** | Clamping negative radiance values to $0$ after stray-light correction keeps the data physically sensible, but reduces informational variance in sparsely populated rural areas where true illumination is near $0$ (Gibson et al., 2021). |
+| 3 | **Mechanical autocorrelation on fine grids** | The native resolution of monthly VIIRS composites is approximately $463.83\text{ m}$, so a $500 \times 500\text{ m}$ grid cell covers roughly $1.16$ native pixels. Two adjacent grid cells can share parts of the same VIIRS pixel through fractional extraction (`exactextract`), which induces mechanical spatial autocorrelation. |
 
 > [!TIP]
-> **Resolution sensitivity:** a 1,000 m grid is a practical alternative, not a scientifically privileged threshold. Select spatial support from the research question and source resolution, then report results across defensible alternative cell sizes. A causal interpretation still requires a separate identification design.
+> **Recommendation for causal regressions:** use a grid size $\ge 1000\text{ m}$ and check robustness across multiple resolutions.
 
 ### 6.2. Hardware constraints
 

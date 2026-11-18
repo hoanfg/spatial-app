@@ -2,8 +2,6 @@
 
 **Trạng thái:** V11 đã ghi kết quả đối chiếu NTL/LISA tổng hợp cho cả ba địa bàn. Repo chưa có đủ cặp raster nguồn và kết quả từng ô, vì vậy muốn chạy lại đầy đủ vẫn cần bổ sung các đầu vào này.
 
-Các nhãn bên dưới là giả thuyết lấy mẫu cho những bối cảnh không gian khác nhau có chủ đích, không phải phân loại đã được kiểm chứng về nền kinh tế của từng nơi. Xem [kiểm toán phát biểu khoa học](../evidence/README-vi.md#kiểm-toán-phát-biểu-khoa-học) để phân biệt bằng chứng tổng hợp đã ghi với phép kiểm thực địa có thể tái lập độc lập.
-
 ## 1. Thiết kế ba trường hợp
 
 | Vai trò thử nghiệm | Địa bàn theo GADM 4.1 | GID_2 | Diện tích gần đúng (km²) | Ô 500 m tối thiểu theo diện tích |

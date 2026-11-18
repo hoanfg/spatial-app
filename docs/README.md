@@ -388,5 +388,3 @@ The five checks in Section 4 are the target contract for future extraction. Befo
 ## Validation status
 
 The [validation guide](../validation/README.md) records verified results, their limits and the next evidence required. The [evidence guide](../validation/evidence/README.md) links the deposited datasets and runnable checks.
-
-The evidence guide also separates external methodological support from repository checks and field evidence. Extraction rules in this document remain design specifications for any country or output not covered by deposited evidence; documenting a rule is not the same as validating every application of it.

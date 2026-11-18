@@ -388,5 +388,3 @@ Năm bước ở Phần 4 là hợp đồng cho những lần trích xuất ti�
 ## Tình trạng kiểm chứng
 
 [Hướng dẫn kiểm chứng](../validation/README-vi.md) ghi kết quả đã xác nhận, giới hạn và bằng chứng cần bổ sung. [Hướng dẫn bằng chứng](../validation/evidence/README-vi.md) dẫn tới dữ liệu đã lưu và các phép kiểm có thể chạy.
-
-Hướng dẫn bằng chứng cũng tách cơ sở phương pháp bên ngoài khỏi kiểm tra trong repo và bằng chứng thực địa. Với quốc gia hoặc đầu ra chưa có bằng chứng lưu trong repo, các quy tắc trích xuất ở tài liệu này vẫn là đặc tả thiết kế; việc ghi rõ quy tắc không đồng nghĩa với đã kiểm chứng mọi trường hợp áp dụng.

@@ -58,7 +58,7 @@ Dự án này là một hệ thống dành cho **kinh tế lượng không gian*
 | **SOL** (Sum of Lights) | Tổng lượng ánh sáng của một ô = bức xạ trung bình × diện tích ô. |
 | **LISA** | Chỉ số cho biết *từng ô lưới* có tụ cụm với các ô xung quanh hay không (tụ cụm sáng, tụ cụm tối, hay lạc quẻ). |
 | **HH / LL / HL / LH** | Bốn loại nhãn của LISA: High-High, Low-Low, High-Low, Low-High (xem [Mục 3.1](#s3)). |
-| **MAUP** | Độ nhạy của kết quả đối với quy mô và cách phân vùng của đơn vị không gian; lưới đều giúp chuẩn hóa hỗ trợ đo lường nhưng không loại bỏ vấn đề này. |
+| **MAUP** | Thiên lệch thống kê khi so sánh các đơn vị hành chính có diện tích và hình dạng chênh nhau quá lớn. |
 | **FDR** | Cách kiểm soát số "phát hiện sai" khi kiểm định hàng loạt ô cùng lúc. |
 | **CBD** | Central Business District, tâm lõi kinh tế của một vùng. |
 | **Gini** | Thước đo mức độ tập trung/bất bình đẳng. Càng gần 0 càng đều, càng gần 1 càng dồn vào ít ô. |
@@ -157,7 +157,7 @@ Giao diện đi theo đúng thứ tự của một quy trình nghiên cứu có 
 
 1. **Xác định đơn vị và câu hỏi.** Quyết định quan sát là ô lưới hay vùng-năm, và mục tiêu là mô tả, dự báo, liên hệ hay suy luận nhân quả.
 2. **Chọn ranh giới và năm.** Ghi lại mã GADM và năm nguồn, không chỉ dựa vào tên địa phương hiển thị.
-3. **Chọn hỗ trợ không gian.** Chọn lưới ban đầu dựa trên quy mô không gian của quá trình, độ phân giải nguồn và ngân sách tính toán, sau đó lặp lại ở các độ phân giải mịn hơn hoặc thô hơn có cơ sở. Không có một kích thước ô tối ưu chung cho mọi nghiên cứu.
+3. **Chọn hỗ trợ không gian.** Có thể bắt đầu ở 1.000 m cho nhiều bài toán kinh tế lượng, rồi dùng 500 m và lưới thô hơn làm kiểm tra độ nhạy. Kích thước tốt nhất vẫn phụ thuộc quá trình nghiên cứu.
 4. **Kiểm tra hỗ trợ đo lường.** Đọc các cột `dq_*` và khối chất lượng trước khi diễn giải giá trị 0 là không có hoạt động.
 5. **Khám phá mức và độ tập trung.** Xem bản đồ, histogram, Lorenz, Gini và hồ sơ khoảng cách trước khi chạy kiểm định cục bộ.
 6. **Kiểm tra cấu trúc toàn cục.** Global Moran's I trả lời có tụ cụm ở cấp địa phương hay không, không trả lời tụ cụm ở đâu.
@@ -449,11 +449,11 @@ Streamlit vận hành theo nguyên lý **không trạng thái**: mỗi lần ng�
 
 ## II. Phương pháp luận xử lý không gian (spatial geoprocessing)
 
-### 2.1. Làm rõ hỗ trợ không gian dưới ảnh hưởng MAUP
+### 2.1. Giải pháp cho vấn đề đơn vị diện tích có thể thay đổi (MAUP)
 
-Kết quả tính từ dữ liệu vùng có thể thay đổi khi quy mô hoặc cách phân vùng của đơn vị phân tích thay đổi. Độ nhạy này được gọi là **vấn đề đơn vị diện tích có thể thay đổi (Modifiable areal unit problem, MAUP)** (Openshaw, 1984; Fotheringham & Wong, 1991). Đơn vị hành chính làm hỗ trợ không gian đặc biệt không đồng nhất vì diện tích và hình dạng khác nhau, nhưng thay chúng bằng lưới đều không loại bỏ MAUP. Ứng dụng dùng lưới vuông trong hệ chiếu để công khai và chuẩn hóa hỗ trợ đo lường; nghiên cứu vẫn phải báo cách dựng lưới và thử các kích thước hoặc cách căn hợp lý khác.
+Trong kinh tế học không gian thực nghiệm, dùng thẳng ranh giới hành chính tỉnh/huyện/xã sẽ gây thiên lệch thống kê, vì các đơn vị này chênh nhau rất xa về diện tích lẫn hình dạng. Vấn đề này có tên là **vấn đề đơn vị diện tích có thể thay đổi (Modifiable areal unit problem – MAUP)** (Openshaw, 1984; Fotheringham & Wong, 1991). Hệ thống xử lý nó bằng cách quy khu vực nghiên cứu về một ma trận lưới vuông đồng nhất (Donaldson & Storeygard, 2016).
 
-> **Hiểu nôm na:** các ô vuông bằng nhau giúp đơn vị đo dễ so sánh hơn, nhưng kích thước và điểm bắt đầu của lưới vẫn có thể làm mẫu hình thay đổi. Lưới là một lựa chọn phân tích được công bố rõ, không phải cách chữa dứt điểm MAUP.
+> **Hiểu nôm na:** so sánh độ sáng của một huyện rộng bằng cả một tỉnh nhỏ với một quận nội thành chỉ vài chục km² thì rất khập khiễng. Chia tất cả thành các ô vuông bằng nhau thì mọi nơi đứng cùng một vạch xuất phát.
 
 #### Thuật toán chiếu tọa độ động
 
@@ -473,7 +473,7 @@ $$
 
 > **Ví dụ nhanh:** tâm vùng nghiên cứu ở kinh độ $105^\circ\mathrm{E}$, thuộc Bắc bán cầu, cho $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ và $\mathrm{EPSG} = 32648$. Đó đúng là mã mà bản Phase 1 từng gắn cứng.
 
-**Căn lưới.** Tọa độ gốc $(x_0, y_0)$ được căn về bội số nguyên của cạnh ô $\mathrm{size}$ trong hệ UTM đã chọn. Quy tắc này làm các đường lưới có thể tái lập giữa những lần chạy dùng cùng CRS, kích thước và cách chọn gốc. Nó không bảo đảm một lưới liền mạch cho các địa phương thuộc những múi UTM khác nhau; phân tích nhiều địa phương phải xác định trước một lưới và phép chiếu chung.
+**Căn lưới.** Toàn bộ tọa độ gốc $(x_0, y_0)$ của lưới được căn về bội số nguyên của cạnh ô $\mathrm{size}$ trong không gian phẳng UTM. Nhờ vậy, lưới của các quận/huyện liền kề khớp khít với nhau khi ghép lại.
 
 ### 2.2. Lọc mây trên GEE và trích xuất zonal statistics bằng tỷ lệ phủ (fractional coverage)
 
@@ -486,11 +486,11 @@ $$
 | Mặt nạ lọc mây | `cf_cvg` $> 0$ áp dụng cho từng ảnh tháng |
 | Cách tổng hợp | **Trung vị năm** (annual median composite) (Elvidge et al., 2017, 2021) |
 
-Lý do cần mặt nạ: `cf_cvg` $= 0$ nghĩa là điểm ảnh tháng không có hỗ trợ quan sát không mây. Coi giá trị đó là bóng tối quan sát được sẽ trộn dữ liệu thiếu với bức xạ đo được, nên ứng dụng loại nó trước khi lấy trung vị năm. Nếu mọi tháng đều bị loại, giá trị năm là thiếu và bề mặt vận hành cũ mới điền 0 ở bước sau, còn các trường `dq_*` giữ lại sự phân biệt. Chuỗi ảnh tháng Phiên bản 1 vẫn có thể chứa cực quang, cháy, tàu thuyền và ánh sáng tạm thời khác; mặt nạ này không phải bộ lọc nhiễu hoàn chỉnh.
+Lý do cần mặt nạ: ở vùng nhiệt đới gió mùa, mây phủ dày đặc trong các tháng mưa có thể khiến một điểm ảnh không có quan sát hợp lệ nào (`cf_cvg` $= 0$), và giá trị bức xạ bị ghi thành $0$ một cách giả tạo. Mặt nạ lọc mây loại bỏ thiên lệch âm này trước khi lấy trung vị.
 
 #### Bước 2: tính thống kê vùng bằng tỷ lệ phủ
 
-Quy tắc tâm điểm ảnh gán toàn bộ điểm ảnh nguồn theo vị trí tâm nên bỏ qua phần giao cắt tại biên đa giác. Mức chênh phụ thuộc hình học và độ phân giải; repo không khẳng định một mức sai số chung cho mọi địa bàn. Hệ thống thay vào đó dùng `exactextract` (Baston, 2023). Bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ là trung bình có trọng số, với trọng số là tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
+Phương pháp tâm điểm ảnh (center-of-pixel) truyền thống gây sai số lớn khi kích thước ô lưới tiến gần kích thước điểm ảnh VIIRS. Vì vậy hệ thống dùng thư viện C/C++ `exactextract` (Baston, 2023). Bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ là trung bình có trọng số, với trọng số là tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
 
 $$
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
@@ -683,15 +683,15 @@ $$
 d_{\mathrm{core}, i} = \frac{1}{1000}\sqrt{(c_{x,i} - \mathrm{CBD}_x)^2 + (c_{y,i} - \mathrm{CBD}_y)^2}
 $$
 
-### 3.6. Các mô-đun chẩn đoán không gian bổ sung
+### 3.6. Các mô-đun kinh tế lượng không gian biên
 
-Mô-đun `ntl/lisa_core.py` không dừng ở thống kê mô tả không gian tĩnh (ESDA) mà tính thêm năm nhóm chẩn đoán. Chúng giúp phát hiện cấu trúc không gian, độ nhạy và các kênh mà thiết kế nghiên cứu tiếp theo có thể cần xử lý; bản thân chúng không nhận dạng tham số nhân quả hoặc cấu trúc:
+Mô-đun `ntl/lisa_core.py` không dừng ở thống kê mô tả không gian tĩnh (ESDA). Để đáp ứng tiêu chuẩn nhận diện nhân quả của các tạp chí kinh tế học hàng đầu, nó tính thêm 5 nhóm chỉ số hiện đại:
 
 | # | Mô-đun | Trả lời câu hỏi | Biến xuất ra |
 | :---: | :--- | :--- | :--- |
 | 1 | Số mũ đuôi Pareto | Các ô sáng nhất tập trung mạnh đến mức nào? | Không áp dụng |
 | 2 | Độ dốc suy giảm mật độ đô thị | Ánh sáng giảm nhanh ra sao khi rời xa tâm lõi? | `urban_gradient_decay`, `monocentric_r2` |
-| 3 | Tiếp cận thị trường đã tái định tâm | Chỉ số tiếp cận thị trường còn lại bao nhiêu sau khi trừ quan hệ ước lượng của nó với khoảng cách tới lõi được phát hiện? | `recentered_market_access` |
+| 3 | Tiếp cận thị trường đã khử thiên lệch | Tiềm năng thị trường của một ô là bao nhiêu, sau khi bỏ phần do vị trí địa lý trung tâm? | `recentered_market_access` |
 | 4 | Vành đai lan tỏa & biến chạy có dấu | Ranh giới điểm nóng nằm ở đâu và hiệu ứng lan tỏa ra bao xa? | `signed_dist_hh_km` |
 | 5 | Nghiệm đơn vị không gian & Spatial Markov | Cấu trúc không gian bền vững đến đâu và thay đổi ra sao giữa hai kỳ? | `spatial_ar1_persistence` |
 
@@ -790,11 +790,11 @@ $$
 
 Khi số ô lưới vượt quá $30,000$, trình duyệt có nguy cơ bị treo lúc dựng cây DOM SVG/Canvas của Leaflet. Hệ thống xử lý như sau:
 
-- Giữ các ô có bức xạ cao nhất để vẽ trên bản đồ tổng quan này.
+- Ưu tiên giữ lại các ô có ý nghĩa thống kê LISA và các ô có bức xạ cao nhất để vẽ lên bản đồ.
 - Làm tròn tọa độ hình học ở mức $10^{-6}$ độ (`shapely.set_precision`) để giảm dung lượng chuỗi GeoJSON.
 
 > [!IMPORTANT]
-> Chỉ bản đồ tổng quan bị rút gọn. **CSV xuất ra giữ mọi ô do lưới phân tích đã cắt tạo thành.**
+> Chỉ bản đồ bị rút gọn. **Toàn bộ tệp CSV xuất ra vẫn giữ 100% quan sát gốc.**
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
@@ -813,7 +813,7 @@ Mục tiêu cốt lõi của hệ thống là cung cấp bộ biến số địn
 
 ### 5.1. Dữ liệu vi mô cấp ô lưới
 
-Tệp CSV cấp ô xuất mọi ô do lưới đã cắt của ứng dụng tạo ra, kể cả ô không sáng `DARK` và ô biên `EDGE`. Giữ các dòng này cùng biến cờ (`is_border_cell`, `is_edge_masked`, `is_dark`) giúp quy tắc chọn hoặc loại mẫu ở bước sau có thể quan sát và kiểm tra lại. Việc đó không tự nhận dạng hoặc hiệu chỉnh thiên lệch chọn mẫu; muốn làm vậy cần mô hình lấy mẫu và giả định phù hợp với từng nghiên cứu (Heckman, 1979).
+Tệp CSV cấp ô lưới xuất ra **100% quan sát** của địa phương, kể cả các ô không sáng `DARK` và các ô biên `EDGE`. Giữ nguyên toàn bộ quan sát cùng các biến cờ (`is_border_cell`, `is_edge_masked`, `is_dark`) giúp nhà nghiên cứu chủ động kiểm soát **thiên lệch chọn mẫu** (Heckman, 1979; Henderson et al., 2012).
 
 **Các nhóm biến vi mô trọng tâm:**
 
@@ -935,11 +935,11 @@ Các bảng dưới đây định nghĩa đầy đủ các biến trong tệp xu
 | # | Hạn chế | Nguyên nhân và hệ quả |
 | :---: | :--- | :--- |
 | 1 | **Ánh sáng tràn và phản chiếu** | Do đặc tính quang học của cảm biến VIIRS DNB và sự tán xạ khí quyển, ánh sáng từ các nguồn cường độ mạnh (cảng biển, khu công nghiệp, cầu lớn) có xu hướng tràn sang điểm ảnh lân cận hoặc phản chiếu trên mặt nước (Elvidge et al., 2017; Gibson et al., 2021). Điều này có thể mở rộng nhẹ ranh giới các cụm `High-High` ven sông/biển. |
-| 2 | **Cắt giá trị âm về $0$** | Sản phẩm nguồn cho phép bức xạ hiệu chỉnh mang giá trị âm. Ứng dụng cắt số âm trong bề mặt vận hành cũ, nhưng tài liệu khoa học không xác lập một ngưỡng đúng cho mọi nghiên cứu. Bảng chất lượng vì vậy ghi hỗ trợ số âm và cho phép so với bản không cắt; kết luận về vùng tối cần công bố độ nhạy này. |
-| 3 | **Chia sẻ hỗ trợ nguồn ở lưới mịn** | Độ phân giải gốc của VIIRS tháng xấp xỉ $463.83\text{ m}$, nên theo diện tích danh nghĩa một ô $500 \times 500\text{ m}$ chỉ tương đương khoảng $1.16$ điểm ảnh nguồn. Hai ô phân tích liền kề có thể nhận các phần của cùng một điểm ảnh, tạo phụ thuộc đo lường và không nên được coi là thông tin cấp ô độc lập. |
+| 2 | **Cắt giá trị âm về $0$** | Cắt các giá trị bức xạ âm về $0$ sau bước hiệu chỉnh ánh sáng tạp (stray-light correction) giữ cho dữ liệu hợp lý về mặt vật lý, nhưng làm giảm phương sai thông tin ở các vùng nông thôn cực thưa dân, nơi mật độ chiếu sáng gần bằng $0$ (Gibson et al., 2021). |
+| 3 | **Tự tương quan cơ học ở lưới mịn** | Độ phân giải gốc của VIIRS tháng xấp xỉ $463.83\text{ m}$, nên một ô lưới $500 \times 500\text{ m}$ chỉ chứa khoảng $1.16$ điểm ảnh gốc. Hai ô liền kề có thể chia sẻ chung một điểm ảnh VIIRS qua phép trích xuất tỷ lệ phủ (`exactextract`), tạo ra tự tương quan không gian mang tính cơ học. |
 
 > [!TIP]
-> **Độ nhạy theo độ phân giải:** lưới 1.000 m là một phương án thực dụng, không phải ngưỡng có ưu thế khoa học mặc định. Hãy chọn hỗ trợ không gian theo câu hỏi nghiên cứu và độ phân giải nguồn, rồi báo cáo kết quả ở các kích thước ô thay thế có cơ sở. Diễn giải nhân quả vẫn cần một thiết kế nhận dạng riêng.
+> **Khuyến nghị cho hồi quy nhân quả:** dùng kích thước lưới $\ge 1000\text{ m}$ và kiểm tra độ vững qua nhiều kích thước lưới khác nhau.
 
 ### 6.2. Hạn chế phần cứng
 

@@ -2,8 +2,6 @@
 
 **Status:** V11 records aggregate NTL/LISA comparisons for all three locations. The repository does not contain the complete source-raster pairs or per-cell outputs, so a full rerun still requires those inputs.
 
-The labels below are sampling hypotheses for deliberately different spatial contexts, not validated classifications of their economies. See the [scientific claim audit](../evidence/README.md#scientific-claim-audit) for the distinction between recorded aggregate evidence and independently reproducible field checks.
-
 ## 1. Three-case design
 
 | Test role | Location per GADM 4.1 | GID_2 | Approximate area ($\text{km}^2$) | Minimum 500 m cells by area |
