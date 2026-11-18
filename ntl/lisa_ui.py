@@ -233,7 +233,7 @@ RING_COLORS = {
 
 T["vi"].update({
     "h_kpi_title": "4 chỉ số tổng hợp cấp vùng–năm được trích xuất tự động từ kiểm định LISA để đưa vào bảng hồi quy Panel.",
-    "h_map_t": "Bản đồ mô tả cụm LISA, nhóm khoảng cách HH và chỉ số NTL có trọng số khoảng cách trừ kỳ vọng hoán vị; không đưa ra kết luận nhân quả.",
+    "h_map_t": "Bản đồ mô tả cụm LISA, nhóm khoảng cách HH và tiềm năng NTL trừ kỳ vọng hoán vị. Chỉ số này chỉ dùng NTL, diện tích ô và khoảng cách địa lý, không dùng việc làm, dân số hay chi phí vận tải, nên không đo trực tiếp tiếp cận thị trường kinh tế.",
     "h_comp_t": "Phân bố tỷ trọng diện tích các trạng thái không gian và đồ thị phân tán Moran kiểm tra cấu trúc tự tương quan.",
     "h_comp": "Số lượng ô và tỷ lệ % diện tích của từng trạng thái LISA trên tổng diện tích tự nhiên của địa phương.",
     "h_fq_title": "Các chỉ số mô tả suy ra từ NTL và LISA. Chúng không phải tham số nhân quả hoặc mô hình cấu trúc đã được nhận dạng.",
@@ -251,14 +251,14 @@ T["vi"].update({
     "h_bridge_t": "Xuất dữ liệu vi mô (100% quan sát cấp ô) và dữ liệu vĩ mô (1 dòng/vùng-năm) phục vụ hồi quy trên Stata, R, Python.",
     "h_panel_tbl": "Bảng dữ liệu Panel tích lũy qua các lần bấm 'Thêm vùng-năm'. Khóa chính: (iso3, region_id, year, cell_size_m).",
     "map_mode_lbl": "Lớp hiển thị bản đồ",
-    "map_modes": {"lisa": "Cụm LISA", "ring": "Vành đai khoảng cách HH", "ma": "MA trừ kỳ vọng hoán vị"},
-    "h_map_mode": "Đổi lớp tô màu trên bản đồ để kiểm tra trực quan các biến kinh tế lượng Q1.",
-    "tt_full": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái LISA", "Cách tâm NTL (km)", "Cách tâm ô đối lập (km)", "Nhóm khoảng cách HH", "MA trừ kỳ vọng hoán vị"],
+    "map_modes": {"lisa": "Cụm LISA", "ring": "Vành đai khoảng cách HH", "ma": "Tiềm năng NTL trừ kỳ vọng"},
+    "h_map_mode": "Đổi lớp bản đồ để xem các đại lượng mô tả không gian. Tiềm năng NTL trừ kỳ vọng không phải Market Access kinh tế đã được hiệu chuẩn.",
+    "tt_full": ["Ô", "NTL", "z (ô sáng)", "p giả", "Trạng thái LISA", "Cách tâm NTL (km)", "Cách tâm ô đối lập (km)", "Nhóm khoảng cách HH", "Tiềm năng NTL trừ kỳ vọng"],
 })
 
 T["en"].update({
     "h_kpi_title": "4 region-year summary indicators extracted from LISA for macro panel regressions.",
-    "h_map_t": "Interactive descriptive map of LISA clusters, HH distance groups, and permutation-centered distance-weighted NTL.",
+    "h_map_t": "Descriptive map of LISA clusters, HH distances and permutation-centered NTL potential. This index uses NTL, cell area and geographic distances only, not jobs, population or measured transport costs; it is not verified economic market access.",
     "h_comp_t": "Area share breakdown across spatial classes and Moran scatterplot diagnosing spatial autocorrelation.",
     "h_comp": "Cell count and area share (%) of each LISA class relative to total locality area.",
     "h_fq_title": "Descriptive NTL and LISA-derived indicators, not identified causal effects or validated structural parameters.",
@@ -276,9 +276,9 @@ T["en"].update({
     "h_bridge_t": "Export micro cell-level CSVs (100% observations) and macro region-year panel rows for Stata, R, and Python.",
     "h_panel_tbl": "Accumulated panel table across 'Add region-year' clicks. Primary key: (iso3, region_id, year, cell_size_m).",
     "map_mode_lbl": "Map display layer",
-    "map_modes": {"lisa": "LISA Clusters", "ring": "HH distance groups", "ma": "Permutation-centered NTL"},
-    "h_map_mode": "Switch the active choropleth layer to visually inspect frontier Q1 spatial variables.",
-    "tt_full": ["Cell", "NTL", "z (lit)", "pseudo p", "LISA Class", "Dist to NTL center (km)", "Dist to opposite-group cell (km)", "HH distance group", "Permutation-centered NTL"],
+    "map_modes": {"lisa": "LISA Clusters", "ring": "HH distance groups", "ma": "Centered NTL potential"},
+    "h_map_mode": "Switch descriptive map layers. Centered NTL potential is not economically calibrated market access.",
+    "tt_full": ["Cell", "NTL", "z (lit)", "pseudo p", "LISA Class", "Dist to NTL center (km)", "Dist to opposite-group cell (km)", "HH distance group", "Centered NTL potential"],
 })
 
 _CSS = """
@@ -997,7 +997,7 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                     ("Số ô" if is_vi else "Cells"): int(m_r.sum()),
                     ("% Diện tích" if is_vi else "% Area"): round(float(area[m_r].sum() / max(area.sum(), 1e-12) * 100), 1),
                     ("NTL TB" if is_vi else "Mean NTL"): round(float(ntl_arr[m_r].mean()), 2) if m_r.any() else 0.0,
-                    ("MA trừ kỳ vọng" if is_vi else "Permutation-centered NTL"): round(float(np.nanmean(rec_ma_arr[m_r])), 2) if m_r.any() and np.isfinite(rec_ma_arr[m_r]).any() else 0.0,
+                    ("Tiềm năng NTL trừ kỳ vọng" if is_vi else "Centered NTL potential"): round(float(np.nanmean(rec_ma_arr[m_r])), 2) if m_r.any() and np.isfinite(rec_ma_arr[m_r]).any() else 0.0,
                 })
             st.dataframe(pd.DataFrame(ring_rows), hide_index=True, use_container_width=True)
 
