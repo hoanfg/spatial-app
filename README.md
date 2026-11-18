@@ -19,9 +19,9 @@
 >
 > No time for a 10-page academic manual? Here is what this engine does, in plain words.
 >
-> - **The problem.** Satellite nighttime lights (NTL) are a standard stand-in for GDP in economics. **But** the data is huge. Processing it usually crashes an ordinary computer (RAM runs out), and doing it by hand takes weeks.
+> - **The problem.** Satellite nighttime lights (NTL) can provide a partial proxy for activity, but do not directly measure GDP or land use. **But** the data is huge. Processing it usually crashes an ordinary computer (RAM runs out), and doing it by hand takes weeks.
 > - **What the app does.** You pick a region $\rightarrow$ the app fetches the data from *Google Earth Engine* $\rightarrow$ a C/C++ backend crushes millions of pixels into grid cells $\rightarrow$ **resource guards limit the workload; reliable operation within 1GB still requires a full deployment benchmark.**
-> - **What you get.** One click gives you a CSV of ready-to-use economic indicators: where is the true urban core? where are the economic hotspots (LISA)? how unequal is the distribution (Gini)? Download it and drop it straight into your regression models.
+> - **What you get.** One click gives you cell-level NTL measures, statistically defined light clusters (LISA), descriptive concentration (Gini) and candidate variables for further research. Their economic meaning must be assessed before regression interpretation.
 
 ```mermaid
 flowchart LR
@@ -140,14 +140,14 @@ The interface follows the same order as a defensible research workflow. Features
 | :--- | :--- | :--- |
 | **Place and resolution selector** | Search or browse country, first-level unit and locality; choose a year from 2014 to 2025 and a grid size from 500 to 5,000 m; estimate workload before execution | Boundary area, expected cell count, dynamic UTM CRS and a warning or block for oversized jobs |
 | **Extraction pipeline** | Build a globally aligned square grid, create the annual median VIIRS composite, extract area-weighted cell means and record stage performance | Grid geometry, `ntl_mean`, `area_km2`, cell centroid and pipeline provenance |
-| **Map tab** | Switch between continuous NTL, global economic classes and within-locality standing; select linear, square-root or logarithmic color scaling; toggle unlit cells, Top 10 outlines, cell borders and the outside mask | Interactive cell tooltips with rank, percentile, SOL share, standardized score, class and coordinates |
+| **Map tab** | Switch between continuous NTL, descriptive radiance bands and within-locality standing; select linear, square-root or logarithmic color scaling; toggle unlit cells, Top 10 outlines, cell borders and the outside mask | Interactive cell tooltips with rank, percentile, SOL share, standardized score, class and coordinates |
 | **Data tab: overview** | Report weighted and unweighted summaries, percentiles, dispersion, skewness, Gini, lit share and the brightest cells | Quick findings, descriptive table, Top 10 table and the complete preview table |
 | **Data tab: spatial structure** | Compute Global Moran's I with Queen neighbors and permutation inference | Observed $I$, expected $I$, pseudo p-value and average neighbor count |
 | **Data tab: distribution** | Compare cell share with light share; draw Lorenz, rank-size and radial distance profiles | Gini, Pareto-tail view and evidence of monocentric or polycentric light patterns |
 | **Data quality panel** | Flag missing, negative, zero and low-observation support; optionally compare clipped and unclipped negatives and retrieve valid-month support | `dq_*` fields, automatic warnings and the assumptions used by the NTL composite |
 | **External validation panel** | Compare NTL with GHSL built-up surface or population on the preserved native GHSL grid | Spearman $\rho$, spatial block-bootstrap interval, AUC and the GHSL epoch used |
 | **LISA and Panel tab** | Set permutations, $\alpha$, FDR, log transform, light threshold, minimum cluster size and minimum neighbors; classify local clusters and derive the urban core | LISA map, area composition, region-year KPIs, cell and panel exports |
-| **LISA map modes** | View local clusters, spillover rings or recentered market access; inspect distance to the core and signed distance to the hotspot boundary | Inputs for density-gradient, market-access and spatial-boundary research designs |
+| **LISA map modes** | View local clusters, HH-based distance groups or permutation-centered NTL; inspect distances to the NTL-derived center and opposite-group cell centers | Descriptive inputs requiring additional validation before economic or causal interpretation |
 | **Diagnostics and robustness** | Check dark share, residual spatial pattern, Pareto tail, seed stability, transform/weight/threshold alternatives, MAUP and adjacent years | Warnings, Jaccard overlap, stable-HH area and downloadable robustness table |
 | **Dynamic Space-Time panel** | Re-extract a comparison year, calculate changes in standardized own-cell and neighbor positions, and build spatially conditioned transition matrices | Four relative-change regimes, Shorrocks mobility, extensive/intensive margins and a Space-Time CSV |
 | **Performance panel** | Record elapsed time and process memory for extraction, zonal statistics, LISA, GHSL and Space-Time stages when available | Stage-level timing, sampled peak RSS, deployment revision when known and downloadable JSON/CSV |
@@ -324,8 +324,8 @@ The app derives several variables from the descriptive light surface:
 
 - **Pareto tail diagnostics** summarize concentration among the brightest cells and should be accompanied by the selected tail fraction, standard error and KS diagnostic (Bluhm & Krause, 2022).
 - **Urban density gradients** describe how radiance changes with distance from a detected core. The core is algorithmic, not an official CBD or a causal treatment boundary.
-- **Recentered market access** removes the component predicted by centrality so that access is not mechanically treated as random exposure (Borusyak & Hull, 2023).
-- **Signed hotspot-boundary distance and spillover rings** prepare running variables and exposure groups for spatial-boundary or interference designs. Identification still requires continuity, no precise sorting and a defensible spillover model (Vazquez-Bare, 2023; Butts, 2024).
+- **Permutation-centered distance-weighted NTL** subtracts its expectation under location-fixed random assignments; this does not by itself eliminate endogeneity or identify exogenous exposure (compare Borusyak & Hull, 2023).
+- **Signed between-cell-center distances and HH distance groups** provide descriptive measures only. They are not geometric boundary distances or identified treatments; causal designs require an independent assignment rule, continuity and a defensible spillover model (Vazquez-Bare, 2023; Butts, 2024).
 
 These exports are candidate regressors, outcomes, exposure measures or diagnostics. Their correct role depends on the estimand and the timing of the empirical design.
 
