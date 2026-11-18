@@ -216,6 +216,8 @@ Các mô-đun nâng cao hữu ích nhất khi mỗi đầu ra được xem là c
 
 <div align="center">*Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.*</div>
 
+
+
 Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ đo được. Có thể hình dung $y_i = g(a_i, z_i) + u_i$, trong đó $z_i$ chứa công nghệ chiếu sáng, sử dụng đất, điều kiện khí quyển và các yếu tố khác, còn $u_i$ chứa sai số đo lường còn lại. App cải thiện cách xây dựng và ghi chép $y_i$; app không tự nhận dạng $g(\cdot)$ hoặc khôi phục $a_i$ nếu thiếu giả định và biến kết quả bên ngoài (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
 
 Đó là lý do khối Chất lượng dữ liệu tách hỗ trợ quan sát, dữ liệu thiếu, số 0 đo được và bức xạ âm bị cắt. Một giá trị 0 được ghi nhận, một điểm ảnh không có quan sát và một bức xạ âm sau hiệu chỉnh được đưa về 0 có thể cho cùng NTL hiển thị nhưng mang ý nghĩa bằng chứng khác nhau. Nghiên cứu nên giữ các cột `dq_*` và công bố chính sách xử lý số 0/số âm trong phần phương pháp.
@@ -238,7 +240,7 @@ trong đó $r_p$ là bức xạ của điểm ảnh nguồn và $a_{ip}$ là di�
 
 ![Từ ô lưới tới ma trận trọng số và độ trễ không gian](docs/assets/spatial-weights-vi.jpg)
 
-*Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận $W$, rồi ma trận thành độ trễ không gian $Wy$.*
+<div align="center">*Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận $W$, rồi ma trận thành độ trễ không gian $Wy$.*</div>
 
 $W$ không chỉ là một tùy chọn phần mềm. Tiếp giáp Queen giả định tiếp xúc cạnh hoặc góc đều có thể truyền tương tác; Rook loại tiếp xúc chỉ qua góc; ma trận khoảng cách hoặc mạng lưới sẽ biểu diễn một cơ chế khác. Chuẩn hóa theo hàng biến trễ không gian từ tổng láng giềng thành trung bình láng giềng, trong khi ma trận nhị phân đối xứng giữ một thang đo khác (Anselin, 1988; LeSage & Pace, 2009).
 
@@ -262,7 +264,7 @@ là trung bình có trọng số của vùng xung quanh. Nếu $y_i$ cao và $(W
 
 ![Từ đồ thị Moran tới LISA sau hiệu chỉnh FDR](docs/assets/lisa-inference-vi.jpg)
 
-*Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.*
+<div align="center">*Hình 3. Mẫu hình khám phá được đối chiếu bằng hoán vị có điều kiện và hiệu chỉnh nhiều kiểm định trước khi gắn nhãn LISA có ý nghĩa.*</div>
 
 LISA chạy một kiểm định cục bộ cho mỗi ô đủ điều kiện. p-value giả phụ thuộc thủ tục hoán vị có điều kiện, seed và số hoán vị. Độ phân giải nhỏ nhất của p-value bị giới hạn bởi số hoán vị. Kiểm định hàng nghìn ô còn tạo ra vấn đề kiểm định nhiều lần, vì vậy app cung cấp hiệu chỉnh FDR Benjamini-Hochberg và cảnh báo khi tổ hợp số hoán vị/FDR không thể bác bỏ ô nào (Anselin, 1995; Benjamini & Hochberg, 1995; Caldas de Castro & Singer, 2006).
 
@@ -295,7 +297,7 @@ Do đó, số hoán vị quyết định độ phân giải của p-value. Nếu
 
 ![Các trục kiểm tra độ vững và kiểm chứng ngoài](docs/assets/robustness-validation-vi.jpg)
 
-*Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.*
+<div align="center">*Hình 4. Một kết luận được thử qua cỡ lưới, quan hệ láng giềng, năm liền kề và proxy GHSL; phần ổn định được tách khỏi phần nhạy cảm.*</div>
 
 Một kết quả có thể tái lập chưa chắc đã có độ vững. Tái lập nghĩa là cùng dữ liệu, mã và tham số cho lại cùng kết quả. Độ vững hỏi một câu khó hơn: kết luận có còn giữ được khi thay đổi những lựa chọn phân tích khác nhưng vẫn hợp lý về khoa học hay không. Có thể hình dung đầu ra là $R(s)$, trong đó $s$ là một đặc tả gồm cỡ lưới, $W$, phép biến đổi, ngưỡng, seed, FDR và năm. Độ vững nghiên cứu sự biến thiên của $R(s)$ trên một tập đặc tả có thể biện minh, không phải trên mọi tổ hợp tùy ý.
 
