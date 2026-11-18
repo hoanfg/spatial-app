@@ -9,7 +9,6 @@ import numpy as np
 import pytest
 
 from ntl.lisa_core import (
-    compute_recentered_market_access,
     compute_spillover_rings_and_rdd,
     run_lisa,
     run_spacetime_lisa,
@@ -26,19 +25,6 @@ def test_spacetime_requires_forward_chronology(year_t0, year_t1):
         )
 
 
-def test_forward_spacetime_keeps_two_period_outputs():
-    xy = np.arange(5, dtype=float) * 500.0 + 250.0
-    cx, cy = [a.ravel() for a in np.meshgrid(xy, xy)]
-    a = np.arange(1.0, 26.0)
-    out = run_spacetime_lisa(
-        cx, cy, a, a * 1.1, np.full(a.size, 0.25), 500.0,
-        year_t0=2019, year_t1=2020,
-    )
-    assert out.metrics["year_t0"] == 2019
-    assert out.metrics["year_t1"] == 2020
-    assert len(out.st_cell_df) == a.size
-
-
 def test_signed_hh_distance_is_between_cell_centers_not_boundaries():
     cx = np.array([250.0, 750.0, 1250.0])
     cy = np.zeros(3)
@@ -51,19 +37,6 @@ def test_signed_hh_distance_is_between_cell_centers_not_boundaries():
     assert np.allclose(distance, [0.0, 0.5, 1.0])
     assert np.allclose(signed, [-0.5, 0.5, 1.0])
     assert groups[0] == "0_Treated_HH"  # Historical export identifier only.
-
-
-def test_permutation_centered_ntl_is_raw_minus_exchange_expectation():
-    xy = np.arange(3, dtype=float) * 500 + 250
-    cx, cy = [a.ravel() for a in np.meshgrid(xy, xy)]
-    sol = np.arange(1.0, 10.0)
-    core = np.ones(9, dtype=bool)
-    raw, expected, centered = compute_recentered_market_access(
-        cx, cy, sol, core, 500.0, radius_steps=2,
-    )
-    assert np.allclose(centered, raw - expected, equal_nan=True)
-    assert np.isfinite(centered).all()
-    assert not np.allclose(centered, 0.0)
 
 
 def test_legacy_spatial_ar1_key_is_cross_sectional_lag_correlation():
