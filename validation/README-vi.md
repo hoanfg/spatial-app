@@ -79,7 +79,25 @@ Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và
 | G15 | P2 | `moran_I_lit` là trung bình Local Moran, không phải Global Moran I. | Bảo đảm mọi giải thích trên giao diện và CSV phân biệt hai đại lượng. |
 | G16 | P2 | Liên kết danh mục VIIRS trong hướng dẫn bằng chứng phải đúng mã `VCMSLCFG` đang chạy. | Đối chiếu nguồn và phiên bản; không chạy lại V11. |
 | G17 | P1 | Số học BH đã kiểm thử, nhưng phụ thuộc không gian không bảo đảm FDR danh nghĩa trong mọi cấu trúc. | Mô phỏng null không gian: FDR thực nghiệm và lực kiểm định của BH so với BY theo W và mức tương quan. |
-| G18 | P1 | LISA mặc định loại ô NTL bằng 0 khỏi cả kiểm định lẫn đồ thị láng giềng. | So HH/LL khi đưa ô 0 vào, đồng thời tách số 0 thực đo khỏi thiếu quan sát. |
+| G18 | P1 | Đã lưu bằng chứng độ nhạy tổng hợp có cờ quan sát: đưa ô 0 vào và điền 0 sai làm đổi nhãn, láng giềng và p-value LISA. **Kiểm chứng thực địa thiếu hỗ trợ vẫn mở.** | Lặp lại trên ca thực có hỗ trợ A02 được xác minh; không coi mô phỏng là kiểm chứng ngoài. |
+
+### Bằng chứng tổng hợp G18 (phạm vi giới hạn, 18/11/2026)
+
+Đây là thí nghiệm **dữ liệu nhân tạo có kiểm soát** trên lưới 12×12 ô, cạnh 500 m, không phải dữ liệu VIIRS thực hoặc ca kiểm chứng A02. Mặt nạ quan sát được xác định trước, gồm 106 ô có NTL dương đã quan sát, 28 ô có NTL bằng 0 thực đo và 10 ô không có quan sát nhưng bị điền 0 theo chính sách cũ. Ba lần chạy dùng cùng Queen, 999 hoán vị có điều kiện, seed 42, alpha 0,05; bảng dưới dùng BH-FDR.
+
+| Chính sách tập mẫu và xử lý ô 0 | Ô kiểm định | HH | LL |
+| --- | ---: | ---: | ---: |
+| Chỉ ô NTL dương thuộc vùng có quan sát | 106 | 22 | 21 |
+| Đưa thêm ô 0 thực đo trong vùng có quan sát | 134 | 21 | 17 |
+| Đưa cả ô thiếu quan sát bị điền 0 vào như ô thực đo | 144 | 18 | 13 |
+
+Khi đưa các ô 0 thực đo vào, **50/134 ô có dữ liệu** đổi nhãn (trong đó có 28 ô trước đó là `DARK`), 45/134 ô đổi số láng giềng và 92/106 p-value so sánh được thay đổi. Khi coi nhầm 10 ô thiếu quan sát thành ô 0 thực đo, 9/134 ô có dữ liệu đổi nhãn, 28/134 ô đổi số láng giềng và 112/134 p-value so sánh được thay đổi **ngay trong phần có quan sát thực sự**. Cả 10 ô thiếu quan sát đã đi vào họ kiểm định của lần chạy sai. CSV bằng chứng còn lưu kết quả chưa hiệu chỉnh FDR.
+
+**Giới hạn:** Đây chỉ là độ nhạy trên một trường nhân tạo, **không** phải mức thiên lệch đo được tại địa phương thực, không xác định chính sách nào đúng cho mọi nghiên cứu và không chứng minh kiểm soát FDR thực nghiệm. Những lần chạy có kiểm soát loại vị trí thiếu quan sát khỏi hình học phân tích thay vì đưa NaN vào `run_lisa`, bởi tính Gini trong hàm hiện bác bỏ NaN. Việc này đồng thời thay đổi quần thể chuẩn hóa và tập phép kiểm định. Các bằng chứng V11/GHSL/A02/A03/A04 được bảo lưu; chính sách vận hành mặc định vẫn loại ô NTL bằng 0 khỏi LISA.
+
+**Bằng chứng lưu trữ:** [chương trình tạo kết quả](g18_zero_support_experiment.py), [đầu vào và mặt nạ quan sát](evidence/g18_zero_support/synthetic_input.csv), [kết quả cấp ô toàn bộ](evidence/g18_zero_support/cell_comparison.csv) và [JSON tóm tắt, phiên bản thư viện, mã băm SHA-256](evidence/g18_zero_support/summary.json). CI chạy chương trình và đối chiếu cả ba tệp lưu trữ để bảo đảm tái lập đúng kết quả.
+
+**G18 thực địa còn mở:** Cần ca thực có siêu dữ liệu hỗ trợ quan sát được kiểm tra độc lập, phân biệt số 0 thực đo và thiếu dữ liệu, rồi thực hiện so độ nhạy với tiêu chí diễn giải và ngưỡng chất lượng định trước.
 
 ### Tiêu chí nghiệm thu kiểm chứng mới
 
