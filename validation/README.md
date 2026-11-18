@@ -12,9 +12,9 @@ A result applies only to the stated location, year, input and precision. The tab
 | --- | --- | --- |
 | GADM China | 2,420 curated units matched the full-resolution GADM 4.1 source at the documented precision. | This does not verify current official boundaries or every country. |
 | Yanqing VIIRS and LISA | The deposited 2020 polygon table has 8,332/8,333 cells within 0.00005; the single exceedance is a border cell at 0.0000643242. The independent LISA table matches 8,154/8,333 final classes and records all 179 differences. | LISA uses rounded exported NTL and an independent permutation seed, so label differences must be reported rather than treated as exact arithmetic failures. Two dates do not establish an annual trend. |
-| Shanghai, Bao'an and Qimen | V11 reports 15,330/15,330 full cells within the four-decimal CSV bound; 1,846/1,847 clipped cells were within 0.00005 and all were within 0.0000501. | Complete source rasters, cellwise outputs and plots are not deposited. |
+| Shanghai, Bao'an and Qimen | The completed V11 validation found 15,330/15,330 full cells within the four-decimal CSV bound; 1,846/1,847 clipped cells were within 0.00005 and all were within 0.0000501. The recovered manifest inventories the source rasters, application CSVs and edge-cell outputs used. | The current checkout preserves the report, inventory and hashes rather than every expanded binary input, so this completed result should not be confused with a fresh rerun from the checkout alone. |
 | A02 observation metadata | The 7,148-cell Bao'an CSV has observed status and five finite quality fields in every row. Across the earlier and later exports, all values in the 32 shared columns match; the later file adds LISA columns. | No real missing or low-support field case has been checked. |
-| GHSL Shanghai | The native-grid quantity calculation and independent aggregate comparison reproduce the displayed rho, bootstrap interval and AUC rounding on 715 eligible cells. | There is no deposited live per-cell GHSL export; Bao'an and Qimen charts are not independent cellwise checks. |
+| GHSL Shanghai | The completed independent validation inventories native-grid and application-style rasters, a cell-validation JSON, hashes, script and report. The native-grid calculation reproduced the displayed rho, bootstrap interval and AUC rounding on 715 eligible cells. | Both rho intervals include zero, so the verified result is an inconclusive association for this sample, not proof of general GHSL agreement or economic validity. |
 | A02 performance | The later Bao'an run records 37.6479 s for the pipeline and 26.4623 s for A02, compared with 46.6687 s and 25.0028 s in the earlier run. | The total run was shorter, but A02 itself was not faster. Repeated comparable runs are needed. |
 
 File locations, hashes and runnable checks are listed in the [evidence guide](evidence/README.md).
@@ -34,7 +34,7 @@ The original source review used identifiers A01 to A12. Their current status is 
 | A05 | Test versions are partly pinned, but production dependencies and a full reproducible lock remain incomplete. |
 | A06 | Integration coverage and modular statistical code reduce risk; application orchestration remains coupled. |
 | A07 | Block-aggregation MAUP is tested as implemented; equivalence to direct coarse-grid raster extraction is not established. |
-| A08 | Native-grid GHSL conservation and CRS handling are fixed and tested; Shanghai aggregate evidence is available, while public per-cell field evidence is incomplete. |
+| A08 | Native-grid GHSL conservation and CRS handling are fixed and tested; the independent Shanghai field validation is complete, with its inputs, cell-validation result, script and hashes recorded in the recovered evidence manifest. |
 | A09 | Rho labels are descriptive conventions. Shanghai confidence intervals include zero and do not establish a nonzero association. |
 | A10 | In-session caches are bounded and two field profiler files are deposited; concurrent Cloud capacity is untested. |
 | A11 | Synthetic integration and one stored Bao'an execution cover many stages; a repeatable authenticated live-service end-to-end test is still absent. |
@@ -47,13 +47,13 @@ The original source review used identifiers A01 to A12. Their current status is 
 | Bao'an evidence | `node validation/audit_public_evidence.mjs --check-result` | Checks rows, IDs, A02 fields, stored summary and file inventories. |
 | Documentation | `node validation/check_docs.mjs` | Checks the maintained English/Vietnamese guides, links and math delimiters. |
 | Application contracts | `python -m pytest -q tests` | Checks numerical, schema, masking and interface behavior with deposited or synthetic inputs. |
-| Three-location raster comparison | [Cross-location workflow](cross_location/README.md) | The method and checker are present; a full rerun needs the matching source rasters and app exports. |
+| Three-location raster comparison | [Cross-location workflow](cross_location/README.md) and recovered audit manifest | Records the completed V11 method, inputs, edge-cell artifacts, tolerances and results. The current checkout is not a newly expanded binary rerun bundle. |
 
 ## Next steps
 
 1. Test A02 with a real missing or low-observation case without changing the `legacy_zero_fill` policy silently.
-2. Deposit or regenerate the matching raster pairs and per-cell outputs for Shanghai, Bao'an and Qimen.
-3. Export GHSL values per cell and compare them independently on the same grid.
+2. Resolve the negative and nonfinite input contract shared by the two Gini implementations.
+3. Compare block aggregation with a fresh coarse-grid raster extraction for A07.
 4. Repeat performance measurements with the same deployed commit, location, year and grid size.
 5. Extend the two-date analysis to a continuous annual series before making temporal claims.
 6. Compare NTL with an independently sourced and aligned economic outcome before drawing economic conclusions.

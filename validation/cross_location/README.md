@@ -1,6 +1,6 @@
 # Cross-location Validation for VIIRS 2020
 
-**Status:** V11 records aggregate NTL/LISA comparisons for all three locations. The repository does not contain the complete source-raster pairs or per-cell outputs, so a full rerun still requires those inputs.
+**Status:** V11 validation is complete for all three locations. The recovered audit manifest inventories the application CSVs, matched rasters, edge-cell outputs and archived packages with hashes. The current checkout does not expand every binary input for a fresh rerun, which is a reproducibility-packaging limit rather than an unfinished validation.
 
 The labels below are sampling hypotheses for deliberately different spatial contexts, not validated classifications of their economies. See the [scientific claim audit](../evidence/README.md#scientific-claim-audit) for the distinction between recorded aggregate evidence and independently reproducible field checks.
 
@@ -54,6 +54,6 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## 5. Current status
 
-- **Recorded result:** V11 reports aggregate outcomes for Shanghai Core, Bao'an and Qimen with the rounding and seed qualifications listed in the [validation guide](../README.md).
+- **Completed result:** V11 validated Shanghai Core, Bao'an and Qimen with the rounding and seed qualifications listed in the [validation guide](../README.md).
 - **Reproducible here:** the three boundary files, Earth Engine export script and independent Python comparator are deposited. The comparator rejects equal-area cell swaps by checking UTM and WGS84 centroids.
-- **Still required for public rerun:** matched 2020 source rasters and app CSV files for all three locations, per-cell comparison outputs, independent per-location LISA output and an independent GHSL comparison.
+- **Archive provenance:** the recovered manifest names the matched application CSVs, Shanghai and Qimen source rasters, per-edge-cell tables and archived validation packages with recorded hashes. These inputs are not all expanded as direct checkout files; that does not reopen the completed V11 scientific result.
