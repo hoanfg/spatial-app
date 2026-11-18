@@ -216,10 +216,6 @@ Các mô-đun nâng cao hữu ích nhất khi mỗi đầu ra được xem là c
 
 <div align="center">*Hình 1. Chuỗi đo lường đi từ bức xạ VIIRS, ranh giới hành chính và lưới chiếu tới tỷ lệ phủ và bảng dữ liệu ô-năm.*</div>
 
-
-
-
-
 Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ đo được. Có thể hình dung $y_i = g(a_i, z_i) + u_i$, trong đó $z_i$ chứa công nghệ chiếu sáng, sử dụng đất, điều kiện khí quyển và các yếu tố khác, còn $u_i$ chứa sai số đo lường còn lại. App cải thiện cách xây dựng và ghi chép $y_i$; app không tự nhận dạng $g(\cdot)$ hoặc khôi phục $a_i$ nếu thiếu giả định và biến kết quả bên ngoài (Henderson và cộng sự, 2012; Donaldson & Storeygard, 2016; Gibson và cộng sự, 2021).
 
 Đó là lý do khối Chất lượng dữ liệu tách hỗ trợ quan sát, dữ liệu thiếu, số 0 đo được và bức xạ âm bị cắt. Một giá trị 0 được ghi nhận, một điểm ảnh không có quan sát và một bức xạ âm sau hiệu chỉnh được đưa về 0 có thể cho cùng NTL hiển thị nhưng mang ý nghĩa bằng chứng khác nhau. Nghiên cứu nên giữ các cột `dq_*` và công bố chính sách xử lý số 0/số âm trong phần phương pháp.
