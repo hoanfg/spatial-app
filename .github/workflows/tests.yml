@@ -71,3 +71,16 @@ jobs:
           cache: pip
       - run: pip install numpy==2.4.6 pandas==3.1.1 scipy==1.17.1
       - run: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g04_ntl_potential_experiment.py --verify
+
+  g05-evidence:
+    name: G05 center-selection gradient sensitivity
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install numpy==2.4.6 pandas==3.1.1 scipy==1.17.1
+      - run: OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g05_ntl_center_experiment.py --verify
