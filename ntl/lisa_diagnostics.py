@@ -169,7 +169,8 @@ def resid_moran(cx, cy, ntl, area, dist_core_km, edge, cell_size_m: float,
         return float((vec[hi] * lag).sum() / den) if den > 1e-12 else float("nan")
 
     I = _I(uf)
-    out = {"I": I, "p": float("nan"), "n": int(core.sum()), "flag": False, "perm_done": False, "perms": int(perms)}
+    out = {"I": I, "p": float("nan"), "n": int(core.sum()), "flag": False, "perm_done": False,
+           "perms": int(perms), "descriptive_high_I": bool(np.isfinite(I) and I > 0.3)}
     if np.isfinite(I) and ci.size <= max_n_perm:
         rng = np.random.default_rng(seed)
         E = -1.0 / (hi.size - 1)
@@ -181,8 +182,8 @@ def resid_moran(cx, cy, ntl, area, dist_core_km, edge, cell_size_m: float,
         out["p"] = (1 + ge) / (perms + 1)
         out["perm_done"] = True
         out["flag"] = bool(out["p"] < 0.05 and I > 0)
-    elif np.isfinite(I):
-        out["flag"] = bool(I > 0.3)
+    # If permutation inference is skipped, I > 0.3 is a descriptive
+    # threshold only. Never reuse the significance flag for this heuristic.
     return out
 
 
@@ -222,7 +223,8 @@ def auto_diagnostics(cx, cy, ntl, area, cell_size_m, cell_df, region_metrics,
         lvl = "ok"
     items.append({"key": "hill", "level": lvl, "vals": hd})
     items.append({"key": "primacy", "level": "warn" if pr["multipolar"] else "ok", "vals": pr})
-    items.append({"key": "resid", "level": ("info" if not np.isfinite(rm_["I"]) else ("warn" if rm_["flag"] else "ok")),
+    items.append({"key": "resid", "level": ("info" if not np.isfinite(rm_["I"]) or not rm_["perm_done"]
+                                              else ("warn" if rm_["flag"] else "ok")),
                   "vals": rm_})
     items.append({"key": "dark", "level": "warn" if dk["flag"] else "ok", "vals": dk})
 
@@ -233,6 +235,8 @@ def auto_diagnostics(cx, cy, ntl, area, cell_size_m, cell_df, region_metrics,
         "cluster_primacy": round(pr["primacy"], 4) if np.isfinite(pr["primacy"]) else float("nan"),
         "resid_moran_I": round(rm_["I"], 4) if np.isfinite(rm_["I"]) else float("nan"),
         "resid_moran_p": round(rm_["p"], 4) if np.isfinite(rm_["p"]) else float("nan"),
+        "resid_moran_inference_performed": int(rm_["perm_done"]),
+        "resid_moran_descriptive_high_I": int(rm_.get("descriptive_high_I", False)),
         "dark_cell_share": round(dk["share"], 4) if np.isfinite(dk["share"]) else float("nan"),
         "perm_min_hits_ratio": round(pw["ratio"], 4),
         "perm_auto_raised": int(perm_auto_from is not None),
