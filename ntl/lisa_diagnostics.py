@@ -220,7 +220,9 @@ def auto_diagnostics(cx, cy, ntl, area, cell_size_m, cell_df, region_metrics,
     elif hd["power_law_ok"] is False or hd["k"] < 20:
         lvl = "warn"
     else:
-        lvl = "ok"
+        # A non-rejected approximate KS test is NOT a certified Pareto law:
+        # fitted-alpha and spatial-dependence calibration remain open (G06).
+        lvl = "info"
     items.append({"key": "hill", "level": lvl, "vals": hd})
     items.append({"key": "primacy", "level": "warn" if pr["multipolar"] else "ok", "vals": pr})
     items.append({"key": "resid", "level": ("info" if not np.isfinite(rm_["I"]) or not rm_["perm_done"]
