@@ -2,15 +2,11 @@
 
 [Hướng dẫn dữ liệu và GADM](docs/README-vi.md) · [Tình trạng kiểm chứng và bằng chứng](validation/README-vi.md)
 
-<div align="center">
-
 # Sổ tay kỹ thuật và khung phương pháp luận
 
-**Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) & công cụ kinh tế lượng không gian**
+<p align="center"><strong>Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) &amp; công cụ kinh tế lượng không gian</strong></p>
 
-[English](README.md) &nbsp;|&nbsp; [Tiếng Việt](README-vi.md) &nbsp;|&nbsp; [Dùng thử trực tiếp](https://spatial-app.streamlit.app/?)
-
-</div>
+<p align="center"><a href="README.md">English</a> &nbsp;|&nbsp; <a href="README-vi.md">Tiếng Việt</a> &nbsp;|&nbsp; <a href="https://spatial-app.streamlit.app/?">Dùng thử trực tiếp</a></p>
 
 ---
 
@@ -84,9 +80,9 @@ Kinh tế lượng thông thường thường bắt đầu từ giả định r�
 
 Đối tượng trung tâm là ma trận trọng số không gian $W$. Mỗi phần tử $w_{ij}$ biểu diễn vị trí $j$ có kết nối với vị trí $i$ hay không, hoặc mức kết nối mạnh đến đâu. Biến trễ không gian
 
-$$
+```math
 (Wy)_i = \sum_j w_{ij}y_j
-$$
+```
 
 vì vậy là một tóm tắt các giá trị xung quanh vị trí $i$. Trên lưới đều, dự án chủ yếu dùng tiếp giáp Queen, tức ô chung cạnh hoặc chung góc đều là láng giềng. Kiểm định độ vững còn dùng tiếp giáp Rook, chỉ tính các ô chung cạnh (Anselin, 1988; Rey và cộng sự, 2023).
 
@@ -222,9 +218,9 @@ Gọi $a_i$ là cấu trúc kinh tế chưa quan sát và $y_i$ là bức xạ �
 
 **Từ ảnh vệ tinh đến một con số trong bảng.** VIIRS quan sát bức xạ hướng lên cảm biến, không quan sát trực tiếp GDP, thu nhập hay phúc lợi. Các ảnh tháng phải được ghép thành một đại diện năm, sau đó cắt theo ranh giới GADM và quy về lưới phân tích. Với ô phân tích $i$ giao nhiều điểm ảnh nguồn $p$, trung bình có trọng số diện tích có thể được hình dung như:
 
-$$
+```math
 \bar r_i = \frac{\sum_p a_{ip}r_p}{\sum_p a_{ip}},
-$$
+```
 
 trong đó $r_p$ là bức xạ của điểm ảnh nguồn và $a_{ip}$ là diện tích giao giữa điểm ảnh đó với ô $i$. Công thức này giải thích vì sao ô ở biên không nên được đối xử như ô đầy đủ: chỉ phần diện tích thực sự nằm trong vùng nghiên cứu mới có quyền đóng góp. Cách trích xuất theo tỷ lệ phủ giúp tránh việc một điểm ảnh chỉ chạm rất ít vào ô nhưng lại được tính như phủ toàn bộ ô (Baston, 2023).
 
@@ -246,9 +242,9 @@ App cho phép thử độ nhạy Queen/Rook và kích thước lưới vì một
 
 **Trực giác đồ thị.** Hãy coi mỗi ô là một nút và mỗi quan hệ láng giềng là một cạnh. Khi đó hàng $i$ của $W$ là danh sách những nút mà ô $i$ được phép "nhìn thấy". Với chuẩn hóa theo hàng, $\sum_j w_{ij}=1$ cho ô có láng giềng, nên
 
-$$
+```math
 (Wy)_i = \sum_j w_{ij}y_j
-$$
+```
 
 là trung bình có trọng số của vùng xung quanh. Nếu $y_i$ cao và $(Wy)_i$ cũng cao, ô nằm trong một môi trường sáng tương đối. Nếu $y_i$ cao nhưng $(Wy)_i$ thấp, ô giống một ngoại lệ sáng giữa vùng tối. Đây là quan hệ tương đối theo $W$, không phải khoảng cách vật lý tự thân.
 
@@ -270,10 +266,10 @@ Một kết quả LISA có thể bảo vệ được cần báo phép biến đ�
 
 **Từ toàn cục tới cục bộ.** Global Moran's $I$ tóm tắt mức đồng biến giữa giá trị chuẩn hóa $z_i$ và độ trễ $\sum_j w_{ij}z_j$ trên toàn vùng:
 
-$$
+```math
 I = \frac{n}{S_0}\frac{\sum_i\sum_j w_{ij}z_i z_j}{\sum_i z_i^2},
 \qquad S_0=\sum_i\sum_j w_{ij}.
-$$
+```
 
 $I$ dương thường gợi ý các giá trị tương tự nằm gần nhau theo $W$; $I$ âm gợi ý quan hệ tương phản; nhưng giá trị quan sát chỉ có ý nghĩa khi được so với phân phối tham chiếu thích hợp (Moran, 1950). Global Moran cho biết toàn vùng có cấu trúc, không cho biết ô nào tạo nên cấu trúc đó.
 
@@ -281,9 +277,9 @@ Local Moran phân rã trực giác này theo ô, thường có dạng tỷ lệ 
 
 **Hoán vị trả lời điều gì.** App giữ giá trị của ô tiêu điểm và tráo các giá trị láng giềng phù hợp để tạo ra phân phối tham chiếu. Với $R$ lần hoán vị, pseudo p-value thường được tính theo nguyên tắc cộng một:
 
-$$
+```math
 p_i = \frac{1 + \sum_{r=1}^{R} \mathbb{I}\left(|I_i^{(r)}| \ge |I_i^{obs}|\right)}{R+1}
-$$
+```
 
 Do đó, số hoán vị quyết định độ phân giải của p-value. Nếu ngưỡng sau FDR nhỏ hơn mức p-value nhỏ nhất có thể đạt, không ô nào có thể được bác bỏ dù mẫu hình nhìn bằng mắt rất nổi bật.
 
@@ -308,9 +304,9 @@ App thử bốn nhóm rủi ro chính:
 
 Với hai tập ô `HH` là $A$ và $B$, hệ số Jaccard
 
-$$
+```math
 J(A,B)=\frac{|A\cap B|}{|A\cup B|}
-$$
+```
 
 tóm tắt mức trùng từ 0 đến 1. Tuy nhiên, một con số Jaccard không nói hết câu chuyện. Cần xem cả diện tích ổn định, vị trí phần mất/thêm, mức thay đổi của chỉ số toàn cục và liệu các khác biệt tập trung ở biên hay ở lõi.
 
@@ -461,15 +457,15 @@ Bản thử nghiệm Phase 1 gắn cứng một mã EPSG địa phương (`EPSG:
 
 **Bước 1: xác định múi chiếu.**
 
-$$
+```math
 \mathrm{Zone} = \min\left(60, \max\left(1, \left\lfloor \frac{\lambda_{\mathrm{center}} + 180}{6} \right\rfloor + 1\right)\right)
-$$
+```
 
 **Bước 2: gán mã EPSG** (đơn vị mét), tự động cho cả Bắc và Nam bán cầu:
 
-$$
+```math
 \mathrm{EPSG} = \begin{cases} 32600 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} \ge 0 \text{ (Bắc bán cầu)} \\ 32700 + \mathrm{Zone} & \text{nếu } \phi_{\mathrm{center}} < 0 \text{ (Nam bán cầu)} \end{cases}
-$$
+```
 
 > **Ví dụ nhanh:** tâm vùng nghiên cứu ở kinh độ $105^\circ\mathrm{E}$, thuộc Bắc bán cầu, cho $\mathrm{Zone} = \lfloor 285 / 6 \rfloor + 1 = 48$ và $\mathrm{EPSG} = 32648$. Đó đúng là mã mà bản Phase 1 từng gắn cứng.
 
@@ -492,17 +488,17 @@ Lý do cần mặt nạ: `cf_cvg` $= 0$ nghĩa là điểm ảnh tháng không c
 
 Quy tắc tâm điểm ảnh gán toàn bộ điểm ảnh nguồn theo vị trí tâm nên bỏ qua phần giao cắt tại biên đa giác. Mức chênh phụ thuộc hình học và độ phân giải; repo không khẳng định một mức sai số chung cho mọi địa bàn. Hệ thống thay vào đó dùng `exactextract` (Baston, 2023). Bức xạ trung bình $\mathrm{NTL}_i$ của ô lưới $i$ là trung bình có trọng số, với trọng số là tỷ lệ diện tích điểm ảnh $w_{ip} \in [0, 1]$ thực sự nằm bên trong đa giác ô lưới $i$:
 
-$$
+```math
 \mathrm{NTL}_i = \frac{\sum_{p \in i} x_p \cdot w_{ip}}{\sum_{p \in i} w_{ip}}
-$$
+```
 
 > **Hiểu nôm na:** mỗi điểm ảnh chỉ được tính phần nằm trong ô. Điểm ảnh có 60% diện tích rơi vào ô thì mang trọng số $0.6$, còn điểm ảnh chỉ sượt qua mép ô thì gần như không ảnh hưởng.
 
 Giá trị rỗng hoặc âm phát sinh từ bước hiệu chỉnh ánh sáng nền của cảm biến được chuẩn hóa về $0.0$. Tổng lượng ánh sáng (sum of lights – SOL) của mỗi ô bằng bức xạ trung bình nhân với diện tích thực tế sau khi cắt:
 
-$$
+```math
 \mathrm{SOL}_i = \mathrm{NTL}_i \times A_i
-$$
+```
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
@@ -524,9 +520,9 @@ Dữ liệu bức xạ đêm tự nhiên có rất nhiều quan sát bằng $0$ 
 
 Một ô lưới $i$ bị gắn cờ là ô biên (`is_border_cell = 1` và `is_edge_masked = 1`) và bị loại khỏi đồ thị láng giềng nếu diện tích thực tế sau khi cắt $A_i$ nhỏ hơn $99\%$ diện tích ô lưới chuẩn:
 
-$$
+```math
 A_i < 0.99 \times \left(\frac{\mathrm{size}}{1000}\right)^2 \quad (\mathrm{km}^2)
-$$
+```
 
 #### Bước 2. Chuẩn hóa Z-score trên tập tham chiếu lõi $S$
 
@@ -539,9 +535,9 @@ Gọi $S$ là tập các ô lõi (không phải ô biên, tức $A_i \ge 0.99 \t
 
 Điểm chuẩn hóa $z_i$ được tính với độ lệch chuẩn mẫu hiệu chỉnh Bessel ($\mathrm{ddof} = 1$):
 
-$$
+```math
 \mu_S = \frac{1}{\lvert S \rvert} \sum_{i \in S} v_i, \quad \sigma_S = \sqrt{\frac{1}{\lvert S \rvert - 1} \sum_{i \in S} (v_i - \mu_S)^2}, \quad z_i = \frac{v_i - \mu_S}{\sigma_S} \quad \forall i \in S
-$$
+```
 
 Trong đó $v_i$ phụ thuộc vào việc người dùng có bật biến đổi logarit hay không (bật để nén đuôi phân phối lệch phải):
 
@@ -577,9 +573,9 @@ Ma trận trọng số không gian $W$ được dựng theo quy tắc tiếp xú
 
 Từ tọa độ tâm $(c_{x,i}, c_{y,i})$ trong hệ mét UTM, thuật toán ánh xạ mỗi ô về cặp chỉ số nguyên $(ix_i, iy_i)$ rồi tạo một khóa băm một chiều duy nhất:
 
-$$
+```math
 ix_i = \left\lfloor \frac{c_{x,i} + \epsilon}{\mathrm{size}} \right\rfloor, \quad iy_i = \left\lfloor \frac{c_{y,i} + \epsilon}{\mathrm{size}} \right\rfloor, \quad \mathrm{Key}_i = ix_i \cdot H + iy_i
-$$
+```
 
 Ở đây $\epsilon = 10^{-6}\text{ m}$ là hằng số bù sai số dấu phẩy động IEEE-754 gần mép ô, và $H = \max(iy) - \min(iy) + 4$.
 
@@ -587,9 +583,9 @@ $$
 
 Trọng số không gian $w_{ij}$ được chuẩn hóa theo hàng:
 
-$$
+```math
 w_{ij} = \begin{cases} \frac{1}{k_i} & \text{nếu } j \in N(i) \cap S \\ 0 & \text{nếu ngược lại} \end{cases}
-$$
+```
 
 với $k_i = \lvert N(i) \cap S \rvert$ là số láng giềng hợp lệ của ô $i$. Chỉ các ô $i \in S$ có $k_i \ge k_{\min}$ (mặc định $k_{\min} = 1$) mới vào tập kiểm định $\mathrm{Focal}$.
 
@@ -599,9 +595,9 @@ với $k_i = \lvert N(i) \cap S \rvert$ là số láng giềng hợp lệ của 
 
 Thống kê Local Moran's I (Anselin, 1995) và biến trễ không gian chuẩn hóa ($\mathrm{Spatial\ Lag}\ z$) của mỗi ô $i \in \mathrm{Focal}$ được xác định như sau:
 
-$$
+```math
 I_i = \frac{z_i}{m_2} \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad \mathrm{Lag}(z_i) = \sum_{j \in N(i) \cap S} w_{ij} z_j, \quad m_2 = \frac{1}{\lvert S \rvert - 1} \sum_{r \in S} z_r^2
-$$
+```
 
 > **Hiểu nôm na:** biến trễ không gian $\mathrm{Lag}(z_i)$ là mức sáng "trung bình" của các ô láng giềng. $I_i$ dương lớn nghĩa là ô đang xét và hàng xóm cùng xu hướng (cùng sáng hoặc cùng tối). $I_i$ âm nghĩa là chúng trái chiều nhau.
 
@@ -618,15 +614,15 @@ Bức xạ ánh sáng ban đêm không tuân theo phân phối chuẩn, nên ý 
 
 Gọi $M_i$ là số lần mô phỏng rơi vào miền cực trị ở đuôi gần hơn (đồng hạng được xử lý với dung sai số học $10^{-12}$):
 
-$$
+```math
 M_i = \min\left( \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \ge I_i - 10^{-12}\right); \sum_{r=1}^R \mathbb{I}\left(I_i^{(r)} \le I_i + 10^{-12}\right) \right)
-$$
+```
 
 App giữ quy ước pseudo p-value hai phía: nhân đôi đuôi nhỏ hơn, tính cả đồng hạng và hiệu chỉnh +1 (khác `p_sim` một phía nguyên bản của ESDA):
 
-$$
+```math
 p_i = \min\left(1.0; 2 \times \frac{M_i + 1}{R + 1}\right)
-$$
+```
 
 ### 3.4. Kiểm soát tỷ lệ phát hiện sai (FDR – Benjamini-Hochberg)
 
@@ -640,9 +636,9 @@ Hệ thống dùng thủ tục kiểm soát tỷ lệ phát hiện sai (false di
 
 2. Tìm chỉ số $k \in \{1, \dots, m\}$ lớn nhất thỏa mãn bất đẳng thức:
 
-$$
+```math
 p_{(k)} \le \frac{k}{m} \alpha
-$$
+```
 
 3. Nếu tồn tại $k$, bác bỏ giả thuyết không $H_0$ (công nhận có cụm không gian có ý nghĩa thống kê) cho toàn bộ các ô có $p_i \le p_{(k)}$.
 
@@ -650,9 +646,9 @@ $$
 
 Mức sàn nhỏ nhất của pseudo p-value hai phía là $p_{\mathrm{floor}} = \frac{2}{R + 1}$. Vì vậy, để thủ tục Benjamini–Hochberg bác bỏ được ít nhất một giả thuyết, số ô chạm mức sàn $p_{\mathrm{floor}}$ phải thỏa mãn điều kiện cần về mặt toán học:
 
-$$
+```math
 k_{\mathrm{hit}} \ge \left\lceil \frac{p_{\mathrm{floor}} \cdot m}{\alpha} \right\rceil = \left\lceil \frac{2m}{(R + 1)\alpha} \right\rceil
-$$
+```
 
 Hệ thống tự tính ngưỡng $k_{\mathrm{hit}}$ (`fdr_min_hits_needed`) và hiện cảnh báo, hướng dẫn người dùng tăng số hoán vị $R$ lên $999$ khi cỡ mẫu $m$ lớn.
 
@@ -668,9 +664,9 @@ Có ba bước để từ cụm đi tới tâm lõi:
 
 2. **Chọn tâm sáng đại diện (tâm suy ra từ NTL).** Tọa độ tâm $(\mathrm{CBD}_x, \mathrm{CBD}_y)$ là **trọng tâm có trọng số tổng ánh sáng (SOL-weighted centroid) của cụm High-High có diện tích lớn nhất** ($C^{\star}$):
 
-$$
+```math
 \mathrm{CBD}_x = \frac{\sum_{i \in C^{\star}} c_{x,i} \cdot (\mathrm{NTL}_i \cdot A_i)}{\sum_{i \in C^{\star}} (\mathrm{NTL}_i \cdot A_i)}, \quad \mathrm{CBD}_y = \frac{\sum_{i \in C^{\star}} c_{y,i} \cdot (\mathrm{NTL}_i \cdot A_i)}{\sum_{i \in C^{\star}} (\mathrm{NTL}_i \cdot A_i)}
-$$
+```
 
 3. **Phương án dự phòng.** Nếu địa phương chưa có cụm `High-High` nào đạt ngưỡng $n_{\min}$, hệ thống áp dụng quy tắc dự phòng mô tả: chọn ô lõi không biên có điểm tổ hợp trung bình trượt không gian $0.5 \cdot \mathrm{NTL}_i + 0.5 \cdot \mathrm{Lag}(\mathrm{NTL}_i)$ cao nhất làm tâm.
 
@@ -679,9 +675,9 @@ $$
 
 Từ tâm lõi, khoảng cách Euclid từ mọi ô lưới $i$ tới tâm lõi kinh tế (đơn vị: km) được xuất thành biến `dist_to_core_km`:
 
-$$
+```math
 d_{\mathrm{core}, i} = \frac{1}{1000}\sqrt{(c_{x,i} - \mathrm{CBD}_x)^2 + (c_{y,i} - \mathrm{CBD}_y)^2}
-$$
+```
 
 ### 3.6. Các mô-đun chẩn đoán không gian bổ sung
 
@@ -701,9 +697,9 @@ Chi tiết từng mô-đun:
 
 Áp dụng ước lượng cực trị Hill cho nhóm $k = \lfloor 0.10 \lvert S_{\mathrm{lit}} \rvert \rfloor$ ô lõi sáng nhất, để đo mức độ tập trung cực trị ở đỉnh phân phối đô thị:
 
-$$
+```math
 \hat{\zeta}_{\mathrm{Hill}} = \left[ \frac{1}{k} \sum_{j=1}^{k} \ln\left(\frac{\mathrm{NTL}_{(j)}}{\mathrm{NTL}_{(k+1)}}\right) \right]^{-1}
-$$
+```
 
 **Giới hạn diễn giải:** Hệ số Hill chỉ mô tả hình dạng đuôi, **không chứng minh** NTL tuân theo phân phối Pareto. p-value KS hiện có trong ứng dụng là **xấp xỉ tiệm cận sau khi ước lượng alpha bằng chính dữ liệu đuôi**, chưa tự hiệu chỉnh bất định của tham số và phụ thuộc không gian. G06 đối chiếu với bootstrap KS có điều kiện, **ước lượng lại alpha ở từng lần lặp**, thử các tỷ lệ đuôi cố định và so sánh các phân phối exponential và lognormal đã cắt theo ngưỡng. Với 10% ô sáng nhất của Bảo An 2020, p-value KS hiện hành là 0,0951, còn bootstrap giả định các giá trị độc lập cho p-value 0,0225. **Cả hai chưa phải p-value được hiệu chuẩn theo phụ thuộc không gian của NTL thực**; dữ liệu nhân tạo không phải nguồn xác minh kinh tế độc lập. Toàn bộ đầu vào, bảng bootstrap và giới hạn nằm trong [kiểm chứng G06](validation/README-vi.md).
 
@@ -711,9 +707,9 @@ $$
 
 Ước lượng liên hệ mô tả giữa log NTL và khoảng cách tới tâm do chính NTL quyết định bằng WLS có trọng số diện tích trên tập ô lõi. Đây chưa phải phương trình cấu trúc mật độ kinh tế đô thị:
 
-$$
+```math
 \ln(1 + \mathrm{NTL}_{i}) = \alpha_{0} - \gamma \cdot d_{\mathrm{core}, i} + u_{i}
-$$
+```
 
 Kết quả gồm độ dốc NTL $\hat{\gamma}$ (`urban_gradient_decay`) và hệ số khớp nội mẫu $R^2_{\mathrm{gradient}}$ (`monocentric_r2`). Hai đại lượng này chưa xác nhận CBD chính thức hoặc cấu trúc đô thị đơn tâm.
 
@@ -765,9 +761,9 @@ Mã nguồn: `ntl/data_quality.py`, `ntl/semantics.py`, `ntl/robustness.py`, `nt
 
 Trước khi cho phép chạy `geopandas.clip()`, hệ thống kích hoạt một bước chặn trước. Chỉ từ diện tích ($\mathrm{Area}$, $\mathrm{km}^2$) và chu vi ($\mathrm{Perimeter}$, $\mathrm{km}$) của ranh giới hành chính, nó dự phóng số ô lưới sau khi cắt ($N_{\mathrm{clip}}$) và số ô của hộp bao chữ nhật ($N_{\mathrm{bbox}}$):
 
-$$
+```math
 N_{\mathrm{clip}} \approx \frac{\mathrm{Area}}{(\mathrm{size}/1000)^2} + \beta \frac{\mathrm{Perimeter}}{\mathrm{size}/1000}
-$$
+```
 
 Trong đó $\beta = 0.65$ là hệ số hiệu chỉnh hình học cho các ô biên bị cắt.
 
@@ -784,9 +780,9 @@ Trong đó $\beta = 0.65$ là hệ số hiệu chỉnh hình học cho các ô b
 
 Cảng biển, khu công nghiệp nặng hay trạm đốt khí có thể sáng chói đến mức làm mất độ tương phản của các khu dân cư đô thị trên bản đồ. Để chặn điều đó, mức trần hiển thị $v_{\max}$ được tính động tại phân vị thứ 99 của tập các ô có ánh sáng $\mathrm{NTL}_{\mathrm{lit}} = \{\mathrm{NTL}_i \mid \mathrm{NTL}_i > 0\}$:
 
-$$
+```math
 v_{\mathrm{raw}} = \begin{cases} P_{99}(\mathrm{NTL}_{\mathrm{lit}}) & \text{nếu } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert > 10 \\ \max_i(\mathrm{NTL}_i) & \text{nếu } \lvert \mathrm{NTL}_{\mathrm{lit}} \rvert \le 10 \end{cases}, \quad v_{\max} = \begin{cases} v_{\mathrm{raw}} & \text{nếu } v_{\mathrm{raw}} > 0.1 \\ 1.0 & \text{nếu } v_{\mathrm{raw}} \le 0.1 \end{cases}
-$$
+```
 
 #### Trần kết xuất DOM trình duyệt (`RENDER_CAP = 30,000`)
 
@@ -836,9 +832,9 @@ Với các nghiên cứu vĩ mô theo dõi sự phát triển cấp Quận/Huy�
 
 Kế thừa phương pháp chỉ số phát triển ánh sáng đêm (NLDI) của Elvidge et al. (2012) và các nghiên cứu bất bình đẳng không gian từ vệ tinh của Lessmann & Seidel (2017) và Mirza et al. (2021), hệ số Gini đo mức độ tập trung của hoạt động kinh tế:
 
-$$
+```math
 G = \frac{2 \sum_{i=1}^n i \cdot x_{(i)}}{n \sum_{i=1}^n x_{(i)}} - \frac{n + 1}{n}
-$$
+```
 
 (với $x_{(1)} \le x_{(2)} \le \dots \le x_{(n)}$ là chuỗi giá trị đã sắp xếp không giảm). Hệ thống xuất 3 biến thể:
 
@@ -855,9 +851,9 @@ Hai biến `hh_area_share` và `hh_cluster_area_share` đo tỷ lệ diện tíc
 - các ô `High-High` có ý nghĩa thống kê (`hh_area_share`), hoặc
 - các cụm `High-High` liên thông đạt quy mô tối thiểu (`hh_cluster_area_share`).
 
-$$
+```math
 \mathrm{HH}_{\mathrm{share}} = \frac{\sum_{i \in \mathrm{HH}} A_i}{\sum_{i=1}^N A_i}
-$$
+```
 
 Đây là biến đại diện (proxy) cho **mức độ đô thị hóa thực tế (de facto urbanization)**, khắc phục nhược điểm của số liệu diện tích đô thị theo phân loại hành chính. Kết hợp với số cụm điểm nóng độc lập (`n_hh_clusters`) và diện tích cụm lớn nhất (`largest_hh_cluster_km2`), nhà nghiên cứu có thể định lượng quá trình chuyển từ cấu trúc đô thị đơn cực sang đa cực.
 
@@ -865,9 +861,9 @@ $$
 
 Chỉ số này hiển thị ở tab Dữ liệu của `app.py`. Nó được tính trên toàn bộ $N$ ô lưới (kể cả các ô $\mathrm{NTL} = 0$) với ma trận trọng số nhị phân Queen đối xứng (Moran, 1950):
 
-$$
+```math
 I_{\mathrm{global}} = \frac{N}{\sum_{i=1}^N \sum_{j=1}^N w_{ij}} \frac{\sum_{i=1}^N \sum_{j=1}^N w_{ij}(x_i - \bar{x})(x_j - \bar{x})}{\sum_{i=1}^N (x_i - \bar{x})^2}
-$$
+```
 
 > [!WARNING]
 > Tự tương quan không gian có ý nghĩa trong NTL là lý do để kiểm tra phần dư của mô hình đã ước lượng; riêng nó chưa chứng minh phần dư OLS có tương quan không gian. Nếu phần dư còn phụ thuộc không gian, chọn đặc tả phù hợp như SAR, SEM, SDM (LeSage & Pace, 2009) hoặc suy luận với sai số chuẩn vững theo không gian (Conley, 1999) tùy thiết kế nghiên cứu.
@@ -876,9 +872,9 @@ $$
 
 Chỉ số này được xuất trong bảng Panel CSV từ `ntl/lisa_core.py`. Nó là trung bình cộng của thống kê Local Moran's I trên tập các ô sáng được kiểm định:
 
-$$
+```math
 \bar{I}_{\mathrm{lit}} = \frac{1}{\lvert \mathrm{Focal} \rvert} \sum_{i \in \mathrm{Focal}} I_i
-$$
+```
 
 Chỉ số đo cường độ kết tụ không gian bên trong ranh giới khu vực đã đô thị hóa/điện khí hóa của địa phương qua các năm.
 
