@@ -653,12 +653,28 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
         df_m_all = _build_mat(np.ones(int(ok.sum()), dtype=bool))
         df_m_hi = _build_mat(hi_ctx)
         df_m_lo = _build_mat(~hi_ctx)
-        trace_p = float(np.trace(df_m_all.to_numpy()) / 100.0)
-        shorrocks_mobility = float((4.0 - trace_p) / 3.0)
+
+        # The four-state Shorrocks index requires a row-stochastic 4x4
+        # transition matrix. An unoccupied initial quartile has an undefined
+        # transition row (encoded as zeros in the historical display table);
+        # counting that row's diagonal as zero falsely signals mobility.
+        initial_counts = np.bincount(c0, minlength=4)
+        missing_initial_quartiles = [
+            f"Q{i + 1}" for i in np.flatnonzero(initial_counts == 0)
+        ]
+        if missing_initial_quartiles:
+            shorrocks_mobility = float("nan")
+            shorrocks_status = "undefined_empty_initial_quartile"
+        else:
+            trace_p = float(np.trace(df_m_all.to_numpy()) / 100.0)
+            shorrocks_mobility = float((4.0 - trace_p) / 3.0)
+            shorrocks_status = "defined"
     else:
         empty_m = pd.DataFrame(np.zeros((4, 4)), index=q_labels, columns=["→ Q1", "→ Q2", "→ Q3", "→ Q4"])
         df_m_all = df_m_hi = df_m_lo = empty_m
         shorrocks_mobility = float("nan")
+        shorrocks_status = "insufficient_eligible_cells"
+        missing_initial_quartiles = []
 
     tot_core_area = max(float(area[ok].sum()), 1e-12)
     reg_rows = []
@@ -709,6 +725,8 @@ def run_spacetime_lisa(cx, cy, ntl_t0, ntl_t1, area_km2, cell_size_m: float, *,
         "year_t0": year_t0,
         "year_t1": year_t1,
         "shorrocks_mobility": round(shorrocks_mobility, 4) if np.isfinite(shorrocks_mobility) else float("nan"),
+        "shorrocks_status": shorrocks_status,
+        "shorrocks_missing_initial_quartiles": missing_initial_quartiles,
         "synergistic_growth_pct": round(synergy_share, 2),
         "agglomeration_shadow_pct": round(shadow_share, 2),
         "mean_delta_ln_ntl": round(float((v1[core] - v0[core]).mean()), 4) if core.any() else 0.0,
