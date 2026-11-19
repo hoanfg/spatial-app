@@ -243,7 +243,7 @@ T["vi"].update({
     "h_donut_rdd": "Loại ô có khoảng cách tới tâm ô đối lập gần nhất dưới 500 m để so độ nhạy mô tả; không chứng minh đã loại hết ảnh hưởng quang học hay phụ thuộc không gian.",
     "h_st_year_t0": "Chọn năm sớm hơn năm hiện tại để tính thay đổi vị thế NTL và bảng chuyển dịch phân vị giữa hai kỳ.",
     "h_st_run_btn": "Tải ảnh vệ tinh VIIRS năm t₀ trên đúng lưới UTM hiện tại và tính vector dịch chuyển không gian 2 kỳ.",
-    "h_st_shorrocks": "Chỉ số dịch chuyển Shorrocks (0 = thứ hạng không gian đóng băng hoàn toàn; càng cao = mức độ xáo trộn giữa các phân vị càng mạnh).",
+    "h_st_shorrocks": "Chỉ số Shorrocks trên ma trận chuyển tiếp 4 phân vị, chỉ xác định khi cả bốn phân vị ban đầu đều có ô. N/A nếu có nhóm ban đầu rỗng hoặc quá ít ô đủ điều kiện; giá trị 0 nghĩa là không có chuyển nhóm khi chỉ số xác định.",
     "h_st_synergy": "Tỷ lệ diện tích vùng lõi có Δz ≥ 0 và ΔLag z ≥ 0 theo NTL chuẩn hóa riêng từng năm; không phải tăng trưởng kinh tế.",
     "h_st_shadow": "Tỷ lệ diện tích có Δz < 0 và ΔLag z ≥ 0, theo chuẩn hóa riêng từng năm; không chứng minh sự dịch chuyển nguồn lực.",
     "h_markov_hi": "Xác suất chuyển dịch giữa 4 phân vị ánh sáng (Q1→Q4) khi ô nằm cạnh các láng giềng ban đầu có độ sáng CAO (trên trung vị Lag z năm t₀).",
@@ -268,7 +268,7 @@ T["en"].update({
     "h_donut_rdd": "Omits cells within 500 m of an opposite-group cell center for descriptive sensitivity only; it does not establish removal of blooming or spatial dependence.",
     "h_st_year_t0": "Select a strictly earlier year for two-period NTL relative-position changes and quartile transitions.",
     "h_st_run_btn": "Fetch base-year t₀ VIIRS raster on the current UTM grid and compute two-period spatial dynamics.",
-    "h_st_shorrocks": "Shorrocks Mobility Index (0 = completely static spatial hierarchy; higher values indicate stronger rank mobility).",
+    "h_st_shorrocks": "Four-quartile Shorrocks mobility, defined only if all four initial quartiles contain cells. N/A if an initial quartile is empty or too few cells qualify; zero means no transitions when the index is defined.",
     "h_st_synergy": "Core-area share with both Δz ≥ 0 and ΔLag z ≥ 0 in year-standardized NTL, not economic growth.",
     "h_st_shadow": "Share of core area with Δz < 0 and ΔLag z ≥ 0 under year-specific standardization; not evidence of resource diversion.",
     "h_markov_hi": "Transition probability matrix across 4 light quartiles (Q1→Q4) conditioned on HIGH initial neighbor brightness (above median Lag z at t₀).",
@@ -1102,6 +1102,15 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
                         f"{sm['shorrocks_mobility']:.3f}" if np.isfinite(sm["shorrocks_mobility"]) else "N/A",
                         help=L["h_st_shorrocks"],
                     )
+                    if sm.get("shorrocks_status") == "undefined_empty_initial_quartile":
+                        empty_q = ", ".join(sm["shorrocks_missing_initial_quartiles"])
+                        st.warning(
+                            (f"Không tính Shorrocks: phân vị ban đầu {empty_q} không có ô; "
+                             "hàng 0% trong bảng chuyển tiếp là nhóm nguồn rỗng, không phải xác suất chuyển tiếp bằng 0.")
+                            if is_vi else
+                            (f"Shorrocks is undefined: initial quartile(s) {empty_q} contain no cells; "
+                             "zero rows in the transition tables indicate absent source groups, not zero transition probability.")
+                        )
                     m2.metric(
                         "Vị thế cùng tăng (Δz+, ΔLag+)" if is_vi else "Joint Relative-Position Increase",
                         f"{sm['synergistic_growth_pct']:.1f}%",
