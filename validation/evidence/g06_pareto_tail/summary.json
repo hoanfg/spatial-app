@@ -344,10 +344,10 @@
     "scipy": "1.17.1"
   },
   "sha256": {
-    "generator_py": "ebbb3b7637116b9094dcd1d2cd119772509a5050b98abc626d97fa49c65011c3",
+    "generator_py": "cfd82dbcf0053fa0e300b987f5fc1dad67a98f5cde1e7e887322a1771fbad7b7",
     "synthetic_input.csv": "0304074f712dbe0a327c20422ac77eff14c58cd07c523e431ce8f974f511cf2b",
     "baoan_tail_observations.csv": "7a16257d4fff78b0a2c89f9b7980779a52d1964783781aab10e2093ceebee5fe",
-    "tail_cases.csv": "c7d73f70671dd4535e3fe969a81631362f338d0cf889635b72056c601df75463",
+    "tail_cases.csv": "362203d9ef2dbc931071ecf2ba4f6514a71eacad9c8ab6f180b06a430a859b9d",
     "bootstrap_replications.csv": "38c5b21e5fbed92797bdbe5d57e7b292916cc06293d83bcff7dd54b1d6bd364b"
   },
   "cases": [
@@ -682,7 +682,7 @@
       "aicc_exponential_minus_pareto": -93.283407,
       "aicc_lognormal_minus_pareto": -88.306134,
       "pareto_ks_D_vs_exponential_D": 0.05085913,
-      "pareto_ks_D_vs_lognormal_D": 0.0480356,
+      "pareto_ks_D_vs_lognormal_D": 0.04803559,
       "n_threshold_ties": 1,
       "n_tail_unique": 1000,
       "n_core": 5000
@@ -710,7 +710,7 @@
       "aicc_exponential_minus_pareto": 53.446674,
       "aicc_lognormal_minus_pareto": 4.230467,
       "pareto_ks_D_vs_exponential_D": -0.06348433,
-      "pareto_ks_D_vs_lognormal_D": -0.00346156,
+      "pareto_ks_D_vs_lognormal_D": -0.00346155,
       "n_threshold_ties": 1,
       "n_tail_unique": 309,
       "n_core": 6186
@@ -766,7 +766,7 @@
       "aicc_exponential_minus_pareto": 25.943722,
       "aicc_lognormal_minus_pareto": -2.557872,
       "pareto_ks_D_vs_exponential_D": 0.01306373,
-      "pareto_ks_D_vs_lognormal_D": 0.01703951,
+      "pareto_ks_D_vs_lognormal_D": 0.0170395,
       "n_threshold_ties": 1,
       "n_tail_unique": 926,
       "n_core": 6186
@@ -794,7 +794,7 @@
       "aicc_exponential_minus_pareto": -21.992563,
       "aicc_lognormal_minus_pareto": -39.807075,
       "pareto_ks_D_vs_exponential_D": 0.04400972,
-      "pareto_ks_D_vs_lognormal_D": 0.04757294,
+      "pareto_ks_D_vs_lognormal_D": 0.04757295,
       "n_threshold_ties": 1,
       "n_tail_unique": 1235,
       "n_core": 6186
