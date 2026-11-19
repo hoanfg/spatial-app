@@ -154,3 +154,25 @@ def test_g10_source_cf_cvg_count_is_not_months():
     monthly = MagicMock()
     image.map.call_args.args[0](monthly)
     monthly.select.assert_called_with("cf_cvg")
+
+
+def test_single_register_has_all_and_only_original_g01_g18():
+    import json
+
+    register = json.loads(
+        (ROOT / "validation" / "scientific_closure_register.json").read_text(encoding="utf-8")
+    )
+    codes = [item["id"] for item in register["disposition"]]
+    assert codes == [f"G{i:02}" for i in range(1, 19)]
+    allowed = set(register["statuses"])
+    assert all(item["status"] in allowed for item in register["disposition"])
+    assert all(item["claim_ceiling"] and item["evidence_needed"] for item in register["disposition"])
+    assert "V11" in " ".join(register["no_repetition"])
+
+
+def test_g16_evidence_link_matches_actual_application_source():
+    app = (ROOT / "app.py").read_text(encoding="utf-8")
+    assert 'GEE_DATASET = "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG"' in app
+    for name in ("README.md", "README-vi.md"):
+        evidence = (ROOT / "validation" / "evidence" / name).read_text(encoding="utf-8")
+        assert "NOAA_VIIRS_DNB_MONTHLY_V1_VCMSLCFG" in evidence
