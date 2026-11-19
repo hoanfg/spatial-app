@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ntl.scientific_validity import observation_support_screen
+from ntl.scientific_validity import observation_support_screen, utm_applicability_screen
 from ntl.lisa_diagnostics import resid_moran
 from ntl import ee_extra
 
@@ -176,3 +176,34 @@ def test_g16_evidence_link_matches_actual_application_source():
     for name in ("README.md", "README-vi.md"):
         evidence = (ROOT / "validation" / "evidence" / name).read_text(encoding="utf-8")
         assert "NOAA_VIIRS_DNB_MONTHLY_V1_VCMSLCFG" in evidence
+
+
+def test_g11_utm_scope_is_explicit_and_conservative():
+    local = utm_applicability_screen((113.9, 22.4, 114.4, 23.1))
+    assert not local["unsupported"]
+    assert not local["requires_geodesic_validation"]
+    wide = utm_applicability_screen((100.0, 20.0, 111.0, 30.0))
+    assert wide["status"] == "broad_extent_needs_geodesic_error_check"
+    assert wide["requires_geodesic_validation"] and not wide["unsupported"]
+    polar = utm_applicability_screen((30.0, 84.2, 31.0, 85.1))
+    assert polar["unsupported"]
+    dateline_bbox = utm_applicability_screen((-179.0, -20.0, 179.0, -19.0))
+    assert dateline_bbox["unsupported"]
+    with pytest.raises(ValueError):
+        utm_applicability_screen((20.0, 30.0, 10.0, 40.0))
+
+
+def test_g06_uncalibrated_hill_cannot_receive_success_status():
+    from ntl.lisa_core import run_lisa
+    from ntl.lisa_diagnostics import auto_diagnostics
+    yy, xx = np.mgrid[:12, :12]
+    cx, cy = (xx.ravel() + 0.5) * 500.0, (yy.ravel() + 0.5) * 500.0
+    ntl = np.maximum(0.1, 12.0 + 3.0 * np.sin(cx / 1000.0) + cy / 2000.0)
+    area = np.full(len(ntl), 0.25)
+    res = run_lisa(cx, cy, ntl, area, 500.0, perms=19, fdr=False)
+    diag = auto_diagnostics(
+        cx, cy, ntl, area, 500.0, res.cell_df,
+        res.region_metrics, 19, 0.05, False,
+    )
+    hill = next(item for item in diag["items"] if item["key"] == "hill")
+    assert hill["level"] != "ok"
