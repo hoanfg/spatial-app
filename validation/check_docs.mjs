@@ -44,12 +44,30 @@ for (const file of files) {
   const vietnamese = file.endsWith('-vi.md');
   const lines = raw.split(/\r?\n/);
   let inCode = false;
+  let inMathFence = false;
+  let mathFence = '';
   let inDisplay = false;
   let displayMath = '';
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    if (/^\s*```/.test(line)) { inCode = !inCode; continue; }
-    if (inCode) continue;
+    const fence = line.match(/^\s*```([A-Za-z0-9_-]*)\s*$/);
+    if (fence) {
+      if (inCode) {
+        if (inMathFence) checkBraces(mathFence, `${file}:${i + 1}`);
+        inCode = false;
+        inMathFence = false;
+        mathFence = '';
+      } else {
+        inCode = true;
+        inMathFence = fence[1].toLowerCase() === 'math';
+        mathFence = '';
+      }
+      continue;
+    }
+    if (inCode) {
+      if (inMathFence) mathFence += line + '\n';
+      continue;
+    }
     if (/^#{1,6}\s/.test(line)) {
       if (vietnamese && /\b(Audit|Evidence|Validation|Overview|Current status|Source)\b/i.test(line))
         problems.push(`${file}:${i + 1}: English heading in Vietnamese guide`);
