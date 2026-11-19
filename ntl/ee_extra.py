@@ -209,6 +209,25 @@ def fetch_obs_count_raster(ee, dataset: str, bbox: tuple, year: int, scale_m: fl
     return download_tiled_geotiff(ee, img, bbox, scale_m, band_count=1)
 
 
+def fetch_cf_cvg_total_raster(ee, dataset: str, bbox: tuple, year: int,
+                              scale_m: float) -> bytes:
+    """Sum the source's per-month cloud-free OBSERVATION counts, not months.
+
+    This is an optional G10 audit diagnostic. It is not a replacement for
+    the annual unweighted median, and it does not change legacy VIIRS values.
+    """
+    roi = ee.Geometry.Rectangle(list(bbox))
+    col = (ee.ImageCollection(dataset)
+           .filterDate(f"{int(year)}-01-01", f"{int(year) + 1}-01-01")
+           .filterBounds(roi))
+    if col.size().getInfo() == 0:
+        raise LookupError("EMPTY")
+    total = col.map(
+        lambda img: img.select("cf_cvg").unmask(0)
+    ).sum().unmask(0).toFloat().clip(roi)
+    return download_tiled_geotiff(ee, total, bbox, scale_m, band_count=1)
+
+
 def _pixel_grid(params: dict) -> dict:
 
     import re
