@@ -75,7 +75,12 @@ def collect_quality_export(ts: str) -> dict:
     res_q = ss.get("_dq_base", {}).get(ts)
     if not res_q:
         return {}
-    out = quality_export(res_q["raster"], res_q["cells"], ss.get("_dq_obs", {}).get(ts))
+    observed = ss.get("_dq_obs", {}).get(ts)
+    out = quality_export(res_q["raster"], res_q["cells"], observed)
+    if observed and "cf_cvg_total_cell_median" in observed:
+        out["dq_cf_cvg_total_cell_median"] = observed["cf_cvg_total_cell_median"]
+        out["dq_cf_cvg_total_cell_p10"] = observed["cf_cvg_total_cell_p10"]
+        out["dq_cf_cvg_total_cell_p90"] = observed["cf_cvg_total_cell_p90"]
     clip = ss.get("_dq_clip", {}).get(ts)
     if clip:
         out["dq_clip_rho"] = round(clip["rho"], 4) if np.isfinite(clip["rho"]) else float("nan")
@@ -84,6 +89,9 @@ def collect_quality_export(ts: str) -> dict:
         v = ss.get("_dq_val", {}).get((ts, tag))
         if v:
             out.update(val_export(v["agree"], tag))
+            if "year" in v:
+                out[f"val_ghsl_epoch_{tag}"] = int(v["epoch"])
+                out[f"val_ghsl_year_gap_{tag}"] = abs(int(v["epoch"]) - int(v["year"]))
     return out
 
 
@@ -142,8 +150,8 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
         b1, b2 = st.columns(2)
         run_obs = b1.button(("✅ " if ts in obs_cache else "▶ ") + ("Đếm số tháng quan sát không mây" if vi else "Count cloud-free months"),
                             key="dq_btn_obs", use_container_width=True,
-                            help=("Với mỗi pixel, đếm số tháng có quan sát không mây trong năm. Pixel 0 tháng đang bị tính là tối." if vi
-                                  else "Counts cloud-free months per pixel in the year. Pixels with 0 months are currently counted as dark."))
+                            help=("Đếm số tháng có ít nhất một quan sát, đồng thời cộng số lượt quan sát cf_cvg của ảnh tháng trên vùng ô lưới; hai đại lượng khác nhau." if vi
+                                  else "Counts months with at least one observation and sums source cf_cvg monthly observation counts per cell; these are different quantities."))
         run_clip = b2.button(("✅ " if ts in clip_cache else "▶ ") + ("So sánh không cắt giá trị âm" if vi else "Compare without clipping negatives"),
                              key="dq_btn_clip", use_container_width=True, disabled="tif_bytes" not in res,
                              help=("Trích xuất lại trung bình theo ô từ ảnh đã tải nhưng giữ giá trị âm, rồi so với bản đã cắt. Không cần Earth Engine." if vi
@@ -163,7 +171,19 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                         with MemoryFile(raw) as mf:
                             with mf.open() as src:
                                 arr = src.read(1)
-                        _put(obs_cache, ts, obs_report(arr))
+                        months_report = obs_report(arr)
+                        raw_cf = ee_extra.fetch_cf_cvg_total_raster(ee, dataset, bbox, year, scale_m)
+                        # This is the mean count per analysis cell, not just a
+                        # bounding-box pixel report for out-of-region locations.
+                        cf_cell = zonal_stat(raw_cf, grid_wgs, "mean",
+                                             clip_negative=False, fill_missing=None).to_numpy(float)
+                        cf_valid = cf_cell[np.isfinite(cf_cell)]
+                        months_report.update({
+                            "cf_cvg_total_cell_median": float(np.median(cf_valid)) if cf_valid.size else float("nan"),
+                            "cf_cvg_total_cell_p10": float(np.percentile(cf_valid, 10)) if cf_valid.size else float("nan"),
+                            "cf_cvg_total_cell_p90": float(np.percentile(cf_valid, 90)) if cf_valid.size else float("nan"),
+                        })
+                        _put(obs_cache, ts, months_report)
                     st.rerun()
                 except Exception as e:  # noqa: BLE001
                     st.error(f"{'Lỗi' if vi else 'Error'}: {e}")
@@ -178,6 +198,22 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                     st.rerun()
                 except Exception as e:  # noqa: BLE001
                     st.error(f"{'Lỗi' if vi else 'Error'}: {e}")
+
+        obs_v = obs_cache.get(ts)
+        if obs_v and "cf_cvg_total_cell_median" in obs_v:
+            st.info(
+                (f"G10: số lượt quan sát cf_cvg cộng từ ảnh tháng, theo các ô lưới: "
+                 f"trung vị {obs_v['cf_cvg_total_cell_median']:.1f}, "
+                 f"P10–P90 {obs_v['cf_cvg_total_cell_p10']:.1f}–"
+                 f"{obs_v['cf_cvg_total_cell_p90']:.1f}. Đây KHÔNG phải số tháng "
+                 "và không tự chứng minh một quy tắc trọng số hay ngưỡng chất lượng tối ưu.")
+                if vi else
+                (f"G10: summed monthly cf_cvg OBSERVATION counts across analysis cells: "
+                 f"median {obs_v['cf_cvg_total_cell_median']:.1f}, "
+                 f"P10–P90 {obs_v['cf_cvg_total_cell_p10']:.1f}–"
+                 f"{obs_v['cf_cvg_total_cell_p90']:.1f}. These are NOT counts of months "
+                 "and do not validate an optimal weighting scheme or quality cutoff.")
+            )
 
         c = clip_cache.get(ts)
         if c:
@@ -232,7 +268,8 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                         agree = measured_call(res.get("perf_monitor"), f"ghsl.{kind}.agreement",
                                               proxy_agreement, ntl, sums, area, cent.x.to_numpy(),
                                               cent.y.to_numpy(), size, core=core)
-                        _put(val_cache, vkey, {"agree": agree, "epoch": epoch, "sums": sums, "core": core})
+                        _put(val_cache, vkey, {"agree": agree, "epoch": epoch, "year": year,
+                                                "sums": sums, "core": core})
                     st.rerun()
                 except Exception as e:  # noqa: BLE001
                     st.error(f"{'Lỗi' if vi else 'Error'}: {e}")
@@ -258,6 +295,14 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                 lvl = a["level"]
                 msg = (f"Mức đồng thuận **{lvl}** (ρ = {a['rho']:.2f}). " if vi else f"Agreement level **{lvl}** (ρ = {a['rho']:.2f}). ")
                 msg += (f"Epoch GHSL dùng: {v['epoch']} (NTL năm {year})." if vi else f"GHSL epoch used: {v['epoch']} (NTL year {year}).")
+                if int(v["epoch"]) != int(year):
+                    st.warning(
+                        (f"G13: GHSL năm {v['epoch']} cách NTL năm {year} "
+                         f"{abs(int(v['epoch']) - int(year))} năm. Tương quan không tự kiểm chứng sự phù hợp thời gian.")
+                        if vi else
+                        (f"G13: GHSL {v['epoch']} differs from NTL {year} by "
+                         f"{abs(int(v['epoch']) - int(year))} years. Correlation does not validate temporal alignment.")
+                    )
                 if a["proxy_zero_share"] > 0.5:
                     msg += (f" {a['proxy_zero_share'] * 100:.0f}% ô có giá trị 0: ρ chịu ảnh hưởng của nhiều giá trị trùng." if vi
                             else f" {a['proxy_zero_share'] * 100:.0f}% of cells are 0: ρ is affected by many ties.")

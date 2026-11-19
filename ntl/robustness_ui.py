@@ -11,7 +11,7 @@ from .robustness import (
 
 _KEEP = 6
 _VERDICT = {
-    "vững": ("success", "Vững", "Robust"),
+    "vững": ("info", "Trùng cao (ngưỡng quy ước)", "High overlap (heuristic)"),
     "trung bình": ("info", "Trung bình", "Moderate"),
     "yếu": ("warning", "Yếu", "Fragile"),
     "không có HH": ("info", "Không có cụm HH để kiểm tra", "No HH cluster to test"),
@@ -116,10 +116,15 @@ def render_robustness(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, use
             return
         s, table, maup = r["summary"], r["table"], r.get("maup")
         kind, lab_vi, lab_en = _VERDICT.get(s["verdict"], _VERDICT["n/a"])
-        getattr(st, kind)((f"Kết luận độ vững: **{lab_vi}**" if vi else f"Robustness verdict: **{lab_en}**") +
+        getattr(st, kind)((f"Mức trùng của cụm HH: **{lab_vi}**" if vi else f"HH overlap classification: **{lab_en}**") +
                           ((f" (Jaccard trung vị {s['median_jaccard']:.2f}, nhỏ nhất {s['min_jaccard']:.2f})" if vi else
                             f" (median Jaccard {s['median_jaccard']:.2f}, min {s['min_jaccard']:.2f})")
                            if s["n_specs"] and np.isfinite(s["median_jaccard"]) and s["verdict"] != "không có HH" else ""))
+        st.caption(
+            "G14: 0,70/0,50 Jaccard và 80% lõi là ngưỡng mô tả do ứng dụng quy ước, không phải kiểm định độ vững thống kê."
+            if vi else
+            "G14: Jaccard 0.70/0.50 and 80% core are descriptive heuristics, not a statistical robustness test."
+        )
         if s["verdict"] == "không có HH":
             st.caption("Bản gốc không có ô HH (thường do ít hoán vị so với FDR). Jaccard của hai tập rỗng bằng 1 nhưng không phải bằng chứng về độ vững."
                        if vi else "The baseline has no HH cells (often too few permutations for FDR). The Jaccard of two empty sets is 1, which is not evidence of robustness.")
