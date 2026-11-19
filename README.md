@@ -2,11 +2,15 @@
 
 [Data and GADM guide](docs/README.md) · [Validation status and evidence](validation/README.md)
 
+<div align="center">
+
 # Technical manual and methodological framework
 
-<p align="center"><strong>Nighttime lights (NTL) data extractor &amp; spatial econometrics engine</strong></p>
+**Nighttime lights (NTL) data extractor & spatial econometrics engine**
 
-<p align="center"><a href="README.md">English</a> &nbsp;|&nbsp; <a href="README-vi.md">Tiếng Việt</a> &nbsp;|&nbsp; <a href="https://spatial-app.streamlit.app/?">Live demo</a></p>
+[English](README.md) &nbsp;|&nbsp; [Tiếng Việt](README-vi.md) &nbsp;|&nbsp; [Live demo](https://spatial-app.streamlit.app/?)
+
+</div>
 
 ---
 
