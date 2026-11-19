@@ -278,9 +278,9 @@ def conditional_refit_bootstrap(x, u, alpha, D, key):
         "tail_fraction":FRACTIONS[key%len(FRACTIONS)],
         "replicate":b,
         "k_tail":k,
-        "alpha_fitted_in_bootstrap":repr(float(alphab[b])),
-        "ks_D_fitted_in_bootstrap":repr(float(Db[b])),
-        "ks_D_observed":repr(float(D)),
+        "alpha_fitted_in_bootstrap":repr(fround(alphab[b],7)),
+        "ks_D_fitted_in_bootstrap":repr(fround(Db[b],7)),
+        "ks_D_observed":repr(fround(D,7)),
         "bootstrap_ge_observed":int(hits[b]),
     } for b in range(B)]
     return p,conf,rows
@@ -468,7 +468,7 @@ def main():
     if args.emit_ci or args.emit_ci_updates:
         for name,body in outputs.items():
             if args.emit_ci_updates and name not in (
-                    "tail_cases.csv", "summary.json"):
+                    "tail_cases.csv", "bootstrap_replications.csv", "summary.json"):
                 continue
             encoded=base64.b64encode(body.encode("utf-8")).decode("ascii")
             print("G06_BEGIN "+name)
