@@ -2,11 +2,15 @@
 
 [Hướng dẫn dữ liệu và GADM](docs/README-vi.md) · [Tình trạng kiểm chứng và bằng chứng](validation/README-vi.md)
 
+<div align="center">
+
 # Sổ tay kỹ thuật và khung phương pháp luận
 
-<p align="center"><strong>Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) &amp; công cụ kinh tế lượng không gian</strong></p>
+**Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) & công cụ kinh tế lượng không gian**
 
-<p align="center"><a href="README.md">English</a> &nbsp;|&nbsp; <a href="README-vi.md">Tiếng Việt</a> &nbsp;|&nbsp; <a href="https://spatial-app.streamlit.app/?">Dùng thử trực tiếp</a></p>
+[English](README.md) &nbsp;|&nbsp; [Tiếng Việt](README-vi.md) &nbsp;|&nbsp; [Dùng thử trực tiếp](https://spatial-app.streamlit.app/?)
+
+</div>
 
 ---
 
