@@ -207,3 +207,46 @@ def test_g06_uncalibrated_hill_cannot_receive_success_status():
     )
     hill = next(item for item in diag["items"] if item["key"] == "hill")
     assert hill["level"] != "ok"
+
+
+def test_g10_independent_source_raster_reference_respects_native_geometry():
+    import geopandas as gpd
+    import rasterio
+    import shapely.geometry
+    from rasterio.io import MemoryFile
+    from rasterio.transform import from_origin
+
+    spec = importlib.util.spec_from_file_location(
+        "g10_reference_zonal", ROOT / "validation" / "g10_reference_zonal.py"
+    )
+    ref_mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ref_mod)
+
+    origin_x, origin_y = 500000.0, 2000000.0
+    transform = from_origin(origin_x, origin_y, 500.0, 500.0)
+    observed = np.ones((4, 4), dtype=np.float32)
+    months = np.full((4, 4), 8.0, dtype=np.float32)
+    counts = np.full((4, 4), 60.0, dtype=np.float32)
+    observed[0, 0] = months[0, 0] = counts[0, 0] = 0.0
+    with MemoryFile() as mem:
+        with mem.open(driver="GTiff", width=4, height=4, count=3,
+                      dtype="float32", crs="EPSG:32650",
+                      transform=transform, nodata=np.nan) as writer:
+            writer.write(np.stack([observed, months, counts]))
+            for i, name in enumerate(ref_mod.BANDS, start=1):
+                writer.set_band_description(i, name)
+        raw = mem.read()
+    geometries = [
+        shapely.geometry.box(origin_x + ix * 500, origin_y - (iy + 1) * 500,
+                             origin_x + (ix + 1) * 500, origin_y - iy * 500)
+        for iy in range(4) for ix in range(4)
+    ]
+    polygons = gpd.GeoDataFrame(
+        {"grid_id": np.arange(16)}, geometry=geometries, crs="EPSG:32650"
+    )
+    ref = ref_mod.make_reference(raw, polygons)
+    assert len(ref) == 16
+    assert ref.loc[0, "ref_cf_cvg_total"] == pytest.approx(0.0)
+    assert ref.loc[1, "ref_cf_cvg_total"] == pytest.approx(60.0)
+    assert ref.loc[1, "ref_mean_valid_months"] == pytest.approx(8.0)
+    assert ref.loc[1, "ref_observed_fraction"] == pytest.approx(1.0)
