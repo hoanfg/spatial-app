@@ -2,7 +2,7 @@
 
 [Hướng dẫn dữ liệu và GADM](docs/README-vi.md) · [Tình trạng kiểm chứng và bằng chứng](validation/README-vi.md)
 
-Sổ tay kỹ thuật và khung phương pháp luận
+# Sổ tay kỹ thuật và khung phương pháp luận
 
 <p align="center"><strong>Bộ trích xuất dữ liệu ánh sáng ban đêm (NTL) &amp; công cụ kinh tế lượng không gian</strong></p>
 
