@@ -84,6 +84,9 @@ def collect_quality_export(ts: str) -> dict:
         v = ss.get("_dq_val", {}).get((ts, tag))
         if v:
             out.update(val_export(v["agree"], tag))
+            if "year" in v:
+                out[f"val_ghsl_epoch_{tag}"] = int(v["epoch"])
+                out[f"val_ghsl_year_gap_{tag}"] = abs(int(v["epoch"]) - int(v["year"]))
     return out
 
 
@@ -232,7 +235,8 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                         agree = measured_call(res.get("perf_monitor"), f"ghsl.{kind}.agreement",
                                               proxy_agreement, ntl, sums, area, cent.x.to_numpy(),
                                               cent.y.to_numpy(), size, core=core)
-                        _put(val_cache, vkey, {"agree": agree, "epoch": epoch, "sums": sums, "core": core})
+                        _put(val_cache, vkey, {"agree": agree, "epoch": epoch, "year": year,
+                                                "sums": sums, "core": core})
                     st.rerun()
                 except Exception as e:  # noqa: BLE001
                     st.error(f"{'Lỗi' if vi else 'Error'}: {e}")
@@ -258,6 +262,14 @@ def render_quality_panel(*, res, grid_utm, lang, ee, dataset, scale_m):
                 lvl = a["level"]
                 msg = (f"Mức đồng thuận **{lvl}** (ρ = {a['rho']:.2f}). " if vi else f"Agreement level **{lvl}** (ρ = {a['rho']:.2f}). ")
                 msg += (f"Epoch GHSL dùng: {v['epoch']} (NTL năm {year})." if vi else f"GHSL epoch used: {v['epoch']} (NTL year {year}).")
+                if int(v["epoch"]) != int(year):
+                    st.warning(
+                        (f"G13: GHSL năm {v['epoch']} cách NTL năm {year} "
+                         f"{abs(int(v['epoch']) - int(year))} năm. Tương quan không tự kiểm chứng sự phù hợp thời gian.")
+                        if vi else
+                        (f"G13: GHSL {v['epoch']} differs from NTL {year} by "
+                         f"{abs(int(v['epoch']) - int(year))} years. Correlation does not validate temporal alignment.")
+                    )
                 if a["proxy_zero_share"] > 0.5:
                     msg += (f" {a['proxy_zero_share'] * 100:.0f}% ô có giá trị 0: ρ chịu ảnh hưởng của nhiều giá trị trùng." if vi
                             else f" {a['proxy_zero_share'] * 100:.0f}% of cells are 0: ρ is affected by many ties.")
