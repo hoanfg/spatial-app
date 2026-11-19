@@ -487,9 +487,14 @@ def _diag_line(it, vi):
             return f"{prefix} " + ("**Phần dư độ dốc đô thị:** không đủ dữ liệu." if vi else "**Urban-gradient residuals:** not enough data.")
         pt = fmt_p(v["p"], v.get("perms"), prefix=True) if v["perm_done"] else ("(không tính p-value vì lưới lớn)" if vi else "(no p-value: large grid)")
         t = f"**Phần dư độ dốc đô thị:** Moran's I = {v['I']:.3f}, {pt}." if vi else f"**Urban-gradient residuals:** Moran's I = {v['I']:.3f}, {pt}."
-        if v["flag"]:
-            t += (" Phần dư còn tự tương quan không gian: R² của độ dốc có thể bị thổi phồng." if vi
-                  else " Residuals are still spatially autocorrelated: the gradient R² may be inflated.")
+        if not v["perm_done"]:
+            t += (" Chỉ số I là mô tả: không chạy hoán vị, nên I > 0,3 không phải kết luận có ý nghĩa thống kê."
+                  if vi else
+                  " I is descriptive: no permutations were run, so I > 0.3 cannot establish statistical significance.")
+        elif v["flag"]:
+            t += (" Có bằng chứng tự tương quan theo phép hoán vị được nêu; không tự suy ra R² bị thổi phồng."
+                  if vi else
+                  " Permutation evidence of residual autocorrelation is present; this alone does not prove R² is inflated.")
         return f"{prefix} {t}"
     # dark
     t = (f"**Ô tối:** {v['share'] * 100:.0f}% số ô lõi có NTL = 0." if vi else f"**Dark cells:** {v['share'] * 100:.0f}% of core cells have NTL = 0.")
