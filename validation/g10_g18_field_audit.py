@@ -143,6 +143,22 @@ def _independent_support_check(df: pd.DataFrame, path: Path):
         residuals["observed_fraction_max_abs"] <= 0.001
         and residuals["valid_months_max_abs"] <= 0.001
     )
+    residuals["cf_cvg_source_count_available"] = "ref_cf_cvg_total" in ref
+    if "ref_cf_cvg_total" in ref:
+        cf = pd.to_numeric(
+            ref.set_index("grid_id").reindex(df["grid_id"])["ref_cf_cvg_total"],
+            errors="coerce",
+        ).to_numpy(float)
+        if not np.isfinite(cf).all() or (cf < 0).any():
+            raise ValueError("Source cf_cvg totals must be finite and nonnegative")
+        noobs = df["dq_status"].eq("no_observation").to_numpy(bool)
+        months = df["dq_mean_valid_months"].to_numpy(float)
+        residuals["cf_cvg_support_consistent"] = bool(
+            np.all(cf[noobs] <= 1e-6) and np.all(cf[months > 0] > 0)
+        )
+        residuals["cf_cvg_total_cell_median"] = float(np.median(cf))
+        if not residuals["cf_cvg_support_consistent"]:
+            residuals["within_tolerance_1e_3"] = False
     return residuals
 
 
