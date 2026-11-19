@@ -705,6 +705,8 @@ $$
 \hat{\zeta}_{\mathrm{Hill}} = \left[ \frac{1}{k} \sum_{j=1}^{k} \ln\left(\frac{\mathrm{NTL}_{(j)}}{\mathrm{NTL}_{(k+1)}}\right) \right]^{-1}
 $$
 
+**Giới hạn diễn giải:** Hệ số Hill chỉ mô tả hình dạng đuôi, **không chứng minh** NTL tuân theo phân phối Pareto. p-value KS hiện có trong ứng dụng là **xấp xỉ tiệm cận sau khi ước lượng alpha bằng chính dữ liệu đuôi**, chưa tự hiệu chỉnh bất định của tham số và phụ thuộc không gian. G06 đối chiếu với bootstrap KS có điều kiện, **ước lượng lại alpha ở từng lần lặp**, thử các tỷ lệ đuôi cố định và so sánh các phân phối exponential và lognormal đã cắt theo ngưỡng. Với 10% ô sáng nhất của Bảo An 2020, p-value KS hiện hành là 0,0951, còn bootstrap giả định các giá trị độc lập cho p-value 0,0225. **Cả hai chưa phải p-value được hiệu chuẩn theo phụ thuộc không gian của NTL thực**; dữ liệu nhân tạo không phải nguồn xác minh kinh tế độc lập. Toàn bộ đầu vào, bảng bootstrap và giới hạn nằm trong [kiểm chứng G06](validation/README-vi.md).
+
 **2. Độ dốc NTL theo khoảng cách (mô tả)** ($\hat{\gamma}$, Duranton & Puga, 2023)
 
 Ước lượng liên hệ mô tả giữa log NTL và khoảng cách tới tâm do chính NTL quyết định bằng WLS có trọng số diện tích trên tập ô lõi. Đây chưa phải phương trình cấu trúc mật độ kinh tế đô thị:
