@@ -25,6 +25,56 @@ def test_spacetime_requires_forward_chronology(year_t0, year_t1):
         )
 
 
+def _g09_grid():
+    # Four-by-four contiguous full cells, so every one of the 16 cells is
+    # eligible for the two-period transition table.
+    coords = np.arange(4, dtype=float) * 500.0 + 250.0
+    xx, yy = np.meshgrid(coords, coords)
+    return xx.ravel(), yy.ravel(), np.full(16, 0.25)
+
+
+def test_g09_shorrocks_undefined_when_tied_values_empty_initial_quartiles():
+    cx, cy, area = _g09_grid()
+    # Eight zeros and eight positive values have only two distinct ranks.
+    # All observations are unchanged across periods: no transition occurs.
+    x = np.array([0.0] * 8 + [5.0] * 8)
+    result = run_spacetime_lisa(
+        cx, cy, x, x.copy(), area, 500.0, year_t0=2018, year_t1=2024,
+    )
+    assert result.metrics["shorrocks_status"] == "undefined_empty_initial_quartile"
+    assert result.metrics["shorrocks_missing_initial_quartiles"] == ["Q1", "Q3"]
+    assert np.isnan(result.metrics["shorrocks_mobility"])
+    # Legacy tables keep zero rows; these rows are undefined conditional
+    # transitions, NOT empirical transition probabilities equal to zero.
+    assert np.array_equal(
+        result.markov_all.to_numpy().sum(axis=1), [0.0, 100.0, 0.0, 100.0],
+    )
+    assert np.all(result.st_cell_df["delta_ntl"] == 0)
+
+
+def test_g09_shorrocks_zero_for_static_populated_four_quartiles():
+    cx, cy, area = _g09_grid()
+    x = np.arange(1.0, 17.0)
+    result = run_spacetime_lisa(
+        cx, cy, x, x.copy(), area, 500.0, year_t0=2018, year_t1=2024,
+    )
+    assert result.metrics["shorrocks_status"] == "defined"
+    assert result.metrics["shorrocks_missing_initial_quartiles"] == []
+    assert result.metrics["shorrocks_mobility"] == pytest.approx(0.0)
+    np.testing.assert_allclose(np.diag(result.markov_all.to_numpy()), [100.0] * 4)
+
+
+def test_g09_shorrocks_missing_if_too_few_eligible_cells():
+    x = np.arange(1.0, 10.0)
+    xx, yy = np.meshgrid(np.arange(3) * 500.0 + 250.0, np.arange(3) * 500.0 + 250.0)
+    result = run_spacetime_lisa(
+        xx.ravel(), yy.ravel(), x, x.copy(), np.full(9, 0.25), 500.0,
+        year_t0=2018, year_t1=2024,
+    )
+    assert result.metrics["shorrocks_status"] == "insufficient_eligible_cells"
+    assert np.isnan(result.metrics["shorrocks_mobility"])
+
+
 def test_signed_hh_distance_is_between_cell_centers_not_boundaries():
     cx = np.array([250.0, 750.0, 1250.0])
     cy = np.zeros(3)
