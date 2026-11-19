@@ -74,3 +74,39 @@ def observation_support_screen(frame: pd.DataFrame, *, min_months: int = 3) -> d
         "requires_field_validation": True,
         "missing_columns": [],
     }
+
+
+
+def utm_applicability_screen(bounds_wgs84) -> dict:
+    """Flag scientific limits of applying a single UTM zone to a study area.
+
+    Limits are conservative applicability checks, not measured projection
+    error. They do NOT replace independent geodesic control of areas/distances.
+    """
+    if len(bounds_wgs84) != 4:
+        raise ValueError("WGS84 bounds must be xmin,ymin,xmax,ymax")
+    west, south, east, north = [float(x) for x in bounds_wgs84]
+    if (not np.isfinite([west, south, east, north]).all()
+            or west >= east or south >= north
+            or west < -180 or east > 180 or south < -90 or north > 90):
+        raise ValueError("Invalid WGS84 bounding box")
+    lon_span = east - west
+    lat_span = north - south
+    if south < -80 or north > 84:
+        status = "outside_standard_utm_latitudes"
+    elif lon_span >= 180:
+        status = "dateline_bbox_cannot_be_modeled_by_one_utm_zone"
+    elif lon_span > 6 or lat_span > 8:
+        status = "broad_extent_needs_geodesic_error_check"
+    else:
+        status = "candidate_local_utm_not_independently_validated"
+    return {
+        "status": status,
+        "lon_span_degrees": lon_span,
+        "lat_span_degrees": lat_span,
+        "unsupported": status in (
+            "outside_standard_utm_latitudes",
+            "dateline_bbox_cannot_be_modeled_by_one_utm_zone",
+        ),
+        "requires_geodesic_validation": status != "candidate_local_utm_not_independently_validated",
+    }
