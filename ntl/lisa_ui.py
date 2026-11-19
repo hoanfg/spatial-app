@@ -460,8 +460,15 @@ def _diag_line(it, vi):
              f"KS p = {v['ks_p']:.3f}." if vi else
              f"**Pareto tail:** α = {v['alpha']:.2f} ± {v['se']:.2f} (95% CI {v['ci_lo']:.2f}–{v['ci_hi']:.2f}, k = {v['k']}); "
              f"KS p = {v['ks_p']:.3f}.")
+        # The existing diagnostic uses an approximate KS reference despite
+        # fitting alpha on the same tail. The G06 audit provides a separate
+        # conditional refit bootstrap but does not change historical exports.
         if v["power_law_ok"] is False:
-            t += " Đuôi không giống luật lũy thừa, hãy diễn giải α thận trọng." if vi else " The tail does not look like a power law; interpret α with care."
+            t += (" KS xấp xỉ không ủng hộ Pareto ở ngưỡng này." if vi
+                  else " The approximate KS check does not support Pareto at this cutoff.")
+        t += (" Đây là p-value KS xấp xỉ, chưa hiệu chỉnh việc ước lượng lại α và phụ thuộc không gian; không phải xác nhận phân phối Pareto."
+              if vi else
+              " This is an approximate KS p-value, not corrected for alpha refitting or spatial dependence; it does not certify a Pareto law.")
         if v["k"] < 20:
             t += " Mẫu đuôi nhỏ (k < 20), sai số rất lớn." if vi else " Small tail sample (k < 20), very wide error."
         return f"{prefix} {t}"
@@ -589,8 +596,8 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
                                    if vi else "Jaccard of the High-High cell set across raw, P99-winsorized and ln(1+NTL). Low values mean outliers drive the HH set."))
         run_tail = b3.button(_lbl("Độ nhạy tail_frac" if vi else "tail_frac sensitivity", "tail"), key="dg_btn_tail",
                              use_container_width=True,
-                             help=("Ước lượng Hill α ở 5%, 10%, 15% đuôi trên. Biên độ α nhỏ nghĩa là đuôi ổn định." if vi
-                                   else "Hill α at the top 5%, 10%, 15%. A small α range means a stable tail."))
+                             help=("Ước lượng Hill α trên 5%, 10%, 15% ô sáng nhất. Chênh lệch α nhỏ chỉ là độ nhạy mô tả, không chứng minh dữ liệu có phân phối Pareto." if vi
+                                   else "Hill α at the top 5%, 10%, 15% brightest cells. Small variation is descriptive, not proof of a Pareto distribution."))
 
         def _progress(label):
             bar = st.progress(0.0, text=label)
@@ -653,7 +660,7 @@ def _render_diagnostics(*, lang, ckey, out, grid_utm, size, perms, alpha, fdr, u
                      "SE": _num(x["se"], "{:.2f}"), "KS p": _num(x["ks_p"], "{:.3f}")} for x in r["rows"]]
             st.markdown("**" + ("Kết quả: độ nhạy tail_frac" if vi else "Result: tail_frac sensitivity") + "**")
             st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
-            st.caption((f"Biên độ α giữa các ngưỡng cắt: {_num(r['spread'], '{:.2f}')} (nhỏ = đuôi ổn định)."
+            st.caption((f"Biên độ α giữa các ngưỡng cắt: {_num(r['spread'], '{:.2f}')} (chỉ đo độ nhạy của ước lượng)." 
                         if vi else f"α range across tail fractions: {_num(r['spread'], '{:.2f}')} (small = stable tail)."))
 
 

@@ -705,6 +705,8 @@ $$
 \hat{\zeta}_{\mathrm{Hill}} = \left[ \frac{1}{k} \sum_{j=1}^{k} \ln\left(\frac{\mathrm{NTL}_{(j)}}{\mathrm{NTL}_{(k+1)}}\right) \right]^{-1}
 $$
 
+**Interpretive limit:** Hill's alpha is a tail-shape estimate, not a proof that NTL follows a Pareto law. The app's existing KS p-value is an **asymptotic approximation calculated after fitting alpha to those same observations**; it does not automatically account for fitted-parameter uncertainty or spatial dependence. G06 compares this reference against a conditional parametric KS bootstrap that **refits alpha in each replication**, across fixed top-tail cutoffs, with exponential and threshold-truncated lognormal rivals. In the Bao'an 2020 top-10% sample, the approximate KS p-value was 0.0951 but the conditional iid bootstrap p-value was 0.0225. **Neither is a field-calibrated p-value under spatially dependent VIIRS observations**, and the synthetic controls are not independent economic validation. Full inputs, replicate tables and limitations are in [G06 validation](validation/README.md#%67%30%36-pareto-tail-testing-and-conditional-bootstrap-19-november-2026).
+
 **2. Descriptive NTL distance gradient** ($\hat{\gamma}$, Duranton & Puga, 2023)
 
 Fits the descriptive association between log NTL and distance from the NTL-derived center by area-weighted WLS across core cells. The center is selected using NTL, so this is not a structural urban-density model:

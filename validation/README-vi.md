@@ -67,7 +67,7 @@ Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và
 | G03 | P1 | Các ngưỡng NTL 5/15/40 đã được gọi là nhóm bức xạ mô tả; hiệu chuẩn ý nghĩa kinh tế vẫn **mở**. | Dữ liệu sử dụng đất và biến kinh tế độc lập tại nhiều địa bàn. |
 | G04 | P1 | Đã lưu bằng chứng về độ nhạy chỉ số NTL theo khoảng cách trên Bảo An 2020 và thí nghiệm nhân tạo có quy mô việc làm biết trước. **Hiệu chuẩn tiếp cận thị trường kinh tế và ngoại sinh vẫn mở.** | Đối chiếu dữ liệu việc làm, dân số, chi phí đi lại hoặc kết quả thị trường độc lập, đồng bộ địa bàn, thời gian và đơn vị không gian. |
 | G05 | P1 | Đã lưu bằng chứng về độ nhạy theo tâm chọn bằng LISA: thử nghiệm nhân tạo biết trước tâm, 80 lần lặp của các tâm thay thế và so sánh Bảo An 2020. **Vẫn chưa có tâm kinh tế thực được xác minh độc lập.** | Ghép tâm việc làm/POI hoặc trung tâm hoạt động được xác minh độc lập, có vị trí và năm phù hợp; không đồng nhất R² nội mẫu với độ đúng của tâm kinh tế. |
-| G06 | P1 | Số học Hill/KS đã kiểm thử nhưng chưa xác nhận dữ liệu thực sự theo Pareto. | Bootstrap có ước lượng lại tham số, so ngưỡng đuôi và các phân phối thay thế. |
+| G06 | P1 | Đã lưu bootstrap KS có điều kiện, ước lượng lại alpha ở mọi lần lặp, bốn ngưỡng đuôi, ba phân phối nhân tạo và NTL Bảo An 2020, kèm so AICc. **Chưa xác thực quy luật Pareto trên trường NTL có phụ thuộc không gian.** | Cần mô phỏng giả thuyết không có phụ thuộc không gian, xử lý cách chọn ngưỡng và đối chiếu các địa bàn độc lập trước khi kết luận thực địa. |
 | G07 | P1 | Giao diện và sổ tay đã ghi đúng khoảng cách **giữa tâm ô**; khoảng cách tới biên đa giác thực vẫn **chưa kiểm chứng**. | Đối chiếu với khoảng cách đến biên đa giác tại cụm HH phức tạp và nhiều lưới. |
 | G08 | P1 | Đã chặn năm ngược: `year_t0 < year_t1` trong hàm lõi và giao diện; có kiểm thử hồi quy mới. | Giữ nguyên bằng chứng hai kỳ đã hoàn tất, không chạy lại chỉ vì bổ sung ràng buộc. |
 | G09 | P1 | Bảng chuyển phân vị hai kỳ chỉ mô tả, chưa chứng minh quá trình Markov dài hạn ổn định. | Panel nhiều năm liên tục, kiểm tra đồng hạng, phân vị và độ ổn định xác suất chuyển. |
@@ -110,6 +110,41 @@ Các mức $\tau$ được thử là 0,25; 0,5 và 1,0 mỗi km. Thứ hạng t�
 **Bằng chứng lưu trữ đầy đủ:** [chương trình có thể tái lập](g04_ntl_potential_experiment.py), [CSV đầu vào nhân tạo 335 ô có quy mô việc làm](evidence/g04_ntl_potential/synthetic_input.csv), [1.005 kết quả cấp ô nhân tạo ở cấu hình mặc định](evidence/g04_ntl_potential/synthetic_cell_results.csv), [kết quả cấp ô theo 7.148 ID Bảo An](evidence/g04_ntl_potential/baoan_cell_results.csv), [bảng 36 trường hợp độ nhạy](evidence/g04_ntl_potential/sensitivity.csv) và [JSON gồm mã băm SHA-256 nguồn, phiên bản thư viện, định nghĩa và giới hạn](evidence/g04_ntl_potential/summary.json). CSV gốc Bảo An đã được bảo quản ở `validation/evidence/a02_post_pr27/`. CI sẽ đối chiếu đúng cả năm tệp mới bằng cách chạy lại chương trình, giữ nguyên đầu vào lịch sử.
 
 **Phần đã hoàn tất và phần còn mở:** Bộ G04 đã kiểm tra độ nhạy trên dữ liệu nhân tạo và bức xạ VIIRS thực; nó không chứng minh ý nghĩa kinh tế. **Chưa đóng G04 về giá trị diễn giải kinh tế, không phải vì thiếu dữ liệu để chạy công thức.** Để hiệu chuẩn như thước đo tiếp cận thị trường kinh tế, cần số liệu việc làm hoặc dân số được thu thập độc lập, có vị trí và cùng khoảng thời gian, kết hợp với chi phí giao thông hoặc đi lại có cơ sở, tốt nhất thêm kết quả thị trường quan sát thực tế. Việc làm nhân tạo không đóng được khoảng trống này; kiểm tra độ nhạy thuần NTL tại một địa bàn không nhận dạng tác động ngoại sinh. Trong [Donaldson và Hornbeck (2016)](https://doi.org/10.1093/qje/qjw002), tiếp cận thị trường liên quan quy mô thị trường và chi phí vận tải; còn phép tái định tâm phục vụ nhận dạng trong [Borusyak và Hull (2023)](https://doi.org/10.3982/ECTA19367) cần quy tắc về các cú sốc phản thực được xác định rõ.
+
+### G06: Kiểm chứng đuôi Pareto bằng bootstrap có điều kiện (19/11/2026)
+
+**Ước lượng Hill không đồng nghĩa xác nhận phân phối Pareto.** Ứng dụng hiện tính hệ số Hill cho 10% ô lõi có NTL dương sáng nhất. Hàm `ntl.lisa_diagnostics.ks_pareto` vẫn xuất **p-value KS xấp xỉ tiệm cận** sau khi hệ số alpha đã được ước lượng từ chính tập mẫu dùng kiểm định. T09 đã xác nhận phép tính số học trong trường hợp kiểm soát, **không đồng nghĩa đã hiệu chuẩn phép kiểm độ phù hợp phân phối**. G06 không tính lại kiểm chứng ảnh vệ tinh hoặc thay đổi hàm ước lượng vận hành, các khóa CSV và giá trị kết quả.
+
+**Thiết kế kiểm chứng.** Chọn trước bốn tỷ lệ đuôi: 5%, 10%, 15% và 20% các ô lõi có NTL dương. Ở mỗi mức, ngưỡng `u` bằng giá trị sáng thứ `k+1`, đúng quy tắc hiện hành của Hill; `k` ô sáng nhất tạo thành tập quan sát đuôi. Tính \(\widehat\alpha=1/\overline{\log(x/u)}\) và thống kê KS theo hàm phân phối Pareto có điều kiện đã khớp alpha. Sau đó tạo **399 mẫu bootstrap Pareto cho mỗi tổ hợp**, giữ cố định ngưỡng `u` và kích thước mẫu đuôi `k`. **Mỗi mẫu bootstrap đều được ước lượng lại alpha**, rồi tính lại KS theo tham số mới. p-value tham chiếu bằng \((1+\#\{D^{*}\ge D_{\rm obs}\})/(399+1)\). Vì vậy, p nhỏ nhất có thể ghi là **0,0025**, không phải bằng 0; khoảng tin cậy 95% phản ánh bất định hữu hạn từ số lượt mô phỏng.
+
+**Giới hạn quan trọng:** Bootstrap này **giữ nguyên `u`, `k` và giả định các giá trị vượt ngưỡng độc lập cùng phân phối**. Nó **không chọn lại ngưỡng thấp nhất trong từng lần mô phỏng**, nên chưa phải đầy đủ quy trình của Clauset, Shalizi và Newman (2009). Với NTL VIIRS thực, các ô kế nhau có phụ thuộc không gian; do đó p-value trên Bảo An chỉ là **chuẩn tham chiếu theo giả định độc lập có điều kiện**, **không phải p-value thực địa đã được hiệu chuẩn phụ thuộc không gian**.
+
+**Ba trường nhân tạo, mỗi trường 5.000 quan sát độc lập.** Chương trình có seed cố định tạo một phân phối Pareto với hệ số đúng bằng 2,5, một phân phối lognormal và một phân phối exponential có dịch gốc. Bảng CSV lưu toàn bộ giá trị đầu vào. Qua bốn ngưỡng:
+
+| Phân phối sinh dữ liệu biết trước | Khoảng p-value KS bootstrap | So sánh ứng viên bằng AICc |
+| --- | ---: | --- |
+| Pareto, alpha thật bằng 2,5 | 0,4050 đến 0,8075 | Pareto có AICc thấp nhất ở 3/4 trường hợp, lognormal ở 1/4 |
+| Lognormal | 0,0025 đến 0,0850 | Lognormal cắt ngưỡng có AICc thấp nhất ở 4/4 |
+| Exponential có dịch gốc | 0,0025 đến 0,0500 | Exponential có AICc thấp nhất ở 3/4, lognormal cắt ngưỡng ở 1/4 |
+
+Việc không bác bỏ ở một ngưỡng ngắn, chẳng hạn 5% với dữ liệu lognormal (p = 0,085), **không chứng minh có quy luật Pareto**. Khi chỉ giữ số ít giá trị lớn nhất, phép thử có thể thiếu sức phân biệt.
+
+**NTL thực Bảo An năm 2020, chỉ kiểm chứng giả định độc lập có điều kiện.** Dùng đúng CSV VIIRS 7.148 ô đã kiểm tra A02. **6.186 ô lõi có NTL dương** đi vào phân tích; 962 ô biên vẫn hiện diện trong bảng nối theo mã ô nhưng không vào phép khớp. Không lấy thêm biến kinh tế hoặc dữ liệu ảnh vệ tinh mới.
+
+| Nhóm ô lõi sáng nhất | Số ô đuôi `k` | Hệ số Hill | p-value KS cũ | p-value KS bootstrap ước lượng lại alpha | AICc nhỏ nhất |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 5% | 309 | 5,6726 | 0,00665 | 0,0025 | Pareto |
+| 10% (mặc định ứng dụng) | 618 | 5,5904 | 0,09511 | 0,0225 | Pareto |
+| 15% | 927 | 4,6953 | 0,000009 | 0,0025 | Lognormal cắt ngưỡng |
+| 20% | 1.237 | 4,0730 | Rất gần 0 ở độ chính xác hiển thị | 0,0025 | Lognormal cắt ngưỡng |
+
+**Diễn giải:** Ở ngưỡng 10% ứng dụng thường dùng, p-value xấp xỉ cũ bằng 0,09511, còn bootstrap **theo giả định độc lập có điều kiện** bằng 0,0225 trên cùng 618 ô. Hai phương pháp có thể dẫn tới đánh giá khác nhau ở mức 5%. Nhưng **không được kết luận đã bác bỏ Pareto cho toàn bộ trường NTL Bảo An** theo tiêu chuẩn thống kê thực địa, vì bootstrap này chưa điều chỉnh tự tương quan không gian và cố định ngưỡng thứ tự từ mẫu. Với 399 lượt bootstrap, p = 0,0025 nghĩa là không lượt nào có KS sau tái ước lượng lớn hơn hoặc bằng KS quan sát, trong giới hạn Monte Carlo. Đồng thời, **AICc là so sánh tương đối**: Pareto thắng ở 5% và 10% dù phép KS bootstrap theo giả định độc lập không ủng hộ ở ngưỡng 5%. Không có mâu thuẫn, bởi mô hình tốt nhất trong ba ứng viên chưa chắc phù hợp tuyệt đối với dữ liệu.
+
+**Phân phối đối chiếu:** Mô hình exponential của phần vượt ngưỡng và lognormal **được cắt trái tại cùng ngưỡng `u`** đều được ước lượng riêng trên **cùng `k` quan sát đuôi**, rồi so với Pareto bằng AICc và chênh lệch KS mô tả. Cách này tránh so likelihood vô điều kiện của lognormal với likelihood có điều kiện của Pareto. Đây không phải phép kiểm tỷ số likelihood có p-value; tham số lognormal sau khớp được lưu riêng.
+
+**Bằng chứng đầy đủ có thể tái lập:** [chương trình sinh phép kiểm](g06_pareto_tail_experiment.py), [5.000 đầu vào nhân tạo](evidence/g06_pareto_tail/synthetic_input.csv), [7.148 ô Bảo An gốc có cờ lõi, quan sát dương và thứ hạng](evidence/g06_pareto_tail/baoan_tail_observations.csv), [16 trường hợp phân phối/ngưỡng](evidence/g06_pareto_tail/tail_cases.csv), [6.384 lần bootstrap có hệ số alpha và KS sau ước lượng lại](evidence/g06_pareto_tail/bootstrap_replications.csv), [JSON tổng hợp, phiên bản thư viện, mã băm SHA-256 và giới hạn](evidence/g06_pareto_tail/summary.json). CSV gốc Bảo An đã nằm tại `validation/evidence/a02_post_pr27/`. CI sẽ chạy và đối chiếu **đúng từng byte của cả năm tệp mới** bằng các thư viện khóa phiên bản.
+
+**G06 thực địa còn mở:** Kết quả **không chứng nhận NTL có quy luật Pareto**, không xác lập quan hệ kinh tế hoặc nhân quả. Cần mô phỏng giả thuyết không có cấu trúc phụ thuộc không gian hoặc bootstrap theo khối địa lý, kiểm tra tính khác biệt của quá trình đo theo thời gian và quy trình chọn ngưỡng đã đăng ký trước hoặc được bootstrap cùng bước tối ưu ngưỡng. Tham khảo [Clauset, Shalizi và Newman (2009)](https://doi.org/10.1137/070710111). Cờ `power_law_ok` cũ chỉ là **phép sàng lọc KS xấp xỉ**, không phải kết luận đã xác thực quy luật ở thực địa; phần diễn giải trên giao diện đã được bổ sung cảnh báo.
 
 ### G05: Độ nhạy khi chọn tâm từ NTL để ước lượng độ dốc và R² (19/11/2026)
 
