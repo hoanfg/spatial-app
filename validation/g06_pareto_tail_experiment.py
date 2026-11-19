@@ -122,7 +122,7 @@ def conditional_exponential(x, u):
     return float(ks_sorted(np.sort(excess), cdf)), float(ll)
 
 
-def conditional_lognormal(x, u):
+def conditional_lognormal(x, u, archived_parameters=None):
     # Right-tail truncated lognormal: log X ~ N(mu, sigma²) conditional X>u.
     # This is NOT the ordinary untruncated lognormal fit to the tail.
     y = np.log(np.asarray(x,float))
@@ -153,12 +153,29 @@ def conditional_lognormal(x, u):
     if not candidate:
         raise ValueError("Truncated lognormal fit did not converge")
     best=min(candidate,key=lambda a:a.fun)
-    mu,sd=float(best.x[0]),float(np.exp(best.x[1]))
+    # The truncated lognormal can be nearly Pareto at the far tail:
+    # its likelihood is then flat in (mu, sigma), so independent L-BFGS-B
+    # runs may return slightly different but nearly equivalent optima.
+    # Store a canonical rounded parameter pair and recompute rival metrics
+    # from that pair. A subsequent replay uses the stored pair, but also
+    # refits independently and rejects a stored pair with materially worse
+    # likelihood. This is a numerical-stability policy, not extra evidence.
+    if archived_parameters is None:
+        mu=fround(best.x[0],8)
+        sd=fround(np.exp(best.x[1]),8)
+    else:
+        mu=float(archived_parameters["mu_logx"])
+        sd=float(archived_parameters["sigma_logx"])
+    if sd <= 0 or not np.isfinite(mu+sd):
+        raise ValueError("Invalid canonical truncated lognormal parameters")
+    ll=-minus_loglik([mu,np.log(sd)])
+    if not np.isfinite(ll) or -float(best.fun)-ll > 0.02:
+        raise ValueError("Archived truncated lognormal is not near the MLE")
     yc=np.sort(y)
     log_sf_x=norm.logsf((yc-mu)/sd)
     log_sf_u=norm.logsf((lower-mu)/sd)
     cdf=-np.expm1(log_sf_x-log_sf_u)
-    return (float(ks_sorted(yc,cdf)), -float(best.fun),
+    return (float(ks_sorted(yc,cdf)),float(ll),
             {"mu_logx":fround(mu,8),"sigma_logx":fround(sd,8),
              "converged":bool(best.success)})
 
@@ -275,6 +292,19 @@ def calculate():
     data={**syn,"baoan_2020_ntl":real}
     if tuple(data)!=SOURCES:
         raise AssertionError("G06 source order must remain stable")
+    saved_fit={}
+    summary_file=DEST/"summary.json"
+    if summary_file.is_file():
+        previous=json.loads(summary_file.read_text(encoding="utf-8"))
+        if previous.get("gap")!="G06":
+            raise ValueError("Archived G06 fit metadata source invalid")
+        saved_fit={
+            (item["source"],float(item["tail_fraction"])):
+                item["conditional_lognormal_parameters"]
+            for item in previous["fit_details"]
+        }
+        if len(saved_fit)!=len(SOURCES)*len(FRACTIONS):
+            raise ValueError("Archived truncated lognormal parameter grid incomplete")
     cases=[]
     boots=[]
     fitmeta=[]
@@ -297,7 +327,8 @@ def calculate():
                 abs(legacy["ks_D"]-D)>1e-9 or int(legacy["k"])!=k):
                 raise AssertionError("G06 must match production Hill and KS arithmetic")
             Dexp,llexp=conditional_exponential(top,u)
-            Dlog,lllog,logparam=conditional_lognormal(top,u)
+            Dlog,lllog,logparam=conditional_lognormal(
+                top,u,saved_fit.get((name,float(frac))))
             p,conf,rows=conditional_refit_bootstrap(
                 top,u,alpha,D,si*len(FRACTIONS)+fi)
             boots.extend(rows)
@@ -412,6 +443,7 @@ def main():
     p=argparse.ArgumentParser()
     p.add_argument("--verify",action="store_true")
     p.add_argument("--emit-ci",action="store_true")
+    p.add_argument("--emit-ci-updates",action="store_true")
     args=p.parse_args()
     outputs=calculate()
     report=json.loads(outputs["summary.json"])
@@ -433,8 +465,11 @@ def main():
             if path.read_text(encoding="utf-8")!=body:
                 raise SystemExit("G06 evidence mismatch: "+str(path))
         print("G06 exact evidence replay succeeded")
-    if args.emit_ci:
+    if args.emit_ci or args.emit_ci_updates:
         for name,body in outputs.items():
+            if args.emit_ci_updates and name not in (
+                    "tail_cases.csv", "summary.json"):
+                continue
             encoded=base64.b64encode(body.encode("utf-8")).decode("ascii")
             print("G06_BEGIN "+name)
             for j in range(0,len(encoded),4000):
