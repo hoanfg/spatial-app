@@ -19,6 +19,7 @@ from .formatting import fmt_p
 from .performance import profile_stage
 from .spacetime_labels import format_regime_summary
 from .lisa_core import ALL_LABELS, DARK, EDGE, NS, SPILLOVER_RINGS, run_lisa, run_spacetime_lisa
+from .scientific_validity import observation_support_screen
 from .lisa_diagnostics import (
     HEAVY_WORK_LIMIT, SEED_LIST, auto_diagnostics, estimate_seconds, heavy_work_units,
     method_sensitivity, perm_power, seed_stability, tail_sensitivity,
@@ -679,6 +680,24 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
         "Metrics retain the legacy zero-fill policy. CSV dq_ fields distinguish missing observations, "
         "observed zeros and clipped negative radiance; unknown means coverage is not established."
     )
+    support_audit = observation_support_screen(grid_utm)
+    if support_audit["n_support_issues"]:
+        count = support_audit["n_support_issues"]
+        st.warning(
+            (f"ĐÁNH GIÁ HỖ TRỢ QUAN SÁT (G10/G18): {count:,}/{n:,} ô có metadata chưa xác minh, "
+             "không có quan sát, chỉ được quan sát một phần hoặc dưới ngưỡng số tháng mô tả. "
+             "LISA phía dưới vẫn dùng chính sách legacy; không suy luận rằng các ô điền 0 là tối đã đo.")
+            if lang == "vi" else
+            (f"OBSERVATION-SUPPORT SCREEN (G10/G18): {count:,}/{n:,} cells have unknown support, "
+             "missing observations, partial coverage or few valid monthly composites. "
+             "LISA still uses legacy zero-fill; filled zeros are not verified dark locations.")
+        )
+    else:
+        st.caption(
+            "A02: không thấy cờ hỗ trợ bất thường theo quy tắc mô tả, chưa phải kiểm chứng khoa học thực địa."
+            if lang == "vi" else
+            "A02: no support flags under the descriptive screen; this is not field validation."
+        )
 
     st.markdown(_CSS, unsafe_allow_html=True)
     h1c, h2c = st.columns([12, 1], vertical_alignment="center")
@@ -711,6 +730,14 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     _nt0 = grid_utm["ntl_mean"].to_numpy(float)
     _m_est = int(((_nt0 > thr) & ~(_ar0 < 0.99 * (size / 1000.0) ** 2)).sum())
     _pw0 = perm_power(_m_est, int(perms), float(alpha), bool(fdr))
+    if fdr:
+        st.caption(
+            "G17: BH-FDR được áp dụng cho pseudo p-value hoán vị có điều kiện. "
+            "Chưa xác nhận giả thuyết không, điều kiện phụ thuộc p-value hoặc bảo đảm FDR thực địa."
+            if lang == "vi" else
+            "G17: BH-FDR is applied to conditional-permutation pseudo p-values. "
+            "The field null, p-value dependence assumptions and actual FDR guarantee are not validated."
+        )
     if _pw0["infeasible"] and perms < 999:
         perm_auto_from, perms = int(perms), 999
         st.info((f"Tổ hợp {perm_auto_from} hoán vị với α = {alpha} khiến FDR không thể bác bỏ ô nào; đã tự nâng lên 999 hoán vị."
@@ -786,6 +813,14 @@ def render_lisa_tab(res, grid_utm, export_df, *, lang="vi", region_id="region", 
     except Exception:  # noqa: BLE001
         dq_cols = {}
     rm_full = {**rm, **_collect_export(ckey), **rob_cols, **dq_cols}
+    rm_full.update({
+        "science_observation_screen": support_audit["status"],
+        "science_n_support_issues": support_audit["n_support_issues"],
+        "science_n_unknown_support": support_audit["n_unknown"],
+        "science_n_no_observation": support_audit["n_no_observation"],
+        "science_n_low_months": support_audit["n_low_months"],
+        "science_fdr_field_calibrated": 0,
+    })
 
 
     st.divider()
