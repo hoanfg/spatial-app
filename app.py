@@ -17,6 +17,7 @@ import geopandas as gpd
 import numpy as np
 from ntl.zonal import read_valid_band
 from ntl.semantics import annual_image_with_quality, cell_quality
+from ntl.scientific_validity import utm_applicability_screen
 from ntl.ee_extra import download_tiled_geotiff, tile_bboxes
 from ntl.performance import PerformanceRecorder, measured_call, render_performance_panel
 import pandas as pd
@@ -1834,6 +1835,20 @@ def run_pipeline():
             boundary_wgs = gpd.GeoDataFrame(geometry=[union_geoms(boundary.to_crs(4326))], crs=4326)
 
             bx0, by0, bx1, by1 = boundary_wgs.total_bounds
+            utm_scope = utm_applicability_screen((bx0, by0, bx1, by1))
+            if utm_scope["unsupported"]:
+                raise ValueError(
+                    f"G11: Geographic bounds ({utm_scope['status']}) are outside the scientifically "
+                    "supported single-UTM workflow; select a more local region."
+                )
+            if utm_scope["requires_geodesic_validation"]:
+                st.warning(
+                    "G11: Vùng quá rộng cho một phép chiếu UTM duy nhất; diện tích/khoảng cách "
+                    "phải được đối chiếu trắc địa trước khi suy luận khoa học."
+                    if LANG == "vi" else
+                    "G11: Extent is broad for one UTM zone; geodesic area/distance "
+                    "validation is required before scientific interpretation."
+                )
             epsg = get_dynamic_utm_crs((bx0 + bx1) / 2, (by0 + by1) / 2)
             boundary_utm = boundary_wgs.to_crs(epsg=epsg)
 
@@ -1964,7 +1979,8 @@ def run_pipeline():
          "year": int(year),
          "moran": moran,
          "data_quality": {"raster": raster_q, "cells": cell_q},
-         "provenance": {"ntl_dataset": GEE_DATASET, "ntl_scale_m": GEE_SCALE_M, **PIPELINE_PROVENANCE},
+         "provenance": {"ntl_dataset": GEE_DATASET, "ntl_scale_m": GEE_SCALE_M,
+                        "utm_scope_status": utm_scope["status"], **PIPELINE_PROVENANCE},
          "tif_bytes": tif_bytes,
          "ts": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
     }

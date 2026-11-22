@@ -1,0 +1,152 @@
+{
+  "audit_version": "consolidated-2026-11-19",
+  "base_sha": "6eb97fd2743872ed0122335ace2ba6b9059e5780",
+  "source_of_truth": "validation/scientific_closure_register.json is canonical; EN/VI validation README entries summarize the same dispositions.",
+  "scope": "Scientific validity only; not clean-code or performance audit; no live EE credentials in review environment",
+  "rule": "A numerical invariant is not a field validation. A descriptive claim can be bounded without estimating unavailable economic quantities. Missing external evidence cannot be closed by synthetic data.",
+  "statuses": [
+    "bounded_descriptive",
+    "external_construct_needed",
+    "conditional_inference_only",
+    "closed_numerical",
+    "closed_numerical_open_longitudinal",
+    "real_sparse_support_required",
+    "extreme_geography_not_validated",
+    "closed_inference_semantics",
+    "bounded_temporal_warning",
+    "closed_provenance"
+  ],
+  "accepted_for_descriptive_use": "Only with documented source, grid, processing policy, A02 support audit, LISA settings and known inferential limits",
+  "claims_requiring_external_evidence": [
+    "real economic market access",
+    "true economic CBD",
+    "causal spillover/RDD",
+    "spatial Pareto law",
+    "field-calibrated FDR",
+    "generalized missing-support error magnitude",
+    "extreme-region geometric accuracy"
+  ],
+  "next_hard_inputs": [
+    "One real VIIRS VCMSLCFG district-year with A02-verified incomplete support and nonzero cloud-free observations plus source monthly cf_cvg",
+    "Independent pixels or counts to validate observation masks",
+    "Geocoded real economic comparator if economic/CBD claim is desired",
+    "Multi-year panel if stationary Markov claim is desired"
+  ],
+  "no_repetition": [
+    "A04 Gini numeric oracle",
+    "V11 3-locality raster checks",
+    "A02 Bao'an all-observed",
+    "A08/GHSL Shanghai",
+    "G04/G05/G06/G17/G18 archived simulations"
+  ],
+  "disposition": [
+    {
+      "id": "G01",
+      "status": "bounded_descriptive",
+      "claim_ceiling": "HH-distance rings; no causal RDD",
+      "evidence_needed": "Exogenous intervention/boundary and continuity diagnostics"
+    },
+    {
+      "id": "G02",
+      "status": "bounded_descriptive",
+      "claim_ceiling": "Corr(z,Wz) is only a cross-sectional correlation",
+      "evidence_needed": "Explicit spatial autoregression / unit-root research design"
+    },
+    {
+      "id": "G03",
+      "status": "bounded_descriptive",
+      "claim_ceiling": "5/15/40 are fixed radiance bands, not economic classes",
+      "evidence_needed": "Independent multi-locality land-use/economic labels for calibration"
+    },
+    {
+      "id": "G04",
+      "status": "external_construct_needed",
+      "claim_ceiling": "Distance-weighted NTL is descriptive light potential, not economic market access",
+      "evidence_needed": "Independent employment/population plus transport friction and target market outcomes"
+    },
+    {
+      "id": "G05",
+      "status": "external_construct_needed",
+      "claim_ceiling": "NTL-selected center and in-sample R2 do not verify economic CBD",
+      "evidence_needed": "Independent geocoded job/activity center with matched date/support"
+    },
+    {
+      "id": "G06",
+      "status": "conditional_inference_only",
+      "claim_ceiling": "Hill and conditional iid bootstrap do not establish a spatial Pareto law",
+      "evidence_needed": "Data-dependent tail-cutoff refit and spatially calibrated null simulations"
+    },
+    {
+      "id": "G07",
+      "status": "bounded_descriptive",
+      "claim_ceiling": "signed_dist_hh_km is distance between cell centers, not polygon boundaries",
+      "evidence_needed": "Boundary geometry only if user wants an actual boundary-distance estimand"
+    },
+    {
+      "id": "G08",
+      "status": "closed_numerical",
+      "claim_ceiling": "Chronology year_t0 < year_t1 guarded and tested",
+      "evidence_needed": "None for chronology; longitudinal causality remains a separate question"
+    },
+    {
+      "id": "G09",
+      "status": "closed_numerical_open_longitudinal",
+      "claim_ceiling": "Undefined 4-state Shorrocks for empty source quartiles guarded and tested",
+      "evidence_needed": "Multiyear panel to interpret Markov dynamics beyond two observations"
+    },
+    {
+      "id": "G10",
+      "status": "real_sparse_support_required",
+      "claim_ceiling": "A02 counts valid months; optional cf_cvg count diagnostic distinguishes source observations",
+      "evidence_needed": "Real sparse-observation VIIRS location-year and independent monthly cf_cvg reference"
+    },
+    {
+      "id": "G11",
+      "status": "extreme_geography_not_validated",
+      "claim_ceiling": "UTM-by-bbox-center is not a globally reliable distance/area estimator",
+      "evidence_needed": "Independent geodesic/equal-area control at poles/dateline/multizone regions"
+    },
+    {
+      "id": "G12",
+      "status": "closed_inference_semantics",
+      "claim_ceiling": "Residual Moran large-grid I threshold is descriptive only, no pseudo p",
+      "evidence_needed": "Valid permutation/reference test for inferential label on large grids"
+    },
+    {
+      "id": "G13",
+      "status": "bounded_temporal_warning",
+      "claim_ceiling": "GHSL nearest epoch may differ from VIIRS year; gap exposed",
+      "evidence_needed": "Independent contemporaneous proxy to claim same-year validity"
+    },
+    {
+      "id": "G14",
+      "status": "bounded_descriptive",
+      "claim_ceiling": "Jaccard/seed SD/movement cutoffs are heuristics",
+      "evidence_needed": "Predeclared empirical sensitivity for any universal threshold claim"
+    },
+    {
+      "id": "G15",
+      "status": "bounded_descriptive",
+      "claim_ceiling": "moran_I_lit is mean local I, not global Moran I",
+      "evidence_needed": "None if exported metric and UI are correctly described"
+    },
+    {
+      "id": "G16",
+      "status": "closed_provenance",
+      "claim_ceiling": "Evidence catalog matches production VCMSLCFG product",
+      "evidence_needed": "Recheck only if the dataset identifier changes"
+    },
+    {
+      "id": "G17",
+      "status": "conditional_inference_only",
+      "claim_ceiling": "BH/BY simulations do not validate field LISA null p-values or PRDS",
+      "evidence_needed": "Credible spatial null with known truth, valid p calibration, spatial dependence analysis"
+    },
+    {
+      "id": "G18",
+      "status": "real_sparse_support_required",
+      "claim_ceiling": "Synthetic zero/missingness sensitivity bounded; real case remains absent",
+      "evidence_needed": "Real A02 low-support raster, verified observed zero/missing distinction, policy sensitivity"
+    }
+  ]
+}

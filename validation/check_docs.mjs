@@ -11,6 +11,7 @@ const files = [
   'validation/evidence/README.md', 'validation/evidence/README-vi.md',
   'validation/cross_location/README.md', 'validation/cross_location/README-vi.md',
   'validation/evidence/yanqing/README.md', 'validation/evidence/yanqing/README-vi.md',
+  'validation/evidence/ntl_appgrid_multisource_2020/README.md',
 ];
 const problems = [];
 function markdownFiles(dir) {
