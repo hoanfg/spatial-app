@@ -51,7 +51,7 @@ One Qimen building bootstrap draw was undefined because the sampled blocks had c
 
 ## Evidence, provenance and reproduction
 
-The full underlying source files and per-cell round-3 outputs remain owner-held; bulky OSM GeoPackages and GeoTIFFs are **not** duplicated into this PR. [source_sha256.csv](source_sha256.csv) records exact SHA-256 fingerprints of the source snapshots, and [summary.csv](summary.csv) records the deposited compact statistics. Per-cell round-3 output filenames are `BAOAN_same_grid_cells_with_proxies.csv`, `QIMEN_same_grid_cells_with_proxies.csv`, and `SHANGHAI_same_grid_cells_with_proxies.csv` (17,177 rows in aggregate). The associated owner-held analysis bundle also contains `validate_app_grid.py`, `extra_proxies.py`, `check_boundary.py`, raw QA JSON, and its own output checksums. Since those source inputs and full computation scripts are not all checked into this repository, this folder is **provenance-traceable and partially independently reproducible**, rather than a self-contained end-to-end rerun.
+The full underlying source files and per-cell round-3 outputs remain owner-held; bulky OSM GeoPackages and GeoTIFFs are **not** duplicated in this evidence directory. [source_sha256.csv](source_sha256.csv) records exact SHA-256 fingerprints of the source snapshots, and [summary.csv](summary.csv) records the deposited compact statistics. Per-cell round-3 output filenames are `BAOAN_same_grid_cells_with_proxies.csv`, `QIMEN_same_grid_cells_with_proxies.csv`, and `SHANGHAI_same_grid_cells_with_proxies.csv` (17,177 rows in aggregate). The associated owner-held analysis bundle also contains `validate_app_grid.py`, `extra_proxies.py`, `check_boundary.py`, raw QA JSON, and its own output checksums. Since those source inputs and full computation scripts are not all checked into this repository, this folder is **provenance-traceable and partially independently reproducible**, rather than a self-contained end-to-end rerun.
 
 To reproduce the resampling from the owner-held bundle, place its `spatial_app_grid_validation` directory under a data root with the three exported GeoJSON files in that root, and run:
 
@@ -61,4 +61,3 @@ python validation/evidence/ntl_appgrid_multisource_2020/spatial_block_resampling
 
 Required packages: geopandas, pandas, numpy, scipy, shapely and a GeoJSON-capable vector driver. No app implementation is imported by the resampling script. Do not update `validation/scientific_closure_register.json` statuses to `closed` on the strength of these associations alone.
 
-**Review boundary:** add evidence to PR #63 for owner review; keep the PR Draft and do not merge without an owner decision.
