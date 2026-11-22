@@ -1,6 +1,6 @@
 # 2020 NTL cross-source comparison on exported 500 m app grids
 
-**Status:** `descriptive_app_grid_evidence` — a deposited, bounded comparison, **not** a validation of economic activity, spatial FDR, missing-data zero handling, or all G01–G18 claims.
+**Status:** `descriptive_app_grid_evidence` : a deposited, bounded comparison, **not** a validation of economic activity, spatial FDR, missing-data zero handling, or all G01–G18 claims.
 
 **Analysis date:** 2026-11-22. **Study areas:** Bao'an (Shenzhen), Qimen (Anhui), and the selected inner-Shanghai polygon. The inputs are three *same-run* pairs of Spatial App CSV and GeoJSON for year 2020 at 500 m. Exact exported GeoJSON polygons and their `grid_id` values are used; source-raster pixels and app cells are **not interchangeable**.
 
