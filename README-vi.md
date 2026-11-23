@@ -2,6 +2,8 @@
 
 [Hướng dẫn dữ liệu và GADM](docs/README-vi.md) · [Tình trạng kiểm chứng và bằng chứng](validation/README-vi.md)
 
+**Cách đọc bằng chứng khoa học:** bắt đầu từ [bảng G01-G18 giải thích phép tính, lý do và giới hạn](validation/README-vi.md#cách-đọc-một-phép-kiểm-toán-khoa-học), sau đó xem [ma trận A01-A12, V11, GADM cùng cách kiểm tra](validation/evidence/README-vi.md#giải-thích-lựa-chọn-phương-pháp-cho-từng-kiểm-toán-a01-a12). Mỗi con số phải đi kèm **đầu vào, công thức/chuẩn so, đơn vị quan sát, dung sai và điều chưa chứng minh**. Kiểm thử số học, mô phỏng và đối chiếu thực địa là các tầng chứng cứ khác nhau.
+
 <div align="center">
 
 # Sổ tay kỹ thuật và khung phương pháp luận
