@@ -43,6 +43,18 @@ python validation/cross_location/compare_raster_cells.py \
 
 Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
+## Why the V11 checks are designed this way
+
+**Estimand:** for every exported app `grid_id`, independently compute `sum(pixel_value × overlap_area) / sum(overlap_area)` over its polygon, then compare `abs(NTL_ref - NTL_app)`. Using the same VIIRS product and year **isolates processing differences**, not sensor-level truth. Because polygons are exported by the app, this comparison does not independently verify the GADM-to-grid construction algorithm.
+
+**Why three sites:** the selected areas deliberately differ in size, hypothesized urbanization and edge geometry. This is **purposeful technical-risk sampling**, not a random representative sample of Chinese districts.
+
+**Why `0.00005` tolerance:** CSV `ntl_mean` retains four decimals; half a unit in its last retained place is `0.00005`. The auxiliary `0.0000501` threshold diagnoses floating-point boundary effects, not a newly relaxed scientific criterion. Retain **per-cell absolute differences**, pass rates, clipped cells, coverage gaps and maxima; correlation alone cannot establish agreement.
+
+**Why LISA is checked separately:** correct NTL extraction does not prove correct adjacency, conditional randomization or BH-FDR. Implementation Local Moran uses standardized `z_i`, neighbor mean `lag(z)_i`, and `I_i = z_i × lag(z)_i / [sum(z²)/(m-1)]`. Conditional permutation holds each focal value fixed, samples distinct other cells **without replacement**, counts ties in both tails, and uses `(count+1)/(B+1)` correction. BH operates on the **actual tested family**. Different rounding and random sequences require reporting classification disagreements, not forcing exact agreement.
+
+**Result boundary:** V11 supports raster-processing consistency under the specified data, geometries and tolerances at three locations. It does not validate the economic meaning of HH/LL, causal claims, or field null calibration of LISA p-values.
+
 ## 4. Evaluation criteria (pre-defined)
 
 1. **Geometry:** cell count, `grid_id`, area and UTM/WGS84 centroid match the app CSV. Area tolerance is $0.00005\text{ km}^2$; centroid tolerances follow the CSV's 0.1 m and six-decimal-degree rounding. This rejects same-area ID/location swaps.
