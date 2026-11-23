@@ -568,13 +568,13 @@ Khi các ô tối ($\mathrm{NTL}_i \le \mathrm{threshold}$, gán nhãn `DARK`) b
 Ma trận trọng số không gian $W$ được dựng theo quy tắc tiếp xúc **Queen** trên lưới đều, cho các ô thuộc tập $S$. Queen tính 8 hướng lân cận: 4 cạnh và 4 góc.
 
 ```text
-┌───┬───┬───┐
+┌────┬────┬────┐
 │ TB │ B  │ ĐB │
-├───┼───┼───┤
+├────┼────┼────┤
 │ T  │ ■  │ Đ  │      ■ = ô đang xét, 8 ô xung quanh là láng giềng
-├───┼───┼───┤
+├────┼────┼────┤
 │ TN │ N  │ ĐN │
-└───┴───┴───┘
+└────┴────┴────┘
 ```
 
 Từ tọa độ tâm $(c_{x,i}, c_{y,i})$ trong hệ mét UTM, thuật toán ánh xạ mỗi ô về cặp chỉ số nguyên $(ix_i, iy_i)$ rồi tạo một khóa băm một chiều duy nhất:
