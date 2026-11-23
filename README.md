@@ -240,7 +240,11 @@ where $r_p$ is source-pixel radiance and $a_{ip}$ is the area shared by pixel $p
 
 ![From grid cells to a weights matrix and spatial lag](docs/assets/spatial-weights.jpg)
 
-<p align="center"><em>Figure 2. A neighbor rule turns the grid into a graph, the graph into <var>W</var>, and <var>W</var> into the spatial lag <var>Wy</var>.</em></p>
+<div align="center">
+
+*Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.*
+
+</div>
 
 $W$ is not merely a software setting. Queen contiguity asks whether immediate edge or corner contact carries relevant interaction; Rook excludes corner-only contact; a distance or network matrix would encode a different mechanism. Row standardization changes a spatial lag from a neighbor sum into a neighbor average, while a binary symmetric matrix preserves a different scale (Anselin, 1988; LeSage & Pace, 2009).
 
