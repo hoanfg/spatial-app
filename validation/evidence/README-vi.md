@@ -47,6 +47,29 @@ Trích dẫn, kiểm thử mã và đối chiếu thực địa là ba loại h�
 | Kết quả trích xuất raster có khớp tham chiếu độc lập không? | Mã đúng vẫn có thể dùng nhầm raster, phép chiếu, mặt nạ hoặc hình học ô. | Đối chiếu raster và đa giác tại Diên Khánh cùng quy trình ba địa bàn |
 | Local Moran và FDR có khớp khi tính độc lập không? | Cách dựng láng giềng, làm tròn, hạt hoán vị và đếm hai đuôi có thể đổi nhãn ý nghĩa. | Đối chiếu LISA từng ô tại Diên Khánh và kiểm thử hồi quy của repo |
 
+## Giải thích lựa chọn phương pháp cho từng kiểm toán A01-A12
+
+Ma trận kết quả phía dưới cho biết **đã quan sát được gì**. Bảng này giải thích thêm **vì sao phép thử trả lời được câu hỏi kiểm toán**, đâu là điểm phát hiện sai sót và vì sao không được suy rộng.
+
+| Mã | Phương pháp và chuẩn đối chiếu | Lý do chọn và cách đọc |
+| --- | --- | --- |
+| A01 | Kiểm tra cây `tests/` được phân công cho hai tác vụ CI, không bỏ sót hoặc tính trùng; xác nhận trạng thái kết thúc của cả hai. | Đây là bài kiểm **mức bao phủ thực thi**, không đo đúng đắn khoa học; 100% bài đã chạy vẫn có thể bỏ sót một giả thuyết chưa viết test. |
+| A02 | Kiểm tra tính duy nhất `grid_id`, các tỷ lệ `dq_*` trong [0,1], số tháng trong [0,12], trạng thái quan sát hợp logic; tạo mặt nạ thiếu dữ liệu nhân tạo để xem thống kê thay đổi. | Dữ liệu thiếu được điền 0 có thể giả tạo bóng tối. Mẫu Bảo An chỉ xác minh schema và trường hợp đủ quan sát; mô phỏng chỉ phơi lộ độ nhạy. |
+| A03 | Dùng đáp án tính tay của Global Moran (`1/3`), Local I trên lưới nhỏ, láng giềng Queen, trường hợp hoán vị liệt kê được và bộ p cố định cho BH; đối chiếu mã độc lập trên Diên Khánh. | Mẫu nhỏ cô lập lỗi công thức; đối chiếu Diên Khánh thăm dò đầu ra thực. Chênh LISA có thể do làm tròn hoặc chuỗi hoán vị, không tự động là bug. |
+| A04 | So Gini với `sum_i sum_j |x_i-x_j|/(2 n² mean(x))` trên mẫu hữu hạn không âm; sai số tuyệt đối `1e-12`; đầu vào không hữu hạn/âm phải bị từ chối. | Đây là một **oracle toán học độc lập**, giúp bắt bất nhất khi các nhánh tính Gini nhận mẫu khác nhau. Không thay thế chính sách xử lý radiance âm trước đó. |
+| A05 | Ghi Python, phiên bản thư viện thống kê, tệp phụ thuộc và đối chiếu khả năng chạy lại. | Kết quả phụ thuộc môi trường; cố định một vài thư viện chưa tương đương khóa tất cả phụ thuộc, nên không gọi là tái lập môi trường hoàn toàn. |
+| A06 | Kiểm thử đường dữ liệu giữa raster, lưới, phân tích, giao diện và tệp xuất, thay vì chỉ kiểm tra các hàm rời. | Lỗi thường xuất hiện khi ghép mô-đun; test tích hợp không chứng minh rằng mọi hành vi trong `app.py` đã được bao phủ. |
+| A07 | So chẩn đoán gộp khối MAUP theo cách ứng dụng thực hiện với ý tưởng dựng lại lưới 1.000 m và trích xuất raster trực tiếp. | Trung bình của các ô 500 m, đặc biệt ô biên, không nhất thiết bằng trung bình pixel trên polygon 1.000 m mới; không nhận hai phương pháp là tương đương khi chưa đối chiếu thực. |
+| A08 | Bảo toàn lượng GHSL trên pixel 100 m hệ Mollweide: `sum(quantity_pixel × area_intersection / area_pixel)`, đổi sang mật độ trên diện tích ô, rồi so rho, AUC và lấy lại mẫu theo khối. | GHSL chứa **lượng**, không phải radiance; tái lấy mẫu rồi cộng thô làm tăng giả tổng lượng. Việc sửa số học không tự biến GHSL thành chuẩn kinh tế độc lập. |
+| A09 | Spearman rho cho quan hệ đơn điệu; AUC Mann-Whitney cho phân biệt nhóm NTL cao; lấy lại mẫu theo khối giữ phần nào phụ thuộc không gian. | Rho mô tả thứ hạng, AUC mô tả phân tách; các ngưỡng màu 0,4/0,6 không phải quy tắc kiểm định. Khoảng rho chứa 0 không cho phép tuyên bố tương quan khác 0. |
+| A10 | Phân rã thời gian `wall time` theo bước và RSS tiến trình được lấy mẫu, so những lượt cùng cấu hình. | Tổng thời gian giảm có thể do lưới hay mạng thay vì A02; RSS lấy mẫu không phải peak chắc chắn hoặc RAM trên từng người dùng. |
+| A11 | Kiểm thử tích hợp có kiểm soát, smoke test giao diện, số dòng/giá trị CSV và profiler ghi các giai đoạn. | Kiểm tra đường đi phần mềm khác với bài end-to-end có tài khoản Earth Engine và lỗi mạng thật; thiếu bài thứ hai phải ghi thiếu. |
+| A12 | Kiểm tra các đường dẫn, số cặp tài liệu, dấu toán học và quy tắc định dạng; đọc thủ công để xác nhận tính tương đương ngữ nghĩa. | Link hợp lệ không bảo đảm công thức đúng, dịch đúng hoặc bằng chứng có sức nặng phù hợp. |
+| V11 | So trung bình theo tỷ lệ giao pixel-raster trên **cùng polygon app** tại ba địa bàn, ghi sai số tuyệt đối từng `grid_id` và riêng ô đầy đủ/ô biên. | Dung sai `0.00005` xuất phát từ CSV NTL làm tròn 4 chữ số, không phải sai số cảm biến. Hai nhánh dùng cùng NOAA VIIRS nên đây là đối chiếu xử lý, không phải phép đo ánh sáng độc lập. |
+| GADM | So GID định danh, loại hình hành chính, hình học và kết quả biên tập với GADM 4.1; không dùng tên trùng làm khóa. | Bắt lỗi gộp đơn vị khác nhau do trùng tên hoặc cấp quản lý; phù hợp bản GADM tham chiếu, không chứng nhận ranh giới pháp lý hiện tại. |
+
+**Quy tắc chung:** nêu **cỡ mẫu, tập ô loại trừ, dung sai, seed, phương pháp lấy mẫu, phép tính gốc, dữ liệu nguồn và ngoại lệ** trước khi dùng từ “khớp”. Không suy diễn một kết quả có p-value, khoảng tin cậy hay ý nghĩa nhân quả nếu phép kiểm không thực sự tính và hiệu chuẩn đại lượng đó.
+
 ## Ma trận câu hỏi kiểm toán đầy đủ
 
 Ma trận này hợp nhất đợt rà soát A01 đến A12 và các phép kiểm thực địa về sau. Cột kết quả chỉ nêu điều mà bằng chứng được dẫn có thể hỗ trợ.
