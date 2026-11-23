@@ -242,7 +242,7 @@ where $r_p$ is source-pixel radiance and $a_{ip}$ is the area shared by pixel $p
 
 <div align="center">
 
-*Figure 2. A neighbor rule turns the grid into a graph, the graph into $W$, and $W$ into the spatial lag $Wy$.*
+<em>Figure 2. A neighbor rule turns the grid into a graph, the graph into</em> $W$<em>, and</em> $W$ <em>into the spatial lag</em> $Wy$<em>.</em>
 
 </div>
 
