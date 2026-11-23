@@ -31,6 +31,16 @@ The LISA table reconstructs Queen neighbors, recalculates Local I from the round
 
 The Space-Time CSV is checked by row count and by the exported regime codes for all 8,333 cells.
 
+## Quantitative methods and interpretation rules
+
+**1. Polygon-level raster error.** Calculate VIIRS area-overlap means on each cell polygon, join on `grid_id`, and compare with exported app `ntl_mean` using `e_i = |NTL_ref_i - NTL_app_i|`. **Why:** local errors, particularly at boundaries, can be hidden by an excellent regional correlation. The `0.00005` tolerance follows four-decimal CSV rounding and **is not a satellite accuracy specification**.
+
+**2. Local Moran and randomization.** Build Queen neighbors on the 500 m lattice, standardize NTL on the eligible population and compute `I_i = z_i × mean(z_neighbor) / [sum(z²)/(m-1)]`. Hold each focal cell fixed, sample distinct nonfocal members without replacement, count ties in two-sided permutation tails, use `(count+1)/(B+1)` correction and apply BH-FDR within the actual test family. **Why:** normalization, adjacency, p calculation and multiple-testing decisions are different error sources even if NTL is correct. The independent comparison uses **rounded CSV NTL** and a separate RNG sequence; 179 differing labels must not automatically be treated as algorithm bugs.
+
+**3. Two-year change.** Compare `NTL_2020 - NTL_2014` in raw radiance separately from changes in year-standardized `log1p(NTL)` and its neighbor lag. **Why:** absolute brightness may increase even while **relative standardized position** decreases. The `4_Synchronized_Decline` label does not mean every such cell lost physical light or economic output.
+
+**4. Reproduction boundary.** SHA-256 identifies bytes; scientific replay additionally needs the exact polygons, raster, masks, seed and p-tail convention. The raw 2020 reference raster is not retained in this directory, so its 2020 result is based on the **archived per-cell comparison** rather than full source re-extraction. The 2014 raster lacks observation-support bands needed to test the missingness policy.
+
 ## Results
 
 | Check | Result | Interpretation |
