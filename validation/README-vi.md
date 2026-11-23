@@ -6,6 +6,49 @@
 
 Mỗi kết quả chỉ áp dụng cho đúng địa bàn, năm, dữ liệu và độ chính xác đã nêu. Bảng dưới tách kết quả có bằng chứng khỏi phần vẫn cần thêm dữ liệu.
 
+## Cách đọc một phép kiểm toán khoa học
+
+Một phép kiểm toán chỉ đủ rõ khi trả lời được sáu câu hỏi: **đầu vào và đơn vị quan sát là gì; đại lượng nào được tính; chuẩn đối chiếu là gì; vì sao chọn phép kiểm; sai số hoặc độ nhạy được đánh giá như thế nào; và kết luận tối đa được phép phát biểu là gì**. Mã nguồn thực thi, kiểm thử nhân tạo, phép đối chiếu hai quy trình xử lý cùng sản phẩm, và dữ liệu thực độc lập là **bốn tầng chứng cứ khác nhau**. Kết quả ở tầng trước không tự động thay thế tầng sau.
+
+- **Chuẩn số học:** kiểm thử công thức bằng mẫu có đáp án biết trước; hữu ích để phát hiện lỗi tính toán, không kiểm chứng hiện tượng ngoài thực địa.
+- **Kiểm chứng triển khai:** so mã đầu ra, schema, hình học, mặt nạ và quy trình; xác nhận hợp đồng phần mềm cho đúng ca kiểm tra.
+- **Đối chiếu nguồn trên ô thực:** tính lại trên raster, polygon hoặc sản phẩm đối chứng; phải ghi mức độc lập của nguồn và sai số làm tròn/lấy mẫu.
+- **Mô phỏng có sự thật đã gán:** thử độ nhạy hoặc sai số kiểm định khi biết trước dữ liệu sinh ra thế nào; không mặc nhiên suy rộng thành hiệu năng thực địa.
+- **Kiểm chứng giá trị cấu trúc kinh tế và suy luận:** cần biến kinh tế độc lập, thiết kế nhận dạng hoặc giả thuyết không hiệu chuẩn phù hợp; các bảng tương quan chỉ có thể cung cấp bằng chứng liên hệ mô tả.
+
+### G01-G18: câu hỏi, phép tính, lý do và phạm vi kết luận
+
+Bảng này mô tả **phép kiểm đang tồn tại**, không đề xuất thay thuật toán. Trạng thái chuẩn vẫn ở [sổ G01-G18](scientific_closure_register.json); bằng chứng định lượng chi tiết và tệp chương trình nằm trong các mục phía dưới hoặc [hướng dẫn bằng chứng](evidence/README-vi.md).
+
+| Mã | Kiểm tra và cách tính | Vì sao dùng phương pháp đó | Cách diễn giải và giới hạn |
+| --- | --- | --- | --- |
+| G01 | Từ các ô High-High (HH), lấy khoảng cách Euclid giữa **tâm ô** và phân nhóm vòng khoảng cách như 0-2, 2-5, 5-10 km. | Kiểm tra tính nhất quán của chỉ số lan tỏa theo khoảng cách đã có mà không giả định có can thiệp ngoại sinh. | Đó là phân bố theo khoảng cách quanh HH, **không phải hiệu ứng lan tỏa nhân quả hoặc RDD**; cần ranh giới/can thiệp độc lập mới kiểm định nhân quả. |
+| G02 | Chuẩn hóa NTL thành `z`, tính độ trễ không gian `Wz`, báo `Corr(z, Wz)` trên một lát cắt. | Tách tương quan đồng thời giữa ô và hàng xóm khỏi động học theo thời gian. | Không phải hệ số AR(1), tham số tự hồi quy không gian ước lượng hay kiểm định nghiệm đơn vị. |
+| G03 | Áp ngưỡng bức xạ cố định 5/15/40 vào các giá trị NTL, đối chiếu quy tắc phân lớp. | Ngưỡng quyết định nhóm có thể tái lập ngay cả khi chưa có nhãn kinh tế chuẩn. | Nhóm bức xạ mô tả, **không tự mang nghĩa** khu việc làm, CBD hay mức phát triển kinh tế. |
+| G04 | Tính `SOL_j = NTL_j × area_j`; cộng `SOL_j × exp(-tau × distance_ij)` trong bán kính đặt trước; so thay đổi thứ hạng/Jaccard top 10% theo bán kính, `tau` và hoán vị vị trí NTL. | Thử xem kết quả phụ thuộc vào hạt nhân khoảng cách và sự trùng vị trí sáng hay không; dữ liệu nhân tạo cho biết quy mô việc làm để kiểm tra tính nhạy cấu trúc. | Đây là **tiềm năng ánh sáng**, không đo thời gian đi lại hoặc tiếp cận thị trường thực; phép trừ kỳ vọng hoán vị không tạo biến ngoại sinh. |
+| G05 | Chọn tâm từ cụm HH có ý nghĩa lớn nhất, theo trọng số `SOL`; hồi quy WLS theo diện tích của `log1p(NTL)` lên khoảng cách tâm; so độ dốc và R² với tâm biết trước trong dữ liệu nhân tạo và tâm thay thế. | Phát hiện độ nhạy nội sinh khi chính NTL vừa chọn tâm vừa là biến được giải thích. | R² cao **không xác nhận tâm CBD kinh tế**; Bảo An thiếu tâm việc làm độc lập, còn tâm chuẩn chỉ tồn tại trong mô phỏng. |
+| G06 | Lấy bốn tỷ lệ đuôi dương 5/10/15/20%, ước lượng Hill, KS; dùng 399 lần bootstrap Pareto có **ước lượng lại alpha nhưng giữ ngưỡng u và k**; so AICc với đuôi mũ và lognormal bị cắt tại cùng `u`. | Phân biệt phép tính KS xấp xỉ, độ phù hợp có điều kiện và lựa chọn giữa các mô hình đuôi cạnh tranh. | Không bác bỏ KS hoặc AICc thấp nhất **không chứng minh quy luật Pareto không gian**; bootstrap giả định iid và chưa tái chọn ngưỡng. |
+| G07 | Khoảng cách dấu `signed_dist_hh_km` được tính từ tâm ô tới tâm HH gần nhất theo quy tắc mã. | Chỉ rõ đại lượng hình học thực được tính, tránh dùng từ “biên cụm” sai nghĩa. | Không được dùng như khoảng cách tới đường biên polygon HH nếu chưa tính khoảng cách hình học biên. |
+| G08 | Ràng buộc `year_t0 < year_t1`; thử các trường hợp năm đảo và bằng nhau phải bị từ chối. | Bảo đảm hướng thời gian của so sánh hai mốc. | Kiểm tra hợp đồng thời gian, không nhận dạng nhân quả hay xu hướng giữa hai năm. |
+| G09 | Lập ma trận chuyển nhóm tứ phân vị, tính Shorrocks `(4 - trace(P))/3` **chỉ khi đủ hàng xác suất nguồn**; trả NaN nếu phân vị nguồn rỗng. | Tránh biến hàng toàn 0 thành phân phối chuyển tiếp giả, vốn có thể tạo chỉ số chuyển dịch dương khi mọi ô bất động. | Hai mốc có thể mô tả chuyển nhóm; chưa đủ kiểm chứng tính dừng hoặc Markov dài hạn. |
+| G10 | Phân biệt `dq_mean_valid_months` (số tháng hợp lệ) với `cf_cvg_total` (tổng lượt quan sát); so `dq_observed_fraction`, mặt nạ và raster nguồn theo `grid_id`. | Một tháng có thể chứa nhiều lượt quan sát; số tháng, số lượt và tỷ lệ diện tích có quan sát trả lời ba câu hỏi khác nhau. | Bảo An/Kỳ Môn có quan sát ở tất cả ô chưa kiểm nghiệm chính sách cho một ô **không có quan sát thực**; không chứng minh trọng số số lượt là tối ưu. |
+| G11 | Kiểm tra phạm vi vĩ độ, đường đổi ngày và tính phù hợp của một vùng UTM; đối chiếu với khoảng cách/diện tích trắc địa khi cần. | Khoảng cách và diện tích phẳng có thể sai ở vùng cực, xuyên múi hoặc đường đổi ngày. | Cảnh báo phạm vi không phải chứng nhận sai số hình học toàn cầu; cần chuẩn trắc địa ở ca cực đoan. |
+| G12 | Phân biệt chỉ số Moran phần dư mô tả với suy luận từ hoán vị/phân phối tham chiếu; không coi ngưỡng `I > 0.3` là giá trị p. | Quy mô hoặc độ lớn thống kê không tự xác định mức ý nghĩa thống kê. | Chỉ nói “có tự tương quan mô tả” khi chưa có phép kiểm suy luận hợp lệ. |
+| G13 | Ghi mốc năm GHSL thực dùng và độ lệch so với năm VIIRS. | GHSL theo epoch cách quãng; phép đối chiếu khác mốc có thể mang sai lệch thời gian. | Tương quan không phải bằng chứng cùng năm nếu hai nguồn không đồng thời; cần proxy cùng mốc nếu khẳng định đồng thời. |
+| G14 | Tính Jaccard hai tập HH, độ dao động theo seed, dịch tâm và các ngưỡng nhạy; so cùng tập ô và thông số. | Đếm số ô HH giống nhau chưa đủ để biết **vị trí** điểm nóng có ổn định hay không. | Mốc Jaccard/SD/cự ly là ngưỡng kinh nghiệm, không có p-value hay tính phổ quát được xác nhận. |
+| G15 | Kiểm tra nhãn `moran_I_lit` bằng thống kê trung bình Local I và phân biệt với Global Moran I. | Local và Global Moran có chuẩn hóa, tập ô và mục tiêu thống kê khác nhau. | Không gọi trung bình Local I là hệ số Global Moran, kể cả khi cùng phản ánh cấu trúc lân cận. |
+| G16 | Đối chiếu ID sản phẩm NOAA `VCMSLCFG` trong tài liệu, đường mã Earth Engine và kiểm thử hợp đồng nguồn. | Đổi sản phẩm có thể đổi xử lý ánh sáng lạc, mask và khả năng so sánh theo thời gian. | Chứng nhận **nhận dạng nguồn được sử dụng**, không chứng nhận độ chính xác vật lý của cảm biến. |
+| G17 | Trên lưới nhân tạo 64 ô, sinh p Gaussian có giả thuyết đúng/sai biết trước (400 lần/cấu hình) và mô phỏng LISA riêng (24 lần/cấu hình, 999 hoán vị); so không hiệu chỉnh, BH, BY bằng `FDP = V/max(R,1)`. | Muốn ước lượng FDR mô phỏng phải biết giả thuyết nào thực sự đúng; thử nhiều cấu trúc phụ thuộc để xem ranh giới phương pháp. | FDR trung bình của **mô hình Gaussian có p hợp lệ** không chứng minh p hoán vị Local Moran ngoài thực địa hợp lệ hay thỏa PRDS. |
+| G18 | Tạo 144 ô với 106 ô dương, 28 ô quan sát bằng 0 và 10 ô thiếu; chạy LISA ba chính sách (chỉ dương, gồm số 0 có quan sát, điền 0 cả ô thiếu), trước/sau BH. | Cô lập hệ quả của đổi tập ô, láng giềng, chuẩn hóa và họ kiểm định khi nhầm thiếu dữ liệu với bóng tối. | Chênh nhãn HH/LL là **độ nhạy trong dữ liệu nhân tạo**, không phải độ lớn sai lệch thực địa. Phải có ô thiếu thực và nguồn quan sát độc lập để kiểm chứng phần này. |
+
+### Quy tắc tính, báo sai số và lý do chọn chuẩn
+
+- **Đối chiếu VIIRS theo ô:** trên đúng polygon `grid_id`, so `NTL_app` và trung bình pixel raster có trọng số giao diện tích; báo độ lệch tuyệt đối từng ô và các ngoại lệ. CSV xuất bốn chữ số thập phân nên `0.00005` là **dung sai làm tròn**, không phải sai số đo của cảm biến. Tương quan Spearman gần 1 chỉ bảo đảm **thứ hạng**, không bảo đảm hai giá trị bằng nhau.
+- **Đối chiếu GHSL:** GHSL lưu lượng/diện tích ở pixel gốc; cộng `quantity_pixel × intersection_area/pixel_area` trong hệ diện tích phù hợp để tránh tạo hoặc mất lượng do tái lấy mẫu. Sau đó chia diện tích ô để ra mật độ; đối chiếu rho/AUC với khoảng bootstrap khối. Nếu khoảng rho chứa 0 thì không được khẳng định quan hệ đơn điệu khác 0 từ mẫu đó.
+- **Hoán vị và đa kiểm định:** hạt ngẫu nhiên cố định phục vụ tái lập **cùng cài đặt**, không bảo đảm kết quả p trùng giữa hai bộ mã độc lập. BH so p đã sắp thứ tự với `i × alpha/m`; BY còn điều chỉnh bằng tổng điều hòa. Việc chia một họ kiểm định hay thay số ô tham gia làm thay đổi ngưỡng và cách đọc p.
+- **Không gian phụ thuộc:** các ô kề nhau không thể mặc nhiên xem là quan sát iid. Spearman dùng để mô tả quan hệ đơn điệu; các khoảng lấy lại mẫu theo khối mô tả **độ nhạy đối với đơn vị lấy mẫu**, không tự tạo ra CI đã hiệu chuẩn hoặc kết quả nhân quả.
+- **Tái lập và độc lập:** SHA-256 xác nhận đúng phiên bản byte chứ không xác nhận phép đo khoa học đúng. Cùng VIIRS nhưng khác tuyến xử lý là đối chiếu triển khai nguồn, không phải cảm biến đối chứng độc lập. Tệp đầu vào không lưu trong repo phải được ghi rõ là giới hạn chạy lại, không lấp bằng đầu vào mô phỏng.
+
 ## Kết quả
 
 | Hạng mục | Kết quả | Giới hạn |
