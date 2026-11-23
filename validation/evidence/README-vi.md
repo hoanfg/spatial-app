@@ -172,6 +172,25 @@ Rho, hai đầu khoảng và AUC tái lập các giá trị hiển thị của �
 
 **Giới hạn.** Kết quả độc lập xác nhận đúng gói và chỉ số Thượng Hải đã nêu; nó không làm hai đường Earth Engine Drive và `computePixels` đồng nhất cho mọi lượt chạy có thể có. Kết quả Thượng Hải không xác nhận Bảo An, Kỳ Môn hoặc epoch GHSL khác. GHSL không phải biến kết quả kinh tế trực tiếp.
 
+## Kiểm tra G10/G18 tại Kỳ Môn 2016: số 0 có quan sát
+
+**Câu hỏi:** ô NTL bằng 0 có thực sự không có ánh sáng quan sát, hay do trung vị radiance **âm** được cắt về 0? Đây là câu hỏi đo lường, khác với câu hỏi ô **không có dữ liệu** được xử lý ra sao.
+
+**Nguồn và cấp độ độc lập:** CSV và GeoJSON ứng dụng gồm 9.143 `grid_id` năm 2016; raster nguồn GEE gồm ba band `raw_median`, `clipped_median`, `cf_cvg_total`; và GeoTIFF VIIRS 2020 chỉ cung cấp **hệ tọa độ pixel tham chiếu**. Hai đường xử lý cùng sử dụng sản phẩm NOAA `VCMSLCFG`; đây là đối chiếu xử lý nguồn, **không phải** phép đo cảm biến độc lập. Chương trình `reproduce_qimen_2016.py`, báo cáo, `metrics.json` và bảng theo ô thuộc gói dữ liệu chủ sở hữu lưu giữ, **chưa nằm trong checkout repo**; vì thế kết quả này chưa có khả năng chạy lại từ repo đơn lẻ.
+
+**Cách tính và lý do chọn:**
+
+1. Ở pixel nguồn, kiểm tra `clipped_median = max(raw_median, 0)` và `cf_cvg_total > 0` trên pixel hữu hạn. Cách này trực tiếp phân biệt **âm bị cắt**, **số 0 đúng bằng 0** và **không có quan sát**.
+2. Dùng `rasterio.warp.reproject` với **nearest** đưa raster 2016 sang lưới pixel tọa độ tham chiếu 2020; không dùng ánh sáng năm 2020 trong phép tính. Đây là thử nghiệm **căn chỉnh gián tiếp**, không phải chứng minh lưới tải ảnh nội bộ của app năm 2016.
+3. Chồng raster đã căn lên **polygon `grid_id` thực**; tính trung bình `max(raw_median,0)` và tỷ lệ pixel có `raw_median < 0` bằng diện tích giao pixel-đa giác. Báo sai số tuyệt đối, Spearman, số ô trong dung sai làm tròn `0.00005`; tách ô đầy đủ khỏi ô biên.
+4. Kiểm tra `ntl_class` để phân biệt số 0 thật với giá trị NTL dương rất nhỏ bị CSV làm tròn thành `0.0000`. Dùng `dq_observed_fraction` và `dq_negative_fraction` để đối chiếu ngữ nghĩa hỗ trợ.
+
+**Kết quả có thể phát biểu:** 12.202 pixel nguồn hợp lệ, trong đó 1.079 pixel trung vị âm, không pixel nào trung vị đúng bằng 0; các pixel hợp lệ đều có `cf_cvg_total > 0`. App có **49 ô** được phân loại NTL thật sự bằng 0, đều có `dq_observed_fraction=1` và `dq_negative_fraction=1`; thêm **7 ô** dương rất nhỏ bị làm tròn thành `0.0000`. Sau căn chỉnh, đối chiếu được **9.120/9.143** ô (Spearman **0,9988467**, MAE **0,00007570**), trong đó **8.532** ô đầy đủ có MAE **0,00002711**. Có **47/49** ô số 0 app đủ phủ raster; **47/47** cho kết quả nguồn bằng 0. **23 ô biên** không phủ bởi raster nguồn đã cắt ROI; **8 ô biên** có kết quả số 0 khác nhau.
+
+**Điều chưa chứng minh:** không có file raster sáu band do chính app nhận trong lần chạy 2016 để xác nhận geotransform tuyệt đối; thiếu phủ ROI khác thiếu quan sát VIIRS; không có `no_observation` ở các ô app; và chưa đo sai lệch LISA do chính sách thiếu-versus-zero trên một cảnh thực thiếu quan sát. Do đó kết quả hỗ trợ **cơ chế số 0 do cắt radiance âm**, không đóng G10/G18 hoặc hiệu chuẩn FDR.
+
+**Danh tính nguồn (SHA-256):** raster 2016 `28c8db4486455a6df1aa2f120ff1ff1d39f61336c80b90b0432e58cd79b4358e`; lưới raster 2020 `c3a209ff1e800b960f69a986b425941e958fe368fd421858bcf4405004d83f0f`; CSV app `447690688e1f648eee5b57e38eda0c82edc81680086a475baed5c224b7607e64`; GeoJSON app `4758265ca72ba9540ccb55bab1d179590e87f63c77c410cdc4a26b4940daf2c0`.
+
 ## Kiểm tra số học và tích hợp
 
 **Lý do.** Đối chiếu thực địa có thể phát hiện lỗi đầu vào và hình học, còn chuẩn tham chiếu nhỏ giúp cô lập công thức cùng đường xử lý lỗi. Dự án cần cả hai loại.
