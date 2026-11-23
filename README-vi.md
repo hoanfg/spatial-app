@@ -240,7 +240,11 @@ trong đó $r_p$ là bức xạ của điểm ảnh nguồn và $a_{ip}$ là di�
 
 ![Từ ô lưới tới ma trận trọng số và độ trễ không gian](docs/assets/spatial-weights-vi.jpg)
 
-<p align="center"><em>Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận <var>W</var>, rồi ma trận thành độ trễ không gian <var>Wy</var>.</em></p>
+<div align="center">
+
+<em>Hình 2. Quan hệ láng giềng biến lưới thành đồ thị, đồ thị thành ma trận</em> $W$<em>, rồi ma trận thành độ trễ không gian</em> $Wy$<em>.</em>
+
+</div>
 
 $W$ không chỉ là một tùy chọn phần mềm. Tiếp giáp Queen giả định tiếp xúc cạnh hoặc góc đều có thể truyền tương tác; Rook loại tiếp xúc chỉ qua góc; ma trận khoảng cách hoặc mạng lưới sẽ biểu diễn một cơ chế khác. Chuẩn hóa theo hàng biến trễ không gian từ tổng láng giềng thành trung bình láng giềng, trong khi ma trận nhị phân đối xứng giữ một thang đo khác (Anselin, 1988; LeSage & Pace, 2009).
 
