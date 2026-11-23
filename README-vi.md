@@ -84,7 +84,13 @@ Kinh tế lượng thông thường thường bắt đầu từ giả định r�
 1. **Phụ thuộc không gian:** giá trị hoặc nhiễu tại vị trí $i$ có liên hệ với giá trị hoặc nhiễu ở các vị trí lân cận.
 2. **Dị biệt không gian:** quan hệ, phương sai hoặc chế độ có thể khác nhau giữa các địa điểm.
 
-Đối tượng trung tâm là ma trận trọng số không gian $W$. Mỗi phần tử $w_{ij}$ biểu diễn vị trí $j$ có kết nối với vị trí $i$ hay không, hoặc mức kết nối mạnh đến đâu. Biến trễ không gian $$(Wy)_i = \sum_j w_{ij}y_j$$ vì vậy là một tóm tắt các giá trị xung quanh vị trí $i$. Trên lưới đều, dự án chủ yếu dùng tiếp giáp Queen, tức ô chung cạnh hoặc chung góc đều là láng giềng. Kiểm định độ vững còn dùng tiếp giáp Rook, chỉ tính các ô chung cạnh (Anselin, 1988; Rey và cộng sự, 2023).
+Đối tượng trung tâm là ma trận trọng số không gian $W$. Mỗi phần tử $w_{ij}$ biểu diễn vị trí $j$ có kết nối với vị trí $i$ hay không, hoặc mức kết nối mạnh đến đâu. Biến trễ không gian
+
+$$
+(Wy)_i = \sum_j w_{ij}y_j
+$$ 
+
+vì vậy là một tóm tắt các giá trị xung quanh vị trí $i$. Trên lưới đều, dự án chủ yếu dùng tiếp giáp Queen, tức ô chung cạnh hoặc chung góc đều là láng giềng. Kiểm định độ vững còn dùng tiếp giáp Rook, chỉ tính các ô chung cạnh (Anselin, 1988; Rey và cộng sự, 2023).
 
 Phụ thuộc không gian quan trọng vì nó làm thay đổi cả câu hỏi nghiên cứu lẫn suy luận thống kê. Hồi quy thông thường có thể hỏi $X_i$ liên hệ với $y_i$ như thế nào. Mô hình không gian còn có thể hỏi $y_j$ ở vùng lân cận ảnh hưởng tới $y_i$ hay không, một cú sốc lan truyền qua không gian ra sao, và phần dư có còn tụ cụm theo địa lý hay không (LeSage & Pace, 2009; Elhorst, 2014).
 
