@@ -568,13 +568,13 @@ When unlit cells ($\mathrm{NTL}_i \le \mathrm{threshold}$, labeled `DARK`) are e
 The spatial weight matrix $W$ is built with **Queen** contiguity on the regular grid, for cells in $S$. Queen counts 8 surrounding directions: 4 edges and 4 corners.
 
 ```text
-┌───┬───┬───┐
+┌────┬────┬────┐
 │ NW │ N  │ NE │
-├───┼───┼───┤
+├────┼────┼────┤
 │ W  │ ■  │ E  │      ■ = the cell being examined; the 8 cells around it are its neighbors
-├───┼───┼───┤
+├────┼────┼────┤
 │ SW │ S  │ SE │
-└───┴───┴───┘
+└────┴────┴────┘
 ```
 
 From the centroid coordinates $(c_{x,i}, c_{y,i})$ in UTM meters, the algorithm maps each cell to integer grid indices $(ix_i, iy_i)$ and computes a unique 1D hash key:
@@ -721,7 +721,7 @@ It exports the fitted slope $\hat{\gamma}$ (`urban_gradient_decay`) and the in-s
 
 **3. Permutation-centered distance-weighted NTL** (legacy field `recentered_market_access`)
 
-The app sums distance-weighted satellite lights, $P_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})$, with $\mathrm{SOL}_j = \mathrm{NTL}_j \times \mathrm{cell\ area}_j$ and Euclidean grid distance $d_{ij}$ within a fixed radius. It then subtracts the spatial-permutation expectation, $\mathbb{E}_{\pi}[P_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}}\sum_{j \ne i}\exp(-\tau d_{ij})$. The exported key remains `recentered_market_access` for compatibility. **No measured jobs, population, income, transport costs or travel times enter this calculation.** The result describes NTL concentration relative to a spatial-randomization reference, not verified economic market access. Synthetic jobs in G04 are generated solely for a controlled stress test; they are not input to the production app and are not real employment observations. Economic calibration would require independent matched data. Subtracting the permutation expectation does not identify an exogenous shock or remove economic endogeneity; Borusyak and Hull (2023) is not evidence of causal identification for this implementation.
+The app sums distance-weighted satellite lights, $`P_i = \sum_{j \ne i} \mathrm{SOL}_j \exp(-\tau d_{ij})`$, with $`\mathrm{SOL}_j = \mathrm{NTL}_j \times \mathrm{cell\ area}_j`$ and Euclidean grid distance $`d_{ij}`$ within a fixed radius. It then subtracts the spatial-permutation expectation, $`\mathbb{E}_{\pi}[P_i] = \overline{\mathrm{SOL}}_{\mathrm{Core}} \sum_{j \ne i} \exp(-\tau d_{ij})`$. The exported key remains `recentered_market_access` for compatibility. **No measured jobs, population, income, transport costs or travel times enter this calculation.** The result describes NTL concentration relative to a spatial-randomization reference, not verified economic market access. Synthetic jobs in G04 are generated solely for a controlled stress test; they are not input to the production app and are not real employment observations. Economic calibration would require independent matched data. Subtracting the permutation expectation does not identify an exogenous shock or remove economic endogeneity; Borusyak and Hull (2023) is not evidence of causal identification for this implementation.
 
 **4. Descriptive HH distance groups and signed cell-center distances** (spatial causal designs require additional assumptions; see Vazquez-Bare, 2023; Butts, 2024)
 
@@ -729,7 +729,7 @@ Computes the signed Euclidean distance between cell centers: HH cells use the ne
 
 **5. Spatial-lag correlation and two-period relative-position transitions** (the spatial unit-root question requires separate analysis; see Müller & Watson, 2024; spatial Markov background in Rey et al., 2023)
 
-The legacy CSV key `spatial_ar1_persistence` stores $\operatorname{Corr}(z,Wz)$ within one cross-section, not an estimated spatial AR coefficient or unit-root test. The two-year module describes changes in year-standardized NTL positions and conditional quartile-transition frequencies, not identified *Agglomeration Shadow* effects. It requires $t_0 < t_1$ and does not estimate a stationary multi-period Markov process.
+The legacy CSV key `spatial_ar1_persistence` stores $\mathrm{Corr}(z, Wz)$ within one cross-section, not an estimated spatial AR coefficient or unit-root test. The two-year module describes changes in year-standardized NTL positions and conditional quartile-transition frequencies, not identified *Agglomeration Shadow* effects. It requires $t_0 < t_1$ and does not estimate a stationary multi-period Markov process.
 
 <sub>[↑ Back to top](#top)</sub>
 
