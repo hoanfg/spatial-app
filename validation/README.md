@@ -6,6 +6,49 @@
 
 A result applies only to the stated location, year, input and precision. The table separates results supported by deposited evidence from work that still needs additional data.
 
+## How to interpret a scientific audit
+
+An interpretable audit states six things: **source and unit of observation; quantity estimated; comparison reference; rationale for the test; error/sensitivity rule; and the strongest permitted conclusion**. Formula checks, implementation tests, independent processing of the same satellite product, simulations with known truth, and independent field construct validation are **not interchangeable levels of evidence**.
+
+- **Numerical oracle:** small inputs with known answers establish formula behavior, not field truth.
+- **Implementation contract:** checks file schemas, grid geometry, masks, and application pathways on specified cases.
+- **Source-level cross-check:** recalculates per-cell outputs from rasters or comparison products. State whether data and processing are genuinely independent.
+- **Known-truth simulation:** exposes sensitivity or test error under specified synthetic assumptions, not general field performance.
+- **Economic construct / inferential validation:** requires an independent economic comparator, identified design, or an appropriate calibrated null. Rank correlations alone do not supply these.
+
+### G01-G18: test, calculation, rationale, and claim boundary
+
+This matrix documents **existing checks**, not algorithm changes. The authoritative dispositions remain in the [G01-G18 register](scientific_closure_register.json); detailed numerical evidence and programs appear below and in the [evidence guide](evidence/README.md).
+
+| ID | What is calculated or tested | Why this test is used | Interpretation and upper limit |
+| --- | --- | --- | --- |
+| G01 | Assign distance rings (0-2, 2-5, 5-10 km, etc.) using Euclidean distance between **cell centers** and High-High (HH) cells. | Preserve a reproducible proximity descriptor without presuming an exogenous intervention. | A distance association, **not causal spillover or regression discontinuity**; those need an independent intervention/boundary and identification checks. |
+| G02 | Standardize NTL to `z`, obtain neighbor lag `Wz`, and report same-period `Corr(z, Wz)`. | Separate simultaneous spatial association from time-series dynamics. | Not an estimated spatial AR(1) coefficient or unit-root test. |
+| G03 | Apply fixed radiance cutoffs 5/15/40 and check resulting labels. | Class membership is reproducible without economic ground-truth labels. | Radiance bands are descriptive, not verified employment, CBD or economic-development classes. |
+| G04 | Form `SOL_j = NTL_j × area_j`; sum `SOL_j × exp(-tau × distance_ij)` within a chosen radius, then compare ranks/top-decile Jaccard across radii, `tau` and spatial reassignments. | Stress-test distance kernels and brightness-location dependence; synthetic known jobs illustrate construct sensitivity. | **Light potential**, not observed travel cost or economic market access. Subtracting permutation expectations does not establish exogeneity. |
+| G05 | Select an NTL-based center from the largest significant HH component using SOL weights; fit area-weighted WLS of `log1p(NTL)` on center distance; compare slopes and R² with known simulated and alternative centers. | Detect sensitivity from using NTL to select both the explanatory reference point and the dependent variable. | Higher in-sample R² does **not** validate an economic CBD. Only simulations have a known true center; Bao'an lacks an independent employment center. |
+| G06 | Estimate Hill/KS for the top 5/10/15/20% positive tails; perform 399 Pareto bootstrap draws **refitting alpha but fixing u and k**; compare conditional Pareto, exponential, truncated-lognormal AICc at the same cutoff. | Distinguish an asymptotic KS approximation, conditional fit, and rival tail descriptions. | A nonsignificant KS or best AICc does **not prove a spatial Pareto law**: resampling assumes iid and does not reselect cutoff. |
+| G07 | Calculate `signed_dist_hh_km` from cell center to HH cell center under the implementation rule. | Expose the geometric estimand rather than labeling a centroid distance as a boundary distance. | Not distance to the actual outline of HH polygons without an independent geometry calculation. |
+| G08 | Enforce `year_t0 < year_t1`, rejecting identical or reversed time endpoints. | Establish temporal ordering for a two-date comparison. | A chronology invariant, not causal identification or knowledge of intervening annual trends. |
+| G09 | Construct quartile transition probabilities; compute Shorrocks `(4 - trace(P))/3` **only with valid source probability rows**; return NaN on empty source quartiles. | Avoid treating all-zero rows as distributions, which could produce spurious mobility with no transitions. | A two-date transition description, not validated stationary or long-run Markov dynamics. |
+| G10 | Distinguish `dq_mean_valid_months` (months) from summed `cf_cvg_total` (observation counts), and compare masks and `dq_observed_fraction` on matching `grid_id`. | A valid month can contain multiple cloud-free observations; count, temporal completeness and observed area are different quantities. | All-supported Bao'an/Qimen cells do not test a **genuinely unobserved cell**; neither do these checks establish an optimal observation-count weighting scheme. |
+| G11 | Screen polar latitudes, dateline crossing and applicability of a single UTM zone; use geodesic/equal-area controls where required. | Planar area and distance can be distorted across extreme or multizone geographies. | A scope warning is not global geometric accuracy certification. |
+| G12 | Separate descriptive residual Moran I from an inferential statistic backed by permutations or another justified reference; do not treat `I > 0.3` as a p-value. | The magnitude of an autocorrelation statistic does not itself provide its null distribution. | Describe association only when an appropriate inference test is unavailable. |
+| G13 | Record the GHSL epoch actually used and its year difference from VIIRS. | Five-year GHSL epochs can make a supposedly cross-sectional comparison temporally mismatched. | Not same-year evidence until timestamps are matched or temporal sensitivity is assessed. |
+| G14 | Compare HH-set Jaccard, seed-to-seed variation, center movement and threshold sensitivity on consistent cells/settings. | Equal HH counts do not establish **spatial overlap** or hotspot location stability. | These cutoffs are heuristic descriptors, not validated universal statistical tests. |
+| G15 | Verify that `moran_I_lit` means the mean of Local Moran I rather than Global Moran I. | Local and global statistics use different domains and normalizations. | Never relabel an average local statistic as a global coefficient. |
+| G16 | Match NOAA product ID `VCMSLCFG` in documentation, Earth Engine code, and provenance tests. | Product substitutions can alter stray-light processing, masking and comparability. | This establishes **source identity**, not physical sensor accuracy. |
+| G17 | On a 64-cell synthetic grid, run valid-null Gaussian p-value experiments with known truth (400 replications per setting) and separate LISA simulations (24 per setting, 999 permutations); compare raw, BH and BY using `FDP = V/max(R,1)`. | Simulated FDR requires known true nulls; alternate spatial dependence exposes assumptions. | Mean FDR from **valid Gaussian p-values** does not validate field Local Moran permutation p-values or PRDS conditions. |
+| G18 | Generate 144 synthetic cells: 106 positive, 28 observed zero, 10 unobserved; compare positive-only, supported-zero and naive missing-as-zero LISA, with and without BH. | Isolate how misclassifying missingness changes analysis population, adjacency, normalization and test family. | HH/LL differences are **synthetic policy sensitivity**, not quantified real-world bias; a genuinely missing field case and independent observation source remain necessary. |
+
+### Computation, tolerance choice and interpretation rules
+
+- **Cellwise VIIRS verification:** compare `NTL_app` with pixel-area-overlap means on the same `grid_id` polygons, and retain each absolute deviation. Four-decimal CSV output implies `0.00005` rounding tolerance, **not an instrument accuracy bound**. Spearman near 1 checks ranks, **not exact numerical agreement**.
+- **GHSL aggregation:** source pixels encode quantities; sum `pixel_quantity × intersection_area/pixel_area` in a suitable area CRS to avoid creating or losing totals through resampling, then normalize by cell area for density. Compare rho, AUC and spatial-block ranges. A rho interval including zero does not justify a claim of a nonzero monotonic relationship.
+- **Permutation inference and multiplicity:** fixed RNG seeds aid reproduction under **the same algorithm**, not exact p-value equivalence between independent codebases. BH tests sorted p-values against `i × alpha/m`; BY further divides by the harmonic sum. Changing analyzed cells also changes the tested family.
+- **Spatial dependence:** neighboring cells are not automatically iid. Spearman describes monotonic association; block resampling explores **sensitivity to sampling units**, not automatically calibrated confidence intervals, causal effects or FDR guarantees.
+- **Provenance and independence:** SHA-256 establishes byte identity, not scientific correctness. Reprocessing the same VIIRS product is an implementation cross-check rather than an independent sensor validation. When raw inputs are owner-held instead of committed, label the limitation explicitly rather than substituting synthetic data.
+
 ## Results
 
 | Topic | Result | Limit |
