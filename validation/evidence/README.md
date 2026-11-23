@@ -47,6 +47,29 @@ A citation, a code test and a field comparison are different forms of support. T
 | Does raster extraction agree with an independent reference? | Correct code can still use the wrong raster, projection, mask or cell geometry. | Yanqing raster-to-polygon comparison and the three-location workflow |
 | Do Local Moran and FDR results survive an independent calculation? | Neighbor construction, rounding, permutation seed and tail counting can change significance labels. | Yanqing per-cell LISA comparison and repository regression tests |
 
+## Why each A01-A12 audit uses its particular method
+
+The matrix below records **observed findings**. This table explains **why each check bears on its audit question**, what type of error it can reveal, and why that evidence cannot be extrapolated further.
+
+| ID | Test method and reference | Rationale and interpretation |
+| --- | --- | --- |
+| A01 | Reconcile maintained `tests/` files against the two CI job assignments; require both jobs to complete. | Tests **execution coverage**, not scientific truth; all registered tests passing does not cover hypotheses for which no test exists. |
+| A02 | Check unique `grid_id`, `dq_*` fractions within [0,1], valid-month counts within [0,12], coherent observation status; inject a controlled synthetic missingness mask and compare downstream statistics. | Missing support silently zero-filled can masquerade as darkness. Bao'an only validates schema and an all-supported case; synthetic masking tests sensitivity. |
+| A03 | Use hand-computed Global Moran (`1/3`), local I on a tiny lattice, Queen neighbors, enumerable permutation cases and fixed BH p-values; independently recalculate Yanqing outputs. | Small oracles isolate formula defects; Yanqing checks realistic output. Rounding and independent permutation sequences can explain some classification differences. |
+| A04 | Compare Gini with `sum_i sum_j |x_i-x_j|/(2 n² mean(x))` for finite nonnegative vectors at absolute tolerance `1e-12`; reject invalid raw inputs. | An **independent numerical oracle** detects inconsistent Gini implementations; it does not decide the upstream negative-radiance policy. |
+| A05 | Record Python, statistics-library versions, dependency specifications and replay requirements. | Results depend on environments. Pinning a subset of libraries is not a complete lockfile or full reproducibility. |
+| A06 | Test data contracts across raster, grid, statistics, UI and exports rather than only isolated functions. | Integration faults can appear between individually correct modules; coverage still does not encompass every `app.py` pathway. |
+| A07 | Distinguish the implemented MAUP block aggregation from regenerating 1,000 m polygons and extracting raw pixels directly. | Averaging 500 m cells, especially clipped edge cells, need not equal a fresh raster extraction on a coarse grid; equivalence requires a dedicated field comparison. |
+| A08 | Preserve GHSL quantities on the 100 m Mollweide source lattice: `sum(pixel_quantity × intersection_area/pixel_area)`, normalize by cell area, then compare rho, AUC and spatial-block resampling. | GHSL encodes **quantities**, not radiance. Reprojection and naive summing can inflate totals. Numerical correction is not independent economic construct validation. |
+| A09 | Spearman rho tests monotone ranks; Mann-Whitney AUC measures top-quartile separation; spatial blocks probe dependence sensitivity. | These answer different questions; colored 0.4/0.6 thresholds are display heuristics. A rho interval containing zero does not support a clearly nonzero monotone association. |
+| A10 | Record stage-specific wall time and sampled process RSS; compare comparable configurations. | Faster total execution may reflect another stage or external variability; sampled RSS is not guaranteed memory peak or per-user RAM. |
+| A11 | Controlled pipeline integration, UI smoke tests, exported CSV equality and stage profiling. | Software paths and a credentialed Earth Engine-to-Streamlit live test with actual network faults are distinct; the latter is not established. |
+| A12 | Verify links, guide pairs, mathematical delimiters and style constraints; inspect semantic parity manually. | Passing link/style checks does not establish mathematical correctness, accurate translation or justified claims. |
+| V11 | Recalculate pixel-area-intersection raster means for the **same exported app polygons** across three sites, retaining absolute differences per `grid_id` and distinguishing full/edge cells. | `0.00005` tolerance follows four-decimal CSV rounding, **not sensor error**. Both routes use NOAA VIIRS and are processing cross-checks, not independent light measurements. |
+| GADM | Compare unique GIDs, administrative types, geometry and curated mapping with GADM 4.1 without grouping by duplicate display names. | Detects mistaken administrative merges or mixed levels; source-release concordance is not a legal-current-boundary certification. |
+
+**Cross-cutting rule:** record **sample size, exclusions, tolerance, seed, resampling unit, source method, provenance and exceptions** before describing a result as matching. Do not imply causal significance, calibrated p-values or confidence intervals unless the procedure actually estimated and justified them.
+
 ## Complete audit question matrix
 
 This matrix consolidates the A01 to A12 review and the later field checks. The result column states only what the named evidence supports.
