@@ -2,6 +2,8 @@
 
 [Data and GADM guide](docs/README.md) · [Validation status and evidence](validation/README.md)
 
+**How to read scientific evidence:** begin with the [G01-G18 matrix of computations, rationales and claim limits](validation/README.md#how-to-interpret-a-scientific-audit), then consult the [A01-A12, V11 and GADM methods and evidence matrix](validation/evidence/README.md#why-each-a01-a12-audit-uses-its-particular-method). Every claim needs an **input, estimand/reference, unit of observation, tolerance and explicit non-conclusion**. Numerical tests, simulations and field cross-checks are different evidence levels.
+
 <div align="center">
 
 # Technical manual and methodological framework
