@@ -6,6 +6,20 @@
 
 This guide keeps the GADM v4.1 extraction rules and the validation record in one place. The country table is a design specification; the China field checks and scientific validation are identified separately below.
 
+### GADM data audit methodology: question and reference
+
+The country rules below are **design specifications**, not completed validation for every country. For each curated GeoJSON, document the **original GADM v4.1 layer, preserved GID, name/level mapping, type filter, geometry repair and small-polygon policy**.
+
+| Risk | Check performed or needed | Rationale and boundary |
+| --- | --- | --- |
+| Literal `"NA"` versus NULL | Inventory both actual nulls and placeholder strings before mapping administrative levels; reconcile excluded source records. | Prevent phantom or silently removed units. Not every string `"NA"` can be declared invalid without checking the source. |
+| Duplicate unit names | Compare distinct `GID_x` counts before/after `groupby/dissolve`; retain `GID → name → type → filename` mapping. | Display names are not unique keys. Explain every change in count, especially direct-administered municipalities and lower-level units. |
+| Waterbody classes | Inventory `ENGTYPE_x` and removed geometries under explicit source-specific rules; inspect area effects, not merely radiance zero. | Water polygons may be irrelevant for economic units, but incorrect filtering can damage geometry. |
+| Geometry and area | Inspect CRS, validity, emptiness, multipart geometry, before/after area and suspicious overlaps in an appropriate projected system. | Geometry repair can gain or lose area; correct filenames do not establish correct boundaries. |
+| Level choice and small units | Compare source level to app level and approximate 500 m cell support; **warn** rather than deleting legitimate small units. | The `0.25 km²` flag is a sampling-scale heuristic, not a sufficient LISA sample-size rule. `N >= 30` alone cannot certify valid p-values. |
+
+**Observed evidence:** a source-release comparison for **2,420** curated Chinese units against specified GADM v4.1 inputs, including `GID_3 → GID_2` mapping. **Not established:** all country-group cases, current legal boundaries, or name/type filtering behavior in countries without matched inputs. See the [GADM audit matrix](../validation/evidence/README.md#complete-audit-question-matrix) for the distinction between proposed checks and executed evidence.
+
 | Section | Contents |
 | --- | --- |
 | [1. GADM input risks](#s1) | Source values, names, geometry and hierarchy |
