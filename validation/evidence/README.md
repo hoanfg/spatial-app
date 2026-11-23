@@ -172,6 +172,25 @@ The rho, interval endpoints and AUC reproduce the displayed application values a
 
 **Limit.** The independent result verifies the stated Shanghai package and metrics; it does not make the Earth Engine Drive and live `computePixels` paths identical for every possible run. Shanghai does not establish behavior for Bao'an, Qimen or another GHSL epoch. GHSL is not a direct economic outcome.
 
+## G10/G18 Qimen 2016: observed zeros and negative radiance
+
+**Question:** does a zero NTL value indicate a measured zero, a **negative** median radiance clipped to zero, or **missing observation support**? These are distinct measurement outcomes.
+
+**Inputs and independence:** a 9,143-cell 2016 Spatial App CSV/GeoJSON pair; a three-band GEE raster with `raw_median`, `clipped_median` and `cf_cvg_total`; and a VIIRS 2020 TIFF supplying **only the reference pixel lattice**, not 2020 radiance. Both processing paths use NOAA `VCMSLCFG`; this checks processing consistency, **not independent sensor truth**. The `reproduce_qimen_2016.py` script, report, `metrics.json`, and per-cell comparisons remain owner-held and **are not committed to this checkout**. This is not fully repo-replayable evidence.
+
+**Method and rationale:**
+
+1. On finite source pixels verify `clipped_median = max(raw_median,0)` and `cf_cvg_total > 0`. This directly distinguishes clipped negatives from exact zero and absent support.
+2. Apply `rasterio.warp.reproject` with **nearest** to place the 2016 raster onto a 2020 reference geotransform. No 2020 light values enter the comparison. This is an **indirect alignment test**, not verification of the app's actual internal 2016 raster lattice.
+3. Intersect aligned source pixels with actual exported `grid_id` polygons, computing area-overlap means of `max(raw_median,0)` and overlap shares with `raw_median < 0`. Report per-cell absolute error, Spearman and counts within four-decimal rounding tolerance `0.00005`; distinguish complete and clipped-edge cells.
+4. Use `ntl_class` to distinguish truly zero values from very small positives rounded to CSV `0.0000`; compare `dq_observed_fraction` and `dq_negative_fraction` for semantics.
+
+**Bounded results:** among 12,202 finite source pixels, 1,079 have negative annual median and none have exactly zero median; all valid pixels have positive `cf_cvg_total`. The app classifies **49 cells** as truly zero with `dq_observed_fraction=1` and `dq_negative_fraction=1`; **seven additional positive** cells round to `0.0000` in CSV. After alignment, **9,120/9,143** cells can be compared (Spearman **0.9988467**, NTL MAE **0.00007570**); **8,532 complete** cells have MAE **0.00002711**. Source coverage exists for **47/49** true app zeros and **47/47** match source zero. **23 boundary** cells lack coverage in the ROI-clipped source; **eight boundary** cells differ in zero classification.
+
+**What it does not establish:** the original six-band raster downloaded by the live 2016 app run was not retained, so exact internal geotransform identity is unverified; cropped-ROI noncoverage is not VIIRS missingness; no app cell is `no_observation`; no real missing-versus-zero LISA policy comparison or field FDR calibration has been done. This supports the **observed negative-to-zero mechanism**, not scientific closure of G10/G18.
+
+**Input SHA-256:** 2016 raster `28c8db4486455a6df1aa2f120ff1ff1d39f61336c80b90b0432e58cd79b4358e`; 2020 lattice `c3a209ff1e800b960f69a986b425941e958fe368fd421858bcf4405004d83f0f`; app CSV `447690688e1f648eee5b57e38eda0c82edc81680086a475baed5c224b7607e64`; app GeoJSON `4758265ca72ba9540ccb55bab1d179590e87f63c77c410cdc4a26b4940daf2c0`.
+
 ## Numerical and integration checks
 
 **Reason.** Field comparisons can reveal input and geometry errors, while small independent oracles isolate formula and failure-path behavior. Both are needed.
