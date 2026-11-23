@@ -6,6 +6,20 @@
 
 Tài liệu này gom quy tắc trích xuất GADM v4.1 và tình trạng kiểm chứng vào một nơi. Bảng phân loại quốc gia là đặc tả thiết kế; kết quả đã kiểm tra với dữ liệu Trung Quốc và các phép kiểm chứng khoa học được nêu riêng ở cuối.
 
+### Phương pháp kiểm chứng dữ liệu GADM: câu hỏi và chuẩn đối chiếu
+
+Các quy tắc phân loại quốc gia bên dưới là **đặc tả thiết kế**, không phải kết quả đã xác nhận ở mọi quốc gia. Với mỗi tệp GeoJSON biên tập, phải chỉ rõ **lớp GADM v4.1 nguồn, GID gốc, phép ánh xạ tên/cấp hành chính, bộ lọc loại hình, phép sửa hình học và chính sách đa giác nhỏ**.
+
+| Rủi ro | Phép kiểm được dùng hoặc cần chạy | Vì sao và giới hạn |
+| --- | --- | --- |
+| `"NA"` dạng chuỗi, không phải NULL | Kiểm kê cả giá trị null thật lẫn chuỗi placeholder trước khi phân cấp; đối chiếu các đơn vị nguồn bị loại. | Tránh tạo đơn vị giả hoặc bỏ nhầm khu vực. Không tự kết luận mọi `"NA"` là bản ghi vô giá trị. |
+| Đơn vị khác nhau có cùng tên | So số `GID_x` duy nhất trước và sau `groupby/dissolve`; đối chiếu bảng `GID → tên → loại hình → file`. | Tên không phải khóa duy nhất. Bất kỳ thay đổi về số đơn vị cần giải trình, nhất là thành phố trực thuộc và quận/huyện. |
+| Lớp mặt nước | Kiểm kê `ENGTYPE_x` và hình học bị loại theo quy tắc nêu rõ, kiểm tra ảnh hưởng diện tích; không dựa vào NTL bằng 0 để suy ra loại hình. | Nước không phải một quận kinh tế, nhưng loại bỏ sai có thể phá hình học; quy tắc lọc cần được kiểm tra với nguồn cụ thể. |
+| Hình học và diện tích | Kiểm tra CRS, tính hợp lệ hình học, polygon rỗng, đa phần, diện tích trước/sau xử lý và chồng lấn bất thường trên hệ quy chiếu phù hợp. | Chỉnh sửa hình học có thể tạo hoặc mất diện tích; tên file đúng không bảo đảm đường biên đúng. |
+| Cấp hành chính và ô quá nhỏ | Đối chiếu bản đồ cấp nguồn với cấp dùng trong app và diện tích ước tính trên số ô 500 m; **cảnh báo**, không tự động xóa đơn vị nhỏ. | Cảnh báo `0.25 km²` là thang đo tham khảo chứ không phải ngưỡng đủ mẫu đảm bảo LISA. Điều kiện `N ≥ 30` không tự bảo đảm p-value có hiệu lực. |
+
+**Bằng chứng thực đã có:** đối chiếu **2.420** đơn vị Trung Quốc với bản GADM v4.1 xác định, gồm ánh xạ `GID_3 → GID_2` của bộ biên tập. **Chưa được xác nhận:** mọi quốc gia trong bảng phân nhóm; tính hợp pháp hiện thời của ranh giới; và mọi rủi ro dựa trên tên/trùng loại hình ở các nước không có dữ liệu đối chiếu. Xem [ma trận kiểm toán GADM](../validation/evidence/README-vi.md#ma-trận-câu-hỏi-kiểm-toán-đầy-đủ) để phân biệt khuyến nghị thiết kế với phép kiểm đã thực thi.
+
 | Phần | Nội dung |
 | --- | --- |
 | [1. Rủi ro dữ liệu GADM](#s1) | Giá trị nguồn, tên, hình học và phân cấp |
