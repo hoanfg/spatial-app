@@ -737,7 +737,7 @@ Hệ thống tính khoảng cách Euclid có dấu **giữa các tâm ô**: ô H
 
 **5. Tương quan trễ không gian và chuyển dịch vị thế NTL hai kỳ** (nghiệm đơn vị cần phép kiểm riêng; xem Müller & Watson, 2024; nền tảng Spatial Markov tại Rey và cộng sự, 2023)
 
-Cột CSV cũ `spatial_ar1_persistence` thực chất lưu $\operatorname{Corr}(z,Wz)$ trong một lát cắt, không phải hệ số AR không gian hay kiểm định nghiệm đơn vị. Mô-đun hai năm mô tả chuyển dịch vị thế NTL chuẩn hóa riêng từng năm và tần suất chuyển phân vị theo bối cảnh láng giềng, không nhận dạng hiệu ứng *bóng tối tích tụ*. Yêu cầu $t_0 < t_1$; hai năm chưa đủ để ước lượng quá trình Markov nhiều kỳ ổn định.
+Cột CSV cũ `spatial_ar1_persistence` thực chất lưu $\mathrm{Corr}(z, Wz)$ trong một lát cắt, không phải hệ số AR không gian hay kiểm định nghiệm đơn vị. Mô-đun hai năm mô tả chuyển dịch vị thế NTL chuẩn hóa riêng từng năm và tần suất chuyển phân vị theo bối cảnh láng giềng, không nhận dạng hiệu ứng *bóng tối tích tụ*. Yêu cầu $t_0 < t_1$; hai năm chưa đủ để ước lượng quá trình Markov nhiều kỳ ổn định.
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
