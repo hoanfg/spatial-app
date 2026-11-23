@@ -31,6 +31,16 @@ Bảng LISA dựng lại láng giềng Queen, tính lại Local I từ NTL đã 
 
 CSV Không gian và Thời gian được kiểm tra theo số dòng và mã chế độ của toàn bộ 8.333 ô.
 
+## Phương pháp định lượng và quy tắc diễn giải
+
+**1. Sai số raster trên đa giác.** Lấy trung bình theo diện tích giao raster VIIRS với từng polygon, ghép bằng `grid_id`, so với `ntl_mean` app và tính `e_i = |NTL_ref_i - NTL_app_i|`. **Vì sao:** sai số cục bộ, nhất là ô biên, có thể bị hệ số tương quan toàn vùng che lấp. Ngưỡng `0.00005` xuất phát từ mức làm tròn bốn chữ số của CSV, **không** phải giới hạn sai số cảm biến.
+
+**2. Local Moran và tính ngẫu nhiên.** Xây Queen trên tâm ô 500 m, chuẩn hóa NTL cho tập ô tham gia và tính `I_i = z_i × mean(z_neighbor) / [sum(z²)/(m-1)]`. Giữ ô `i` cố định, tráo ngẫu nhiên các giá trị ở tập còn lại, lấy mẫu không hoàn lại; dùng quy tắc hai đuôi kể cả trường hợp hòa, hiệu chỉnh `(count+1)/(B+1)`, rồi BH-FDR trên đúng họ kiểm định. **Vì sao:** các bước chuẩn hóa, chọn hàng xóm, tính p và đa kiểm định có thể sai độc lập dù NTL đúng. Dữ liệu kiểm chứng dùng `ntl_mean` **đã làm tròn** và RNG riêng nên 179 khác biệt nhãn không thể được quy ngay cho sai số lõi.
+
+**3. Hai mốc thời gian.** So `NTL_2020 - NTL_2014` theo đơn vị bức xạ và so **riêng** thay đổi `log1p(NTL)` đã chuẩn hóa từng năm cùng độ trễ láng giềng. **Vì sao:** một ô có thể tăng ánh sáng tuyệt đối nhưng giảm **vị thế tương đối**. Vì thế nhãn `4_Synchronized_Decline` không được diễn giải tự động thành giảm ánh sáng hoặc suy giảm kinh tế.
+
+**4. Tái lập và giới hạn.** SHA-256 chỉ nhận dạng tệp; để tái lập thống kê cần đúng polygon, raster, phương pháp mặt nạ, seed và cách tính p. Raster tham chiếu thô 2020 không nằm trong thư mục này, nên đối chiếu raster 2020 hiện dựa trên **bảng từng ô đã lưu**, không phải một phép chạy lại nguồn từ đầu. Dữ liệu 2014 không có đủ dải hỗ trợ quan sát để suy ra đúng/sai của chính sách thiếu dữ liệu.
+
 ## Kết quả
 
 | Phép kiểm | Kết quả | Diễn giải |

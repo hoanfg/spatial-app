@@ -43,6 +43,18 @@ python validation/cross_location/compare_raster_cells.py \
 
 Lặp lại cho Bảo An và Kỳ Môn bằng đúng GeoJSON/GeoTIFF/CSV tương ứng.
 
+## Vì sao phép so V11 được thiết kế như vậy?
+
+**Đại lượng được so:** với mỗi `grid_id` của ứng dụng, dựng trung bình NTL độc lập `sum(pixel_value × overlap_area) / sum(overlap_area)` trên polygon lưới đã xuất, sau đó tính `abs(NTL_ref - NTL_app)`. Dùng cùng sản phẩm VIIRS và năm để **cô lập sai lệch trích xuất**, không dùng một sản phẩm vệ tinh khác để đánh giá “độ đúng” vật lý. Vì đa giác do ứng dụng xuất, phép thử không tự xác nhận thuật toán sinh lưới từ GADM.
+
+**Vì sao ba địa bàn:** khác nhau về quy mô, mức độ đô thị hóa giả định và hình học cắt biên. Đây là **chọn mẫu theo rủi ro kỹ thuật có chủ đích**, không phải mẫu ngẫu nhiên đại diện cho mọi huyện Trung Quốc.
+
+**Vì sao dung sai `0.00005`:** `ntl_mean` chỉ giữ bốn chữ số thập phân trong CSV; khi đối chiếu với số thực có độ chính xác cao hơn, nửa đơn vị thập phân cuối là `0.00005`. Mốc phụ `0.0000501` chỉ chẩn đoán nhiễu điểm động, không phải “nới chuẩn” khoa học. Báo **sai số tuyệt đối theo ô**, tỷ lệ đạt, ô biên, thiếu phủ, cực trị; không dùng chỉ mỗi hệ số tương quan để tuyên bố khớp.
+
+**Vì sao kiểm LISA riêng:** phép trích xuất NTL đúng không bảo đảm mạng láng giềng, phép hoán vị và BH-FDR đúng. Local Moran dùng độ lệch chuẩn hóa `z_i` và trung bình láng giềng `lag(z)_i`; dạng triển khai là `I_i = z_i × lag(z)_i / [sum(z²)/(m-1)]`. Hoán vị có điều kiện giữ giá trị ô đang kiểm định, lấy các ô khác **không hoàn lại**, dùng quy tắc hai đuôi có tính trường hợp bằng nhau và hiệu chỉnh `(count+1)/(B+1)`. BH hiệu chỉnh trong **đúng họ ô được kiểm định**. Vì CSV làm tròn và RNG độc lập, cần báo sai khác nhãn thay vì ép bằng tuyệt đối.
+
+**Ý nghĩa kết quả:** đối chiếu V11 xác nhận các phép tính raster theo đúng đầu vào và dung sai đã nêu tại ba địa bàn. Nó không kiểm chứng ý nghĩa kinh tế của HH/LL, quan hệ nhân quả, hay tính hợp lệ của p-value LISA khi giả thuyết hoán vị sai.
+
 ## 4. Tiêu chí đánh giá (đã định trước)
 
 1. **Hình học:** số ô, `grid_id`, diện tích và tâm ô theo UTM/WGS84 khớp CSV app. Dung sai diện tích là 0,00005 km²; dung sai tâm ô theo mức làm tròn 0,1 m và sáu chữ số thập phân của độ. Kiểm tra này từ chối tráo hai ID cùng diện tích.

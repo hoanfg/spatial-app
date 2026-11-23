@@ -47,6 +47,29 @@ A citation, a code test and a field comparison are different forms of support. T
 | Does raster extraction agree with an independent reference? | Correct code can still use the wrong raster, projection, mask or cell geometry. | Yanqing raster-to-polygon comparison and the three-location workflow |
 | Do Local Moran and FDR results survive an independent calculation? | Neighbor construction, rounding, permutation seed and tail counting can change significance labels. | Yanqing per-cell LISA comparison and repository regression tests |
 
+## Why each A01-A12 audit uses its particular method
+
+The matrix below records **observed findings**. This table explains **why each check bears on its audit question**, what type of error it can reveal, and why that evidence cannot be extrapolated further.
+
+| ID | Test method and reference | Rationale and interpretation |
+| --- | --- | --- |
+| A01 | Reconcile maintained `tests/` files against the two CI job assignments; require both jobs to complete. | Tests **execution coverage**, not scientific truth; all registered tests passing does not cover hypotheses for which no test exists. |
+| A02 | Check unique `grid_id`, `dq_*` fractions within [0,1], valid-month counts within [0,12], coherent observation status; inject a controlled synthetic missingness mask and compare downstream statistics. | Missing support silently zero-filled can masquerade as darkness. Bao'an only validates schema and an all-supported case; synthetic masking tests sensitivity. |
+| A03 | Use hand-computed Global Moran (`1/3`), local I on a tiny lattice, Queen neighbors, enumerable permutation cases and fixed BH p-values; independently recalculate Yanqing outputs. | Small oracles isolate formula defects; Yanqing checks realistic output. Rounding and independent permutation sequences can explain some classification differences. |
+| A04 | Compare Gini with `sum_i sum_j |x_i-x_j|/(2 n² mean(x))` for finite nonnegative vectors at absolute tolerance `1e-12`; reject invalid raw inputs. | An **independent numerical oracle** detects inconsistent Gini implementations; it does not decide the upstream negative-radiance policy. |
+| A05 | Record Python, statistics-library versions, dependency specifications and replay requirements. | Results depend on environments. Pinning a subset of libraries is not a complete lockfile or full reproducibility. |
+| A06 | Test data contracts across raster, grid, statistics, UI and exports rather than only isolated functions. | Integration faults can appear between individually correct modules; coverage still does not encompass every `app.py` pathway. |
+| A07 | Distinguish the implemented MAUP block aggregation from regenerating 1,000 m polygons and extracting raw pixels directly. | Averaging 500 m cells, especially clipped edge cells, need not equal a fresh raster extraction on a coarse grid; equivalence requires a dedicated field comparison. |
+| A08 | Preserve GHSL quantities on the 100 m Mollweide source lattice: `sum(pixel_quantity × intersection_area/pixel_area)`, normalize by cell area, then compare rho, AUC and spatial-block resampling. | GHSL encodes **quantities**, not radiance. Reprojection and naive summing can inflate totals. Numerical correction is not independent economic construct validation. |
+| A09 | Spearman rho tests monotone ranks; Mann-Whitney AUC measures top-quartile separation; spatial blocks probe dependence sensitivity. | These answer different questions; colored 0.4/0.6 thresholds are display heuristics. A rho interval containing zero does not support a clearly nonzero monotone association. |
+| A10 | Record stage-specific wall time and sampled process RSS; compare comparable configurations. | Faster total execution may reflect another stage or external variability; sampled RSS is not guaranteed memory peak or per-user RAM. |
+| A11 | Controlled pipeline integration, UI smoke tests, exported CSV equality and stage profiling. | Software paths and a credentialed Earth Engine-to-Streamlit live test with actual network faults are distinct; the latter is not established. |
+| A12 | Verify links, guide pairs, mathematical delimiters and style constraints; inspect semantic parity manually. | Passing link/style checks does not establish mathematical correctness, accurate translation or justified claims. |
+| V11 | Recalculate pixel-area-intersection raster means for the **same exported app polygons** across three sites, retaining absolute differences per `grid_id` and distinguishing full/edge cells. | `0.00005` tolerance follows four-decimal CSV rounding, **not sensor error**. Both routes use NOAA VIIRS and are processing cross-checks, not independent light measurements. |
+| GADM | Compare unique GIDs, administrative types, geometry and curated mapping with GADM 4.1 without grouping by duplicate display names. | Detects mistaken administrative merges or mixed levels; source-release concordance is not a legal-current-boundary certification. |
+
+**Cross-cutting rule:** record **sample size, exclusions, tolerance, seed, resampling unit, source method, provenance and exceptions** before describing a result as matching. Do not imply causal significance, calibrated p-values or confidence intervals unless the procedure actually estimated and justified them.
+
 ## Complete audit question matrix
 
 This matrix consolidates the A01 to A12 review and the later field checks. The result column states only what the named evidence supports.
@@ -148,6 +171,25 @@ After the native-grid and CRS corrections, the independent aggregate calculation
 The rho, interval endpoints and AUC reproduce the displayed application values at their shown precision. Both intervals include zero, so this sample does not establish a reliably nonzero monotonic association.
 
 **Limit.** The independent result verifies the stated Shanghai package and metrics; it does not make the Earth Engine Drive and live `computePixels` paths identical for every possible run. Shanghai does not establish behavior for Bao'an, Qimen or another GHSL epoch. GHSL is not a direct economic outcome.
+
+## G10/G18 Qimen 2016: observed zeros and negative radiance
+
+**Question:** does a zero NTL value indicate a measured zero, a **negative** median radiance clipped to zero, or **missing observation support**? These are distinct measurement outcomes.
+
+**Inputs and independence:** a 9,143-cell 2016 Spatial App CSV/GeoJSON pair; a three-band GEE raster with `raw_median`, `clipped_median` and `cf_cvg_total`; and a VIIRS 2020 TIFF supplying **only the reference pixel lattice**, not 2020 radiance. Both processing paths use NOAA `VCMSLCFG`; this checks processing consistency, **not independent sensor truth**. The `reproduce_qimen_2016.py` script, report, `metrics.json`, and per-cell comparisons remain owner-held and **are not committed to this checkout**. This is not fully repo-replayable evidence.
+
+**Method and rationale:**
+
+1. On finite source pixels verify `clipped_median = max(raw_median,0)` and `cf_cvg_total > 0`. This directly distinguishes clipped negatives from exact zero and absent support.
+2. Apply `rasterio.warp.reproject` with **nearest** to place the 2016 raster onto a 2020 reference geotransform. No 2020 light values enter the comparison. This is an **indirect alignment test**, not verification of the app's actual internal 2016 raster lattice.
+3. Intersect aligned source pixels with actual exported `grid_id` polygons, computing area-overlap means of `max(raw_median,0)` and overlap shares with `raw_median < 0`. Report per-cell absolute error, Spearman and counts within four-decimal rounding tolerance `0.00005`; distinguish complete and clipped-edge cells.
+4. Use `ntl_class` to distinguish truly zero values from very small positives rounded to CSV `0.0000`; compare `dq_observed_fraction` and `dq_negative_fraction` for semantics.
+
+**Bounded results:** among 12,202 finite source pixels, 1,079 have negative annual median and none have exactly zero median; all valid pixels have positive `cf_cvg_total`. The app classifies **49 cells** as truly zero with `dq_observed_fraction=1` and `dq_negative_fraction=1`; **seven additional positive** cells round to `0.0000` in CSV. After alignment, **9,120/9,143** cells can be compared (Spearman **0.9988467**, NTL MAE **0.00007570**); **8,532 complete** cells have MAE **0.00002711**. Source coverage exists for **47/49** true app zeros and **47/47** match source zero. **23 boundary** cells lack coverage in the ROI-clipped source; **eight boundary** cells differ in zero classification.
+
+**What it does not establish:** the original six-band raster downloaded by the live 2016 app run was not retained, so exact internal geotransform identity is unverified; cropped-ROI noncoverage is not VIIRS missingness; no app cell is `no_observation`; no real missing-versus-zero LISA policy comparison or field FDR calibration has been done. This supports the **observed negative-to-zero mechanism**, not scientific closure of G10/G18.
+
+**Input SHA-256:** 2016 raster `28c8db4486455a6df1aa2f120ff1ff1d39f61336c80b90b0432e58cd79b4358e`; 2020 lattice `c3a209ff1e800b960f69a986b425941e958fe368fd421858bcf4405004d83f0f`; app CSV `447690688e1f648eee5b57e38eda0c82edc81680086a475baed5c224b7607e64`; app GeoJSON `4758265ca72ba9540ccb55bab1d179590e87f63c77c410cdc4a26b4940daf2c0`.
 
 ## Numerical and integration checks
 

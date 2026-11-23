@@ -21,6 +21,24 @@ Bao'an additional proxies: WorldCover 2020 native class `50` share, Spearman 0.8
 
 The main data table is [summary.csv](summary.csv). Earlier exploratory rounds first analyzed source raster pixels, then pixel-level OSM geometry; these are methodological baselines, **not separate independent field replications**. This folder records the third round on the application's actual exported `grid_id`.
 
+## Why each proxy and statistic was chosen
+
+This is a **measurement-convergence and spatial-sensitivity study** on the app's exported polygons, not a search for an economic ground truth. Every reported coefficient is tied to the same `grid_id` and **does not become an independent replication just because multiple products appear in a table**.
+
+| Comparison | Operational calculation | Scientific rationale and interpretation ceiling |
+| --- | --- | --- |
+| App NTL versus independently processed monthly VIIRS | Recompute polygon-overlap radiance mean from the same monthly VCMSLCFG source and compare both **absolute per-cell error** and Spearman rho. | Primarily tests **processing and geospatial consistency**. Near-one rho is expected for shared source data and does **not** imply equal cell values or independent physical validation. |
+| App NTL versus EOG Annual VIIRS | Area-overlap annual radiance from another annual product/workflow, then Spearman. | Tests **product/processing sensitivity**, not a totally independent sensor or automatic equivalence of zero/missingness rules. Qimen's much lower rho must be described, not averaged away. |
+| OSM roads | Sum road **segment length inside each polygon** in a projected CRS; divide by cell area in km². | Road presence is an urbanization proxy; it does not measure travel time, network accessibility, road capacity or causal market access. |
+| OSM buildings | Sum intersected footprint areas and divide by cell area, **without union/deduplication**. | Tests association with mapped structural footprints; overlapping features can overcount and the resulting fraction is not guaranteed to be at most one. |
+| OSM POIs | Count mapped POI points intersecting each polygon. | Provides a separate mapped-activity proxy, strongly limited by completeness of OSM contributions; missing POIs do not prove missing activity. |
+| WSF, WorldCover | Assign categorical **native-pixel center** values to app cells and count selected class shares. | Tests built-settlement/land-cover association without treating classes as jobs or causal outcomes. Edge fractions are approximate at pixel size. |
+| GHSL built surface | Aggregate the specified **native-band** source values on app cells. | Compares another built-environment signal; its unit and aggregation must remain explicit and should not be mislabeled an economic outcome. |
+| Spearman rho | Rank both cell series with tie handling and calculate Pearson correlation of ranks. | More robust to nonlinear monotone scales than raw-value Pearson; only states **rank association**, not calibration or independence. |
+| 2 km spatial-block resampling | Group cells by `floor(UTM centroid coordinate / 2000)`, draw entire blocks with replacement **500 times** using seed `20261122`, recompute cellwise rho and report empirical 2.5/97.5 percentiles. | Samples geographic groups rather than pretending nearby cells are iid. Block size, origin, number of unique blocks and cross-block dependence remain unvalidated, so these are **sensitivity ranges, not calibrated 95% confidence intervals**. |
+
+**What a result may say:** report sign/magnitude of a proxy association for the selected site-year, whether the ordering differs across products, source temporal mismatch (OSM 2026 versus NTL 2020, WSF 2019), and the observed sensitivity to block sampling. **What it may not say:** that NTL explains economic activity, that proxy disagreement establishes a data bug, or that these resampling ranges supply field-calibrated inference.
+
 ## Method and checking boundary
 
 1. Three app CSV/GeoJSON pairs agree on `grid_id`, `ntl_mean`, and cell area to exported rounding precision; all **17,177** polygons are nonempty and valid.
