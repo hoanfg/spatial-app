@@ -47,7 +47,7 @@ The GADM v4.1 database was exported from an R environment (`terra` / `sf`). Ther
 
 In GADM v4.1, many large lakes, bays, or inland waters are cut into separate polygons in the `ADM_2` and `ADM_3` layers. Their `ENGTYPE_2` / `ENGTYPE_3` columns hold values such as `"Water body"`, `"Lake"`, and `"Inland water"`.
 
-If these rows are not filtered out before exporting the files, the econometric model will put entire lakes into the analysis sample with a nighttime light radiance of $\mathrm{NTL} = 0$. The result is a severe bias in the light Gini coefficient and in economic density.
+If these rows are not filtered out before exporting the files, the econometric model will put entire lakes into the analysis sample with a nighttime light radiance of $`\mathrm{NTL} = 0`$. The result is a severe bias in the light Gini coefficient and in economic density.
 
 ### Pitfall 3: the administrative-unit name collision (when `GID_x` is not used)
 
@@ -70,11 +70,11 @@ If the extraction loop only calls `.unique()` on the `NAME_2` or `NAME_3` column
 
 | Parameter | Value |
 | :--- | :--- |
-| Native resolution of monthly VIIRS DNB imagery | $\approx 463.83 \text{ m}$ (pixel area $\approx 0.215 \text{ km}^2$) |
-| Minimum number of grid cells for LISA/Moran's I to make meaningful inferences | $N \ge 30$ |
-| Standard grids | $500 \text{ m}$ - $1000 \text{ m}$ |
-| Ideal area of an analysis unit (district/county/city level) | $10 \text{ km}^2$ to $5,000 \text{ km}^2$ |
-| Area of a unit at commune/ward level | $0.2 - 5 \text{ km}^2$ |
+| Native resolution of monthly VIIRS DNB imagery | $`\approx 463.83 \text{ m}`$ (pixel area $`\approx 0.215 \text{ km}^2`$) |
+| Minimum number of grid cells for LISA/Moran's I to make meaningful inferences | $`N \ge 30`$ |
+| Standard grids | $`500 \text{ m}`$ - $`1000 \text{ m}`$ |
+| Ideal area of an analysis unit (district/county/city level) | $`10 \text{ km}^2`$ to $`5,000 \text{ km}^2`$ |
+| Area of a unit at commune/ward level | $`0.2 - 5 \text{ km}^2`$ |
 
 If a script automatically reads the deepest layer (`ADM_3` or `ADM_4`) for every country, countries such as Vietnam, France, Thailand, and Indonesia get pushed down to the commune/ward level. At that scale each unit is so small that LISA testing is crippled.
 
@@ -134,7 +134,7 @@ All countries and territories (matching the `COUNTRY_NAMES` list in `app.py`) ar
 
 ### Group 1: `STANDARD_ADM2` (standard Level 2, covering ~85% of countries)
 
-**Characteristics:** Level 1 (`NAME_1`) is a state/province/centrally administered city. Level 2 (`NAME_2`) is a district/county/county-equivalent/city within a province, covers 100% of the territory, and has an ideal area scale for the NTL grid (grid resolution $500 \text{ m}$ - $2000 \text{ m}$).
+**Characteristics:** Level 1 (`NAME_1`) is a state/province/centrally administered city. Level 2 (`NAME_2`) is a district/county/county-equivalent/city within a province, covers 100% of the territory, and has an ideal area scale for the NTL grid (grid resolution $`500 \text{ m}`$ - $`2000 \text{ m}`$).
 
 **Extraction configuration:**
 
@@ -385,7 +385,7 @@ This naming is compatible with the `list_counties()` and `split_county()` functi
 
 ### 5. Check 5: minimum area check for VIIRS
 
-Issue a warning if a polygon has an area of $< 0.25 \text{ km}^2$, which is smaller than one $500 \times 500 \text{ m}$ grid cell.
+Issue a warning if a polygon has an area of $`< 0.25 \text{ km}^2`$, which is smaller than one $`500 \times 500 \text{ m}`$ grid cell.
 
 <sub>[↑ Back to top](#top)</sub>
 
