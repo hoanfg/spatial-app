@@ -148,5 +148,125 @@
       "claim_ceiling": "Synthetic zero/missingness sensitivity bounded; real case remains absent",
       "evidence_needed": "Real A02 low-support raster, verified observed zero/missing distinction, policy sensitivity"
     }
-  ]
+  ],
+  "follow_up_2026_11_25": {
+    "base_sha": "a53d02222e4d4251e2043306fbe9804b4b6ca8ca",
+    "scope": "Independent CSV, controlled numerical, and reference raster/polygon diagnostics; production and live EE validation remain distinct. Original G01-G18 dispositions retained.",
+    "replay": "validation/g19_g29_independent_audit.mjs",
+    "evidence": "validation/evidence/g19_g29_independent_audit.json",
+    "priority_groups": [
+      {
+        "priority": "P0",
+        "gaps": [
+          "G10",
+          "G18",
+          "G19",
+          "G26",
+          "G20"
+        ]
+      },
+      {
+        "priority": "P1",
+        "gaps": [
+          "G21",
+          "G22",
+          "G23",
+          "G24",
+          "G25",
+          "G27",
+          "G29",
+          "G06",
+          "G17"
+        ]
+      },
+      {
+        "priority": "P2",
+        "gaps": [
+          "G28",
+          "G04",
+          "G05"
+        ]
+      }
+    ],
+    "disposition": [
+      {
+        "id": "G19",
+        "status": "synthetic_mechanism_confirmed_field_missing_open",
+        "next": "Obtain verified missing-support scene; compare all production metrics."
+      },
+      {
+        "id": "G20",
+        "status": "offline_aligned_mosaic_confirmed_live_tile_open",
+        "next": "Compare independent EE single/multiple/native-aligned downloads, mask, all bands and seams."
+      },
+      {
+        "id": "G21",
+        "status": "bounded_reference_raster_weighting_measured",
+        "next": "Extend to other latitudes, source lattices and geometry; distinguish supported-area SOL from production SOL."
+      },
+      {
+        "id": "G22",
+        "status": "direct_reference_grid_and_origin_sensitivity_measured",
+        "next": "Compare exact production block weighting and LISA hotspot area/Jaccard on matched direct grids."
+      },
+      {
+        "id": "G23",
+        "status": "actual_reference_geometry_shared_pixel_mechanism_confirmed",
+        "next": "Extend across sites/resolutions and realistic source nulls; not a field-bias estimate."
+      },
+      {
+        "id": "G24",
+        "status": "independent_csv_estimand_difference_confirmed",
+        "next": "Compare actual production and UI subset using identical weights, transformation, support and island convention."
+      },
+      {
+        "id": "G25",
+        "status": "independent_csv_denominator_difference_confirmed",
+        "next": "Test production with islands and focal threshold; resolve output name or denominator explicitly."
+      },
+      {
+        "id": "G26",
+        "status": "synthetic_mechanism_and_export_alignment_confirmed",
+        "next": "Obtain actual incomplete-support two-year scene; compare dynamics under common support."
+      },
+      {
+        "id": "G27",
+        "status": "static_key_risk",
+        "next": "Test panel method fingerprint and incompatible configurations; verify source boundary identity."
+      },
+      {
+        "id": "G28",
+        "status": "open_bootstrap_coverage_calibration",
+        "next": "Simulate known-truth coverage and vary block size and replicate count."
+      },
+      {
+        "id": "G29",
+        "status": "synthetic_p_convention_counterexample_confirmed",
+        "next": "Distinguish illustrative and production estimands; leave existing README formulas unchanged."
+      }
+    ],
+    "source_limit": "Raw source files remain owner-held; hashes and reference raster summaries are in evidence. The two reference hypotheses in G17 are distinct. All previous G04/G05/G06 and open claim limits remain in force.",
+    "additional_replay": [
+      "validation/g20_g23_raster_audit.py",
+      "validation/g17_source_support_null.py"
+    ],
+    "additional_evidence": "validation/evidence/g20_g23_g17_raster_summary.json",
+    "old_gap_additional_evidence": [
+      {
+        "id": "G10/G18",
+        "status": "finite_reference_cf_cvg_positive_no_verified_missing_case",
+        "next": "Real incomplete support with independent source counts, not AOI nodata."
+      },
+      {
+        "id": "G11",
+        "status": "local_area_comparison_measured",
+        "next": "Geodesic distance, multi-zone and extreme geography validation."
+      },
+      {
+        "id": "G17",
+        "status": "source_independence_null_simulation_on_reference_geometry",
+        "next": "Multiple geometries, realistic source covariance, reference size sensitivity and declared null; no field FDR guarantee."
+      }
+    ]
+  }
 }

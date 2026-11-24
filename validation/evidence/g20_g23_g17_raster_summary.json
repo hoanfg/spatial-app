@@ -1,0 +1,255 @@
+{
+  "design": "Independent raster reference; raw Drive source bytes hashed; geometry repaired by make_valid/buffer(0), angular precision 1e-11 degree; coarse slivers <=1e-4 m2 excluded. Geodesic polygon area uses WGS84 ellipsoid and geodesic segments between vertices. No production execution or new EE request.",
+  "inputs": {
+    "baoan_raster": "36f09174873de596b3d1de5c1c3e9d82126fb7aa122518be6c19a3f4dd8ad6e2",
+    "baoan_geojson": "30983de3e6bc6172a4898f37245d946d65654888a57c29366346eb13b3fbd4c6",
+    "baoan_support": "a4be2a8e145fac56b4e9769e75de7a02bac5f685c7d5357e33d14dbdc0f8c1ab",
+    "qimen_raster": "28c8db4486455a6df1aa2f120ff1ff1d39f61336c80b90b0432e58cd79b4358e",
+    "qimen_geojson": "4758265ca72ba9540ccb55bab1d179590e87f63c77c410cdc4a26b4940daf2c0"
+  },
+  "G10_G18": {
+    "baoan_2020_support_finite_pixels": 8909,
+    "baoan_finite_cf_cvg_nonpositive": 0,
+    "qimen_2016_support_finite_pixels": 12202,
+    "qimen_finite_cf_cvg_nonpositive": 0,
+    "limit": "AOI-masked or nodata pixels not classified as missing observations. Both exports have positive cf_cvg on all finite support pixels."
+  },
+  "G20": {
+    "baoan_offline_aligned_four_tiles": {
+      "shape": [
+        1,
+        109,
+        217
+      ],
+      "same_transform": true,
+      "same_valid_mask": true,
+      "valid_values": 8909,
+      "valid_values_equal": true,
+      "max_abs_valid_difference": 0,
+      "raw_mismatch_nan_equal": 0
+    },
+    "limit": "Offline split of one source raster is not an independent EE tiled download."
+  },
+  "G11_G21": {
+    "baoan": {
+      "cells": 7148,
+      "comparable_cells": 7147,
+      "complete_support_ge_0_999": 7103,
+      "mean_abs_utm_geodesic_rel": 0.001305700842071248,
+      "max_abs_utm_geodesic_rel": 0.0019249888454677677,
+      "mean_abs_radiance_difference": 0.000009862196190107905,
+      "p95_abs_radiance_difference": 0.000034016739753894853,
+      "max_abs_radiance_difference": 0.0002993129257902183,
+      "spearman": 0.9999999997863402,
+      "angular_SOL_supported": 34196.306051417734,
+      "physical_SOL_supported": 34196.30712521532
+    },
+    "qimen": {
+      "cells": 9143,
+      "comparable_cells": 9143,
+      "complete_support_ge_0_999": 9117,
+      "mean_abs_utm_geodesic_rel": 0.0007140821319129429,
+      "max_abs_utm_geodesic_rel": 0.0007906805816060292,
+      "mean_abs_radiance_difference": 1.1370562960297242e-7,
+      "p95_abs_radiance_difference": 2.2514011378121883e-7,
+      "max_abs_radiance_difference": 0.000018815268574279287,
+      "spearman": 0.9999999992934746,
+      "angular_SOL_supported": 115.38065554034377,
+      "physical_SOL_supported": 115.38062243539028
+    }
+  },
+  "G22": {
+    "fields": [
+      "size_m",
+      "offset_xy_m",
+      "cells",
+      "supported_cells",
+      "physical_SOL",
+      "physical_mean",
+      "aligned_mean_abs_diff",
+      "aligned_max_abs_diff"
+    ],
+    "rows": [
+      [
+        1000,
+        0,
+        1921,
+        1920,
+        34196.30733306392,
+        20.73370359404673,
+        0.000022938512625220928,
+        0.000279087138721934
+      ],
+      [
+        1000,
+        500,
+        1912,
+        1912,
+        34196.30730206648,
+        20.733703576444945,
+        null,
+        null
+      ],
+      [
+        1500,
+        0,
+        913,
+        913,
+        34196.30739423621,
+        20.733703631048204,
+        0.000049632971237415385,
+        0.0005406086636980945
+      ],
+      [
+        1500,
+        750,
+        902,
+        902,
+        34196.30718827341,
+        20.73370346802662,
+        null,
+        null
+      ],
+      [
+        2000,
+        0,
+        539,
+        539,
+        34196.30742649573,
+        20.733703650621546,
+        0.00007460154307265102,
+        0.0004156886077772981
+      ],
+      [
+        2000,
+        1000,
+        540,
+        540,
+        34196.30744084668,
+        20.733703659400383,
+        null,
+        null
+      ]
+    ],
+    "limit": "Uses supported-area weighting and union of exported polygons, not production block implementation or independent boundary; hotspot overlap not tested."
+  },
+  "G23": {
+    "cells": 6185,
+    "directed_rook_edges": 23900,
+    "share_edges_common_pixel": 1,
+    "mean_expected_pairwise_corr": 0.23026827445071477,
+    "p95_expected_pairwise_corr": 0.41592508756352153,
+    "max_expected_pairwise_corr": 0.42645639878117897,
+    "replicates": 400,
+    "seed": 20261125,
+    "mean_global_moran": 0.20923185367774097,
+    "empirical_p025_p975": [
+      0.19096118438746204,
+      0.22833053950687796
+    ],
+    "limit": "Actual exported geometry and raster support, simulated iid normal source values; no sensor PSF or field effect magnitude."
+  },
+  "G17": {
+    "grid_origin_ix_iy": [
+      338,
+      5025
+    ],
+    "grid_ids": [
+      1595,
+      1599,
+      1604,
+      1719,
+      1723,
+      1725,
+      1737,
+      1741,
+      1582,
+      1596,
+      1603,
+      1718,
+      1722,
+      1726,
+      1736,
+      1739,
+      1580,
+      1598,
+      1602,
+      1720,
+      1724,
+      1732,
+      1738,
+      1758,
+      1581,
+      1600,
+      1601,
+      1717,
+      1721,
+      1733,
+      1735,
+      1740,
+      1569,
+      1597,
+      1593,
+      1710,
+      1715,
+      1734,
+      1745,
+      1757,
+      1570,
+      1586,
+      1591,
+      1709,
+      1713,
+      1716,
+      1744,
+      1751,
+      1585,
+      1589,
+      1592,
+      1711,
+      1712,
+      1742,
+      1746,
+      1750,
+      1572,
+      1588,
+      1590,
+      1707,
+      1714,
+      1743,
+      1747,
+      1748
+    ],
+    "source_pixels": 102,
+    "reference_draws": 999,
+    "test_draws": 400,
+    "seed": 171723,
+    "cell_permutation": {
+      "marginal_p_le_005": 0.105546875,
+      "any_rejection_counts": {
+        "raw": 394,
+        "BH": 21,
+        "BY": 0
+      },
+      "mean_rejections": {
+        "raw": 6.755,
+        "BH": 0.26,
+        "BY": 0
+      }
+    },
+    "source_reference": {
+      "marginal_p_le_005": 0.0518359375,
+      "any_rejection_counts": {
+        "raw": 385,
+        "BH": 2,
+        "BY": 0
+      },
+      "mean_rejections": {
+        "raw": 3.3175,
+        "BH": 0.015,
+        "BY": 0
+      }
+    },
+    "limit": "Different null hypotheses, shared reference draws across test fields, one deterministic window; no field FDR guarantee. Two-sided p floor 0.002 can severely restrict BY rejections."
+  }
+}
