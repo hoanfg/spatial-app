@@ -258,6 +258,28 @@ Under a correlated background with $\rho=0.8$ and no planted mean shift, BH reje
 
 **Unresolved G17 claim:** Neither positive spatial dependence nor BH step-up correctness proves the formal PRDS condition for LISA pseudo p-values. BY's arbitrary-dependence guarantee presumes valid null p-values; it **does not repair invalid spatial permutations**. Before a real-world nominal FDR claim, define the scientific null, the full tested family, how spatial nuisance dependence is handled and what ground truth or valid null calibration supports the claim. See [Benjamini and Yekutieli (2001)](https://doi.org/10.1214/aos/1013699998) and the [GeoDa Local Spatial Autocorrelation guidance](https://geodacenter.github.io/workbook/6a_local_auto/lab6a.html).
 
+#### G17: Source-independence null calibration on reference raster geometry
+
+**Scientific object and rationale.** Conditional cell permutation tests random placement of cell values. Source-pixel independence is a different null when cells share pixels (G23). Marginal p validity and BH/BY arithmetic must remain distinct.
+
+**Data, calculation and reference.** Use the first complete 8×8 Bao'an core window in sorted lattice order (64 cells, 102 pixels). Generate 999 reference and 400 test iid Gaussian source fields, seed 171723; extract using normalized overlap weights. Compute sample-standardized Local I with Queen mean lag. Compare the simulated source reference with conditional cell permutations sampling neighbors without replacement. Use doubled inclusive smaller-tail plus-one p capped at one; apply raw/BH/BY at alpha 0.05.
+
+**Results.**
+
+| Measure (400 test fields, 25,600 cell tests) | Cell permutation | Source reference |
+| --- | ---: | ---: |
+| Marginal p ≤ 0.05 | 10.5547% | 5.1836% |
+| Raw: fields with any rejection | 394 | 385 |
+| BH: fields with any rejection | 21 | 2 |
+| BY: fields with any rejection | 0 | 0 |
+| BH any-rejection rate under source null | 5.25% | 0.5% |
+
+Marginal p frequency differs from the fraction of fields with any rejection. Under the all-null source design the latter is empirical FDR for that null.
+
+**Archived evidence.** [Source-null simulation program](g17_source_support_null.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** One window, one iid source model, shared reference draws across test fields. The 0.002 p floor limits BH/BY, especially BY. The comparison does not establish BH failure for the cell random-placement null or certify field FDR. Extend across geometries, resolutions, source covariance and reference sizes; specify the scientific null.
+
 ### G18 synthetic evidence (bounded result, 18 November 2026)
 
 **Additional bounded G18 field evidence from Qimen 2016:** all 49 truly zero app cells show observation support and negative-radiance metadata; all 47 with source-raster overlap also match zero after clipping. No `no_observation` cell exists among 9,143 app cells. This checks the **negative-to-zero source mechanism**, not policy sensitivity under genuine missingness. Alignment uses an indirect 2020 raster lattice and leaves 23 cropped edge cells uncovered; it does not prove exact internal 2016 app geotransform. See [method, exclusions and source digests](evidence/README.md#g10g18-qimen-2016-observed-zeros-and-negative-radiance).
@@ -278,6 +300,263 @@ Including observed zeros changed 50/134 classes on the common known-support doma
 
 **G18 field validation remains open:** Select a genuine locality with independently verified observation-support metadata, distinguish measured zeros and missing coverage, and repeat a sensitivity comparison with preregistered interpretation and coverage thresholds.
 
+#### G10/G18: Observed zeros, negative radiance and observation support
+
+**Scientific object and rationale.** A02 quality fields distinguish observed radiance, missing support and values clipped to zero. An exported zero does not establish measured darkness.
+
+**Data, calculation and reference.** Screen the five cell exports (Qimen 2014/2016/2020, Bao'an 2020, Shanghai 2020) for status, observed fraction, valid months, missing-stat flag, negative fraction and exported zeros. Inspect finite `cf_cvg` values in the Bao'an 2020 and Qimen 2016 support rasters. Do not classify pixels outside the AOI mask as missing VIIRS observations.
+
+**Results.**
+
+| Export | Records | Full reported support |
+| --- | ---: | ---: |
+| Qimen 2014 | 9,143 | 100% |
+| Qimen 2016 | 9,143 | 100% |
+| Qimen 2020 | 9,143 | 100% |
+| Bao'an 2020 | 7,148 | 100% |
+| Shanghai 2020 | 886 | 100% |
+| Total | 35,463 | 100% |
+
+No missing-stat flag or below-three-month cell occurs. All 8,909 Bao'an and 12,202 Qimen finite support pixels have positive cf_cvg. Qimen 2016 has 56 exported zeros and 2,487 cells with positive negative-radiance fraction. Exported zeros may reflect rounding and do not replace the 49 verified zero cells in the earlier G18 comparison.
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** These samples establish reported support, not a genuine missing-observation case or the field magnitude of zero-fill bias. An independently verified incomplete-support scene and matched geometry are still needed.
+
+### G19: Missingness and zero-fill propagation into NTL statistics
+
+**Scientific object and rationale.** The raster and zonal paths use `median.unmask(0.0)` and `fillna(0.0)`. Quality flags alone do not alter the statistics computed from the filled values.
+
+**Data, calculation and reference.** Use four equal-area cells with the third unobserved. Compare legacy [10,20,0,30] with observed [10,20,30]. Mean is the sum divided by the count; Gini is the sum of all pairwise absolute differences divided by twice the squared count times the mean. Only the analysis population changes.
+
+**Results.**
+
+| Policy | Cells | Mean NTL | Gini |
+| --- | ---: | ---: | ---: |
+| Missing cell filled with zero | 4 | 15 | 0.416666667 |
+| Observed cells only | 3 | 20 | 0.222222222 |
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
+
+**Verified scope and unresolved claims.** The counterexample establishes sensitivity of mean and Gini, not the true missing value, true regional mean or universal bias direction. Test all production SOL, mean, Gini, lit fraction, Global/Local Moran and supported area under legacy, observed-only and prespecified support policies on a verified incomplete scene.
+
+### G20: Pixel alignment and tile mosaic integrity
+
+**Scientific object and rationale.** Common CRS and pixel size do not establish a common pixel origin. Different transforms or masks at seams can alter zonal inputs. An offline test isolates mosaicking from retrieval.
+
+**Data, calculation and reference.** Split the Bao'an 2020 VIIRS Median raster into four integer pixel windows with source-derived affine transforms. Merge using `rasterio.merge(method='first')`. Compare shape, transform, finite mask and absolute value differences; treat paired NaNs as equivalent for raw-array comparison.
+
+**Results.**
+
+| Comparison | Result |
+| --- | --- |
+| Mosaic shape (rows × columns) | 109 × 217 |
+| Affine transform and finite mask | Identical |
+| Finite values compared | 8,909 |
+| Maximum absolute difference | 0 |
+| Raw mismatch after NaN equivalence | 0 |
+
+**Archived evidence.** [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** Aligned offline mosaicking is verified in this case. Independent Earth Engine requests may not share the same lattice. Hold AOI, year, product and native affine fixed and compare single, split and native-aligned downloads across all bands, masks, seams and polygon means. See [Earth Engine image exports](https://developers.google.com/earth-engine/guides/exporting_images).
+
+### G26: Common observation support in space-time dynamics
+
+**Scientific object and rationale.** Entry, exit, Markov transitions and lag changes require comparable observations. A missing baseline filled with zero can create a false dark-to-lit transition.
+
+**Data, calculation and reference.** Use t0=[10,0,0,5] and t1=[10,8,0,5]; the first baseline zero represents missingness, the second is observed. Entry is the number of initial zero cells becoming positive divided by the initial zero count in the selected domain. Join each pair of Qimen exports by grid_id and compare geographic/projected centroids and reported area.
+
+**Results.**
+
+| Synthetic domain | Entry / initial zeros | Entry rate |
+| --- | ---: | ---: |
+| Legacy zero-fill | 1/2 | 50% |
+| Common observed support | 0/1 | 0% |
+
+| Qimen year pair | Matched IDs | Identical exported centroids/area | Positive to exported zero | Exported zero to positive |
+| --- | ---: | ---: | ---: | ---: |
+| 2014–2016 | 9,143 | 9,143 | 56 | 0 |
+| 2014–2020 | 9,143 | 9,143 | 0 | 0 |
+| 2016–2020 | 9,143 | 9,143 | 0 | 56 |
+
+All paired records report full observation support.
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
+
+**Verified scope and unresolved claims.** Synthetic mechanism and exported grid attributes are confirmed; exact polygon identity, field missingness and economic transition are not. Test an actual incomplete two-year scene on common support, including Markov, lag and extensive margins, and report excluded area.
+
+### G11: UTM area accuracy relative to ellipsoidal area
+
+**Scientific object and rationale.** Projected area enters edge screening, area weights and SOL. UTM is not equal-area, so compare actual polygons rather than nominal grid size.
+
+**Data, calculation and reference.** For every exported Bao'an and Qimen polygon, calculate planar area in its declared UTM CRS and WGS84 ellipsoidal area using `pyproj.Geod`, with geodesic segments between vertices. Summarize abs(A_UTM/A_geod - 1).
+
+**Results.**
+
+| Site | Cells | Mean relative absolute difference | Maximum |
+| --- | ---: | ---: | ---: |
+| Bao'an | 7,148 | 0.13057% | 0.19250% |
+| Qimen | 9,143 | 0.07141% | 0.07907% |
+
+**Archived evidence.** [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** Local area discrepancies are measured, not universal tolerances. Distances, multiple UTM zones, polar regions and the dateline remain untested. G21 addresses raster intersection weighting, a distinct question.
+
+### G21: Angular versus physical raster intersection weighting
+
+**Scientific object and rationale.** For equal-angular-size pixels in EPSG:4326, coverage fractions are proportional to angular overlap. Physical area varies with location, so the two weighted means are not mathematical identities.
+
+**Data, calculation and reference.** Build source pixel polygons from the affine transform, intersect the exact exported polygons and exclude nonfinite pixels. Sum radiance times overlap area divided by total overlap, once with angular area and once with WGS84 ellipsoidal area. Compare cell-level absolute differences, Spearman ranks and SOL over physically supported area in km². Bao'an uses VIIRS Median 2020, Qimen uses the `clipped_median` band of RAW_SUPPORT 2016. Intersection uses make_valid, buffer(0), and 1e-11 degree precision; ellipsoidal areas use geodesic segments between vertices.
+
+**Results.**
+
+| Measure | Bao'an 2020 | Qimen 2016 |
+| --- | ---: | ---: |
+| Comparable finite cells | 7,147 | 9,143 |
+| Geometric support ≥ 0.999 | 7,103 | 9,117 |
+| Mean absolute difference | 0.000009862 | 0.000000114 |
+| 95th percentile absolute difference | 0.000034017 | 0.000000225 |
+| Maximum absolute difference | 0.000299313 | 0.000018815 |
+| Spearman rho | 0.9999999998 | 0.9999999993 |
+| Angular-mean SOL | 34196.306051 | 115.380656 |
+| Physical-mean SOL | 34196.307125 | 115.380622 |
+
+The 0.999 threshold stratifies geometric support; it is not a VIIRS observation-quality standard.
+
+**Archived evidence.** [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** Small differences are measured on these two reference rasters, not sensor error, a rerun of V11 or a universal equivalence result. Finite-raster overlap is not cf_cvg; supported-area SOL is not production SOL. Extend to different latitudes and larger geometries as needed. See [exactextract operations](https://isciences.github.io/exactextract/operations.html).
+
+### G22/A07: Direct extraction, block aggregation and MAUP zoning
+
+**Scientific object and rationale.** Scale and zoning change observation units. Aggregating 500 m means equals direct coarse extraction only under compatible geometry and weights. Regional SOL conservation does not imply hotspot conservation.
+
+**Data, calculation and reference.** Use the union of exported Bao'an polygons, not an independent administrative boundary. Construct UTM grids at 1000/1500/2000 m with origin zero or a half-cell shift in both axes, clip to the AOI and exclude slivers ≤0.0001 m². Directly extract from the same raster; for aligned grids compare with support-area-weighted 500 m means. Compare regional SOL and mean across six configurations. The reference does not use production block weighting.
+
+**Results.**
+
+| Cell size (m) | Origin shift (m) | Cells | Supported cells |
+| --- | ---: | ---: | ---: |
+| 1000 | 0 | 1,921 | 1,920 |
+| 1000 | 500 | 1,912 | 1,912 |
+| 1500 | 0 | 913 | 913 |
+| 1500 | 750 | 902 | 902 |
+| 2000 | 0 | 539 | 539 |
+| 2000 | 1000 | 540 | 540 |
+
+| Aligned size | Mean absolute direct–aggregate difference | Maximum |
+| --- | ---: | ---: |
+| 1000 m | 0.000022939 | 0.000279087 |
+| 1500 m | 0.000049633 | 0.000540609 |
+| 2000 m | 0.000074602 | 0.000415689 |
+
+Six SOL values range 34196.307188–34196.307441 and means 20.733703468–20.733703659. A separate four-equal-cell example with one fine HH cell yields 100% coarse-block any-overlap but 25% actual area overlap; `coarse_covered_by_fine` and actual area overlap are different estimands.
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** Near-integral conservation is established for this reference design only. Production block weights, direct-grid LISA and HH overlap remain open. Compare matched raster support, compatible LISA settings and polygon-intersection area Jaccard.
+
+### G23: Spatial dependence induced by shared source pixels
+
+**Scientific object and rationale.** A nominal 500 m analysis grid is not a set of independent sensor observations. Shared source pixels can produce covariance even when the pixel field is independent.
+
+**Data, calculation and reference.** Construct W from angular pixel–cell overlaps normalized to unit row sums. For independent unit-variance source pixels x, y=Wx has covariance WWᵀ; pair correlation is the row dot product divided by row norms. The ideal control uses 400 independent uniform 25×25 rasters, 24×24 output, aligned or shifted half a pixel on both axes. The actual-geometry experiment uses 6,185 Bao'an core cells (area ≥99% nominal, geometric support ≥0.999), 400 iid Gaussian fields, seed 20261125. Calculate binary Rook Global Moran after centering the extracted values.
+
+**Results.**
+
+| Configuration | Mean Moran | Empirical 2.5th percentile | Empirical 97.5th percentile |
+| --- | ---: | ---: | ---: |
+| Ideal aligned | -0.001514 | -0.060801 | 0.056433 |
+| Ideal half-pixel shift | 0.496455 | 0.441207 | 0.550105 |
+| Actual Bao'an reference geometry | 0.209232 | 0.190961 | 0.228331 |
+
+All 23,900 directed Rook edges in the Bao'an sample share at least one source pixel. Mean expected pair correlation is 0.230268; the 95th percentile is 0.415925. In the ideal shifted case neighboring cells share two of four equally weighted pixels.
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
+
+**Verified scope and unresolved claims.** The mechanism is established on real reference geometry with simulated radiance, not a field Moran bias estimate, sensor PSF, or a universal correction to subtract from observed Moran. Empirical percentiles describe simulated fields, not confidence intervals for observed NTL. G17 extends this question to the Local Moran reference distribution.
+
+### G24: Global Moran versus Moran scatterplot slope
+
+**Scientific object and rationale.** The Moran scatterplot slope corresponds to Global Moran only under compatible samples, transformations and weight conventions. The all-cell raw Global I and positive-core LISA slope are distinct.
+
+**Data, calculation and reference.** Reconstruct Queen from exported projected centroids using floor(coordinate/500). Calculate binary all-cell raw Global I and intercept OLS slope of mean neighbor lag on raw deviations among positive core focal cells with at least one neighbor; repeat with log NTL.
+
+**Results.**
+
+| Site 2020 | All-cell raw Global I | Positive-core raw slope | Positive-core log slope |
+| --- | ---: | ---: | ---: |
+| Qimen | 0.817250 | 0.800781 | 0.866488 |
+| Bao'an | 0.903654 | 0.921101 | 0.962057 |
+| Shanghai | 0.810675 | 0.802565 | 0.830273 |
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
+
+**Verified scope and unresolved claims.** Differences are confirmed in rounded exports, not the actual UI trend subset. Match sample, weights, transformations and island handling. The JSON minK=4 row-standardized diagnostic zeros subthreshold rows; it is not conventional Global I on the focal induced graph.
+
+### G25: High-High area denominator on the tested domain
+
+**Scientific object and rationale.** Members may include eligible graph cells that are not tested after the minimum-neighbor screen. If `hh_area_share_of_tested` means tested-area share, a members denominator can differ from its label.
+
+**Data, calculation and reference.** Construct Queen on positive core cells from the CSV, count members and focal at minK=1 and minK=4, and compare their summed areas. For a fixed HH numerator, the two ratios coincide only when the denominators coincide.
+
+**Results.**
+
+| Site 2020 | Members | Focal (minK=4) |
+| --- | ---: | ---: |
+| Qimen | 8,532 | 8,513 |
+| Bao'an | 6,186 | 6,158 |
+| Shanghai | 715 | 712 |
+
+At minK=1 Bao'an has 6,186 members and 6,185 focal, a 0.25 km² difference. At minK=4 focal/member area is 0.995482857.
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
+
+**Verified scope and unresolved claims.** Denominators differ on actual exported data. Raw CSVs lack HH labels, so no new HH share is measured. Run a production regression with islands and varied minK and explicitly resolve the estimand or name.
+
+### G27: Analysis specification comparability in region-year panels
+
+**Scientific object and rationale.** Rows with the same region, year and cell size may use different statistical settings, confounding measurement change with temporal change.
+
+**Data, calculation and reference.** Inspect KEY_COLS and same-key replacement in `ntl/lisa_ui.py`. Specify a method fingerprint including weights, log, alpha, FDR, permutations, seed, support, algorithm version and boundary identity. A future regression must insert conflicting configurations and verify source geometry across years.
+
+**Results.**
+
+Static inspection confirms same-key replacement despite possible method differences. G26 confirms exported Qimen coordinate/area alignment, not polygon hash identity or method equivalence.
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
+
+**Verified scope and unresolved claims.** The data-contract risk is established, but UI/production conflict handling is untested. Validate specification identity before combining panel series.
+
+### G28: Spatial bootstrap block size and interval coverage
+
+**Scientific object and rationale.** Five-cell blocks and 200 resamples are algorithm settings, not evidence of nominal 95% interval coverage. Dependence ranges can differ across urban and rural settings.
+
+**Data, calculation and reference.** Estimate dependence range using a correlogram or variogram; vary block sizes and replicates and report block count, valid replicates, percentiles and sensitivity. In repeated known-parameter simulations calculate the fraction of valid intervals containing truth. Evaluate coverage and Monte Carlo uncertainty, not minimum interval width.
+
+**Results.**
+
+No new coverage-calibration result is deposited. Earlier spatial block resampling remains sensitivity evidence, not 95% coverage evidence.
+
+**Verified scope and unresolved claims.** Retain descriptive interval interpretation until a calibration appropriate to the sampling design and dependence structure is available.
+
+### G29: Equivalence of documented and production p-value conventions
+
+**Scientific object and rationale.** Absolute-tail counting and twice the smaller tail differ under asymmetric reference distributions. A general illustration must not be mistaken for the implemented estimator.
+
+**Data, calculation and reference.** Set observed Local I to 2 and nine simulated values [-5,-4,-3,-2,-1,0,1,2,3]. Absolute-tail counting gives six values of magnitude at least 2; add one and divide by ten. The smaller inclusive tail contains two values at least 2; add one, divide by ten, double and cap at one.
+
+**Results.**
+
+| Convention | p-value |
+| --- | ---: |
+| Absolute tail plus one | 0.7 |
+| Doubled smaller tail plus one | 0.6 |
+
+**Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
+
+**Verified scope and unresolved claims.** An arithmetic counterexample establishes non-equivalence, not which null is calibrated. Review all documented and implemented conventions. Existing equations remain unchanged.
+
 ### New validation acceptance criteria
 
 - **G04/G05/G06:** retain independent input sources, spatial units, model definitions, seed, comparison metrics, cell-level results and sensitivity tables. Distinguish mathematical identity from economic construct validation.
@@ -285,36 +564,8 @@ Including observed zeros changed 50/134 classes on the common known-support doma
 - **G18:** distinguish truly observed zero from no observation using verified A02 support fields; repeat only the alternative zero-inclusion specification, not the previously completed A03 reference tests.
 - **A02/A07 remaining:** test a real incomplete-coverage scene and directly extracted coarse-grid raster respectively. Never re-open the completed Bao'an observed case or V11 raster comparison merely because a neighboring question remains.
 
-**Change boundary for this update:** code changes affect scientific descriptions and chronology validation; the radiance thresholds, VIIRS/ GHSL extraction formulas, Local Moran permutation mathematics, BH step-up logic, Gini, historical files and numeric cell-class codes remain unchanged. The human-readable `ntl_class_label` now describes radiance rather than uncalibrated economic land-use categories.
-
-## Supplemental scientific validation catalogue
-
-Each item specifies its estimand, rationale, computation, evidence and claim boundary. Numerical checks, field comparisons and inferential calibration are distinct evidence levels.
-
-| ID | Object | Rationale | Calculation and reference | Result | Verified scope and limits |
-| --- | --- | --- | --- | --- | --- |
-| G10/G18 (P0) | Observed zero versus missing support. | Missing support is not observed darkness. | Screen five cell CSVs for support flags; inspect finite cf_cvg pixels in Bao'an 2020 and Qimen 2016 support rasters. | All 35,463 records report observed fraction 1; no missing-stat flag. All 8,909/12,202 finite support pixels in Bao'an/Qimen have positive cf_cvg. Qimen 2016 contains 56 exported zeros and 2,487 cells with positive negative-radiance fraction. | No verified missing-observation case; AOI masking is not VIIRS missingness. A genuinely incomplete-support scene and independent reference remain necessary. |
-| G19 (P0) | Propagation of zero-fill into metrics. | Replacing unknown values with zero changes the analysis population. | Four equal-area cells [10,20,0,30], third unobserved; compare mean and Gini to observed [10,20,30]. | Mean 15 vs 20; Gini 0.416666667 vs 0.222222222. | Mechanism confirmed; actual regional truth unknown. Compare all production metrics on a verified incomplete-support scene. |
-| G20 (P0) | Raster tile alignment. | Same CRS/scale need not fix pixel origin. | Split Bao'an reference raster into four integer pixel windows with source affine transforms; rasterio merge first; compare transform, shape, valid mask and pixel values treating NaNs equivalently. | 109 x 217 mosaic; identical transform/mask; all 8,909 finite pixels identical, max error zero, no raw mismatch after NaN equivalence. | Offline aligned mosaicking confirmed; separate live Earth Engine requests remain untested. Compare single/multiple/native-affine downloads and all bands/seams. |
-| G26 (P0) | Common support for dynamics. | Missingness can create spurious dark-to-lit entry or exit. | t0=[10,0,0,5], t1=[10,8,0,5]; first zero at t0 missing. Entry is zero-to-positive count divided by initial zero count. Join Qimen year pairs on grid_id and compare exported centers/areas. | Legacy entry 50%, common support 0%. All 9,143 IDs, centroids and areas match per pair; 56 positive-to-exported-zero transitions 2014-2016, 56 reverse 2016-2020. | Mechanism and exported alignment, not verified polygon identity or economic transition; test real missingness and Markov/lag/margins. |
-| G11 (P1) | UTM area accuracy. | Projection area affects SOL and area denominators. | Compare polygon area in declared UTM to WGS84 ellipsoid area using pyproj.Geod; abs(A_UTM/A_geod - 1). | Bao'an 7,148 cells mean 0.13057%, max 0.19250%; Qimen 9,143 cells mean 0.07141%, max 0.07907%. | Local area discrepancy measured; distance, multizone, polar and dateline accuracy remain open. |
-| G21 (P1) | Physical intersection weighting. | Angular overlap and physical overlap are distinct estimands. | Build pixel polygons from affine, intersect exact exported cells, exclude nonfinite pixels; compare angular vs WGS84 area-weighted means, absolute error, Spearman and SOL over supported area. | Bao'an 7,147 comparable cells: mean abs difference 0.000009862, p95 0.000034017, max 0.000299313, rho 0.9999999998; angular/physical SOL 34196.306051/34196.307125. Qimen 9,143: mean 0.000000114, p95 0.000000225, max 0.000018815, rho 0.9999999993; SOL 115.380656/115.380622. | Bounded weighting sensitivity on reference rasters, not sensor error or universal validation. 7,103/9,117 cells meet geometric support >=0.999; threshold stratifies comparison, not a VIIRS quality standard. |
-| G22/A07 (P1) | MAUP scale and zoning. | Aggregating fine cells is not automatically direct extraction; shifts can alter hotspot support. | Use union of exported Bao'an polygons, direct UTM grids 1000/1500/2000 m with origin 0 or half-cell shift in both axes; compare aligned coarse means to support-area-weighted 500 m cells, region SOL and mean over six grids. One HH fine cell in four gives any-overlap 100%, actual overlap 25%. | Aligned mean absolute differences 0.000022939/0.000049633/0.000074602; maxima 0.000279087/0.000540609/0.000415689. Six SOLs range 34196.307188-34196.307441; means 20.733703468-20.733703659. | Near conservation on this reference under supported-area weighting, not a test of production block weighting or HH. Direct LISA and overlap comparison remain open. |
-| G23 (P1) | Shared-pixel induced dependence. | Source independence does not imply cell independence. | Normalize angular overlap matrix W by row sums; iid unit-variance pixels imply Cov(Wx)=WWᵀ. Pairwise correlation is row dot product over row norms. Use core area >=99% and geometric support >=0.999; 400 iid Gaussian source fields seed 20261125, binary Rook Global Moran after extraction. | 6,185 cells, 23,900 directed edges, all share a pixel; mean expected pair correlation 0.230268, p95 0.415925. Mean Moran 0.209232, empirical 2.5/97.5 percentiles [0.190961,0.228331]. Ideal lattice control previously gives -0.001514 aligned and 0.496455 half-cell offset. | Confirms mechanism on actual reference geometry with simulated radiance, not field bias, PSF or universal null. |
-| G17 (P1) | Source-aware inference. | Conditional cell permutation and source-independence null differ. | First complete 8 x 8 Bao'an window in sorted lattice order (64 cells, 102 pixels); 999 reference and 400 test iid Gaussian source fields, seed 171723. Compute sample-standardized Queen Local I; compare doubled inclusive smaller-tail plus-one p from source reference and conditional cell randomization without replacement; raw/BH/BY alpha 0.05. | Marginal p<=0.05 across 25,600 tests: 10.5547% cell permutation vs 5.1836% source reference. Any rejection counts raw/BH/BY: 394/21/0 vs 385/2/0 out of 400; source-null BH any rejection 5.25% vs 0.5%. | One simulated source null, not evidence against BH for its cell random-placement null. Shared reference draws and p floor 0.002 constrain interpretation, especially BY. More geometries and realistic nulls needed. |
-| G24 (P1) | Global Moran vs scatterplot slope. | Samples, weights and transformations differ. | Queen via floor(projected coordinate/500); all-cell binary raw Global I vs OLS slope with intercept on positive core focal using neighbor mean; repeat with log NTL. | 2020 Global/raw slope/log slope: Qimen 0.817250/0.800781/0.866488; Bao'an 0.903654/0.921101/0.962057; Shanghai 0.810675/0.802565/0.830273. | Confirms differences in rounded exports, not actual UI trend subset; match sample, weights and islands. |
-| G25 (P1) | HH area denominator. | Members can include cells not tested. | Count positive-core Queen members and focal at different minimum neighbor counts; compare area. | Bao'an minK=1 6186/6185, difference 0.25 km2; minK=4 6186/6158, focal/member area 0.995482857; Qimen 8532/8513, Shanghai 715/712. | Denominators differ; raw CSV lacks HH labels. Production regression and explicit estimand needed. |
-| G27 (P1) | Panel comparability. | Region/year/grid key omits method settings. | Inspect key and replacement logic; fingerprint weights, log, alpha, FDR, permutations, seed, support, algorithm and boundary. | Static key risk confirmed; exported Qimen geometry attributes align across years. | UI/specification identity and polygon hashes still require tests. |
-| G29 (P1) | Documentation vs production p convention. | Asymmetric reference distributions distinguish tails. | Observed I=2; simulated [-5,-4,-3,-2,-1,0,1,2,3]; absolute tail plus one vs doubled smaller tail plus one. | p=0.7 vs 0.6. | Arithmetic counterexample, not null calibration; distinguish illustrative and production conventions. |
-| G28 (P2) | Spatial bootstrap blocks. | Five-cell blocks and 200 replicates do not establish 95% coverage. | Estimate dependence range, vary block size and replicates; repeated known-truth simulations and fraction of intervals covering true parameter. | No new coverage result. | Report valid replicates/block counts; descriptive intervals remain bounded. |
-| G04/G05 (P2) | Economic potential and center construct validity. | NTL does not directly measure market access or economic CBD. | Independent employment/population and transport friction, dated activity centers, matched support; rank/top-decile agreement, center error and held-out gradient. | Existing simulation and observed-light sensitivity evidence retained; independent economic reference absent. | 2026 OSM is not 2020 economic ground truth; bounded descriptive claims only without external reference. |
-| G06 (P1) | Pareto tail dependence. | Fitted-parameter KS and fixed cutoff do not establish calibrated inference. | Reselect cutoff and refit alpha per replicate; rival tails on same support and spatially appropriate null rejection frequency. | Conditional-iid evidence exists, no new spatial calibration. | No spatial Pareto law certified. |
-
-
-### Evidence and replay
-
-- [Independent CSV and controlled numerical checks](g19_g29_independent_audit.mjs), [results](evidence/g19_g29_independent_audit.json).
-- [Raster intersection, physical area, MAUP and shared-support diagnostics](g20_g23_raster_audit.py), [source-null simulation](g17_source_support_null.py), [evidence and SHA-256](evidence/g20_g23_g17_raster_summary.json).
-- Bao'an 2020 uses the VIIRS Median reference; Qimen 2016 uses the clipped_median band of RAW_SUPPORT. Geometry is the exported application grid, not an independent boundary. Intersection uses make_valid, zero buffer to retain area geometry, angular precision 1e-11 degrees; coarse slivers <=0.0001 m2 are excluded. Ellipsoidal areas use geodesic segments between vertices. Geometric finite-raster support is distinct from cf_cvg. Supported-area SOL is not the production SOL.
-- [Scientific closure register](scientific_closure_register.json) retains G01-G18 and supplemental G19-G29. G03, G09, G13, G14 and bounded G01/G02/G07/G12/G15 claim limits remain applicable.
+- **G06:** for spatial-null extension of conditional bootstrap, reselect cutoff and refit alpha within each replicate, compare rival distributions over common support and measure rejection frequency.
+- **G04/G05:** match independent economic references in time and spatial support; 2026 OSM is not 2020 economic ground truth. Compare population/employment potential, transport friction, top-decile overlap and held-out activity centers.
+- **G03, label semantics:** `ntl_class_label` describes radiance classes rather than uncalibrated economic or land-use categories. Numeric class codes and radiance thresholds are distinct from the label interpretation.
+- **G03/G09/G13/G14:** retain conditions for radiance thresholds, multi-period Markov stability, epoch alignment and robustness thresholds in the [scientific closure register](scientific_closure_register.json).
 
