@@ -6,7 +6,7 @@ The labels below are sampling hypotheses for deliberately different spatial cont
 
 ## 1. Three-case design
 
-| Test role | Location per GADM 4.1 | GID_2 | Approximate area ($\text{km}^2$) | Minimum 500 m cells by area |
+| Test role | Location per GADM 4.1 | GID_2 | Approximate area ($`\text{km}^2`$) | Minimum 500 m cells by area |
 |---|---|---|---:|---:|
 | Urban core | Shanghai / Urban Core Shanghai | `CHN.24.1.10_1` | ~197.7 | ~791 |
 | Urban–industrial/peri-urban, multi-part geometry | Shenzhen / Bao'an District | `CHN.6.15.1_1` | ~1,655.5 | ~6,623 |
@@ -57,8 +57,8 @@ Repeat for Bao'an and Qimen using the corresponding GeoJSON/GeoTIFF/CSV files.
 
 ## 4. Evaluation criteria (pre-defined)
 
-1. **Geometry:** cell count, `grid_id`, area and UTM/WGS84 centroid match the app CSV. Area tolerance is $0.00005\text{ km}^2$; centroid tolerances follow the CSV's 0.1 m and six-decimal-degree rounding. This rejects same-area ID/location swaps.
-2. **NTL:** all cells with sufficient raster coverage match within the CSV rounding margin of $\pm 0.00005\text{ nW/cm}^2\text{/sr}$; report all missing/fail cases without removing outlier cells.
+1. **Geometry:** cell count, `grid_id`, area and UTM/WGS84 centroid match the app CSV. Area tolerance is $`0.00005\text{ km}^2`$; centroid tolerances follow the CSV's 0.1 m and six-decimal-degree rounding. This rejects same-area ID/location swaps.
+2. **NTL:** all cells with sufficient raster coverage match within the CSV rounding margin of $`\pm 0.00005\text{ nW/cm}^2\text{/sr}`$; report all missing/fail cases without removing outlier cells.
 3. **Missing data check:** compare annual median with masked median; analyze monthly `cf_cvg`, all negative values, and their impact on polygon zonal mean. Do not assume all pixels have 12 months as in Yanqing.
 4. **LISA:** recalculate Queen adjacency, Local Moran, and p-value/FDR at 500 m using a dedicated validation script; fixed-seed randomization, explicitly state tie/tail counting method; report HH/LL labels and outliers.
 5. **Generalizability:** mark V11 as complete only when results and attached evidence are available for all three locations; identical HH area share to Yanqing is not required, as structural differences across locations are expected.
