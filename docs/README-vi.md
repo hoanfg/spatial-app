@@ -47,7 +47,7 @@ Cơ sở dữ liệu GADM v4.1 được xuất từ môi trường R (`terra` / 
 
 Trong GADM v4.1, nhiều hồ lớn, vịnh hoặc vùng nước nội thủy được cắt thành các đa giác riêng ở lớp `ADM_2` và `ADM_3`. Cột `ENGTYPE_2` / `ENGTYPE_3` của chúng mang các giá trị như `"Water body"`, `"Lake"`, `"Inland water"`.
 
-Nếu không lọc bỏ những dòng này trước khi xuất file, mô hình kinh tế lượng sẽ đưa cả mặt hồ vào mẫu phân tích với bức xạ $\mathrm{NTL} = 0$. Hệ quả là hệ số Gini ánh sáng và mật độ kinh tế bị lệch nghiêm trọng.
+Nếu không lọc bỏ những dòng này trước khi xuất file, mô hình kinh tế lượng sẽ đưa cả mặt hồ vào mẫu phân tích với bức xạ $`\mathrm{NTL} = 0`$. Hệ quả là hệ số Gini ánh sáng và mật độ kinh tế bị lệch nghiêm trọng.
 
 ### Bẫy 3: trùng tên đơn vị hành chính (name collision khi không dùng `GID_x`)
 
@@ -70,11 +70,11 @@ Nếu vòng lặp trích xuất chỉ dùng `.unique()` trên cột `NAME_2` ho�
 
 | Thông số | Giá trị |
 | :--- | :--- |
-| Độ phân giải gốc của ảnh VIIRS DNB hàng tháng | $\approx 463.83 \text{ m}$ (diện tích một điểm ảnh $\approx 0.215 \text{ km}^2$) |
-| Số ô lưới tối thiểu để kiểm định LISA/Moran's I suy diễn có ý nghĩa | $N \ge 30$ |
-| Lưới tiêu chuẩn | $500 \text{ m}$ - $1000 \text{ m}$ |
-| Diện tích lý tưởng của một đơn vị phân tích (cấp Quận/Huyện/Thành phố) | $10 \text{ km}^2$ đến $5,000 \text{ km}^2$ |
-| Diện tích đơn vị ở cấp Xã/Phường | $0.2 - 5 \text{ km}^2$ |
+| Độ phân giải gốc của ảnh VIIRS DNB hàng tháng | $`\approx 463.83 \text{ m}`$ (diện tích một điểm ảnh $`\approx 0.215 \text{ km}^2`$) |
+| Số ô lưới tối thiểu để kiểm định LISA/Moran's I suy diễn có ý nghĩa | $`N \ge 30`$ |
+| Lưới tiêu chuẩn | $`500 \text{ m}`$ - $`1000 \text{ m}`$ |
+| Diện tích lý tưởng của một đơn vị phân tích (cấp Quận/Huyện/Thành phố) | $`10 \text{ km}^2`$ đến $`5,000 \text{ km}^2`$ |
+| Diện tích đơn vị ở cấp Xã/Phường | $`0.2 - 5 \text{ km}^2`$ |
 
 Nếu kịch bản cứ tự động đọc lớp sâu nhất (`ADM_3` hoặc `ADM_4`) cho mọi quốc gia, các nước như Việt Nam, Pháp, Thái Lan, Indonesia sẽ bị đẩy xuống cấp Xã/Phường. Ở quy mô đó, mỗi đơn vị quá nhỏ và kiểm định LISA gần như tê liệt.
 
@@ -134,7 +134,7 @@ Toàn bộ các quốc gia và vùng lãnh thổ (khớp với danh mục `COUNT
 
 ### Nhóm 1: `STANDARD_ADM2` (chuẩn cấp 2, chiếm ~85% quốc gia)
 
-**Đặc điểm:** Cấp 1 (`NAME_1`) là Bang / Tỉnh / Thành phố trực thuộc trung ương. Cấp 2 (`NAME_2`) là Quận / Huyện / Hạt / Thành phố thuộc tỉnh, phủ kín 100% lãnh thổ và có quy mô diện tích lý tưởng cho lưới NTL (cạnh ô lưới $500 \text{ m}$ - $2000 \text{ m}$).
+**Đặc điểm:** Cấp 1 (`NAME_1`) là Bang / Tỉnh / Thành phố trực thuộc trung ương. Cấp 2 (`NAME_2`) là Quận / Huyện / Hạt / Thành phố thuộc tỉnh, phủ kín 100% lãnh thổ và có quy mô diện tích lý tưởng cho lưới NTL (cạnh ô lưới $`500 \text{ m}`$ - $`2000 \text{ m}`$).
 
 **Cấu hình trích xuất:**
 
@@ -385,7 +385,7 @@ Cách đặt tên này tương thích với hàm `list_counties()` và `split_co
 
 ### 5. Lần 5: kiểm tra diện tích tối thiểu cho VIIRS
 
-Cảnh báo nếu một đa giác có diện tích $< 0.25 \text{ km}^2$, tức nhỏ hơn một ô lưới $500 \times 500 \text{ m}$.
+Cảnh báo nếu một đa giác có diện tích $`< 0.25 \text{ km}^2`$, tức nhỏ hơn một ô lưới $`500 \times 500 \text{ m}`$.
 
 <sub>[↑ Về đầu trang](#top)</sub>
 
