@@ -148,5 +148,103 @@
       "claim_ceiling": "Synthetic zero/missingness sensitivity bounded; real case remains absent",
       "evidence_needed": "Real A02 low-support raster, verified observed zero/missing distinction, policy sensitivity"
     }
-  ]
+  ],
+  "follow_up_2026_11_25": {
+    "base_sha": "a53d02222e4d4251e2043306fbe9804b4b6ca8ca",
+    "scope": "Independent calculations on five owner-held CSV exports and controlled synthetic inputs; no production execution or raster verification; earlier dispositions unchanged.",
+    "replay": "validation/g19_g29_independent_audit.mjs",
+    "evidence": "validation/evidence/g19_g29_independent_audit.json",
+    "priority_groups": [
+      {
+        "priority": "P0",
+        "gaps": [
+          "G10",
+          "G18",
+          "G19",
+          "G26",
+          "G20"
+        ]
+      },
+      {
+        "priority": "P1",
+        "gaps": [
+          "G21",
+          "G22",
+          "G23",
+          "G24",
+          "G25",
+          "G27",
+          "G29",
+          "G06",
+          "G17"
+        ]
+      },
+      {
+        "priority": "P2",
+        "gaps": [
+          "G28",
+          "G04",
+          "G05"
+        ]
+      }
+    ],
+    "disposition": [
+      {
+        "id": "G19",
+        "status": "synthetic_mechanism_confirmed_field_missing_open",
+        "next": "Compare all production outputs under verified missing-support policies on a real incomplete-support scene."
+      },
+      {
+        "id": "G20",
+        "status": "open_live_tile_comparison",
+        "next": "Compare same AOI and year with single, split, and fixed native affine downloads; compare bands, masks, seams and zonal means."
+      },
+      {
+        "id": "G21",
+        "status": "latitude_weight_screen_only",
+        "next": "Compare native raster extraction using coverage fraction and physical intersection area."
+      },
+      {
+        "id": "G22",
+        "status": "synthetic_estimand_counterexample_only",
+        "next": "Compare direct extraction across scales and shifted origins, area intersections and Jaccard."
+      },
+      {
+        "id": "G23",
+        "status": "synthetic_shared_pixel_mechanism_confirmed",
+        "next": "Calibrate LISA/FDR on realistic native VIIRS grids and actual polygons; no field bias estimate."
+      },
+      {
+        "id": "G24",
+        "status": "independent_csv_estimand_difference_confirmed",
+        "next": "Compare actual production and UI subset using identical weights, transformation, support and island convention."
+      },
+      {
+        "id": "G25",
+        "status": "independent_csv_denominator_difference_confirmed",
+        "next": "Test production with islands and focal threshold; resolve output name or denominator explicitly."
+      },
+      {
+        "id": "G26",
+        "status": "synthetic_mechanism_and_export_alignment_confirmed",
+        "next": "Real incomplete-support two-year case; compare temporal outcomes on common support."
+      },
+      {
+        "id": "G27",
+        "status": "static_key_risk",
+        "next": "Test panel method fingerprint and incompatible configurations; verify source boundary identity."
+      },
+      {
+        "id": "G28",
+        "status": "open_bootstrap_coverage_calibration",
+        "next": "Simulate known-truth coverage and vary block size and replicate count."
+      },
+      {
+        "id": "G29",
+        "status": "synthetic_p_convention_counterexample_confirmed",
+        "next": "Distinguish illustrative and production estimands; leave existing README formulas unchanged."
+      }
+    ],
+    "source_limit": "Input file names recorded in evidence; no owner-held raw inputs or access URLs published. Earlier G04/G05/G06/G17 and other open gaps remain open."
+  }
 }
