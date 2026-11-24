@@ -566,5 +566,6 @@ No new coverage-calibration result is deposited. Earlier spatial block resamplin
 
 - **G06:** for spatial-null extension of conditional bootstrap, reselect cutoff and refit alpha within each replicate, compare rival distributions over common support and measure rejection frequency.
 - **G04/G05:** match independent economic references in time and spatial support; 2026 OSM is not 2020 economic ground truth. Compare population/employment potential, transport friction, top-decile overlap and held-out activity centers.
+- **G03, label semantics:** `ntl_class_label` describes radiance classes rather than uncalibrated economic or land-use categories. Numeric class codes and radiance thresholds are distinct from the label interpretation.
 - **G03/G09/G13/G14:** retain conditions for radiance thresholds, multi-period Markov stability, epoch alignment and robustness thresholds in the [scientific closure register](scientific_closure_register.json).
 
