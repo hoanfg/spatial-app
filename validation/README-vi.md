@@ -568,5 +568,6 @@ Chưa có kết quả hiệu chuẩn độ bao phủ mới. Các kết quả spa
 
 - **G06:** khi mở rộng từ bootstrap có điều kiện sang null không gian, chọn lại cutoff và ước lượng alpha trong mỗi lượt; so các phân phối cạnh tranh trên cùng miền và đo tần suất bác bỏ.
 - **G04/G05:** đối chiếu chuẩn kinh tế độc lập cùng thời điểm và hỗ trợ không gian; OSM 2026 không phải ground truth kinh tế 2020. Kiểm tra potential dân số/việc làm, ma sát giao thông, top-decile và tâm hoạt động ngoài mẫu.
+- **G03, ý nghĩa nhãn:** `ntl_class_label` chỉ mô tả nhóm bức xạ; không gán loại hình sử dụng đất hay hoạt động kinh tế khi chưa hiệu chuẩn độc lập. Các mã nhóm số học và ngưỡng bức xạ không thay đổi theo cách diễn giải nhãn.
 - **G03/G09/G13/G14:** giữ điều kiện kiểm chứng ngưỡng bức xạ, Markov đa kỳ, chênh lệch epoch và ngưỡng robustness trong [sổ kiểm chứng](scientific_closure_register.json).
 
