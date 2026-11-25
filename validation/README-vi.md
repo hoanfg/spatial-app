@@ -100,7 +100,7 @@ Vị trí tệp, mã băm và các phép kiểm có thể chạy nằm trong [h�
 - Lượng trên từng điểm ảnh GHSL được cộng theo tỷ lệ giao với đa giác ngay trên lưới nguồn, sau đó chia diện tích ô để lấy mật độ.
 - Kiểm thử tự động, đối chiếu số liệu đã lưu và phép kiểm dịch vụ trực tiếp trả lời những câu hỏi khác nhau. Mỗi kết quả công bố cần nêu đầu vào, phiên bản mã, địa bàn, năm, lưới và dung sai.
 
-## Các khoảng trống khoa học còn lại: G01-G18 (18/11/2026)
+## Các khoảng trống khoa học còn lại: G01-G18
 
 Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và GHSL Thượng Hải đã ghi ở trên. Sửa nhãn diễn giải **không phải** kiểm chứng thực địa mới. Các bằng chứng số học, manifest lưu trữ, dữ liệu và hợp đồng CSV lịch sử được giữ nguyên trong phạm vi đã xác nhận. Các mã cột như `spatial_ar1_persistence`, `signed_dist_hh_km` và `0_Treated_HH` được giữ để tương thích, không hàm ý đã nhận dạng mô hình.
 
@@ -125,9 +125,9 @@ Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và
 | G17 | P1 | Giữ nguyên mô phỏng Gaussian/LISA đã lưu; giao diện nay nói rõ chưa xác minh bảo đảm FDR thực địa. **Bảo đảm FDR thực vẫn mở.** | Xác minh giả thuyết không, họ kiểm định và điều kiện phụ thuộc/PRDS theo tham chiếu không gian phù hợp. |
 | G18 | P1 | Giữ bằng chứng mô phỏng zero/thiếu quan sát. Trình kiểm tra thực địa mới từ chối cảnh đủ quan sát hoặc metadata không rõ; **chưa khẳng định đã kiểm chứng thực địa**. | Phải dùng cảnh VIIRS thật có thiếu hỗ trợ A02 và bảng đối chiếu quan sát nguồn độc lập. |
 
-**G09: Sửa có giới hạn (19/11/2026).** Công thức Shorrocks bốn nhóm trước đây dùng `(4 - trace(P)) / 3` ngay cả khi một hoặc nhiều phân vị ban đầu không có ô, được lưu dưới dạng hàng toàn 0 trong bảng chuyển tiếp. Những hàng này không phải phân phối xác suất. Với lưới 4×4 ô đầy đủ, tám ô NTL bằng 0 và tám ô có cùng mức sáng, tất cả giữ nguyên giữa hai kỳ, công thức cũ trả **0,6667** dù không có ô nào chuyển nhóm. Hàm đã sửa trả `NaN`, trạng thái `undefined_empty_initial_quartile` và danh sách phân vị nguồn bị rỗng; trường hợp đủ bốn nhóm và không có chuyển dịch vẫn trả **0**. Để giữ tương thích, các bảng Markov cũ vẫn để hàng 0 đối với nhóm nguồn rỗng, nhưng giao diện cảnh báo đây là giá trị chưa xác định. Đây là phép kiểm bất biến số học, **không phải** kiểm chứng thực địa mới hay xác nhận giả định Markov dài hạn.
+**G09: Sửa có giới hạn.** Công thức Shorrocks bốn nhóm trước đây dùng `(4 - trace(P)) / 3` ngay cả khi một hoặc nhiều phân vị ban đầu không có ô, được lưu dưới dạng hàng toàn 0 trong bảng chuyển tiếp. Những hàng này không phải phân phối xác suất. Với lưới 4×4 ô đầy đủ, tám ô NTL bằng 0 và tám ô có cùng mức sáng, tất cả giữ nguyên giữa hai kỳ, công thức cũ trả **0,6667** dù không có ô nào chuyển nhóm. Hàm đã sửa trả `NaN`, trạng thái `undefined_empty_initial_quartile` và danh sách phân vị nguồn bị rỗng; trường hợp đủ bốn nhóm và không có chuyển dịch vẫn trả **0**. Để giữ tương thích, các bảng Markov cũ vẫn để hàng 0 đối với nhóm nguồn rỗng, nhưng giao diện cảnh báo đây là giá trị chưa xác định. Đây là phép kiểm bất biến số học, **không phải** kiểm chứng thực địa mới hay xác nhận giả định Markov dài hạn.
 
-### Chốt kiểm toán G01-G18 trong một đợt (19/11/2026)
+### Chốt kiểm toán G01-G18 trong một đợt
 
 **Một sổ theo dõi, không phát sinh thêm danh sách gap:** [Bảng trạng thái 18 mục có cấu trúc máy đọc được](scientific_closure_register.json). Phân biệt *đã sửa và kiểm thử số học*, *đại lượng mô tả có giới hạn phát biểu* và *kết luận còn đòi hỏi dữ liệu thực độc lập*. Giới hạn diễn giải đã được ghi nhận không tự nó chứng minh có lỗi triển khai mới.
 
@@ -138,7 +138,7 @@ Sổ này tiếp nối các kết quả A01-A12, V11, Diên Khánh, Bảo An và
 
 Đây là lần chốt **phần sửa code và sổ bằng chứng có thể hoàn thành khi chưa có dữ liệu thực mới**; không đồng nghĩa cả 18 vấn đề đã được xác minh toàn diện.
 
-### G04: Tiềm năng NTL có trọng số khoảng cách và kiểm chứng độ nhạy (19/11/2026)
+### G04: Tiềm năng NTL có trọng số khoảng cách và kiểm chứng độ nhạy
 
 **Dữ liệu thực sự được dùng và dữ liệu không có trong phép tính.** Ứng dụng đang sử dụng NTL VIIRS, diện tích ô, tọa độ ô trên lưới chiếu và tham số hàm suy giảm theo khoảng cách. `SOL = NTL × diện tích ô`; khoảng cách Euclid chỉ thể hiện độ gần nhau về địa lý, không phải thời gian đi lại hay chi phí vận tải được quan sát. **Ứng dụng không nạp dữ liệu việc làm, dân số, thu nhập, sức mua, kết quả thị trường hoặc mạng giao thông để tính chỉ số này.** Số "việc làm" bên dưới hoàn toàn do mã kiểm chứng tạo ra để thử ý nghĩa của chỉ số: không phải việc làm khảo sát thực, và không được ứng dụng dùng làm đầu vào. Vì vậy **không cần dữ liệu kinh tế để tính chỉ số NTL**, nhưng chưa thể khẳng định nó đo tiếp cận thị trường kinh tế.
 
@@ -168,7 +168,7 @@ Các mức $\tau$ được thử là 0,25; 0,5 và 1,0 mỗi km. Thứ hạng t�
 
 **Phần đã hoàn tất và phần còn mở:** Bộ G04 đã kiểm tra độ nhạy trên dữ liệu nhân tạo và bức xạ VIIRS thực; nó không chứng minh ý nghĩa kinh tế. **Chưa đóng G04 về giá trị diễn giải kinh tế, không phải vì thiếu dữ liệu để chạy công thức.** Để hiệu chuẩn như thước đo tiếp cận thị trường kinh tế, cần số liệu việc làm hoặc dân số được thu thập độc lập, có vị trí và cùng khoảng thời gian, kết hợp với chi phí giao thông hoặc đi lại có cơ sở, tốt nhất thêm kết quả thị trường quan sát thực tế. Việc làm nhân tạo không đóng được khoảng trống này; kiểm tra độ nhạy thuần NTL tại một địa bàn không nhận dạng tác động ngoại sinh. Trong [Donaldson và Hornbeck (2016)](https://doi.org/10.1093/qje/qjw002), tiếp cận thị trường liên quan quy mô thị trường và chi phí vận tải; còn phép tái định tâm phục vụ nhận dạng trong [Borusyak và Hull (2023)](https://doi.org/10.3982/ECTA19367) cần quy tắc về các cú sốc phản thực được xác định rõ.
 
-### G06: Kiểm chứng đuôi Pareto bằng bootstrap có điều kiện (19/11/2026)
+### G06: Kiểm chứng đuôi Pareto bằng bootstrap có điều kiện
 
 **Ước lượng Hill không đồng nghĩa xác nhận phân phối Pareto.** Ứng dụng hiện tính hệ số Hill cho 10% ô lõi có NTL dương sáng nhất. Hàm `ntl.lisa_diagnostics.ks_pareto` vẫn xuất **p-value KS xấp xỉ tiệm cận** sau khi hệ số alpha đã được ước lượng từ chính tập mẫu dùng kiểm định. T09 đã xác nhận phép tính số học trong trường hợp kiểm soát, **không đồng nghĩa đã hiệu chuẩn phép kiểm độ phù hợp phân phối**. G06 không tính lại kiểm chứng ảnh vệ tinh hoặc thay đổi hàm ước lượng vận hành, các khóa CSV và giá trị kết quả.
 
@@ -203,7 +203,7 @@ Việc không bác bỏ ở một ngưỡng ngắn, chẳng hạn 5% với dữ 
 
 **G06 thực địa còn mở:** Kết quả **không chứng nhận NTL có quy luật Pareto**, không xác lập quan hệ kinh tế hoặc nhân quả. Cần mô phỏng giả thuyết không có cấu trúc phụ thuộc không gian hoặc bootstrap theo khối địa lý, kiểm tra tính khác biệt của quá trình đo theo thời gian và quy trình chọn ngưỡng đã đăng ký trước hoặc được bootstrap cùng bước tối ưu ngưỡng. Tham khảo [Clauset, Shalizi và Newman (2009)](https://doi.org/10.1137/070710111). Cờ `power_law_ok` cũ chỉ là **phép sàng lọc KS xấp xỉ**, không phải kết luận đã xác thực quy luật ở thực địa; phần diễn giải trên giao diện đã được bổ sung cảnh báo.
 
-### G05: Độ nhạy khi chọn tâm từ NTL để ước lượng độ dốc và R² (19/11/2026)
+### G05: Độ nhạy khi chọn tâm từ NTL để ước lượng độ dốc và R²
 
 **Phạm vi của chỉ số.** Ứng dụng tính `urban_gradient_decay` và `monocentric_r2` trên **cùng tập NTL đã dùng để chọn tâm**. Tâm được xác định bằng trọng tâm SOL của cụm HH có ý nghĩa lớn nhất đủ điều kiện; nếu không tồn tại cụm đủ điều kiện, chương trình chọn ô có điểm kết hợp NTL và NTL trung bình láng giềng cao nhất. Sau đó ứng dụng hồi quy có trọng số diện tích giữa $\log(1+\mathrm{NTL}_i)$ và khoảng cách Euclid từ tâm. Đây là **độ dốc mô tả khớp trong mẫu**, không tự xác nhận CBD kinh tế, cấu trúc đơn tâm hoặc tác động nhân quả. Công thức WLS hiện hành và cấu trúc CSV cũ không bị thay đổi.
 
@@ -234,7 +234,7 @@ Ngoài ra, có 80 lần lặp theo seed cho mỗi trường, so tâm gốc với
 
 **Kiểm chứng G05 về ý nghĩa kinh tế vẫn mở:** Cần tâm CBD, tâm việc làm hoặc trung tâm hoạt động được quan sát độc lập tại khoảng năm 2020, có tọa độ, nguồn gốc và phạm vi không gian phù hợp để đánh giá mức lệch chọn tâm **theo nghĩa kinh tế**. Tâm do mô hình nhân tạo đặt trước hay trọng tâm hình học của vùng thật không thay thế được nguồn đó. Một số đô thị còn có cấu trúc đa tâm hoặc độ dốc không tuyến tính, nên phương trình một tâm có thể mô tả không phù hợp bất kể chọn tâm nào. Tham khảo [nghiên cứu về độ dốc bức xạ ban đêm và mật độ đô thị](https://doi.org/10.1057/s41599-023-01884-8).
 
-### Kiểm chứng G17 dưới phụ thuộc không gian (phạm vi mô phỏng, 19/11/2026)
+### Kiểm chứng G17 dưới phụ thuộc không gian
 
 Đây là **hai thí nghiệm nhân tạo tách biệt**, không phải kiểm chứng thực địa VIIRS mới và không làm lại số học BH đã đóng trong A03. p-value hợp lệ dưới giả thuyết không, phụ thuộc giữa các p-value và việc lập trình công thức BH chính xác là ba vấn đề khác nhau.
 
@@ -280,7 +280,7 @@ Tỷ lệ p biên và tỷ lệ trường có bác bỏ là hai đại lượng 
 
 **Phạm vi đã kiểm chứng và phần còn mở.** Một cửa sổ, một mô hình pixel iid và bảng tham chiếu dùng chung giữa các trường thử; các tỷ lệ phụ thuộc thiết kế này. P nhỏ nhất 0,002 hạn chế đáng kể BH/BY, nhất là BY. Kết quả không chứng minh BH sai theo null random placement cấp ô và không xác nhận kiểm soát FDR thực địa. Cần thử nhiều hình học, độ phân giải, mô hình covariance nguồn và số lượt tham chiếu; định nghĩa null trước khi diễn giải.
 
-### Bằng chứng tổng hợp G18 (phạm vi giới hạn, 18/11/2026)
+### Bằng chứng tổng hợp G18 (phạm vi giới hạn)
 
 **Bằng chứng thực bổ sung cho G18 tại Kỳ Môn 2016:** 49 ô app được phân loại NTL bằng 0 đều có metadata đã quan sát và tỷ lệ nguồn radiance âm 1; 47/47 ô có raster tham chiếu giao phủ cũng cho NTL bằng 0 sau căn chỉnh. Trong 9.143 ô, **không có `no_observation`**. Đây là kiểm chứng **nguồn gốc số 0 do cắt âm**, không phải mô phỏng missing-versus-zero trên ca thiếu quan sát thật. Đường căn chỉnh dùng lưới pixel 2020 và còn 23 ô biên chưa phủ, nên không thể gọi là khớp geotransform app 2016 tuyệt đối. Xem [phương pháp và mã băm nguồn](evidence/README-vi.md#kiểm-tra-g10g18-tại-kỳ-môn-2016-số-0-có-quan-sát).
 
