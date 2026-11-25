@@ -100,7 +100,7 @@ The original source review used identifiers A01 to A12. Their current status is 
 - GHSL source-pixel quantities are summed by polygon intersection fraction on the native grid, then divided by cell area for density.
 - Automated tests, stored numeric comparisons and live service checks answer different questions. Each published result should state its input, revision, location, year, grid and tolerance.
 
-## Remaining scientific gaps: G01-G18 (18 November 2026)
+## Remaining scientific gaps: G01-G18
 
 This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai GHSL records above. A corrected label is **not** a new external validation. Existing numerical evidence, archival manifests, data and historic CSV schemas remain authoritative within their recorded scope. Codes such as `spatial_ar1_persistence`, `signed_dist_hh_km` and `0_Treated_HH` are preserved for downstream compatibility; their original names do not establish model identification.
 
@@ -125,9 +125,9 @@ This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai G
 | G17 | P1 | Archived synthetic Gaussian and actual-LISA permutation stress tests remain authoritative. The UI now explicitly disclaims unvalidated field FDR guarantees. **Formal field guarantee remains open.** | Validate null p-values, tested family and dependence/PRDS assumptions with a suitable spatial reference; do not infer validity merely from BH arithmetic. |
 | G18 | P1 | Existing synthetic zero-vs-missing support sensitivity stands. The new guarded field runner refuses all-observed cases and unknown support; **no new real low-support field result is claimed**. | Use a real incomplete-support VIIRS A02 CSV and independent observation-support reference. |
 
-**G09 bounded correction (19 November 2026).** The previous four-state Shorrocks calculation used `(4 - trace(P)) / 3` even when one or more initial quartiles had no cells, represented as all-zero rows in the exported transition table. Such rows are not probability distributions. For a 4×4 full-cell grid with eight zero-radiance cells and eight equally bright cells, all unchanged across two periods, the previous expression gave **0.6667** despite zero observed transitions. The corrected function returns `NaN` with status `undefined_empty_initial_quartile` and lists the missing source quartiles; a fully populated four-quartile identity transition still gives **0**. For backward compatibility, existing Markov tables retain zero rows for missing source classes, now explicitly labeled as undefined by the UI. This is a numerical invariant test, **not** a new field validation or confirmation of long-run Markov assumptions.
+**G09 bounded correction.** The previous four-state Shorrocks calculation used `(4 - trace(P)) / 3` even when one or more initial quartiles had no cells, represented as all-zero rows in the exported transition table. Such rows are not probability distributions. For a 4×4 full-cell grid with eight zero-radiance cells and eight equally bright cells, all unchanged across two periods, the previous expression gave **0.6667** despite zero observed transitions. The corrected function returns `NaN` with status `undefined_empty_initial_quartile` and lists the missing source quartiles; a fully populated four-quartile identity transition still gives **0**. For backward compatibility, existing Markov tables retain zero rows for missing source classes, now explicitly labeled as undefined by the UI. This is a numerical invariant test, **not** a new field validation or confirmation of long-run Markov assumptions.
 
-### Consolidated G01-G18 release decision (19 November 2026)
+### Consolidated G01-G18 release decision
 
 **One authoritative queue, not a series of new gaps:** [machine-readable 18-item disposition register](scientific_closure_register.json). The register separates *numerical completion*, *descriptively bounded indicators* and *claims that require unavailable independent real-world data*. A documented scientific limit is not itself evidence of a newly discovered implementation defect.
 
@@ -138,7 +138,7 @@ This register follows the completed A01-A12, V11, Yanqing, Bao'an and Shanghai G
 
 This is a consolidated closure of the **code-level safeguards and evidence bookkeeping that can be completed without new field data**, not an assertion that all 18 scientific questions have been resolved.
 
-### G04: Distance-weighted NTL potential, construct stress and field sensitivity (19 November 2026)
+### G04: Distance-weighted NTL potential, construct stress and field sensitivity
 
 **What is actually used, and what is not.** The production calculation uses only the archived VIIRS NTL, cell area, projected grid coordinates and user-selected distance-kernel settings. `SOL = NTL × cell area`; Euclidean distance is a proxy for proximity, not a measured trip time or transport cost. The production app does **not** ingest employment, population, household income, purchasing power, external market outcomes or transport networks for this index. The synthetic jobs values below are generated solely inside the audit script to challenge its interpretation. They are not observed jobs and are never read by the app. Therefore the computation works without economic data, but its **economic market-access interpretation is not established**.
 
@@ -168,7 +168,7 @@ Here $\tau\in\{0.25,0.5,1.0\}$ per km. Overall cell ranks remain similar, while 
 
 **What is complete vs. open:** The archived G04 tests quantify sensitivity to a synthetic jobs-generating mechanism and to distance-kernel settings on observed VIIRS radiance. They do not prove economic meaning. **Economic construct validity remains open, not the ability to calculate the index.** A scientifically defensible economic market-access validation needs a real, independent, georeferenced employment or population surface and defensible transport/commuting costs aligned by place, time and spatial units; ideally also external market outcomes. Synthetic job mass cannot close that gap, and an NTL-only real-data sensitivity cannot identify an exogenous effect. This distinction matters because structural market access is linked to transport costs and markets in [Donaldson and Hornbeck (2016)](https://doi.org/10.1093/qje/qjw002), while exposure recentering for identification uses explicitly defined counterfactual shocks in [Borusyak and Hull (2023)](https://doi.org/10.3982/ECTA19367).
 
-### G06: Pareto tail testing and conditional bootstrap (19 November 2026)
+### G06: Pareto tail testing and conditional bootstrap
 
 **Distinguish a Hill estimate from a distributional claim.** The production application estimates a Hill exponent on the largest 10% of positive core-cell NTL values. The existing `ntl.lisa_diagnostics.ks_pareto` reports a **nominal asymptotic KS p-value**, even though the Pareto exponent is estimated using the same sample. T09 already verifies its arithmetic on controlled inputs; **an arithmetic check is not a goodness-of-fit calibration**. G06 does not rerun the original field-extraction tests or change the production estimator, CSV keys, or output values.
 
@@ -203,7 +203,7 @@ Nonrejection at one short cutoff, such as 5% for lognormal (p = 0.085), **does n
 
 **Still open:** The results **do not certify NTL Pareto tails** and do not establish a spatial, economic, or causal law. Needed evidence includes a spatially appropriate null generator or correlated-resampling design, temporal measurement checks, and a prespecified or fully bootstrapped cutoff-selection procedure on independent regions. See [Clauset, Shalizi and Newman (2009)](https://doi.org/10.1137/070710111). Existing `power_law_ok` is a **legacy approximate-KS screening flag**, not a field-verified model-fit statement; the current UI explanation warns against overinterpretation.
 
-### G05: NTL-selected center and gradient sensitivity (19 November 2026)
+### G05: NTL-selected center and gradient sensitivity
 
 **What G05 does and does not establish.** The app's `urban_gradient_decay` and `monocentric_r2` are fitted on the same NTL observations used to select the center. The center is the SOL-weighted centroid of the largest eligible significant HH cluster, or a maximum of a combined NTL/neighbour-NTL score when no qualifying HH cluster exists. Next, the app calculates the area-weighted regression of $\log(1+\mathrm{NTL}_i)$ on Euclidean distance from that selected point. This is an **in-sample descriptive gradient**; R² does not validate the economic CBD, prove that a city is monocentric, or establish causal spatial structure. The existing WLS function and the saved historic schema have not changed.
 
@@ -234,7 +234,7 @@ These are **sensitivity estimates conditional on one region-year**, not rankings
 
 **G05 economic validation remains open:** A real CBD or employment/activity center independently observed in or near 2020, with declared coordinates, provenance, support and timing, is needed before interpreting the center differences as **economic** selection bias. A fixed generator point in a synthetic experiment and a geometry-only centroid in a real city are not substitutes. Some urban light profiles may also be polycentric or nonlinear, so an ordinary single-center regression can be a poor description regardless of center choice. For methodological context see [Spatial gradients of urban land density and nighttime light intensity](https://doi.org/10.1057/s41599-023-01884-8).
 
-### G17 spatial-dependence FDR study (bounded simulation, 19 November 2026)
+### G17 spatial-dependence FDR study (bounded simulation)
 
 This is a **two-part synthetic study**, not new VIIRS field validation and not a re-check of the BH step-up arithmetic closed by A03. A valid marginal p-value distribution and dependence among p-values are distinct from the correctness of the BH implementation.
 
@@ -280,7 +280,7 @@ Marginal p frequency differs from the fraction of fields with any rejection. Und
 
 **Verified scope and unresolved claims.** One window, one iid source model, shared reference draws across test fields. The 0.002 p floor limits BH/BY, especially BY. The comparison does not establish BH failure for the cell random-placement null or certify field FDR. Extend across geometries, resolutions, source covariance and reference sizes; specify the scientific null.
 
-### G18 synthetic evidence (bounded result, 18 November 2026)
+### G18 synthetic evidence (bounded result)
 
 **Additional bounded G18 field evidence from Qimen 2016:** all 49 truly zero app cells show observation support and negative-radiance metadata; all 47 with source-raster overlap also match zero after clipping. No `no_observation` cell exists among 9,143 app cells. This checks the **negative-to-zero source mechanism**, not policy sensitivity under genuine missingness. Alignment uses an indirect 2020 raster lattice and leaves 23 cropped edge cells uncovered; it does not prove exact internal 2016 app geotransform. See [method, exclusions and source digests](evidence/README.md#g10g18-qimen-2016-observed-zeros-and-negative-radiance).
 
