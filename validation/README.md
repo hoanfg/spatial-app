@@ -492,7 +492,22 @@ All 23,900 directed Rook edges in the Bao'an sample share at least one source pi
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
-**Verified scope and unresolved claims.** Differences are confirmed in rounded exports, not the actual UI trend subset. Match sample, weights, transformations and island handling. The JSON minK=4 row-standardized diagnostic zeros subthreshold rows; it is not conventional Global I on the focal induced graph.
+**Comparison on the scatterplot's data domain.** The regression in `ntl/lisa_ui.py` uses rows with nonmissing `ntl_z_lit` and `lisa_lag_z`; `run_lisa` exports both to four decimals. Independently reconstruct positive core members (area ≥99% of nominal) from Bao'an and Shanghai 2020 CSVs, standardize using the members' mean and sample SD, build Queen neighbors, and screen focal cells by degree. Calculate mean focal Local I, row-standardized Global I over members with untested rows set to zero, and intercept OLS slope on focal after rounding z and lag to four decimals. JavaScript rounding approximates NumPy rounding and need not agree at ties.
+
+| Site | minK | Transform | Mean Local I | Global I (untested rows zero) | Rounded-column slope |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Shanghai | 1 | Raw | 0.801442 | 0.802565 | 0.802564 |
+| Shanghai | 4 | Raw | 0.797679 | 0.798796 | 0.800380 |
+| Shanghai | 4 | Log | 0.821366 | 0.822517 | 0.826898 |
+| Bao'an | 1 | Raw | 0.920898 | 0.921047 | 0.921100 |
+| Bao'an | 4 | Raw | 0.916000 | 0.916148 | 0.924092 |
+| Bao'an | 4 | Log | 0.952249 | 0.952403 | 0.961792 |
+
+When all members are focal (Shanghai minK=1), the unrounded slope equals row-standardized Global I to numerical precision. Mean Local I differs by its sample-SD and member-count normalization. Once focal rows are removed, an intercept regression on a subset and Global I normalization over members are distinct. The slope should not be equated with all-region Global I or `moran_I_lit` (mean Local I).
+
+**Additional evidence.** [Estimand reference program](g24_g25_g27_estimand_reference.mjs), [setting-level results](evidence/g24_g25_g27_estimand_reference.json).
+
+**Verified scope and unresolved claims.** The reconstructed CSV columns confirm distinct estimands; the production Python function and Altair UI have not been executed in this test. Compare both functions directly on matched settings and qualify slope interpretation rather than changing a formula solely because the estimand differs. The zero-row diagnostic is not Global I on the focal induced graph.
 
 ### G25: High-High area denominator on the tested domain
 
@@ -512,13 +527,28 @@ At minK=1 Bao'an has 6,186 members and 6,185 focal, a 0.25 km² difference. At m
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
-**Verified scope and unresolved claims.** Denominators differ on actual exported data. Raw CSVs lack HH labels, so no new HH share is measured. Run a production regression with islands and varied minK and explicitly resolve the estimand or name.
+**Quantification with a nonzero HH numerator.** Use the G24 reconstruction for Bao'an and Shanghai 2020, 999 conditional neighbor samples without replacement, and JavaScript PRNG seed 42. P-values use the doubled inclusive smaller tail, plus-one correction and cap at one; identify positive z/lag with BH significance at alpha 0.05. Divide the same HH area by members and focal area, isolating the denominator effect from classification changes.
+
+| Site | minK | Transform | HH cells (BH) | HH / members (%) | HH / focal (%) |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Shanghai | 1 | Raw | 77 | 10.7687 | 10.7687 |
+| Shanghai | 4 | Raw | 77 | 10.7687 | 10.8141 |
+| Shanghai | 4 | Log | 90 | 12.5870 | 12.6400 |
+| Bao'an | 1 | Raw | 1027 | 16.6023 | 16.6049 |
+| Bao'an | 4 | Raw | 1042 | 16.8448 | 16.9213 |
+| Bao'an | 4 | Log | 1719 | 27.7890 | 27.9151 |
+
+For Bao'an minK=4 log NTL, 429.740468 km² HH is divided by 1546.441985 km² members or 1539.456485 km² focal; the difference is approximately 0.1261 percentage points. Equal denominator areas yield equal shares. HH classifications are independent reference calculations, not archived production labels or the NumPy RNG stream.
+
+**Additional evidence.** [Estimand reference program](g24_g25_g27_estimand_reference.mjs), [raw/BH counts, areas and ratios](evidence/g24_g25_g27_estimand_reference.json).
+
+**Verified scope and unresolved claims.** The denominator effect is quantified using reference labels on observed exports. A production regression with islands and varied minK remains necessary, and the label or denominator must explicitly match the estimand.
 
 ### G27: Analysis specification comparability in region-year panels
 
 **Scientific object and rationale.** Rows with the same region, year and cell size may use different statistical settings, confounding measurement change with temporal change.
 
-**Data, calculation and reference.** Inspect KEY_COLS and same-key replacement in `ntl/lisa_ui.py`. Specify a method fingerprint including weights, log, alpha, FDR, permutations, seed, support, algorithm version and boundary identity. A future regression must insert conflicting configurations and verify source geometry across years.
+**Data, calculation and reference.** Inspect KEY_COLS and same-key replacement in `ntl/lisa_ui.py`. Specify a method fingerprint including weights, log, alpha, FDR, permutations, seed, support, algorithm version and boundary identity. The counterexample uses conflicting configurations; source geometry identity across years is a separate condition.
 
 **Results.**
 
@@ -526,7 +556,11 @@ Static inspection confirms same-key replacement despite possible method differen
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
-**Verified scope and unresolved claims.** The data-contract risk is established, but UI/production conflict handling is untested. Validate specification identity before combining panel series.
+**Key-collision counterexample.** Construct two hypothetical records with key CHN, reference, 2020, 500 m. A has 499 permutations, raw NTL and assigned HH share 0.15; B has 999 permutations, log NTL and assigned share 0.08. Independently reproduce the same-key removal and new-row append rule, then add record C with year 2021. A is replaced by B; after C, two rows B and C remain. The assigned HH shares distinguish records and are not LISA results or measured economic change.
+
+**Additional evidence.** [Key-rule reconstruction](g24_g25_g27_estimand_reference.mjs), [counterexample input and resulting rows](evidence/g24_g25_g27_estimand_reference.json).
+
+**Verified scope and unresolved claims.** Same-key replacement is confirmed in an independent reproduction, not a live UI/production test or a fingerprint implementation. Test conflicting specifications across years, polygon hashes and prevention of incompatible panel series.
 
 ### G28: Spatial bootstrap block size and interval coverage
 
@@ -536,9 +570,30 @@ Static inspection confirms same-key replacement despite possible method differen
 
 **Results.**
 
-No new coverage-calibration result is deposited. Earlier spatial block resampling remains sensitivity evidence, not 95% coverage evidence.
+**Known-truth coverage design.** Generate two independent standard Gaussian fields A and E on a 20 × 20 grid. For spatial dependence apply the same Gaussian smoothing kernel to both, with periodic boundary conditions; kernel SD is 0, 1 or 2 cells (0 means no smoothing). Construct B as 0.6 times A plus the square root of (1 − 0.6²) times E. Equal marginal variances and independence of A and E imply Pearson correlation 0.6, hence bivariate-normal population Spearman correlation 6/pi times arcsin(0.6/2) = 0.581920104. This is the population target, not an estimated sample coefficient.
 
-**Verified scope and unresolved claims.** Retain descriptive interval interpretation until a calibration appropriate to the sampling design and dependence structure is available.
+Use 120 independent field pairs per design, seed 271128, and 200 bootstrap draws per field. Reproduce the fixed-origin nonoverlapping block partition and same-number block resampling of `block_bootstrap_rho`; recalculate Spearman ranks (average ties) on each concatenated resample and take the 2.5th and 97.5th percentiles. Test block sides 1, 2, 4, 5 cells. A 10-cell side gives four blocks and is excluded by the production minimum of five blocks. This is a vectorized independent reference, not a production import.
+
+| Kernel SD (cells) | Block side | Blocks | Intervals containing truth / 120 | Coverage (%) | Mean interval width |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 1 | 400 | 113 | 94.17 | 0.135668 |
+| 0 | 2 | 100 | 113 | 94.17 | 0.134333 |
+| 0 | 4 | 25 | 113 | 94.17 | 0.132027 |
+| 0 | 5 | 16 | 109 | 90.83 | 0.127445 |
+| 1 | 1 | 400 | 63 | 52.50 | 0.131316 |
+| 1 | 2 | 100 | 84 | 70.00 | 0.201810 |
+| 1 | 4 | 25 | 96 | 80.00 | 0.241167 |
+| 1 | 5 | 16 | 95 | 79.17 | 0.254773 |
+| 2 | 1 | 400 | 31 | 25.83 | 0.130763 |
+| 2 | 2 | 100 | 61 | 50.83 | 0.240598 |
+| 2 | 4 | 25 | 89 | 74.17 | 0.374397 |
+| 2 | 5 | 16 | 96 | 80.00 | 0.400860 |
+
+**Interpretation.** As dependence increases, cellwise resampling yields narrow intervals with poor coverage. Larger blocks improve coverage in some designs, but do not guarantee 95%; the default five-cell side yields 90.83%, 79.17%, and 80.00% in the three scenarios. With 120 fields the Monte Carlo SE is approximately the square root of coverage times (1−coverage) divided by 120; small differences are not a block ranking. Kernel sigma is the simulation smoothing parameter, not an empirically measured Bao'an dependence range.
+
+**Archived evidence.** [Calibration program](g28_block_coverage_reference.py), [design, coverage and width JSON](evidence/g28_block_coverage_reference.json).
+
+**Verified scope and unresolved claims.** Coverage is quantified for three known Gaussian designs; direct production comparison and field-specific calibration remain open. Increase replications, test irregular domains, empirical dependence ranges and resample count sensitivity. Existing intervals remain conditionally descriptive, not guaranteed 95% coverage.
 
 ### G29: Equivalence of documented and production p-value conventions
 
