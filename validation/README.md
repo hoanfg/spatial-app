@@ -65,6 +65,18 @@ This matrix documents **existing checks**, not algorithm changes. The authoritat
 
 *Figure A02.1. Archived Bao'an CSV observation-support metadata. All rows are observed; no genuine missing observation is tested. [Source evidence](evidence/audit-2026-11-15/verified_summary.json).*
 
+![Figure A03.1: Independent final LISA label comparison in Yanqing. Rounded NTL and independent randomization seed limit exact agreement.](figures/a03_yanqing.svg)
+
+*Figure A03.1. Independent final LISA label comparison in Yanqing. Rounded NTL and independent randomization seed limit exact agreement. [Source evidence](evidence/yanqing/README.md).*
+
+![Figure V11.1: Three-location polygon/raster agreement at the documented four-decimal CSV tolerance; one clipped cell exceeds the literal bound.](figures/v11_cross_location.svg)
+
+*Figure V11.1. Three-location polygon/raster agreement at the documented four-decimal CSV tolerance; one clipped cell exceeds the literal bound. [Source evidence](evidence/README.md).*
+
+![Figure A08/A09.1: Archived Shanghai GHSL Spearman estimates and reported block-bootstrap intervals. Both intervals include zero; neither proves an economic relationship.](figures/a08_ghsl.svg)
+
+*Figure A08/A09.1. Archived Shanghai GHSL Spearman estimates and reported block-bootstrap intervals. Both intervals include zero; neither proves an economic relationship. [Source evidence](evidence/README.md).*
+
 File locations, hashes and runnable checks are listed in the [evidence guide](evidence/README.md).
 
 The evidence guide's [scientific claim audit](evidence/README.md#scientific-claim-audit) distinguishes literature support, implementation tests and field comparisons. A citation can justify a method or interpretation, but it does not establish that this application's output passed a field check.
@@ -87,6 +99,10 @@ The original source review used identifiers A01 to A12. Their current status is 
 | A10 | In-session caches are bounded and two field profiler files are deposited; concurrent Cloud capacity is untested. |
 | A11 | Synthetic integration and one stored Bao'an execution cover many stages; a repeatable authenticated live-service end-to-end test is still absent. |
 | A12 | Six maintained bilingual guide pairs and automated link/math checks are in place; semantic and scientific review remains manual. |
+
+![Figure A04.1: Three archived hand-case Gini checks with nonnegative inputs. These are deterministic formula checks, not field validation.](figures/a04_gini.svg)
+
+*Figure A04.1. Three archived hand-case Gini checks with nonnegative inputs. These are deterministic formula checks, not field validation. [Source evidence](evidence/README.md).*
 
 ## What can be reproduced from this repository
 
@@ -217,6 +233,10 @@ Nonrejection at one short cutoff, such as 5% for lognormal (p = 0.085), **does n
 
 *Figure G06.1. Conditional refitted iid Pareto-bootstrap p-values across four fixed tail fractions; the dashed line is 0.05. [Source evidence](evidence/g06_pareto_tail/summary.json).*
 
+![Figure G06.2: Log-log conditional empirical survival of the top 618 Bao'an positive-core NTL observations and the fitted Pareto at the fixed 10% cutoff. Points are thinned for legibility only.](figures/g06_ccdf.svg)
+
+*Figure G06.2. Log-log conditional empirical survival of the top 618 Bao'an positive-core NTL observations and the fitted Pareto at the fixed 10% cutoff. Points are thinned for legibility only. [Source evidence](evidence/g06_pareto_tail/baoan_tail_observations.csv).*
+
 **Complete evidence and replay:** [generator](g06_pareto_tail_experiment.py), [all 5,000 synthetic inputs](evidence/g06_pareto_tail/synthetic_input.csv), [7,148 source Bao'an IDs with full-core/positive rank flags](evidence/g06_pareto_tail/baoan_tail_observations.csv), [all 16 model/cutoff cases](evidence/g06_pareto_tail/tail_cases.csv), [all 6,384 bootstrap draws with refitted exponent and KS](evidence/g06_pareto_tail/bootstrap_replications.csv), and [machine-readable methodology, fitted rivals, full scenario results, software versions and SHA-256 hashes](evidence/g06_pareto_tail/summary.json). The original Bao'an input is retained at `validation/evidence/a02_post_pr27/`. The CI job regenerates and compares **all five new evidence files byte-for-byte** under pinned dependencies.
 
 **Still open:** The results **do not certify NTL Pareto tails** and do not establish a spatial, economic, or causal law. Needed evidence includes a spatially appropriate null generator or correlated-resampling design, temporal measurement checks, and a prespecified or fully bootstrapped cutoff-selection procedure on independent regions. See [Clauset, Shalizi and Newman (2009)](https://doi.org/10.1137/070710111). Existing `power_law_ok` is a **legacy approximate-KS screening flag**, not a field-verified model-fit statement; the current UI explanation warns against overinterpretation.
@@ -252,6 +272,10 @@ For additional dispersion evidence, 80 seeded replications per field compare the
 
 These are **sensitivity estimates conditional on one region-year**, not rankings of economic CBD accuracy. The geometry-only centroid is defined without using NTL, but **it is not a verified job center**, and the two other alternative centers are still NTL-dependent. All fits use the same 6,186 cells and outcome, so the differences reflect center definitions rather than a change in the fitted sample. Differences as large as 0.274 in R² warn against treating `monocentric_r2` as an economic monocentricity test.
 
+![Figure G05.2: Observed Bao'an 2020 gradient fit under alternative center choices; the same eligible NTL cells are used, without an independent CBD reference.](figures/g05_gradient.svg)
+
+*Figure G05.2. Observed Bao'an 2020 gradient fit under alternative center choices; the same eligible NTL cells are used, without an independent CBD reference. [Source evidence](evidence/g05_ntl_center/summary.json).*
+
 **Retained, replayable evidence:** [experiment source](g05_ntl_center_experiment.py); [625-cell synthetic inputs and all three brightness fields](evidence/g05_ntl_center/synthetic_input.csv); [1,875 synthetic cell-level LISA classes and distances](evidence/g05_ntl_center/synthetic_cell_results.csv); [960 seeded fast-center replications](evidence/g05_ntl_center/synthetic_replications.csv); [7,148 Bao'an IDs and center distances, with border exclusions preserved](evidence/g05_ntl_center/baoan_cell_results.csv); [19 fixed-field center comparisons](evidence/g05_ntl_center/center_comparison.csv); and [metadata, reconstruction diagnostics, Monte Carlo distributions, hashes and limitations](evidence/g05_ntl_center/summary.json). CI pins the scientific Python libraries and verifies all six files byte-for-byte. The Bao'an source file and all prior G04, G17, G18, A02, A03, V11 and GHSL evidence are unchanged.
 
 **G05 economic validation remains open:** A real CBD or employment/activity center independently observed in or near 2020, with declared coordinates, provenance, support and timing, is needed before interpreting the center differences as **economic** selection bias. A fixed generator point in a synthetic experiment and a geometry-only centroid in a real city are not substitutes. Some urban light profiles may also be polycentric or nonlinear, so an ordinary single-center regression can be a poor description regardless of center choice. For methodological context see [Spatial gradients of urban land density and nighttime light intensity](https://doi.org/10.1057/s41599-023-01884-8).
@@ -280,6 +304,10 @@ Under a correlated background with $\rho=0.8$ and no planted mean shift, BH reje
 
 *Figure G17.1. Empirical BH/BY FDR for the all-null Gaussian configurations. These are finite-simulation estimates, not field guarantees. [Source evidence](evidence/g17_spatial_fdr/summary.json).*
 
+![Figure G17.2: Detection power of BH and BY under nine planted Gaussian signals. Whiskers show the reported finite-simulation Monte Carlo intervals.](figures/g17_power.svg)
+
+*Figure G17.2. Detection power of BH and BY under nine planted Gaussian signals. Whiskers show the reported finite-simulation Monte Carlo intervals. [Source evidence](evidence/g17_spatial_fdr/summary.json).*
+
 **Evidence and replay:** The full synthetic design and predeclared injection mask are in [design.csv](evidence/g17_spatial_fdr/design.csv), all **6,544 individual simulation records** in [replicates.csv](evidence/g17_spatial_fdr/replicates.csv), and scenario summaries, uncertainty, assumptions and SHA-256 digests in [summary.json](evidence/g17_spatial_fdr/summary.json). The [generator](g17_spatial_fdr_experiment.py) uses fixed seeds and pinned NumPy, pandas and SciPy in CI. Run `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --verify` from repository root to compare generated outputs with every retained artifact.
 
 **Unresolved G17 claim:** Neither positive spatial dependence nor BH step-up correctness proves the formal PRDS condition for LISA pseudo p-values. BY's arbitrary-dependence guarantee presumes valid null p-values; it **does not repair invalid spatial permutations**. Before a real-world nominal FDR claim, define the scientific null, the full tested family, how spatial nuisance dependence is handled and what ground truth or valid null calibration supports the claim. See [Benjamini and Yekutieli (2001)](https://doi.org/10.1214/aos/1013699998) and the [GeoDa Local Spatial Autocorrelation guidance](https://geodacenter.github.io/workbook/6a_local_auto/lab6a.html).
@@ -302,9 +330,9 @@ Under a correlated background with $\rho=0.8$ and no planted mean shift, BH reje
 
 Marginal p frequency differs from the fraction of fields with any rejection. Under the all-null source design the latter is empirical FDR for that null.
 
-![Figure G17.2: Marginal rejection frequency and BH any-rejection frequency evaluated under the simulated source-pixel null. The two methods use different reference hypotheses.](figures/g17_source_null.svg)
+![Figure G17.3: Marginal rejection frequency and BH any-rejection frequency evaluated under the simulated source-pixel null. The two methods use different reference hypotheses.](figures/g17_source_null.svg)
 
-*Figure G17.2. Marginal rejection frequency and BH any-rejection frequency evaluated under the simulated source-pixel null. The two methods use different reference hypotheses. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
+*Figure G17.3. Marginal rejection frequency and BH any-rejection frequency evaluated under the simulated source-pixel null. The two methods use different reference hypotheses. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
 
 **Archived evidence.** [Source-null simulation program](g17_source_support_null.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
@@ -514,6 +542,10 @@ Six SOL values range 34196.307188–34196.307441 and means 20.733703468–20.733
 
 *Figure G22.1. Aligned direct-extraction versus support-weighted aggregation differences, in millionths of the radiance unit. This does not measure HH stability. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
 
+![Figure G22.2: Schematic equal-area example distinguishing coarse-block any-overlap from actual fine HH intersection area.](figures/g22_overlap.svg)
+
+*Figure G22.2. Schematic equal-area example distinguishing coarse-block any-overlap from actual fine HH intersection area. [Source evidence](evidence/g19_g29_independent_audit.json).*
+
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
 **Verified scope and unresolved claims.** Near-integral conservation is established for this reference design only. Production block weights, direct-grid LISA and HH overlap remain open. Compare matched raster support, compatible LISA settings and polygon-intersection area Jaccard.
@@ -537,6 +569,10 @@ All 23,900 directed Rook edges in the Bao'an sample share at least one source pi
 ![Figure G23.1: Mean Global Moran and empirical 2.5th–97.5th percentiles from 400 simulated source-independent fields per configuration. Whiskers are not field confidence intervals.](figures/g23_shared.svg)
 
 *Figure G23.1. Mean Global Moran and empirical 2.5th–97.5th percentiles from 400 simulated source-independent fields per configuration. Whiskers are not field confidence intervals. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
+
+![Figure G23.2: Schematic of aligned and half-cell-shifted raster support; dashed cells in the shifted case share source pixels.](figures/g23_support_geometry.svg)
+
+*Figure G23.2. Schematic of aligned and half-cell-shifted raster support; dashed cells in the shifted case share source pixels. [Source evidence](evidence/g19_g29_independent_audit.json).*
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
