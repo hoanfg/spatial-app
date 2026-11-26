@@ -73,6 +73,47 @@ function generate(d){
 }
 const data=Object.fromEntries(Object.entries(inputs).map(([k,v])=>[k,JSON.parse(fs.readFileSync(path.join(root,'evidence',v),'utf8'))]));
 const figs=generate(data);
+function archivedFigures(report,g5,ind){
+ const ink="#182d3c",muted="#536674",blue="#226a9b",green="#168077",amber="#b56e16",purple="#7755a2",grid="#d7e2e9",out={};
+ const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+ const f=(x,p=3)=>Number(x).toFixed(p),number=s=>Number(s.replace(/,/g,""));
+ const T=(x,y,s,size=15,color=ink,bold=false,anchor="start")=>`<text x="${x}" y="${y}" font-size="${size}" fill="${color}" font-weight="${bold?600:400}" text-anchor="${anchor}">${esc(s)}</text>`;
+ const R=(x,y,w,h,c,stroke="none",extra="")=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="${c}" stroke="${stroke}" ${extra}/>`;
+ const L=(x,y,x2,y2,c=grid,w=1,dash="")=>`<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" ${dash?'stroke-dasharray="'+dash+'"':""}/>`;
+ const D=(x,y,c,r=5)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" stroke="white"/>`;
+ function save(id,title,sub,h,body,note){
+  let v=`<svg xmlns="http://www.w3.org/2000/svg" width="840" height="${h}" viewBox="0 0 840 ${h}" role="img" aria-labelledby="title desc"><title id="title">${esc(title)}</title><desc id="desc">${esc(sub+". "+note)}</desc><rect width="840" height="${h}" rx="10" fill="white"/><g font-family="Arial, Helvetica, sans-serif">${T(26,34,title,23,ink,true)}${T(26,58,sub,14,muted)}${L(26,73,814,73)}${body}${L(26,h-40,814,h-40)}${T(26,h-17,note,12,muted)}</g></svg>\n`;
+  if(/NaN|Infinity|undefined/.test(v))throw Error(id+" invalid: "+v.match(/.{0,50}(NaN|Infinity|undefined).{0,50}/)?.[0]);out[id+".svg"]=v;
+ }
+ function match(rx){let m=report.match(rx);if(!m)throw Error("Missing report evidence "+rx);return m;}
+ let m=match(/All ([\d,]+) full cells met the CSV bound\. Among clipped cells, ([\d,]+)\/([\d,]+) met (0\.\d+)/);
+ const full=number(m[1]),clipPass=number(m[2]),clipN=number(m[3]),total=full+clipN,w=730*full/total;
+ let s=T(40,109,total.toLocaleString("en-US")+" cell comparisons",18,ink,true)+R(40,124,w,40,blue)+R(40+w,124,730-w,40,green)+T(40+w/2,149,full.toLocaleString("en-US")+" full cells",15,"white",true,"middle")+T(40+w+(730-w)/2,149,clipN.toLocaleString("en-US"),14,"white",true,"middle");
+ s+=T(40,209,"Full cells within tolerance")+T(40,241,full.toLocaleString("en-US")+" / "+full.toLocaleString("en-US"),25,blue,true)+T(420,209,"Clipped cells within tolerance")+T(420,241,clipPass.toLocaleString("en-US")+" / "+clipN.toLocaleString("en-US"),25,green,true)+T(420,267,(clipN-clipPass)+" clipped cell exceeds "+m[4],14,amber,true);
+ save("v11_cross_location","V11 | Three-location VIIRS agreement","Shanghai, Bao'an and Qimen; same exported app polygons",320,s,"Tolerance "+m[4]+" reflects CSV rounding, not sensor error; archived validation.");
+ m=match(/Yanqing reports ([\d,]+)\/([\d,]+) matching final LISA classes/);const same=number(m[1]),n=number(m[2]),w2=750*same/n;
+ s=T(40,109,"Final LISA class comparison",16,ink,true)+R(40,128,w2,32,blue)+R(40+w2,128,750-w2,32,amber)+T(40,205,same.toLocaleString("en-US")+" matching",23,blue,true)+T(450,205,(n-same).toLocaleString("en-US")+" differing",23,amber,true)+T(40,236,f(100*same/n,2)+"% agreement across "+n.toLocaleString("en-US")+" cells");
+ save("a03_yanqing","A03 | Independent LISA classification","Yanqing field comparison; rounded NTL and independent seed",285,s,"Class disagreement is not automatically an arithmetic failure or a sensor error.");
+ const gl=report.split("\n").find(l=>l.includes("| A04.")&&l.includes("Exact hand cases"));if(!gl)throw Error("Missing A04 evidence");
+ const cases=[...gl.matchAll(/`\[([0-9,]+)\]` gives ([\d.]+)/g)].map(v=>[v[1],Number(v[2])]);if(cases.length!==3)throw Error("Unexpected Gini hand-case count");
+ s="";cases.forEach(([label,v],i)=>{let y=102+i*45;s+=T(205,y+17,"["+label+"]",15,ink,false,"end")+R(222,y,Math.max(1,540*v/.6),24,[blue,green,amber][i])+T(229+540*v/.6,y+17,f(v,2),15,ink,true)});
+ save("a04_gini","A04 | Gini hand-case oracles","Finite nonnegative arrays; archived numerical checks",285,s,"Empty and all-zero arrays return zero; invalid negative/nonfinite inputs raise an error.");
+ m=match(/\| Spearman rho \| ([-\d.]+) \| ([-\d.]+) \|[\r\n]+\| Block-bootstrap 95% interval \| \[([-\d.]+), ([-\d.]+)\] \| \[([-\d.]+), ([-\d.]+)\] \|/);
+ const vals=[["Built surface",+m[1],+m[3],+m[4]],["Population",+m[2],+m[5],+m[6]]],x=v=>210+(v+.3)/.65*550;s="";
+ for(let i=0;i<=6;i++){let v=-.3+i*.1;s+=L(x(v),95,x(v),224)+T(x(v),245,f(v,1),12,muted,false,"middle")}
+ s+=L(x(0),95,x(0),224,muted,1.5,"4 4");vals.forEach(([label,v,lo,hi],i)=>{let y=130+i*63,c=[blue,green][i];s+=T(195,y+5,label,15,ink,false,"end")+L(x(lo),y,x(hi),y,c,3)+L(x(lo),y-6,x(lo),y+6,c)+L(x(hi),y-6,x(hi),y+6,c)+D(x(v),y,c)+T(x(v),y-12,f(v),14,ink,true,"middle")});
+ save("a08_ghsl","A08/A09 | GHSL agreement in Shanghai","715 eligible core cells; archived Spearman and block-bootstrap intervals",292,s,"Both archived intervals contain zero; association is inconclusive, not economic validation.");
+ const real=g5.center_comparisons.filter(v=>v.source==="baoan_2020_ntl");s="";
+ real.forEach((v,i)=>{let y=99+i*44,label={archived_ntl_selected:"Archived NTL center",geometry_only_centroid:"Geometry centroid",ntl_weighted_centroid:"NTL-weighted centroid",brightest_ntl_cell:"Brightest cell"}[v.center_method];if(!label)throw Error("Unknown center method");s+=T(230,y+17,label,15,ink,false,"end")+R(244,y,510*v.gradient_r2/.5,24,[blue,green,amber,purple][i])+T(251+510*v.gradient_r2/.5,y+17,f(v.gradient_r2),14,ink,true)});
+ save("g05_gradient","G05 | Gradient fit depends on center","Bao'an 2020; same observed NTL and eligible core cells",328,s,"Horizontal bar: weighted gradient R²; no independent economic center benchmark.");
+ s="";for(let i=0;i<2;i++){let x0=120+i*370;for(let row=0;row<3;row++)for(let col=0;col<3;col++)s+=R(x0+col*48,102+row*48,48,48,(row+col)%2?"#e8eff5":"#dce9f2","#8da9bc");let shift=i?24:0;for(let row=0;row<2;row++)for(let col=0;col<2;col++)s+=R(x0+col*48+shift,102+row*48+shift,48,48,"none",amber,'stroke-width="2" stroke-dasharray="6 3"');s+=T(x0+72,270,i?"Half-cell shift":"Aligned cells",15,ink,true,"middle")}
+ save("g23_support_geometry","G23 | Shared raster support","Schematic: source pixel grid (solid) and analysis cells (dashed)",323,s,"Shifted neighboring cells share source pixels; no measured map or sensor PSF is depicted.");
+ const ma=ind.synthetic.G22;s="";for(let i=0;i<4;i++)s+=R(55+i%2*66,104+Math.floor(i/2)*66,66,66,i===0?amber:"#e6edf2","#a6b9c6");s+=R(55,104,132,132,"none",blue,'stroke-width="3"')+T(121,258,"One of four fine cells is HH",13,ink,false,"middle")+T(265,134,"Coarse block with any fine HH overlap",16)+T(265,165,f(100*ma.any_overlap_block_fraction,0)+"%",27,blue,true)+T(265,203,"Actual intersecting HH area",16)+T(265,234,f(100*ma.actual_overlap_area_fraction,0)+"%",27,amber,true);
+ save("g22_overlap","G22 | Block intersection vs area overlap","Synthetic coarse block with four equal-area fine cells",306,s,"The block-any-overlap fraction is not the actual overlapping HH area fraction.");
+ return out;
+}
+Object.assign(figs,archivedFigures(fs.readFileSync(path.join(root,'evidence','README.md'),'utf8'),data.g5,data.csv));
+
 const out=path.join(root,'figures');
 if(!process.argv.includes('--verify'))fs.mkdirSync(out,{recursive:true});
 for(const [name,svg] of Object.entries(figs)){const p=path.join(out,name);if(process.argv.includes('--verify')){if(fs.readFileSync(p,'utf8')!==svg)throw Error('Figure mismatch: '+name)}else fs.writeFileSync(p,svg);}
