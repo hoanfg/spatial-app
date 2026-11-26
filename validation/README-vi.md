@@ -494,7 +494,22 @@ Trên hình học Bảo An, toàn bộ 23.900 liên kết Rook có hướng dùn
 
 **Bằng chứng lưu trữ.** [Chương trình đối chiếu CSV và mô phỏng số học](g19_g29_independent_audit.mjs), [JSON kết quả](evidence/g19_g29_independent_audit.json).
 
-**Phạm vi đã kiểm chứng và phần còn mở.** Xác nhận khác biệt trên CSV đã làm tròn; chưa phải phép đối chiếu trực tiếp đường trend UI. Cần đồng nhất tập ô, trọng số, biến đổi, xử lý đảo và sample hiển thị. Cột chẩn đoán row-standardized trong JSON ở minK=4 đặt các hàng dưới ngưỡng bằng 0, không phải Global Moran chuẩn trên đồ thị cảm sinh focal.
+**Đối chiếu theo dữ liệu mà scatterplot sử dụng.** Trong `ntl/lisa_ui.py`, đường hồi quy dùng các dòng có cả `ntl_z_lit` và `lisa_lag_z` hữu hạn. Hai cột do `run_lisa` xuất với bốn chữ số thập phân. Từ CSV Bảo An và Thượng Hải năm 2020, phép đối chiếu độc lập dựng lại tập members (ô lõi ≥ 99% diện tích danh nghĩa, NTL dương), chuẩn hóa theo mean và độ lệch chuẩn mẫu của members, tạo Queen, rồi lọc focal theo số láng giềng. Tính ba đại lượng: trung bình Local I trên focal; Global I với trọng số chuẩn hóa hàng trên members nhưng các hàng không được kiểm định bằng 0; và slope OLS có intercept trên focal sau làm tròn z và lag tới bốn chữ số. Cách làm tròn trong chương trình JavaScript là xấp xỉ bước làm tròn của NumPy, không đảm bảo đồng nhất tại điểm tie.
+
+| Địa bàn | minK | Biến đổi | Mean Local I | Global I (hàng không kiểm định = 0) | Slope từ cột làm tròn |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Thượng Hải | 1 | Gốc | 0,801442 | 0,802565 | 0,802564 |
+| Thượng Hải | 4 | Gốc | 0,797679 | 0,798796 | 0,800380 |
+| Thượng Hải | 4 | Log | 0,821366 | 0,822517 | 0,826898 |
+| Bảo An | 1 | Gốc | 0,920898 | 0,921047 | 0,921100 |
+| Bảo An | 4 | Gốc | 0,916000 | 0,916148 | 0,924092 |
+| Bảo An | 4 | Log | 0,952249 | 0,952403 | 0,961792 |
+
+Khi mọi member đều là focal (Thượng Hải, minK=1), slope chưa làm tròn trùng Global I chuẩn hóa hàng tới độ chính xác số học. Mean Local I nhỏ hơn vì Local I dùng mẫu số dựa trên độ lệch chuẩn mẫu và số hạng chuẩn hóa theo số member. Khi loại hàng focal, phép hồi quy trên tập con với intercept và phép chuẩn hóa Global I toàn members không còn là cùng đại lượng. Vì vậy ngay cả khi dùng cùng nguồn NTL, không nên gọi slope là Global I toàn bộ vùng hoặc đồng nhất với `moran_I_lit` (trung bình Local I).
+
+**Bằng chứng bổ sung.** [Chương trình đối chiếu estimand](g24_g25_g27_estimand_reference.mjs), [kết quả từng cấu hình](evidence/g24_g25_g27_estimand_reference.json).
+
+**Phạm vi đã kiểm chứng và phần còn mở.** Đối chiếu trên CSV và các cột tái dựng xác nhận ba đại lượng khác nhau; chưa chạy trực tiếp hàm Python production hoặc UI Altair. Cần kiểm tra trực tiếp hai hàm cùng cấu hình và chỉnh diễn giải slope, không đổi công thức chỉ vì khác estimand. Chẩn đoán hàng bằng 0 không phải Global I trên đồ thị cảm sinh focal.
 
 ### G25: Mẫu số diện tích của tỷ trọng High-High trên tập được kiểm định
 
@@ -514,13 +529,28 @@ Bảo An ngay cả ở minK=1 có 6.186 members nhưng 6.185 focal, chênh 0,25 
 
 **Bằng chứng lưu trữ.** [Chương trình đối chiếu CSV và mô phỏng số học](g19_g29_independent_audit.mjs), [JSON kết quả](evidence/g19_g29_independent_audit.json).
 
-**Phạm vi đã kiểm chứng và phần còn mở.** Xác nhận mẫu số khác nhau trên dữ liệu thực, không tính tỷ trọng HH mới vì CSV không có nhãn HH. Cần test production với đảo và minK thay đổi, xác định rõ tên hoặc mẫu số trước khi sửa thuật toán.
+**Đối chiếu định lượng khi có tử số HH khác 0.** Dùng cùng phép dựng members/focal của G24 trên Bảo An và Thượng Hải năm 2020, sinh 999 lượt lấy mẫu láng giềng có điều kiện, không hoàn lại, seed 42 của bộ sinh JavaScript. P-value là hai lần đuôi nhỏ hơn (bao gồm tie, hiệu chỉnh +1, giới hạn 1); chọn HH khi z và lag dương và vượt điều kiện BH với alpha 0,05. Tính hai tỷ trọng bằng cùng tử số diện tích HH, lần lượt chia tổng diện tích members và focal. Điều này tách ảnh hưởng mẫu số khỏi thay đổi nhãn.
+
+| Địa bàn | minK | Biến đổi | Ô HH (BH) | HH / members (%) | HH / focal (%) |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Thượng Hải | 1 | Gốc | 77 | 10,7687 | 10,7687 |
+| Thượng Hải | 4 | Gốc | 77 | 10,7687 | 10,8141 |
+| Thượng Hải | 4 | Log | 90 | 12,5870 | 12,6400 |
+| Bảo An | 1 | Gốc | 1.027 | 16,6023 | 16,6049 |
+| Bảo An | 4 | Gốc | 1.042 | 16,8448 | 16,9213 |
+| Bảo An | 4 | Log | 1.719 | 27,7890 | 27,9151 |
+
+Tại Bảo An minK=4, log NTL, tử số 429,740468 km² được chia cho 1.546,441985 km² members hoặc 1.539,456485 km² focal; chênh khoảng 0,1261 điểm phần trăm. Khi hai tập có diện tích bằng nhau, hai tỷ trọng trùng. Nhãn HH ở đây được tính tham chiếu, không phải nhãn production trích xuất sẵn hoặc chạy cùng luồng RNG NumPy.
+
+**Bằng chứng bổ sung.** [Chương trình đối chiếu estimand](g24_g25_g27_estimand_reference.mjs), [kết quả raw và BH, diện tích và mẫu số](evidence/g24_g25_g27_estimand_reference.json).
+
+**Phạm vi đã kiểm chứng và phần còn mở.** Mẫu số khác và độ lớn chênh đã được đo với nhãn tham chiếu trên dữ liệu thực. Chưa chạy regression production với đảo và ngưỡng minK; cần xác định tên hoặc mẫu số theo estimand trước khi sửa thuật toán.
 
 ### G27: Tính đồng nhất đặc tả phân tích trong panel vùng-năm
 
 **Đại lượng và lý do kiểm chứng.** Hai bản ghi cùng vùng, năm và cạnh lưới có thể dùng các đặc tả LISA khác nhau. So sánh panel khi cấu hình thay đổi có thể nhầm thay đổi phép đo với thay đổi hiện tượng.
 
-**Dữ liệu, phương pháp và chuẩn đối chiếu.** Đối chiếu `KEY_COLS` và đường thay thế dòng cùng khóa trong `ntl/lisa_ui.py`. Thiết kế định danh đặc tả từ weights, log, alpha, FDR, số hoán vị, seed, chính sách hỗ trợ, phiên bản thuật toán và định danh ranh giới. Phép kiểm cần tạo hai cấu hình khác nhau cùng khóa để phát hiện xung đột; kiểm tra cả ID/hình học nguồn qua năm.
+**Dữ liệu, phương pháp và chuẩn đối chiếu.** Đối chiếu `KEY_COLS` và đường thay thế dòng cùng khóa trong `ntl/lisa_ui.py`. Thiết kế định danh đặc tả từ weights, log, alpha, FDR, số hoán vị, seed, chính sách hỗ trợ, phiên bản thuật toán và định danh ranh giới. Phép kiểm dùng hai cấu hình khác nhau cùng khóa để phát hiện xung đột; việc xác minh ID/hình học nguồn qua năm là điều kiện riêng.
 
 **Kết quả.**
 
@@ -528,7 +558,11 @@ Kiểm tra tĩnh xác nhận dòng cùng khóa có thể bị thay thế dù c�
 
 **Bằng chứng lưu trữ.** [Chương trình đối chiếu CSV và mô phỏng số học](g19_g29_independent_audit.mjs), [JSON kết quả](evidence/g19_g29_independent_audit.json).
 
-**Phạm vi đã kiểm chứng và phần còn mở.** Rủi ro từ hợp đồng dữ liệu đã được nhận diện, chưa có kiểm thử UI/production với các cấu hình xung đột. Cần xác minh fingerprint và ngăn gộp các chuỗi khác đặc tả; không được coi panel hiện có đã đồng nhất.
+**Đối chứng xung đột khóa.** Tạo hai hàng giả định có cùng khóa CHN, reference, 2020, 500 m. Hàng A có 499 hoán vị, NTL gốc và HH share giả định 0,15; hàng B có 999 hoán vị, log NTL và HH share giả định 0,08. Tái hiện độc lập đúng quy tắc lọc bỏ dòng cùng khóa rồi nối bản ghi mới; sau đó thêm hàng C mang khóa năm 2021. Kết quả sau B là A bị thay thế; sau C có hai hàng B và C. Các giá trị HH được đặt trước để phân biệt bản ghi, không phải kết quả LISA hay mức biến động kinh tế.
+
+**Bằng chứng bổ sung.** [Mã tái hiện quy tắc khóa](g24_g25_g27_estimand_reference.mjs), [đầu vào và bảng kết quả đối chứng](evidence/g24_g25_g27_estimand_reference.json).
+
+**Phạm vi đã kiểm chứng và phần còn mở.** Xác nhận cơ chế thay thế cùng khóa trong phép tái hiện độc lập; chưa kiểm thử UI/production, chưa triển khai fingerprint. Cần kiểm tra đặc tả xung đột khác năm và hash polygon, đồng thời ngăn gộp các chuỗi khác phương pháp.
 
 ### G28: Kích thước block và độ bao phủ spatial bootstrap
 
@@ -538,9 +572,30 @@ Kiểm tra tĩnh xác nhận dòng cùng khóa có thể bị thay thế dù c�
 
 **Kết quả.**
 
-Chưa có kết quả hiệu chuẩn độ bao phủ mới. Các kết quả spatial block resampling đã lưu trước đây vẫn là bằng chứng độ nhạy, không phải bằng chứng 95% coverage.
+**Thiết kế hiệu chuẩn với tham số biết trước.** Dựng lưới vuông 20 × 20 ô, hai trường Gaussian chuẩn độc lập A và E; khi cần phụ thuộc không gian, lọc Gaussian cả hai bằng cùng kernel, điều kiện biên tuần hoàn. Ba cấu hình có độ lệch chuẩn kernel bằng 0, 1 hoặc 2 bước ô (0 là không lọc). Tạo B bằng 0,6 nhân A cộng căn bậc hai của (1 − 0,6²) nhân E. Hai trường có tương quan Pearson biên 0,6 do cùng phương sai và độc lập giữa A và E; tương quan Spearman của phân phối Gaussian hai biến là 6 chia pi nhân arcsin(0,6/2) = 0,581920104. Đây là giá trị quần thể cần bao phủ, không phải hệ số mẫu.
 
-**Phạm vi đã kiểm chứng và phần còn mở.** Giữ phạm vi mô tả của các khoảng hiện có; chỉ đưa ra khẳng định độ bao phủ khi có thí nghiệm hiệu chuẩn phù hợp với thiết kế lấy mẫu và phụ thuộc.
+Dùng 120 cặp trường độc lập cho mỗi cấu hình, seed 271128, 200 lượt bootstrap mỗi trường. Tái hiện cách chia block không chồng lấn theo gốc lưới và lấy lại số block bằng số block gốc như `block_bootstrap_rho`; tính lại rank Spearman trên từng mẫu ghép (xử lý rank trung bình khi trùng), lấy phân vị 2,5% và 97,5%. Thử cạnh block 1, 2, 4, 5 ô; cạnh 10 ô chỉ tạo bốn block và bị loại theo điều kiện tối thiểu năm block của production. Đây là phép tính tham chiếu vector hóa, không import hàm production.
+
+| Độ lệch chuẩn kernel (ô) | Block (ô) | Số block | CI chứa giá trị thật / 120 | Coverage (%) | Độ rộng CI trung bình |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 1 | 400 | 113 | 94,17 | 0,135668 |
+| 0 | 2 | 100 | 113 | 94,17 | 0,134333 |
+| 0 | 4 | 25 | 113 | 94,17 | 0,132027 |
+| 0 | 5 | 16 | 109 | 90,83 | 0,127445 |
+| 1 | 1 | 400 | 63 | 52,50 | 0,131316 |
+| 1 | 2 | 100 | 84 | 70,00 | 0,201810 |
+| 1 | 4 | 25 | 96 | 80,00 | 0,241167 |
+| 1 | 5 | 16 | 95 | 79,17 | 0,254773 |
+| 2 | 1 | 400 | 31 | 25,83 | 0,130763 |
+| 2 | 2 | 100 | 61 | 50,83 | 0,240598 |
+| 2 | 4 | 25 | 89 | 74,17 | 0,374397 |
+| 2 | 5 | 16 | 96 | 80,00 | 0,400860 |
+
+**Diễn giải.** Khi phụ thuộc tăng, lấy mẫu từng ô độc lập cho khoảng rất hẹp nhưng bao phủ kém. Block lớn hơn cải thiện coverage trong một số cấu hình, song không đạt 95% một cách mặc định; block 5 ô cho 90,83%, 79,17%, 80,00% lần lượt trong ba thiết kế. Với 120 lượt, sai số Monte Carlo ước tính theo căn của coverage nhân (1−coverage) chia 120; không xếp hạng block chỉ từ chênh lệch vài lượt. Kernel sigma là tham số làm trơn của mô phỏng, không phải phạm vi tương quan thực tế được đo tại Bảo An.
+
+**Bằng chứng lưu trữ.** [Chương trình hiệu chuẩn](g28_block_coverage_reference.py), [JSON thiết kế, coverage và độ rộng](evidence/g28_block_coverage_reference.json).
+
+**Phạm vi đã kiểm chứng và phần còn mở.** Đã định lượng coverage dưới ba mô hình Gaussian biết trước; chưa hiệu chuẩn dữ liệu thực hoặc đối chiếu trực tiếp hàm Python production. Cần mở rộng số lần lặp, hình học không đều, phạm vi phụ thuộc ước lượng từ dữ liệu và độ nhạy số resample. Khoảng hiện có chỉ có ý nghĩa mô tả có điều kiện, chưa bảo đảm 95% coverage.
 
 ### G29: Tính tương đương của quy ước p-value trong tài liệu và production
 
