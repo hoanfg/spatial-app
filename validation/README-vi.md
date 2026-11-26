@@ -65,6 +65,18 @@ Bảng này mô tả **phép kiểm đang tồn tại**, không đề xuất tha
 
 *Hình A02.1. Siêu dữ liệu hỗ trợ quan sát trong CSV Bảo An đã lưu. Mọi dòng đều có quan sát; chưa kiểm chứng ca thiếu thực sự. [Nguồn bằng chứng](evidence/audit-2026-11-15/verified_summary.json).*
 
+![Hình A03.1: Đối chiếu độc lập nhãn LISA cuối tại Diên Khánh. NTL làm tròn và seed hoán vị độc lập giới hạn mức khớp tuyệt đối.](figures/a03_yanqing.svg)
+
+*Hình A03.1. Đối chiếu độc lập nhãn LISA cuối tại Diên Khánh. NTL làm tròn và seed hoán vị độc lập giới hạn mức khớp tuyệt đối. [Nguồn bằng chứng](evidence/yanqing/README-vi.md).*
+
+![Hình V11.1: Đối chiếu đa giác và raster tại ba địa bàn theo dung sai làm tròn CSV bốn chữ số; một ô cắt biên vượt ngưỡng theo giá trị tuyệt đối.](figures/v11_cross_location.svg)
+
+*Hình V11.1. Đối chiếu đa giác và raster tại ba địa bàn theo dung sai làm tròn CSV bốn chữ số; một ô cắt biên vượt ngưỡng theo giá trị tuyệt đối. [Nguồn bằng chứng](evidence/README-vi.md).*
+
+![Hình A08/A09.1: Ước lượng Spearman và khoảng block-bootstrap GHSL Thượng Hải đã lưu. Cả hai khoảng chứa 0; không chứng minh quan hệ kinh tế.](figures/a08_ghsl.svg)
+
+*Hình A08/A09.1. Ước lượng Spearman và khoảng block-bootstrap GHSL Thượng Hải đã lưu. Cả hai khoảng chứa 0; không chứng minh quan hệ kinh tế. [Nguồn bằng chứng](evidence/README-vi.md).*
+
 Vị trí tệp, mã băm và các phép kiểm có thể chạy nằm trong [hướng dẫn bằng chứng](evidence/README-vi.md).
 
 [Kiểm toán phát biểu khoa học](evidence/README-vi.md#kiểm-toán-phát-biểu-khoa-học) trong hướng dẫn bằng chứng tách cơ sở tài liệu, kiểm thử triển khai và đối chiếu thực địa. Trích dẫn có thể biện minh cho phương pháp hoặc cách diễn giải, nhưng không chứng minh rằng đầu ra của ứng dụng đã vượt qua một phép kiểm thực địa.
@@ -87,6 +99,10 @@ Vị trí tệp, mã băm và các phép kiểm có thể chạy nằm trong [h�
 | A10 | Bộ nhớ đệm trong phiên có giới hạn và có hai hồ sơ đo thực địa; chưa kiểm tra năng lực Cloud nhiều người dùng. |
 | A11 | Kiểm thử tích hợp nhân tạo và một lượt Bảo An đã lưu bao phủ nhiều công đoạn; vẫn thiếu phép thử trực tiếp có đăng nhập và có thể lặp từ dịch vụ đến tệp xuất. |
 | A12 | Có sáu cặp hướng dẫn song ngữ cùng kiểm tra tự động cho liên kết và công thức; việc đối chiếu ngữ nghĩa và khoa học vẫn cần đọc thủ công. |
+
+![Hình A04.1: Ba phép kiểm Gini số học đã lưu với đầu vào không âm. Đây là kiểm tra công thức xác định, không phải kiểm chứng thực địa.](figures/a04_gini.svg)
+
+*Hình A04.1. Ba phép kiểm Gini số học đã lưu với đầu vào không âm. Đây là kiểm tra công thức xác định, không phải kiểm chứng thực địa. [Nguồn bằng chứng](evidence/README-vi.md).*
 
 ## Phần có thể tái lập từ repo
 
@@ -217,6 +233,10 @@ Việc không bác bỏ ở một ngưỡng ngắn, chẳng hạn 5% với dữ 
 
 *Hình G06.1. P-value bootstrap Pareto độc lập có điều kiện, ước lượng lại hệ số tại bốn tỷ lệ đuôi cố định; đường đứt nét biểu thị 0,05. [Nguồn bằng chứng](evidence/g06_pareto_tail/summary.json).*
 
+![Hình G06.2: Hàm sống có điều kiện log-log của 618 quan sát NTL lõi dương cao nhất tại Bảo An và Pareto fitted với ngưỡng cố định 10%. Chỉ giảm mật độ điểm hiển thị để dễ đọc.](figures/g06_ccdf.svg)
+
+*Hình G06.2. Hàm sống có điều kiện log-log của 618 quan sát NTL lõi dương cao nhất tại Bảo An và Pareto fitted với ngưỡng cố định 10%. Chỉ giảm mật độ điểm hiển thị để dễ đọc. [Nguồn bằng chứng](evidence/g06_pareto_tail/baoan_tail_observations.csv).*
+
 **Bằng chứng đầy đủ có thể tái lập:** [chương trình sinh phép kiểm](g06_pareto_tail_experiment.py), [5.000 đầu vào nhân tạo](evidence/g06_pareto_tail/synthetic_input.csv), [7.148 ô Bảo An gốc có cờ lõi, quan sát dương và thứ hạng](evidence/g06_pareto_tail/baoan_tail_observations.csv), [16 trường hợp phân phối/ngưỡng](evidence/g06_pareto_tail/tail_cases.csv), [6.384 lần bootstrap có hệ số alpha và KS sau ước lượng lại](evidence/g06_pareto_tail/bootstrap_replications.csv), [JSON tổng hợp, phiên bản thư viện, mã băm SHA-256 và giới hạn](evidence/g06_pareto_tail/summary.json). CSV gốc Bảo An đã nằm tại `validation/evidence/a02_post_pr27/`. CI sẽ chạy và đối chiếu **đúng từng byte của cả năm tệp mới** bằng các thư viện khóa phiên bản.
 
 **G06 thực địa còn mở:** Kết quả **không chứng nhận NTL có quy luật Pareto**, không xác lập quan hệ kinh tế hoặc nhân quả. Cần mô phỏng giả thuyết không có cấu trúc phụ thuộc không gian hoặc bootstrap theo khối địa lý, kiểm tra tính khác biệt của quá trình đo theo thời gian và quy trình chọn ngưỡng đã đăng ký trước hoặc được bootstrap cùng bước tối ưu ngưỡng. Tham khảo [Clauset, Shalizi và Newman (2009)](https://doi.org/10.1137/070710111). Cờ `power_law_ok` cũ chỉ là **phép sàng lọc KS xấp xỉ**, không phải kết luận đã xác thực quy luật ở thực địa; phần diễn giải trên giao diện đã được bổ sung cảnh báo.
@@ -252,6 +272,10 @@ Ngoài ra, có 80 lần lặp theo seed cho mỗi trường, so tâm gốc với
 
 Đây chỉ là **độ nhạy khi đổi tâm trong cùng vùng và cùng năm**, không phải bảng xếp hạng mức độ chính xác CBD kinh tế. Trọng tâm hình học không dùng NTL khi tính, nhưng **không được xác nhận là tâm việc làm**; hai cách chọn tâm còn lại cũng phụ thuộc NTL. Tất cả hồi quy cùng dùng 6.186 ô và cùng biến phụ thuộc, nên khác biệt xuất phát từ quy tắc chọn tâm chứ không phải do thay đổi mẫu. Chênh lệch R² tới khoảng 0,274 là dấu hiệu cần diễn giải thận trọng `monocentric_r2`, không dùng nó làm phép kiểm đô thị đơn tâm trong kinh tế học.
 
+![Hình G05.2: Độ phù hợp gradient trên NTL thực Bảo An 2020 theo các cách chọn tâm; dùng cùng tập ô đủ điều kiện, không có chuẩn CBD độc lập.](figures/g05_gradient.svg)
+
+*Hình G05.2. Độ phù hợp gradient trên NTL thực Bảo An 2020 theo các cách chọn tâm; dùng cùng tập ô đủ điều kiện, không có chuẩn CBD độc lập. [Nguồn bằng chứng](evidence/g05_ntl_center/summary.json).*
+
 **Bằng chứng đầy đủ có thể chạy lại:** [mã chương trình](g05_ntl_center_experiment.py); [đầu vào nhân tạo 625 ô và ba trường ánh sáng](evidence/g05_ntl_center/synthetic_input.csv); [1.875 dòng kết quả cấp ô nhân tạo và khoảng cách](evidence/g05_ntl_center/synthetic_cell_results.csv); [960 dòng mô phỏng chọn tâm thay thế](evidence/g05_ntl_center/synthetic_replications.csv); [7.148 ID Bảo An có lưu khoảng cách từng cách chọn tâm và trạng thái ô biên](evidence/g05_ntl_center/baoan_cell_results.csv); [19 phép so sánh độ dốc và R²](evidence/g05_ntl_center/center_comparison.csv); và [JSON ghi nhận nguồn, chất lượng tái dựng, kết quả mô phỏng, SHA-256 và giới hạn](evidence/g05_ntl_center/summary.json). CI khóa phiên bản thư viện khoa học và đối chiếu đúng cả sáu tệp. CSV nguồn Bảo An cùng các bằng chứng G04, G17, G18, A02, A03, V11, GHSL được bảo lưu.
 
 **Kiểm chứng G05 về ý nghĩa kinh tế vẫn mở:** Cần tâm CBD, tâm việc làm hoặc trung tâm hoạt động được quan sát độc lập tại khoảng năm 2020, có tọa độ, nguồn gốc và phạm vi không gian phù hợp để đánh giá mức lệch chọn tâm **theo nghĩa kinh tế**. Tâm do mô hình nhân tạo đặt trước hay trọng tâm hình học của vùng thật không thay thế được nguồn đó. Một số đô thị còn có cấu trúc đa tâm hoặc độ dốc không tuyến tính, nên phương trình một tâm có thể mô tả không phù hợp bất kể chọn tâm nào. Tham khảo [nghiên cứu về độ dốc bức xạ ban đêm và mật độ đô thị](https://doi.org/10.1057/s41599-023-01884-8).
@@ -280,6 +304,10 @@ Với trường có tương quan $\rho=0,8$ nhưng không tự thêm cụm tín 
 
 *Hình G17.1. FDR thực nghiệm của BH/BY với các cấu hình Gaussian toàn-null. Đây là ước lượng từ mô phỏng hữu hạn, không phải bảo đảm thực địa. [Nguồn bằng chứng](evidence/g17_spatial_fdr/summary.json).*
 
+![Hình G17.2: Lực kiểm định BH và BY đối với chín tín hiệu Gaussian được tạo trước. Thanh khoảng biểu thị độ bất định Monte Carlo của mô phỏng hữu hạn.](figures/g17_power.svg)
+
+*Hình G17.2. Lực kiểm định BH và BY đối với chín tín hiệu Gaussian được tạo trước. Thanh khoảng biểu thị độ bất định Monte Carlo của mô phỏng hữu hạn. [Nguồn bằng chứng](evidence/g17_spatial_fdr/summary.json).*
+
 **Bằng chứng có thể tái lập:** [design.csv](evidence/g17_spatial_fdr/design.csv) chứa lưới và mặt nạ tín hiệu định trước; [replicates.csv](evidence/g17_spatial_fdr/replicates.csv) chứa **6.544 bản ghi cấp lượt chạy**; [summary.json](evidence/g17_spatial_fdr/summary.json) chứa kết quả từng cấu hình, độ bất định, giả định và mã băm SHA-256. [Chương trình tạo phép kiểm](g17_spatial_fdr_experiment.py) dùng seed cố định và phiên bản NumPy, pandas, SciPy được khóa trong CI. Chạy `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --verify` tại thư mục gốc để so sánh toàn bộ tệp lưu trữ.
 
 **G17 thực địa vẫn mở:** Phụ thuộc không gian dương không tự chứng minh điều kiện PRDS cho p-value LISA. Định lý BY dưới phụ thuộc bất kỳ vẫn **đòi hỏi p-value hợp lệ theo giả thuyết không**, không thể chữa sai lệch do hoán vị không hợp lệ. Cần định nghĩa giả thuyết khoa học, tập phép kiểm định, mô hình nhiễu không gian và nguồn chuẩn để kiểm tra khả năng kiểm soát FDR trước khi áp dụng khẳng định định lượng cho vùng thực. Tham khảo [Benjamini và Yekutieli (2001)](https://doi.org/10.1214/aos/1013699998) và [hướng dẫn Local Spatial Autocorrelation của GeoDa](https://geodacenter.github.io/workbook/6a_local_auto/lab6a.html).
@@ -302,9 +330,9 @@ Với trường có tương quan $\rho=0,8$ nhưng không tự thêm cụm tín 
 
 Tỷ lệ p biên và tỷ lệ trường có bác bỏ là hai đại lượng khác nhau. Trong thiết kế toàn-null cấp nguồn, tỷ lệ có ít nhất một bác bỏ là FDR thực nghiệm theo null đó.
 
-![Hình G17.2: Tần suất bác bỏ biên và tần suất có bác bỏ BH dưới null pixel nguồn mô phỏng. Hai phương pháp sử dụng giả thuyết tham chiếu khác nhau.](figures/g17_source_null.svg)
+![Hình G17.3: Tần suất bác bỏ biên và tần suất có bác bỏ BH dưới null pixel nguồn mô phỏng. Hai phương pháp sử dụng giả thuyết tham chiếu khác nhau.](figures/g17_source_null.svg)
 
-*Hình G17.2. Tần suất bác bỏ biên và tần suất có bác bỏ BH dưới null pixel nguồn mô phỏng. Hai phương pháp sử dụng giả thuyết tham chiếu khác nhau. [Nguồn bằng chứng](evidence/g20_g23_g17_raster_summary.json).*
+*Hình G17.3. Tần suất bác bỏ biên và tần suất có bác bỏ BH dưới null pixel nguồn mô phỏng. Hai phương pháp sử dụng giả thuyết tham chiếu khác nhau. [Nguồn bằng chứng](evidence/g20_g23_g17_raster_summary.json).*
 
 **Bằng chứng lưu trữ.** [Chương trình null cấp nguồn](g17_source_support_null.py), [JSON kết quả và SHA-256 dữ liệu nguồn](evidence/g20_g23_g17_raster_summary.json).
 
@@ -516,6 +544,10 @@ SOL sáu cấu hình từ 34.196,307188 đến 34.196,307441; mean từ 20,73370
 
 *Hình G22.1. Sai khác trích xuất trực tiếp và gộp theo diện tích hỗ trợ tại lưới cùng gốc, theo phần triệu đơn vị radiance. Không đo độ ổn định HH. [Nguồn bằng chứng](evidence/g20_g23_g17_raster_summary.json).*
 
+![Hình G22.2: Sơ đồ ví dụ các ô bằng diện tích, phân biệt block lớn có giao bất kỳ với HH và diện tích HH giao thực tế.](figures/g22_overlap.svg)
+
+*Hình G22.2. Sơ đồ ví dụ các ô bằng diện tích, phân biệt block lớn có giao bất kỳ với HH và diện tích HH giao thực tế. [Nguồn bằng chứng](evidence/g19_g29_independent_audit.json).*
+
 **Bằng chứng lưu trữ.** [Chương trình đối chiếu CSV và mô phỏng số học](g19_g29_independent_audit.mjs), [JSON kết quả](evidence/g19_g29_independent_audit.json); [Chương trình đối chiếu raster và hình học](g20_g23_raster_audit.py), [JSON kết quả và SHA-256 dữ liệu nguồn](evidence/g20_g23_g17_raster_summary.json).
 
 **Phạm vi đã kiểm chứng và phần còn mở.** Xác nhận gần bảo toàn tích phân trên AOI và phương pháp đối chứng này. Chưa đối chiếu phép gộp production, chưa chạy LISA trên sáu lưới và chưa đo tính ổn định HH. Phép kiểm tiếp theo phải so cùng raster, cùng hỗ trợ, cấu hình LISA tương thích và giao polygon HH để tính Jaccard diện tích; không dùng tỷ lệ block bất kỳ giao thay cho diện tích giao thực.
@@ -539,6 +571,10 @@ Trên hình học Bảo An, toàn bộ 23.900 liên kết Rook có hướng dùn
 ![Hình G23.1: Global Moran trung bình và phân vị thực nghiệm 2,5%–97,5% từ 400 trường mô phỏng pixel nguồn độc lập mỗi cấu hình. Thanh khoảng không phải CI thực địa.](figures/g23_shared.svg)
 
 *Hình G23.1. Global Moran trung bình và phân vị thực nghiệm 2,5%–97,5% từ 400 trường mô phỏng pixel nguồn độc lập mỗi cấu hình. Thanh khoảng không phải CI thực địa. [Nguồn bằng chứng](evidence/g20_g23_g17_raster_summary.json).*
+
+![Hình G23.2: Sơ đồ hỗ trợ raster khi lưới cùng gốc và dịch nửa ô; các ô nét đứt ở cấu hình dịch gốc dùng chung pixel nguồn.](figures/g23_support_geometry.svg)
+
+*Hình G23.2. Sơ đồ hỗ trợ raster khi lưới cùng gốc và dịch nửa ô; các ô nét đứt ở cấu hình dịch gốc dùng chung pixel nguồn. [Nguồn bằng chứng](evidence/g19_g29_independent_audit.json).*
 
 **Bằng chứng lưu trữ.** [Chương trình đối chiếu CSV và mô phỏng số học](g19_g29_independent_audit.mjs), [JSON kết quả](evidence/g19_g29_independent_audit.json); [Chương trình đối chiếu raster và hình học](g20_g23_raster_audit.py), [JSON kết quả và SHA-256 dữ liệu nguồn](evidence/g20_g23_g17_raster_summary.json).
 
