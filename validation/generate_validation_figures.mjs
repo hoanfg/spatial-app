@@ -73,6 +73,39 @@ function generate(d){
 }
 const data=Object.fromEntries(Object.entries(inputs).map(([k,v])=>[k,JSON.parse(fs.readFileSync(path.join(root,'evidence',v),'utf8'))]));
 const figs=generate(data);
+function tailAndPowerFigures(g6,csv,g17){
+ const ink="#182d3c",muted="#536674",blue="#226a9b",green="#168077",amber="#b56e16",grid="#d7e2e9",out={};
+ const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");const f=(x,p=3)=>Number(x).toFixed(p);
+ const T=(x,y,s,size=15,anchor="start",color=ink,bold=false)=>`<text x="${x}" y="${y}" font-size="${size}" text-anchor="${anchor}" fill="${color}" font-weight="${bold?600:400}">${esc(s)}</text>`;
+ const L=(x,y,x2,y2,c=grid,w=1,dash="")=>`<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" ${dash?'stroke-dasharray="'+dash+'"':""}/>`;
+ const D=(x,y,c,r=4)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" stroke="white" stroke-width=".7"/>`;
+ function save(id,title,sub,h,body,note){let v=`<svg xmlns="http://www.w3.org/2000/svg" width="840" height="${h}" viewBox="0 0 840 ${h}" role="img" aria-labelledby="title desc"><title id="title">${esc(title)}</title><desc id="desc">${esc(sub+". "+note)}</desc><rect width="840" height="${h}" rx="10" fill="white"/><g font-family="Arial, Helvetica, sans-serif">${T(26,34,title,23,"start",ink,true)}${T(26,58,sub,14,"start",muted)}${L(26,73,814,73)}${body}${L(26,h-40,814,h-40)}${T(26,h-17,note,12,"start",muted)}</g></svg>\n`;if(/NaN|Infinity|undefined/.test(v))throw Error(id+" invalid");out[id+".svg"]=v;}
+ const cs=g6.cases.find(x=>x.source==="baoan_2020_ntl"&&x.tail_fraction===.1);
+ const rows=csv.trim().split(/\r?\n/);if(rows[0]!=="grid_id,is_full_core,included_positive_core,ntl_mean_original,positive_core_descending_rank")throw Error("Unexpected CCDF source schema");
+ const a=rows.slice(1).map(l=>l.split(",")).filter(v=>v[2]==="1").map(v=>({x:+v[3],rank:+v[4]})).sort((a,b)=>a.rank-b.rank);if(a.length!==cs.n_positive||a.some((v,i)=>v.rank!==i+1))throw Error("CCDF source ranks mismatch");
+ const tail=a.slice(0,cs.k_tail),u=cs.u_threshold,k=tail.length;if(tail.some(v=>v.x<u))throw Error("Tail below cutoff");
+ const xmax=Math.log10(tail[0].x/u),ymin=Math.floor(Math.log10(Math.min(1/k,10**(-cs.alpha_hill*xmax))));
+ const xx=v=>85+Math.log10(v)*680/xmax,yy=v=>330-(Math.log10(v)-ymin)*228/(0-ymin);let s="";
+ for(let i=ymin;i<=0;i++){s+=L(85,yy(10**i),765,yy(10**i))+T(74,yy(10**i)+4,i===0?"1":"10^"+i,12,"end",muted)}
+ for(const t of [1,1.5,2,3,4].filter(t=>Math.log10(t)<=xmax)){s+=L(xx(t),102,xx(t),330)+T(xx(t),350,t,12,"middle",muted)}
+ s+=L(85,102,85,330,muted)+L(85,330,765,330,muted)+T(85,91,"Tail survival probability (log scale)",13,"start",muted);
+ // Inclusive empirical survival at each distinct tail value; only display points are thinned.
+ const tied=[];for(let i=0;i<tail.length;){let j=i+1;while(j<tail.length&&tail[j].x===tail[i].x)j++;tied.push({x:tail[i].x/u,p:j/k});i=j}
+ const stride=Math.max(1,Math.floor(tied.length/120));const pts=tied.filter((v,i)=>i===0||i===tied.length-1||i%stride===0);
+ let fit=[];for(let i=0;i<=100;i++){let t=xmax*i/100,p=10**(-cs.alpha_hill*t);fit.push(`${85+t*680/xmax},${yy(p)}`)}
+ s+=`<polyline points="${fit.join(" ")}" stroke="${amber}" stroke-width="2.3" stroke-dasharray="6 3" fill="none"/>`;pts.forEach(v=>s+=D(xx(v.x),yy(v.p),blue,2.8));
+ s+=T(425,374,"NTL / fixed cutoff (log scale)",14,"middle")+D(115,402,blue)+T(129,407,"Empirical tail (thinned for display)",13)+L(470,402,503,402,amber,2.3,"6 3")+T(513,407,"Fitted Pareto",13);
+ save("g06_ccdf","G06 | Bao'an conditional tail CCDF","Upper 10% of positive core NTL; k = "+k+", Hill alpha = "+f(cs.alpha_hill),463,s,"Observed tail vs fitted iid Pareto; fixed cutoff, not spatial-distribution validation.");
+ const powers=g17.results.filter(x=>x.study==="gaussian_valid_p"&&x.scenario==="fixed_3x3_mean_shift");if(powers.length!==8)throw Error("G17 power rows missing");
+ const left=200,right=752,top=112,gh=46,bot=top+gh*powers.length,X=v=>left+v/.6*(right-left);
+ s=D(35,91,blue)+T(47,95,"BH",13)+`<rect x="115" y="87" width="8" height="8" fill="${green}"/>`+T(130,95,"BY",13)+T(242,95,"Whiskers: reported Monte Carlo 95% intervals",12,"start",muted);
+ for(let i=0;i<=6;i++){let v=i/10;s+=L(X(v),top-7,X(v),bot-8)+T(X(v),bot+11,f(v,1),12,"middle",muted)}
+ powers.forEach((r,i)=>{let y=top+i*gh;s+=T(left-12,y+20,r.weights+" / rho "+r.rho,14,"end");["bh","by"].forEach((key,j)=>{const a=r.methods[key],c=j?green:blue,yp=y+8+j*18,[lo,hi]=a.power_mc_ci95_normal,v=a.injection_power;s+=L(X(lo),yp,X(hi),yp,c,2.5)+L(X(lo),yp-4,X(lo),yp+4,c)+L(X(hi),yp-4,X(hi),yp+4,c)+(j?`<rect x="${X(v)-3.7}" y="${yp-3.7}" width="7.4" height="7.4" fill="${c}" stroke="white"/>`:D(X(v),yp,c,4))+T(X(hi)+7,yp+4,f(v),12,"start",ink,true)})});
+ save("g17_power","G17 | Detection power under planted signals","Nine injected Gaussian signals; 400 simulations per configuration",bot+66,s,"Power = fraction of injected cells detected; uncertainty is Monte Carlo, not field inference.");
+ return out;
+}
+Object.assign(figs,tailAndPowerFigures(data.g6,fs.readFileSync(path.join(root,'evidence','g06_pareto_tail','baoan_tail_observations.csv'),'utf8'),data.g17));
+
 function archivedFigures(report,g5,ind){
  const ink="#182d3c",muted="#536674",blue="#226a9b",green="#168077",amber="#b56e16",purple="#7755a2",grid="#d7e2e9",out={};
  const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
