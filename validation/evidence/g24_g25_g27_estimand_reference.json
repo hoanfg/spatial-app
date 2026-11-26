@@ -1,0 +1,224 @@
+{
+  "base_sha": "129281ff40bdc1500807333bae79da75f5caa145",
+  "scope": "Independent JavaScript reconstruction on rounded CSV exports; seed stream differs from Python, HH labels are reference simulation results not production outputs. UI OLS uses four-decimal rounded z and lag. No raw input hashes measured on text connector.",
+  "sites": [
+    {
+      "name": "shanghai_NTL_2020_500m.csv",
+      "n": 886,
+      "settings": [
+        {
+          "minK": 1,
+          "log": false,
+          "perms": 999,
+          "members": 715,
+          "focal": 715,
+          "members_area": 178.74020099999998,
+          "focal_area": 178.74020099999998,
+          "mean_local_I": 0.8014422128798104,
+          "matched_zero_row_global_I": 0.802564680965076,
+          "slope_unrounded": 0.8025646809650778,
+          "slope_ui_rounded": 0.8025637955589452,
+          "HH_raw": {
+            "n": 107,
+            "area": 26.747955,
+            "share_members": 0.1496471126828374,
+            "share_focal": 0.1496471126828374
+          },
+          "HH_BH": {
+            "n": 77,
+            "area": 19.247955,
+            "share_members": 0.1076867704764414,
+            "share_focal": 0.1076867704764414
+          }
+        },
+        {
+          "minK": 4,
+          "log": false,
+          "perms": 999,
+          "members": 715,
+          "focal": 712,
+          "members_area": 178.74020099999998,
+          "focal_area": 177.99020099999998,
+          "mean_local_I": 0.7976792440236351,
+          "matched_zero_row_global_I": 0.7987964418443962,
+          "slope_unrounded": 0.8003812979210575,
+          "slope_ui_rounded": 0.8003804726251724,
+          "HH_raw": {
+            "n": 107,
+            "area": 26.747955,
+            "share_members": 0.1496471126828374,
+            "share_focal": 0.15027768298323346
+          },
+          "HH_BH": {
+            "n": 77,
+            "area": 19.247955,
+            "share_members": 0.1076867704764414,
+            "share_focal": 0.10814053184871679
+          }
+        },
+        {
+          "minK": 4,
+          "log": true,
+          "perms": 999,
+          "members": 715,
+          "focal": 712,
+          "members_area": 178.74020099999998,
+          "focal_area": 177.99020099999998,
+          "mean_local_I": 0.82136640125592,
+          "matched_zero_row_global_I": 0.8225167743669219,
+          "slope_unrounded": 0.8268975020223893,
+          "slope_ui_rounded": 0.8268982358978589,
+          "HH_raw": {
+            "n": 121,
+            "area": 30.247904000000002,
+            "share_members": 0.16922832038216185,
+            "share_focal": 0.1699414003133802
+          },
+          "HH_BH": {
+            "n": 90,
+            "area": 22.497955,
+            "share_members": 0.12586958543254634,
+            "share_focal": 0.12639996400700734
+          }
+        }
+      ]
+    },
+    {
+      "name": "bao_an_NTL_2020_500m.csv",
+      "n": 7148,
+      "settings": [
+        {
+          "minK": 1,
+          "log": false,
+          "perms": 999,
+          "members": 6186,
+          "focal": 6185,
+          "members_area": 1546.4419850000004,
+          "focal_area": 1546.1919850000004,
+          "mean_local_I": 0.9208980797110523,
+          "matched_zero_row_global_I": 0.9210469718823828,
+          "slope_unrounded": 0.9211007610365849,
+          "slope_ui_rounded": 0.9211004963255954,
+          "HH_raw": {
+            "n": 1340,
+            "area": 334.99118,
+            "share_members": 0.21662059310941426,
+            "share_focal": 0.21665561796325047
+          },
+          "HH_BH": {
+            "n": 1027,
+            "area": 256.74426800000003,
+            "share_members": 0.1660225669571432,
+            "share_focal": 0.1660494107398959
+          }
+        },
+        {
+          "minK": 4,
+          "log": false,
+          "perms": 999,
+          "members": 6186,
+          "focal": 6158,
+          "members_area": 1546.4419850000004,
+          "focal_area": 1539.4564850000002,
+          "mean_local_I": 0.9160002918808233,
+          "matched_zero_row_global_I": 0.9161483921705322,
+          "slope_unrounded": 0.924092549839835,
+          "slope_ui_rounded": 0.9240922302612525,
+          "HH_raw": {
+            "n": 1332,
+            "area": 332.993394,
+            "share_members": 0.2153287334603761,
+            "share_focal": 0.21630581782894628
+          },
+          "HH_BH": {
+            "n": 1042,
+            "area": 260.495817,
+            "share_members": 0.1684484898410204,
+            "share_focal": 0.16921284852036592
+          }
+        },
+        {
+          "minK": 4,
+          "log": true,
+          "perms": 999,
+          "members": 6186,
+          "focal": 6158,
+          "members_area": 1546.4419850000004,
+          "focal_area": 1539.4564850000002,
+          "mean_local_I": 0.9522488219484306,
+          "matched_zero_row_global_I": 0.9524027829544114,
+          "slope_unrounded": 0.9617918907656353,
+          "slope_ui_rounded": 0.9617919711620684,
+          "HH_raw": {
+            "n": 2006,
+            "area": 501.490468,
+            "share_members": 0.32428663529851065,
+            "share_focal": 0.3257581314485807
+          },
+          "HH_BH": {
+            "n": 1719,
+            "area": 429.7404680000001,
+            "share_members": 0.27788980910266736,
+            "share_focal": 0.27915077313796244
+          }
+        }
+      ]
+    }
+  ],
+  "panel_counterexample": {
+    "key_columns": [
+      "iso3",
+      "region_id",
+      "year",
+      "cell_size_m"
+    ],
+    "first": {
+      "iso3": "CHN",
+      "region_id": "reference",
+      "year": 2020,
+      "cell_size_m": 500,
+      "p_cfg_perms": 499,
+      "p_cfg_log": 0,
+      "hh_area_share": 0.15
+    },
+    "second": {
+      "iso3": "CHN",
+      "region_id": "reference",
+      "year": 2020,
+      "cell_size_m": 500,
+      "p_cfg_perms": 999,
+      "p_cfg_log": 1,
+      "hh_area_share": 0.08
+    },
+    "third": {
+      "iso3": "CHN",
+      "region_id": "reference",
+      "year": 2021,
+      "cell_size_m": 500,
+      "p_cfg_perms": 999,
+      "p_cfg_log": 1,
+      "hh_area_share": 0.08
+    },
+    "result": [
+      {
+        "iso3": "CHN",
+        "region_id": "reference",
+        "year": 2020,
+        "cell_size_m": 500,
+        "p_cfg_perms": 999,
+        "p_cfg_log": 1,
+        "hh_area_share": 0.08
+      },
+      {
+        "iso3": "CHN",
+        "region_id": "reference",
+        "year": 2021,
+        "cell_size_m": 500,
+        "p_cfg_perms": 999,
+        "p_cfg_log": 1,
+        "hh_area_share": 0.08
+      }
+    ],
+    "method": "Independent reproduction of same-key replacement, not running Streamlit."
+  }
+}
