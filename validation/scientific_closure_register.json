@@ -216,13 +216,13 @@
       },
       {
         "id": "G24",
-        "status": "independent_csv_estimand_difference_confirmed",
-        "next": "Compare actual production and UI subset using identical weights, transformation, support and island convention."
+        "status": "matched_csv_estimands_and_rounded_scatter_reference_measured",
+        "next": "Run production Python and UI directly on matched domain; distinguish all-region Global I, mean Local I and focal slope."
       },
       {
         "id": "G25",
-        "status": "independent_csv_denominator_difference_confirmed",
-        "next": "Test production with islands and focal threshold; resolve output name or denominator explicitly."
+        "status": "reference_HH_denominator_effect_quantified",
+        "next": "Run production regression with islands and varying minK; resolve output estimand or name."
       },
       {
         "id": "G26",
@@ -231,13 +231,13 @@
       },
       {
         "id": "G27",
-        "status": "static_key_risk",
-        "next": "Test panel method fingerprint and incompatible configurations; verify source boundary identity."
+        "status": "same_key_replacement_counterexample_confirmed",
+        "next": "Verify production/UI behavior and cross-year conflicts, boundary identity and method fingerprint."
       },
       {
         "id": "G28",
-        "status": "open_bootstrap_coverage_calibration",
-        "next": "Simulate known-truth coverage and vary block size and replicate count."
+        "status": "known_truth_gaussian_coverage_measured_bounded",
+        "next": "Compare production directly; expand replicates, irregular domains, empirical dependence and resample counts. No universal nominal coverage."
       },
       {
         "id": "G29",
@@ -267,6 +267,18 @@
         "status": "source_independence_null_simulation_on_reference_geometry",
         "next": "Multiple geometries, realistic source covariance, reference size sensitivity and declared null; no field FDR guarantee."
       }
-    ]
+    ],
+    "estimand_and_bootstrap_reference": {
+      "base_sha": "129281ff40bdc1500807333bae79da75f5caa145",
+      "scope": "Independent CSV estimand and key-replacement reference; known-truth Gaussian bootstrap reference. No production execution, live EE retrieval, or new field missing-support evidence.",
+      "replay": [
+        "validation/g24_g25_g27_estimand_reference.mjs",
+        "validation/g28_block_coverage_reference.py"
+      ],
+      "evidence": [
+        "validation/evidence/g24_g25_g27_estimand_reference.json",
+        "validation/evidence/g28_block_coverage_reference.json"
+      ]
+    }
   }
 }
