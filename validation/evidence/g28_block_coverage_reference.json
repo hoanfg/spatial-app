@@ -1,0 +1,125 @@
+{
+  "base_sha": "129281ff40bdc1500807333bae79da75f5caa145",
+  "environment": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "scope": "Independent vectorized reference, not production import; 120 fields per scenario, shared sequential PRNG, finite Monte Carlo uncertainty.",
+  "seed": 271128,
+  "n_side": 20,
+  "replicates": 120,
+  "resamples": 200,
+  "latent_pearson": 0.6,
+  "true_spearman": 0.5819201041240697,
+  "rows": [
+    {
+      "sigma": 0,
+      "block": 1,
+      "blocks": 400,
+      "hits": 113,
+      "reps": 120,
+      "coverage": 0.9416666666666667,
+      "mean_width": 0.13566836446187794
+    },
+    {
+      "sigma": 0,
+      "block": 2,
+      "blocks": 100,
+      "hits": 113,
+      "reps": 120,
+      "coverage": 0.9416666666666667,
+      "mean_width": 0.13433269156129377
+    },
+    {
+      "sigma": 0,
+      "block": 4,
+      "blocks": 25,
+      "hits": 113,
+      "reps": 120,
+      "coverage": 0.9416666666666667,
+      "mean_width": 0.13202721199083742
+    },
+    {
+      "sigma": 0,
+      "block": 5,
+      "blocks": 16,
+      "hits": 109,
+      "reps": 120,
+      "coverage": 0.9083333333333333,
+      "mean_width": 0.12744470358311324
+    },
+    {
+      "sigma": 1,
+      "block": 1,
+      "blocks": 400,
+      "hits": 63,
+      "reps": 120,
+      "coverage": 0.525,
+      "mean_width": 0.13131623264727216
+    },
+    {
+      "sigma": 1,
+      "block": 2,
+      "blocks": 100,
+      "hits": 84,
+      "reps": 120,
+      "coverage": 0.7,
+      "mean_width": 0.20180973096016078
+    },
+    {
+      "sigma": 1,
+      "block": 4,
+      "blocks": 25,
+      "hits": 96,
+      "reps": 120,
+      "coverage": 0.8,
+      "mean_width": 0.24116669303438315
+    },
+    {
+      "sigma": 1,
+      "block": 5,
+      "blocks": 16,
+      "hits": 95,
+      "reps": 120,
+      "coverage": 0.7916666666666666,
+      "mean_width": 0.25477261914402277
+    },
+    {
+      "sigma": 2,
+      "block": 1,
+      "blocks": 400,
+      "hits": 31,
+      "reps": 120,
+      "coverage": 0.25833333333333336,
+      "mean_width": 0.13076343841852342
+    },
+    {
+      "sigma": 2,
+      "block": 2,
+      "blocks": 100,
+      "hits": 61,
+      "reps": 120,
+      "coverage": 0.5083333333333333,
+      "mean_width": 0.24059777716377598
+    },
+    {
+      "sigma": 2,
+      "block": 4,
+      "blocks": 25,
+      "hits": 89,
+      "reps": 120,
+      "coverage": 0.7416666666666667,
+      "mean_width": 0.3743974514902374
+    },
+    {
+      "sigma": 2,
+      "block": 5,
+      "blocks": 16,
+      "hits": 96,
+      "reps": 120,
+      "coverage": 0.8,
+      "mean_width": 0.4008603276214077
+    }
+  ],
+  "excluded_block10_count": 4
+}
