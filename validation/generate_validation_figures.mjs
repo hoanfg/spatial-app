@@ -85,14 +85,16 @@ function tailAndPowerFigures(g6,csv,g17){
  const a=rows.slice(1).map(l=>l.split(",")).filter(v=>v[2]==="1").map(v=>({x:+v[3],rank:+v[4]})).sort((a,b)=>a.rank-b.rank);if(a.length!==cs.n_positive||a.some((v,i)=>v.rank!==i+1))throw Error("CCDF source ranks mismatch");
  const tail=a.slice(0,cs.k_tail),u=cs.u_threshold,k=tail.length;if(tail.some(v=>v.x<u))throw Error("Tail below cutoff");
  const xmax=Math.log10(tail[0].x/u),ymin=Math.floor(Math.log10(Math.min(1/k,10**(-cs.alpha_hill*xmax))));
- const xx=v=>85+Math.log10(v)*680/xmax,yy=v=>330-(Math.log10(v)-ymin)*228/(0-ymin);let s="";
+ // Round display coordinates so platform differences in log10 do not change the SVG.
+ const plotX=t=>+f(85+t*680/xmax,5),xx=v=>plotX(Math.log10(v));
+ const yy=v=>+f(330-(Math.log10(v)-ymin)*228/(0-ymin),5);let s="";
  for(let i=ymin;i<=0;i++){s+=L(85,yy(10**i),765,yy(10**i))+T(74,yy(10**i)+4,i===0?"1":"10^"+i,12,"end",muted)}
  for(const t of [1,1.5,2,3,4].filter(t=>Math.log10(t)<=xmax)){s+=L(xx(t),102,xx(t),330)+T(xx(t),350,t,12,"middle",muted)}
  s+=L(85,102,85,330,muted)+L(85,330,765,330,muted)+T(85,91,"Tail survival probability (log scale)",13,"start",muted);
  // Inclusive empirical survival at each distinct tail value; only display points are thinned.
  const tied=[];for(let i=0;i<tail.length;){let j=i+1;while(j<tail.length&&tail[j].x===tail[i].x)j++;tied.push({x:tail[i].x/u,p:j/k});i=j}
  const stride=Math.max(1,Math.floor(tied.length/120));const pts=tied.filter((v,i)=>i===0||i===tied.length-1||i%stride===0);
- let fit=[];for(let i=0;i<=100;i++){let t=xmax*i/100,p=10**(-cs.alpha_hill*t);fit.push(`${85+t*680/xmax},${yy(p)}`)}
+ let fit=[];for(let i=0;i<=100;i++){let t=xmax*i/100,p=10**(-cs.alpha_hill*t);fit.push(`${plotX(t)},${yy(p)}`)}
  s+=`<polyline points="${fit.join(" ")}" stroke="${amber}" stroke-width="2.3" stroke-dasharray="6 3" fill="none"/>`;pts.forEach(v=>s+=D(xx(v.x),yy(v.p),blue,2.8));
  s+=T(425,374,"NTL / fixed cutoff (log scale)",14,"middle")+D(115,402,blue)+T(129,407,"Empirical tail (thinned for display)",13)+L(470,402,503,402,amber,2.3,"6 3")+T(513,407,"Fitted Pareto",13);
  save("g06_ccdf","G06 | Bao'an conditional tail CCDF","Upper 10% of positive core NTL; k = "+k+", Hill alpha = "+f(cs.alpha_hill),463,s,"Observed tail vs fitted iid Pareto; fixed cutoff, not spatial-distribution validation.");
