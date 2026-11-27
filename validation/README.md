@@ -61,6 +61,22 @@ This matrix documents **existing checks**, not algorithm changes. The authoritat
 | GHSL Shanghai | The completed independent validation inventories native-grid and application-style rasters, a cell-validation JSON, hashes, script and report. The native-grid calculation reproduced the displayed rho, bootstrap interval and AUC rounding on 715 eligible cells. | Both rho intervals include zero, so the verified result is an inconclusive association for this sample, not proof of general GHSL agreement or economic validity. |
 | A02 performance | The later Bao'an run records 37.6479 s for the pipeline and 26.4623 s for A02, compared with 46.6687 s and 25.0028 s in the earlier run. | The total run was shorter, but A02 itself was not faster. Repeated comparable runs are needed. |
 
+![Figure A02.1: Archived Bao'an CSV observation-support metadata. All rows are observed; no genuine missing observation is tested.](figures/a02_observed.svg)
+
+*Figure A02.1. Archived Bao'an CSV observation-support metadata. All rows are observed; no genuine missing observation is tested. [Source evidence](evidence/audit-2026-11-15/verified_summary.json).*
+
+![Figure A03.1: Independent final LISA label comparison in Yanqing. Rounded NTL and independent randomization seed limit exact agreement.](figures/a03_yanqing.svg)
+
+*Figure A03.1. Independent final LISA label comparison in Yanqing. Rounded NTL and independent randomization seed limit exact agreement. [Source evidence](evidence/yanqing/README.md).*
+
+![Figure V11.1: Three-location polygon/raster agreement at the documented four-decimal CSV tolerance; one clipped cell exceeds the literal bound.](figures/v11_cross_location.svg)
+
+*Figure V11.1. Three-location polygon/raster agreement at the documented four-decimal CSV tolerance; one clipped cell exceeds the literal bound. [Source evidence](evidence/README.md).*
+
+![Figure A08/A09.1: Archived Shanghai GHSL Spearman estimates and reported block-bootstrap intervals. Both intervals include zero; neither proves an economic relationship.](figures/a08_ghsl.svg)
+
+*Figure A08/A09.1. Archived Shanghai GHSL Spearman estimates and reported block-bootstrap intervals. Both intervals include zero; neither proves an economic relationship. [Source evidence](evidence/README.md).*
+
 File locations, hashes and runnable checks are listed in the [evidence guide](evidence/README.md).
 
 The evidence guide's [scientific claim audit](evidence/README.md#scientific-claim-audit) distinguishes literature support, implementation tests and field comparisons. A citation can justify a method or interpretation, but it does not establish that this application's output passed a field check.
@@ -84,6 +100,10 @@ The original source review used identifiers A01 to A12. Their current status is 
 | A11 | Synthetic integration and one stored Bao'an execution cover many stages; a repeatable authenticated live-service end-to-end test is still absent. |
 | A12 | Six maintained bilingual guide pairs and automated link/math checks are in place; semantic and scientific review remains manual. |
 
+![Figure A04.1: Three archived hand-case Gini checks with nonnegative inputs. These are deterministic formula checks, not field validation.](figures/a04_gini.svg)
+
+*Figure A04.1. Three archived hand-case Gini checks with nonnegative inputs. These are deterministic formula checks, not field validation. [Source evidence](evidence/README.md).*
+
 ## What can be reproduced from this repository
 
 | Check | Command or material | Scope |
@@ -92,6 +112,8 @@ The original source review used identifiers A01 to A12. Their current status is 
 | Documentation | `node validation/check_docs.mjs` | Checks the maintained English/Vietnamese guides, links and math delimiters. |
 | Application contracts | `python -m pytest -q tests` | Checks numerical, schema, masking and interface behavior with deposited or synthetic inputs. |
 | Three-location raster comparison | [Cross-location workflow](cross_location/README.md) and recovered audit manifest | Records the completed V11 method, inputs, edge-cell artifacts, tolerances and results. The current checkout is not a newly expanded binary rerun bundle. |
+
+**Figure reproducibility.** Generate the SVG illustrations from retained evidence with `node validation/generate_validation_figures.mjs`; use `node validation/generate_validation_figures.mjs --verify` to compare every generated figure with its committed counterpart. Both language guides use the same figures with localized captions. No illustration is additional field evidence.
 
 ## Method boundaries
 
@@ -154,6 +176,10 @@ This is a consolidated closure of the **code-level safeguards and evidence bookk
 
 These values show sensitivity to the **constructed data-generating mechanism**, not empirical economic accuracy. The benchmark jobs surface is synthetic and the aligned light field is **generated directly from it**, so it is not an independent external employment observation. The single shuffled case does not supply a p-value.
 
+![Figure G04.1: Construct sensitivity against generated employment potential. The aligned light field is deliberately generated from synthetic jobs, not independent economic observations.](figures/g04_construct.svg)
+
+*Figure G04.1. Construct sensitivity against generated employment potential. The aligned light field is deliberately generated from synthetic jobs, not independent economic observations. [Source evidence](evidence/g04_ntl_potential/summary.json).*
+
 **Observed radiance sensitivity in Bao'an (2020, 500 m).** Reuse exactly the existing, A02-checked, **7,148-row** archived cell CSV; **6,186 full core cells** enter the distance kernel and 962 clipped border cells remain in the exported join table with blank potentials. All 7,148 source records have observed A02 status. One noncore row has an invalid field and is excluded, not filled or assigned a fabricated coordinate. The source CSV is not edited or re-extracted. Against the same baseline on the same eligible core cells:
 
 | Radius in grid steps | Max radius | Spearman range across $\tau$ | Top-decile Jaccard range across $\tau$ |
@@ -163,6 +189,10 @@ These values show sensitivity to the **constructed data-generating mechanism**, 
 | 8 | 4.0 km | 0.9733 to 0.9985 | 0.7839 to 0.9527 |
 
 Here $\tau\in\{0.25,0.5,1.0\}$ per km. Overall cell ranks remain similar, while identity of the highest-ranked 10% changes more. At baseline, raw potential has rank correlation **0.4085** with the geometry-only expected-exposure term, while the centered potential has **0.1758** with that term. Neither is an independence test and the centered quantity need not be spatially uncorrelated with geometry in realized, spatially structured data. Negative centered values (50.73% of eligible cells at baseline) mean *below the spatial-permutation reference expectation*, not negative employment or negative market access.
+
+![Figure G04.2: Top-decile Jaccard sensitivity to kernel radius and decay on observed Bao'an 2020 NTL.](figures/g04_kernel.svg)
+
+*Figure G04.2. Top-decile Jaccard sensitivity to kernel radius and decay on observed Bao'an 2020 NTL. [Source evidence](evidence/g04_ntl_potential/summary.json).*
 
 **Archived inputs and detailed outputs:** the [reproducible program](g04_ntl_potential_experiment.py), [335-cell synthetic input with generated employment](evidence/g04_ntl_potential/synthetic_input.csv), [1,005 synthetic cell-level baseline results](evidence/g04_ntl_potential/synthetic_cell_results.csv), [all 7,148 Bao'an cell IDs and baseline results](evidence/g04_ntl_potential/baoan_cell_results.csv), [36 scenario-level comparisons](evidence/g04_ntl_potential/sensitivity.csv), and [machine-readable summary, source SHA-256, software versions, definitions and limitations](evidence/g04_ntl_potential/summary.json). The original Bao'an CSV referenced by the summary is already deposited at `validation/evidence/a02_post_pr27/`. The CI job checks exact reproducibility of all five new outputs and leaves historical inputs intact.
 
@@ -199,6 +229,14 @@ Nonrejection at one short cutoff, such as 5% for lognormal (p = 0.085), **does n
 
 **Rival distributions:** Exponential excesses and lognormal values **truncated below the same `u`** are independently fitted on the **same `k` exceedances** for each case, and compared against Pareto using AICc and descriptive KS differences. This avoids comparing an unconditional lognormal likelihood against a conditional Pareto likelihood. These are not likelihood-ratio significance tests; truncated lognormal parameter estimates are archived separately.
 
+![Figure G06.1: Conditional refitted iid Pareto-bootstrap p-values across four fixed tail fractions; the dashed line is 0.05.](figures/g06_pareto.svg)
+
+*Figure G06.1. Conditional refitted iid Pareto-bootstrap p-values across four fixed tail fractions; the dashed line is 0.05. [Source evidence](evidence/g06_pareto_tail/summary.json).*
+
+![Figure G06.2: Log-log conditional empirical survival of the top 618 Bao'an positive-core NTL observations and the fitted Pareto at the fixed 10% cutoff. Points are thinned for legibility only.](figures/g06_ccdf.svg)
+
+*Figure G06.2. Log-log conditional empirical survival of the top 618 Bao'an positive-core NTL observations and the fitted Pareto at the fixed 10% cutoff. Points are thinned for legibility only. [Source evidence](evidence/g06_pareto_tail/baoan_tail_observations.csv).*
+
 **Complete evidence and replay:** [generator](g06_pareto_tail_experiment.py), [all 5,000 synthetic inputs](evidence/g06_pareto_tail/synthetic_input.csv), [7,148 source Bao'an IDs with full-core/positive rank flags](evidence/g06_pareto_tail/baoan_tail_observations.csv), [all 16 model/cutoff cases](evidence/g06_pareto_tail/tail_cases.csv), [all 6,384 bootstrap draws with refitted exponent and KS](evidence/g06_pareto_tail/bootstrap_replications.csv), and [machine-readable methodology, fitted rivals, full scenario results, software versions and SHA-256 hashes](evidence/g06_pareto_tail/summary.json). The original Bao'an input is retained at `validation/evidence/a02_post_pr27/`. The CI job regenerates and compares **all five new evidence files byte-for-byte** under pinned dependencies.
 
 **Still open:** The results **do not certify NTL Pareto tails** and do not establish a spatial, economic, or causal law. Needed evidence includes a spatially appropriate null generator or correlated-resampling design, temporal measurement checks, and a prespecified or fully bootstrapped cutoff-selection procedure on independent regions. See [Clauset, Shalizi and Newman (2009)](https://doi.org/10.1137/070710111). Existing `power_law_ok` is a **legacy approximate-KS screening flag**, not a field-verified model-fit statement; the current UI explanation warns against overinterpretation.
@@ -219,6 +257,10 @@ In the dominant-artifact design, the selected center moves away from the known g
 
 For additional dispersion evidence, 80 seeded replications per field compare the known generator center with the geometry-only centroid, NTL-weighted centroid and brightest cell. Those **960 individual center-fit results** are archived. Their Monte Carlo summaries cover only these fast comparison-center rules. The full production HH selection is rerun for the three deposited synthetic fields, **not** for all 240 Monte Carlo fields; do not apply the repeated-proxy uncertainty to the production HH algorithm.
 
+![Figure G05.1: Center error relative to the known synthetic generator center under different unrelated-light intensities.](figures/g05_center.svg)
+
+*Figure G05.1. Center error relative to the known synthetic generator center under different unrelated-light intensities. [Source evidence](evidence/g05_ntl_center/summary.json).*
+
 **Part B: observed Bao'an 2020 NTL, no independent economic CBD.** The study reuses the existing 7,148-cell A02-checked VIIRS CSV and fits exactly the same $\log(1+\mathrm{NTL})$ and area-weighted gradient on **6,186 full core cells**. It does **not** re-extract VIIRS or rerun A03/LISA. The historical app-selected center is recovered by multilateration from archived `dist_to_core_km` rounded to 0.001 km; its reconstructed distances have a median absolute discrepancy of **0.254 m** and a 99th-percentile discrepancy of **0.505 m**. This method identifies the **NTL-selected point from a previous output**, not an externally identified CBD.
 
 | Bao'an 2020 center rule | Distance from archived NTL-selected point | Fitted $\gamma$, per km | In-sample R² |
@@ -229,6 +271,10 @@ For additional dispersion evidence, 80 seeded replications per field compare the
 | Same-year brightest NTL cell | 9.326 km | 0.02677 | 0.37505 |
 
 These are **sensitivity estimates conditional on one region-year**, not rankings of economic CBD accuracy. The geometry-only centroid is defined without using NTL, but **it is not a verified job center**, and the two other alternative centers are still NTL-dependent. All fits use the same 6,186 cells and outcome, so the differences reflect center definitions rather than a change in the fitted sample. Differences as large as 0.274 in R² warn against treating `monocentric_r2` as an economic monocentricity test.
+
+![Figure G05.2: Observed Bao'an 2020 gradient fit under alternative center choices; the same eligible NTL cells are used, without an independent CBD reference.](figures/g05_gradient.svg)
+
+*Figure G05.2. Observed Bao'an 2020 gradient fit under alternative center choices; the same eligible NTL cells are used, without an independent CBD reference. [Source evidence](evidence/g05_ntl_center/summary.json).*
 
 **Retained, replayable evidence:** [experiment source](g05_ntl_center_experiment.py); [625-cell synthetic inputs and all three brightness fields](evidence/g05_ntl_center/synthetic_input.csv); [1,875 synthetic cell-level LISA classes and distances](evidence/g05_ntl_center/synthetic_cell_results.csv); [960 seeded fast-center replications](evidence/g05_ntl_center/synthetic_replications.csv); [7,148 Bao'an IDs and center distances, with border exclusions preserved](evidence/g05_ntl_center/baoan_cell_results.csv); [19 fixed-field center comparisons](evidence/g05_ntl_center/center_comparison.csv); and [metadata, reconstruction diagnostics, Monte Carlo distributions, hashes and limitations](evidence/g05_ntl_center/summary.json). CI pins the scientific Python libraries and verifies all six files byte-for-byte. The Bao'an source file and all prior G04, G17, G18, A02, A03, V11 and GHSL evidence are unchanged.
 
@@ -254,6 +300,14 @@ Under a correlated background with $\rho=0.8$ and no planted mean shift, BH reje
 
 **P-value granularity:** With 999 two-sided permutations, the minimum reported pseudo p is 0.002 for 64 tests. Even the smallest p cannot trigger the step-up threshold at rank one. The earliest potentially feasible rank is three for BH and thirteen for BY in this setup. This discrete threshold materially limits power and must be reported when interpreting the LISA stress results.
 
+![Figure G17.1: Empirical BH/BY FDR for the all-null Gaussian configurations. These are finite-simulation estimates, not field guarantees.](figures/g17_fdr.svg)
+
+*Figure G17.1. Empirical BH/BY FDR for the all-null Gaussian configurations. These are finite-simulation estimates, not field guarantees. [Source evidence](evidence/g17_spatial_fdr/summary.json).*
+
+![Figure G17.2: Detection power of BH and BY under nine planted Gaussian signals. Whiskers show the reported finite-simulation Monte Carlo intervals.](figures/g17_power.svg)
+
+*Figure G17.2. Detection power of BH and BY under nine planted Gaussian signals. Whiskers show the reported finite-simulation Monte Carlo intervals. [Source evidence](evidence/g17_spatial_fdr/summary.json).*
+
 **Evidence and replay:** The full synthetic design and predeclared injection mask are in [design.csv](evidence/g17_spatial_fdr/design.csv), all **6,544 individual simulation records** in [replicates.csv](evidence/g17_spatial_fdr/replicates.csv), and scenario summaries, uncertainty, assumptions and SHA-256 digests in [summary.json](evidence/g17_spatial_fdr/summary.json). The [generator](g17_spatial_fdr_experiment.py) uses fixed seeds and pinned NumPy, pandas and SciPy in CI. Run `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python validation/g17_spatial_fdr_experiment.py --verify` from repository root to compare generated outputs with every retained artifact.
 
 **Unresolved G17 claim:** Neither positive spatial dependence nor BH step-up correctness proves the formal PRDS condition for LISA pseudo p-values. BY's arbitrary-dependence guarantee presumes valid null p-values; it **does not repair invalid spatial permutations**. Before a real-world nominal FDR claim, define the scientific null, the full tested family, how spatial nuisance dependence is handled and what ground truth or valid null calibration supports the claim. See [Benjamini and Yekutieli (2001)](https://doi.org/10.1214/aos/1013699998) and the [GeoDa Local Spatial Autocorrelation guidance](https://geodacenter.github.io/workbook/6a_local_auto/lab6a.html).
@@ -276,6 +330,10 @@ Under a correlated background with $\rho=0.8$ and no planted mean shift, BH reje
 
 Marginal p frequency differs from the fraction of fields with any rejection. Under the all-null source design the latter is empirical FDR for that null.
 
+![Figure G17.3: Marginal rejection frequency and BH any-rejection frequency evaluated under the simulated source-pixel null. The two methods use different reference hypotheses.](figures/g17_source_null.svg)
+
+*Figure G17.3. Marginal rejection frequency and BH any-rejection frequency evaluated under the simulated source-pixel null. The two methods use different reference hypotheses. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
+
 **Archived evidence.** [Source-null simulation program](g17_source_support_null.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
 **Verified scope and unresolved claims.** One window, one iid source model, shared reference draws across test fields. The 0.002 p floor limits BH/BY, especially BY. The comparison does not establish BH failure for the cell random-placement null or certify field FDR. Extend across geometries, resolutions, source covariance and reference sizes; specify the scientific null.
@@ -293,6 +351,10 @@ This experiment is based on a fully specified **synthetic** 12×12 grid at 500 m
 | All locations, naively treating unknown-support zeros as observed | 144 | 18 | 13 |
 
 Including observed zeros changed 50/134 classes on the common known-support domain (including 28 formerly DARK cells); 45/134 neighbor counts and 92/106 comparable pseudo p-values also changed. Inappropriately including the 10 unknown-support cells changed 9/134 classes, 28/134 neighbor counts and 112/134 comparable pseudo p-values **among the truly supported locations**. In the naive run, all 10 unknown-support cells entered the local test family. Separate unadjusted results are stored in the evidence CSV.
+
+![Figure G18.1: HH and LL counts under three support policies on the controlled 12 × 12 synthetic field.](figures/g18_support.svg)
+
+*Figure G18.1. HH and LL counts under three support policies on the controlled 12 × 12 synthetic field. [Source evidence](evidence/g18_zero_support/summary.json).*
 
 **Scope restriction:** The fixed seed does not pair identical Monte Carlo draws across runs with different tested populations, so some p-value variation may reflect permutation-stream changes as well as the altered sample. This demonstrates possible specification sensitivity under one controlled synthetic field, **not** a measured bias magnitude in a real locality, proof of which policy is universally correct, or empirical FDR control. The safe audit runs subset the observed geography instead of feeding NaNs to the existing `run_lisa` (whose full Gini calculation rejects NaN). Consequently, the normalization population and tested family also change. Existing V11/GHSL/A02/A03/A04 validations are untouched, and the production default still excludes zero NTL cells from LISA.
 
@@ -319,6 +381,10 @@ Including observed zeros changed 50/134 classes on the common known-support doma
 
 No missing-stat flag or below-three-month cell occurs. All 8,909 Bao'an and 12,202 Qimen finite support pixels have positive cf_cvg. Qimen 2016 has 56 exported zeros and 2,487 cells with positive negative-radiance fraction. Exported zeros may reflect rounding and do not replace the 49 verified zero cells in the earlier G18 comparison.
 
+![Figure G10/G18.2: All five exported datasets report full observation support. Absence of missing cases does not establish correctness under incomplete support.](figures/g10_support.svg)
+
+*Figure G10/G18.2. All five exported datasets report full observation support. Absence of missing cases does not establish correctness under incomplete support. [Source evidence](evidence/g19_g29_independent_audit.json).*
+
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
 **Verified scope and unresolved claims.** These samples establish reported support, not a genuine missing-observation case or the field magnitude of zero-fill bias. An independently verified incomplete-support scene and matched geometry are still needed.
@@ -335,6 +401,10 @@ No missing-stat flag or below-three-month cell occurs. All 8,909 Bao'an and 12,2
 | --- | ---: | ---: | ---: |
 | Missing cell filled with zero | 4 | 15 | 0.416666667 |
 | Observed cells only | 3 | 20 | 0.222222222 |
+
+![Figure G19.1: Synthetic equal-area example: filling an unobserved cell with zero changes both the analysis population and the computed statistics.](figures/g19_missing.svg)
+
+*Figure G19.1. Synthetic equal-area example: filling an unobserved cell with zero changes both the analysis population and the computed statistics. [Source evidence](evidence/g19_g29_independent_audit.json).*
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
@@ -355,6 +425,10 @@ No missing-stat flag or below-three-month cell occurs. All 8,909 Bao'an and 12,2
 | Finite values compared | 8,909 |
 | Maximum absolute difference | 0 |
 | Raw mismatch after NaN equivalence | 0 |
+
+![Figure G20.1: Schematic of the offline aligned split and mosaic experiment. It is not an independently downloaded Earth Engine tile comparison.](figures/g20_tiles.svg)
+
+*Figure G20.1. Schematic of the offline aligned split and mosaic experiment. It is not an independently downloaded Earth Engine tile comparison. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
 
 **Archived evidence.** [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
@@ -381,6 +455,10 @@ No missing-stat flag or below-three-month cell occurs. All 8,909 Bao'an and 12,2
 
 All paired records report full observation support.
 
+![Figure G26.1: Controlled temporal example comparing entry under zero-fill and common observation support.](figures/g26_temporal.svg)
+
+*Figure G26.1. Controlled temporal example comparing entry under zero-fill and common observation support. [Source evidence](evidence/g19_g29_independent_audit.json).*
+
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
 **Verified scope and unresolved claims.** Synthetic mechanism and exported grid attributes are confirmed; exact polygon identity, field missingness and economic transition are not. Test an actual incomplete two-year scene on common support, including Markov, lag and extensive margins, and report excluded area.
@@ -397,6 +475,10 @@ All paired records report full observation support.
 | --- | ---: | ---: | ---: |
 | Bao'an | 7,148 | 0.13057% | 0.19250% |
 | Qimen | 9,143 | 0.07141% | 0.07907% |
+
+![Figure G11.1: Mean and maximum relative absolute discrepancy between projected and ellipsoidal areas; two exported polygon datasets only.](figures/g11_area.svg)
+
+*Figure G11.1. Mean and maximum relative absolute discrepancy between projected and ellipsoidal areas; two exported polygon datasets only. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
 
 **Archived evidence.** [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
@@ -422,6 +504,10 @@ All paired records report full observation support.
 | Physical-mean SOL | 34196.307125 | 115.380622 |
 
 The 0.999 threshold stratifies geometric support; it is not a VIIRS observation-quality standard.
+
+![Figure G21.1: Mean absolute NTL difference between angular and physical raster-intersection weighting, plotted in millionths of the radiance unit.](figures/g21_weighting.svg)
+
+*Figure G21.1. Mean absolute NTL difference between angular and physical raster-intersection weighting, plotted in millionths of the radiance unit. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
 
 **Archived evidence.** [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
@@ -452,6 +538,14 @@ The 0.999 threshold stratifies geometric support; it is not a VIIRS observation-
 
 Six SOL values range 34196.307188–34196.307441 and means 20.733703468–20.733703659. A separate four-equal-cell example with one fine HH cell yields 100% coarse-block any-overlap but 25% actual area overlap; `coarse_covered_by_fine` and actual area overlap are different estimands.
 
+![Figure G22.1: Aligned direct-extraction versus support-weighted aggregation differences, in millionths of the radiance unit. This does not measure HH stability.](figures/g22_maup.svg)
+
+*Figure G22.1. Aligned direct-extraction versus support-weighted aggregation differences, in millionths of the radiance unit. This does not measure HH stability. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
+
+![Figure G22.2: Schematic equal-area example distinguishing coarse-block any-overlap from actual fine HH intersection area.](figures/g22_overlap.svg)
+
+*Figure G22.2. Schematic equal-area example distinguishing coarse-block any-overlap from actual fine HH intersection area. [Source evidence](evidence/g19_g29_independent_audit.json).*
+
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
 **Verified scope and unresolved claims.** Near-integral conservation is established for this reference design only. Production block weights, direct-grid LISA and HH overlap remain open. Compare matched raster support, compatible LISA settings and polygon-intersection area Jaccard.
@@ -471,6 +565,14 @@ Six SOL values range 34196.307188–34196.307441 and means 20.733703468–20.733
 | Actual Bao'an reference geometry | 0.209232 | 0.190961 | 0.228331 |
 
 All 23,900 directed Rook edges in the Bao'an sample share at least one source pixel. Mean expected pair correlation is 0.230268; the 95th percentile is 0.415925. In the ideal shifted case neighboring cells share two of four equally weighted pixels.
+
+![Figure G23.1: Mean Global Moran and empirical 2.5th–97.5th percentiles from 400 simulated source-independent fields per configuration. Whiskers are not field confidence intervals.](figures/g23_shared.svg)
+
+*Figure G23.1. Mean Global Moran and empirical 2.5th–97.5th percentiles from 400 simulated source-independent fields per configuration. Whiskers are not field confidence intervals. [Source evidence](evidence/g20_g23_g17_raster_summary.json).*
+
+![Figure G23.2: Schematic of aligned and half-cell-shifted raster support; dashed cells in the shifted case share source pixels.](figures/g23_support_geometry.svg)
+
+*Figure G23.2. Schematic of aligned and half-cell-shifted raster support; dashed cells in the shifted case share source pixels. [Source evidence](evidence/g19_g29_independent_audit.json).*
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json); [Raster and geometry reference program](g20_g23_raster_audit.py), [result JSON and source SHA-256](evidence/g20_g23_g17_raster_summary.json).
 
@@ -492,7 +594,26 @@ All 23,900 directed Rook edges in the Bao'an sample share at least one source pi
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
-**Verified scope and unresolved claims.** Differences are confirmed in rounded exports, not the actual UI trend subset. Match sample, weights, transformations and island handling. The JSON minK=4 row-standardized diagnostic zeros subthreshold rows; it is not conventional Global I on the focal induced graph.
+**Comparison on the scatterplot's data domain.** The regression in `ntl/lisa_ui.py` uses rows with nonmissing `ntl_z_lit` and `lisa_lag_z`; `run_lisa` exports both to four decimals. Independently reconstruct positive core members (area ≥99% of nominal) from Bao'an and Shanghai 2020 CSVs, standardize using the members' mean and sample SD, build Queen neighbors, and screen focal cells by degree. Calculate mean focal Local I, row-standardized Global I over members with untested rows set to zero, and intercept OLS slope on focal after rounding z and lag to four decimals. JavaScript rounding approximates NumPy rounding and need not agree at ties.
+
+| Site | minK | Transform | Mean Local I | Global I (untested rows zero) | Rounded-column slope |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Shanghai | 1 | Raw | 0.801442 | 0.802565 | 0.802564 |
+| Shanghai | 4 | Raw | 0.797679 | 0.798796 | 0.800380 |
+| Shanghai | 4 | Log | 0.821366 | 0.822517 | 0.826898 |
+| Bao'an | 1 | Raw | 0.920898 | 0.921047 | 0.921100 |
+| Bao'an | 4 | Raw | 0.916000 | 0.916148 | 0.924092 |
+| Bao'an | 4 | Log | 0.952249 | 0.952403 | 0.961792 |
+
+When all members are focal (Shanghai minK=1), the unrounded slope equals row-standardized Global I to numerical precision. Mean Local I differs by its sample-SD and member-count normalization. Once focal rows are removed, an intercept regression on a subset and Global I normalization over members are distinct. The slope should not be equated with all-region Global I or `moran_I_lit` (mean Local I).
+
+![Figure G24.1: Mean Local I, the row-standardized zero-row Global I diagnostic and the reconstructed focal scatterplot slope; minK = 4. Independent CSV reference, not a live UI result.](figures/g24_moran.svg)
+
+*Figure G24.1. Mean Local I, the row-standardized zero-row Global I diagnostic and the reconstructed focal scatterplot slope; minK = 4. Independent CSV reference, not a live UI result. [Source evidence](evidence/g24_g25_g27_estimand_reference.json).*
+
+**Additional evidence.** [Estimand reference program](g24_g25_g27_estimand_reference.mjs), [setting-level results](evidence/g24_g25_g27_estimand_reference.json).
+
+**Verified scope and unresolved claims.** The reconstructed CSV columns confirm distinct estimands; the production Python function and Altair UI have not been executed in this test. Compare both functions directly on matched settings and qualify slope interpretation rather than changing a formula solely because the estimand differs. The zero-row diagnostic is not Global I on the focal induced graph.
 
 ### G25: High-High area denominator on the tested domain
 
@@ -512,13 +633,32 @@ At minK=1 Bao'an has 6,186 members and 6,185 focal, a 0.25 km² difference. At m
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
-**Verified scope and unresolved claims.** Denominators differ on actual exported data. Raw CSVs lack HH labels, so no new HH share is measured. Run a production regression with islands and varied minK and explicitly resolve the estimand or name.
+**Quantification with a nonzero HH numerator.** Use the G24 reconstruction for Bao'an and Shanghai 2020, 999 conditional neighbor samples without replacement, and JavaScript PRNG seed 42. P-values use the doubled inclusive smaller tail, plus-one correction and cap at one; identify positive z/lag with BH significance at alpha 0.05. Divide the same HH area by members and focal area, isolating the denominator effect from classification changes.
+
+| Site | minK | Transform | HH cells (BH) | HH / members (%) | HH / focal (%) |
+| --- | ---: | --- | ---: | ---: | ---: |
+| Shanghai | 1 | Raw | 77 | 10.7687 | 10.7687 |
+| Shanghai | 4 | Raw | 77 | 10.7687 | 10.8141 |
+| Shanghai | 4 | Log | 90 | 12.5870 | 12.6400 |
+| Bao'an | 1 | Raw | 1027 | 16.6023 | 16.6049 |
+| Bao'an | 4 | Raw | 1042 | 16.8448 | 16.9213 |
+| Bao'an | 4 | Log | 1719 | 27.7890 | 27.9151 |
+
+For Bao'an minK=4 log NTL, 429.740468 km² HH is divided by 1546.441985 km² members or 1539.456485 km² focal; the difference is approximately 0.1261 percentage points. Equal denominator areas yield equal shares. HH classifications are independent reference calculations, not archived production labels or the NumPy RNG stream.
+
+![Figure G25.1: Nested analysis populations for Bao'an 2020, log NTL and minK = 4. Box sizes are schematic, and both shares use the same HH numerator.](figures/g25_denominator.svg)
+
+*Figure G25.1. Nested analysis populations for Bao'an 2020, log NTL and minK = 4. Box sizes are schematic, and both shares use the same HH numerator. [Source evidence](evidence/g24_g25_g27_estimand_reference.json).*
+
+**Additional evidence.** [Estimand reference program](g24_g25_g27_estimand_reference.mjs), [raw/BH counts, areas and ratios](evidence/g24_g25_g27_estimand_reference.json).
+
+**Verified scope and unresolved claims.** The denominator effect is quantified using reference labels on observed exports. A production regression with islands and varied minK remains necessary, and the label or denominator must explicitly match the estimand.
 
 ### G27: Analysis specification comparability in region-year panels
 
 **Scientific object and rationale.** Rows with the same region, year and cell size may use different statistical settings, confounding measurement change with temporal change.
 
-**Data, calculation and reference.** Inspect KEY_COLS and same-key replacement in `ntl/lisa_ui.py`. Specify a method fingerprint including weights, log, alpha, FDR, permutations, seed, support, algorithm version and boundary identity. A future regression must insert conflicting configurations and verify source geometry across years.
+**Data, calculation and reference.** Inspect KEY_COLS and same-key replacement in `ntl/lisa_ui.py`. Specify a method fingerprint including weights, log, alpha, FDR, permutations, seed, support, algorithm version and boundary identity. The counterexample uses conflicting configurations; source geometry identity across years is a separate condition.
 
 **Results.**
 
@@ -526,7 +666,15 @@ Static inspection confirms same-key replacement despite possible method differen
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
-**Verified scope and unresolved claims.** The data-contract risk is established, but UI/production conflict handling is untested. Validate specification identity before combining panel series.
+**Key-collision counterexample.** Construct two hypothetical records with key CHN, reference, 2020, 500 m. A has 499 permutations, raw NTL and assigned HH share 0.15; B has 999 permutations, log NTL and assigned share 0.08. Independently reproduce the same-key removal and new-row append rule, then add record C with year 2021. A is replaced by B; after C, two rows B and C remain. The assigned HH shares distinguish records and are not LISA results or measured economic change.
+
+![Figure G27.1: Controlled key-collision reconstruction: different analysis specifications have the same region-year-grid key, so B replaces A.](figures/g27_panel.svg)
+
+*Figure G27.1. Controlled key-collision reconstruction: different analysis specifications have the same region-year-grid key, so B replaces A. [Source evidence](evidence/g24_g25_g27_estimand_reference.json).*
+
+**Additional evidence.** [Key-rule reconstruction](g24_g25_g27_estimand_reference.mjs), [counterexample input and resulting rows](evidence/g24_g25_g27_estimand_reference.json).
+
+**Verified scope and unresolved claims.** Same-key replacement is confirmed in an independent reproduction, not a live UI/production test or a fingerprint implementation. Test conflicting specifications across years, polygon hashes and prevention of incompatible panel series.
 
 ### G28: Spatial bootstrap block size and interval coverage
 
@@ -536,9 +684,38 @@ Static inspection confirms same-key replacement despite possible method differen
 
 **Results.**
 
-No new coverage-calibration result is deposited. Earlier spatial block resampling remains sensitivity evidence, not 95% coverage evidence.
+**Known-truth coverage design.** Generate two independent standard Gaussian fields A and E on a 20 × 20 grid. For spatial dependence apply the same Gaussian smoothing kernel to both, with periodic boundary conditions; kernel SD is 0, 1 or 2 cells (0 means no smoothing). Construct B as 0.6 times A plus the square root of (1 − 0.6²) times E. Equal marginal variances and independence of A and E imply Pearson correlation 0.6, hence bivariate-normal population Spearman correlation 6/pi times arcsin(0.6/2) = 0.581920104. This is the population target, not an estimated sample coefficient.
 
-**Verified scope and unresolved claims.** Retain descriptive interval interpretation until a calibration appropriate to the sampling design and dependence structure is available.
+Use 120 independent field pairs per design, seed 271128, and 200 bootstrap draws per field. Reproduce the fixed-origin nonoverlapping block partition and same-number block resampling of `block_bootstrap_rho`; recalculate Spearman ranks (average ties) on each concatenated resample and take the 2.5th and 97.5th percentiles. Test block sides 1, 2, 4, 5 cells. A 10-cell side gives four blocks and is excluded by the production minimum of five blocks. This is a vectorized independent reference, not a production import.
+
+| Kernel SD (cells) | Block side | Blocks | Intervals containing truth / 120 | Coverage (%) | Mean interval width |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 1 | 400 | 113 | 94.17 | 0.135668 |
+| 0 | 2 | 100 | 113 | 94.17 | 0.134333 |
+| 0 | 4 | 25 | 113 | 94.17 | 0.132027 |
+| 0 | 5 | 16 | 109 | 90.83 | 0.127445 |
+| 1 | 1 | 400 | 63 | 52.50 | 0.131316 |
+| 1 | 2 | 100 | 84 | 70.00 | 0.201810 |
+| 1 | 4 | 25 | 96 | 80.00 | 0.241167 |
+| 1 | 5 | 16 | 95 | 79.17 | 0.254773 |
+| 2 | 1 | 400 | 31 | 25.83 | 0.130763 |
+| 2 | 2 | 100 | 61 | 50.83 | 0.240598 |
+| 2 | 4 | 25 | 89 | 74.17 | 0.374397 |
+| 2 | 5 | 16 | 96 | 80.00 | 0.400860 |
+
+![Figure G28.1: Empirical coverage of bootstrap intervals by block side and Gaussian smoothing scenario. The dashed line is the nominal 95% target.](figures/g28_coverage.svg)
+
+*Figure G28.1. Empirical coverage of bootstrap intervals by block side and Gaussian smoothing scenario. The dashed line is the nominal 95% target. [Source evidence](evidence/g28_block_coverage_reference.json).*
+
+![Figure G28.2: Mean interval width for the same bootstrap design. A narrow interval alone does not establish adequate coverage.](figures/g28_width.svg)
+
+*Figure G28.2. Mean interval width for the same bootstrap design. A narrow interval alone does not establish adequate coverage. [Source evidence](evidence/g28_block_coverage_reference.json).*
+
+**Interpretation.** As dependence increases, cellwise resampling yields narrow intervals with poor coverage. Larger blocks improve coverage in some designs, but do not guarantee 95%; the default five-cell side yields 90.83%, 79.17%, and 80.00% in the three scenarios. With 120 fields the Monte Carlo SE is approximately the square root of coverage times (1−coverage) divided by 120; small differences are not a block ranking. Kernel sigma is the simulation smoothing parameter, not an empirically measured Bao'an dependence range.
+
+**Archived evidence.** [Calibration program](g28_block_coverage_reference.py), [design, coverage and width JSON](evidence/g28_block_coverage_reference.json).
+
+**Verified scope and unresolved claims.** Coverage is quantified for three known Gaussian designs; direct production comparison and field-specific calibration remain open. Increase replications, test irregular domains, empirical dependence ranges and resample count sensitivity. Existing intervals remain conditionally descriptive, not guaranteed 95% coverage.
 
 ### G29: Equivalence of documented and production p-value conventions
 
@@ -552,6 +729,10 @@ No new coverage-calibration result is deposited. Earlier spatial block resamplin
 | --- | ---: |
 | Absolute tail plus one | 0.7 |
 | Doubled smaller tail plus one | 0.6 |
+
+![Figure G29.1: Asymmetric nine-value reference distribution. Blue points meet the absolute-tail rule; the doubled-smaller-tail convention gives a different p-value.](figures/g29_tails.svg)
+
+*Figure G29.1. Asymmetric nine-value reference distribution. Blue points meet the absolute-tail rule; the doubled-smaller-tail convention gives a different p-value. [Source evidence](evidence/g19_g29_independent_audit.json).*
 
 **Archived evidence.** [Independent CSV and numerical-check program](g19_g29_independent_audit.mjs), [result JSON](evidence/g19_g29_independent_audit.json).
 
